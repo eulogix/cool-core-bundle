@@ -10,33 +10,6 @@
             "email": "pietro@eulogix.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/eulogix/libs-misc.git",
-            "reference": "origin/master"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/eulogix/libs-activiti.git",
-            "reference": "origin/master"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/eulogix/libs-rundeck.git",
-            "reference": "origin/master"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/eulogix/money.git",
-            "reference": "origin/master"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/eulogix/Propel.git",
-            "reference": "origin/master"
-        }
-    ],
     "require": {
         "php": ">=5.3.9",
         "symfony/symfony": "2.8.*",
