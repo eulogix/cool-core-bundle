@@ -1,5 +1,5 @@
 {
-    "name": "eulogix/cool-bundle",
+    "name": "eulogix/cool-core-bundle",
     "type": "library",
     "description": "A Symfony bundle that provides tools to build LOB/CRUD application on Postgres, easily",
     "keywords": [],
