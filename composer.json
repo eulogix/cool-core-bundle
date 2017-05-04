@@ -40,7 +40,7 @@
     "require": {
         "php": ">=5.3.9",
         "symfony/symfony": "2.8.*",
-        "twig/twig": "~1.*",
+        "twig/twig": "1.*",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/assetic-bundle": "~2.8",
         "sensio/framework-extra-bundle": "~3.0",
