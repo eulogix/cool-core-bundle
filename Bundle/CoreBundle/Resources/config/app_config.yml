@@ -13,7 +13,7 @@ twig:
     globals:
         cool: '@cool.cool'
     paths:
-        "@EulogixCoolCoreBundle/CWidget": CoodlWidgets
+        "%kernel.root_dir%/../vendor/eulogix/cool-core-bundle/Bundle/CoreBundle/CWidget": CoolWidgets
 
 propel:
     build_properties:
