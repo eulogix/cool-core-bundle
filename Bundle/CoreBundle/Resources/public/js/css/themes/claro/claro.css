@@ -1,0 +1,231 @@
+/*************** FORM ****************/
+
+/* the div that contains the whole form layout */
+.claro .formContainer {
+    padding:0;
+}
+
+.claro .formContainer .sectionTitle {
+    padding:5px;
+    margin-top:10px;
+    font-weight: bold;
+    color:#333333;
+    border-bottom: 1px solid #666666;
+    background: linear-gradient(transparent, #F4F9FF); /* Standard syntax */
+}
+
+/* the table that holds <fields> entries */
+.claro .fieldsContainer {
+	width: 100%;
+}
+
+/* the table that holds inner entries */
+.claro .innerFieldsContainer {
+	width: 100%;
+}
+
+/* applied to the TD where the control resides*/
+.claro .fieldCell {
+	padding:3px;
+}
+
+/* control cell when stacked */
+.claro .controlCellStacked {
+}
+
+/* control label when stacked */
+.claro .controlLabelStacked {
+	margin-bottom: 2px;
+	color:#666666;
+	font-style: italic;
+}
+
+/* control cell when stacked, error*/
+.claro .controlCellStacked.error {
+	background-color: red;
+}
+
+/* control label when stacked, error */
+.claro .controlLabelStacked.error {
+	color:red;
+	font-weight: bold;
+}
+
+.claro .requiredField {
+    border:1px solid #3B72A6;
+}
+
+/* the outer slots node */
+.claro .slotsNode {
+    margin-top:10px;
+}
+
+
+.claro .slotContainer {
+    padding-bottom: 10px;
+}
+
+
+
+/* assigned to nodes that have to be hidden until something goes in them (eg. slots) */
+.claro .hiddenNode {
+	display:none;
+	visibility: hidden;
+}
+
+
+
+
+.claro .rowInEdit {
+    background: #8dbc83 url("/bundles/eulogixcoolcore/gfx/lister/rowback.png") repeat-x;
+    /*background-color:#bfd6eb;*/
+    opacity: .8;
+}
+
+/* widget */
+
+.claro .widgetMessage {
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+    min-height: 30px;
+    padding-left: 15px;
+
+    /*margin: 10px 0;
+    border-radius: 3px;*/
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.75);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.claro .widgetMessage.error {
+    border: 1px solid #6f0808;
+    background: linear-gradient(#C25555, #892025);
+}
+
+.claro .widgetMessage.warning {
+    border: 1px solid #966701;
+    background: linear-gradient(#FDC243, #E19B04);
+}
+
+.claro .widgetMessage.info {
+    border: 1px solid #126f08;
+    background: linear-gradient(#79CF78, #317E26);
+}
+
+.claro .widgetMessage.info2 {
+    border: 1px solid #10447f;
+    background: linear-gradient(#4A8ADE, #306BB1);
+}
+
+.claro .listerCellError {
+    background-color: #FF0000;
+    opacity: .8;
+}
+
+.claro .listerCellModified {
+    background-color: #00ee00;
+    opacity: .8;
+}
+
+.claro .listerCellPending {
+    background-color: #FFFF5B;
+    opacity: .8;
+}
+
+.claro .widgetTitle {
+    height: 30px;
+    line-height: 30px;
+    min-height: 30px;
+    border: 1px solid #114885;
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+    padding-left: 10px;
+    vertical-align: middle;
+
+    background: linear-gradient(#59abfa, #2f5b85);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.75);
+    font-weight: bold; color: #FFFFFF;
+}
+
+.claro .widgetBody {
+    /*position: absolute;*/
+
+    border: 1px solid #bcbcbc;
+    border-top: 0;
+    border-radius: 3px;
+    -webkit-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.11);
+    -moz-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.11);
+    box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.11);
+}
+
+.claro .widgetTitle .dijitButton {
+    vertical-align: middle;
+}
+
+.claro .widgetTitle .dijitDropDownButton {
+    vertical-align: middle;
+}
+
+.claro .widgetTitle .dijitArrowButtonInner {
+    display: none !important;
+}
+
+.claro .widgetTitle .dijitButtonNode {
+    background:none;
+    border:none;
+    box-shadow: none;
+}
+
+.claro .widgetTitle .dijitButtonText {
+    color:white;
+    font-weight: normal;
+}
+
+.claro .widgetTitle .dijitHover {
+    background-color: rgba(255,255,255,0.25);
+    border-radius: 3px;
+}
+
+.claro .widgetTitle .closeButtonNode {
+    float: right;
+    cursor: pointer;
+    display: none;
+    width: 30px;
+    height:100%;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.25);
+    border-left: 1px solid #114885;
+    text-align: center;
+    background: linear-gradient(#d1000a, #6d0006);
+    margin-left:10px;
+}
+
+.claro .widgetTitle .closeButtonNode:hover{
+    background: linear-gradient(#6d0006, #d1000a);
+}
+
+
+
+/* the outer slots node */
+.claro .filterNode {
+    border-bottom:1px solid #B5BCC7;
+    border-collapse: collapse;
+}
+
+/** chosen
+**/
+
+.claro .chosen-container {
+    font-size: 11px;
+}
+
+
+.claro .dijitTitlePaneContentOuter {
+    border: none;
+}
+
+
+.claro .coolTabControl .dijitTabContainerTop-tabs {
+    padding:0 !important;
+}

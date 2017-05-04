@@ -1,0 +1,48 @@
+<div>
+
+	<div  data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:true" style="width: 100%; height: 100%; margin:0; padding:0;">
+
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" data-dojo-attach-point="filterContainer" style="margin:0; padding: 0; border:0">
+
+			<div data-dojo-attach-point="buttonContainer" class="buttonContainer">
+				<div data-dojo-attach-point="toolbar" data-dojo-type="dijit.Toolbar" >
+					<button data-dojo-attach-point="previousButton" data-dojo-type="dijit.form.Button" >&#x25C0;</button>
+					<button data-dojo-attach-point="todayButton" data-dojo-type="dijit.form.Button" >${label_recentre}</button>
+					<button data-dojo-attach-point="nextButton" data-dojo-type="dijit.form.Button" >&#x25B6;</button>
+
+					<span data-dojo-type="dijit.ToolbarSeparator"></span>
+
+					<button data-dojo-attach-point="oneWeekButton" data-dojo-type="dijit.form.Button" >${label_1week}</button>
+					<button data-dojo-attach-point="twoWeeksButton" data-dojo-type="dijit.form.Button" >${label_2weeks}</button>
+					<button data-dojo-attach-point="oneMonthButton" data-dojo-type="dijit.form.Button" >${label_1month}</button>
+
+					<span data-dojo-type="dijit.ToolbarSeparator"></span>
+
+					${label_today_mode}
+
+					<select data-dojo-type="dijit/form/Select" data-dojo-attach-point="tmSelector">
+						<option value="START">${label_tm_start}</option>
+						<option value="30PC" selected="selected">${label_tm_30PC}</option>
+						<option value="CENTER">${label_tm_centered}</option>
+					</select>
+
+				</div>
+			</div>
+
+		</div>
+
+
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'left'" data-dojo-attach-point="simpleGridContainer" style="width: 350px; height: 100%; padding: 0;"></div>
+
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" data-dojo-attach-point="rightContainer" style="padding: 0;">
+
+			<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:true" style="padding: 0; margin:0;">
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" data-dojo-attach-point="viewContainer" style="padding: 0; border:0; border-bottom: 1px solid #B5BCC7;"></div>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'bottom'" data-dojo-attach-point="detailsContainer" style="height: 50%; padding: 0; border:0; border-top: 1px solid #B5BCC7;"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

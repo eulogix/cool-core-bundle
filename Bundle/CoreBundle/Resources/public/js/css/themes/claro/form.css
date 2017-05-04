@@ -1,0 +1,11 @@
+.widgetTitleOrange  {
+    border-color: #501e1b !important;
+    background: linear-gradient(#e59106, #974902) !important;
+    font-weight: bold; color: #FFFFFF !important;
+}
+
+.widgetTitleGray  {
+    border-color: #501e1b !important;
+    background: linear-gradient(#e3e3e3, #808080) !important;
+    font-weight: bold; color: #FFFFFF !important;
+}

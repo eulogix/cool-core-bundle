@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" namespace="Eulogix\Cool\Bundle\CoreBundle\Model\Core" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" schema="core" defaultIdMethod="native">
+
+    <table name="account">
+        
+        <column name="account_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="login_name" type="LONGVARCHAR" required="true"/>
+        <column name="password" type="LONGVARCHAR"/>
+        <column name="hashed_password" type="LONGVARCHAR"/>
+
+        <column name="type" type="LONGVARCHAR" description="each app may use this field to cluster users as it likes">
+            
+            
+        </column>
+
+        <column name="first_name" type="LONGVARCHAR"/>
+        <column name="last_name" type="LONGVARCHAR"/>
+        <column name="sex" type="LONGVARCHAR">
+            
+        </column>
+        <column name="email" type="LONGVARCHAR"/>
+        <column name="telephone" type="LONGVARCHAR"/>
+        <column name="mobile" type="LONGVARCHAR"/>
+        <column name="default_locale" type="LONGVARCHAR"/>
+
+        <column name="company_name" type="LONGVARCHAR"/>
+
+        <column name="validity" type="LONGVARCHAR" sqlType="tsrange">
+            
+        </column>
+
+        <column name="roles" type="LONGVARCHAR" sqlType="text[]" description="SF security roles"/>
+
+        <unique>
+            <unique-column name="login_name"/>
+        </unique>
+
+        
+
+        
+
+    </table>
+    
+    <table name="app_setting">
+        <column name="app_setting_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="LONGVARCHAR" required="true">
+            
+            
+        </column>
+        <column name="space" type="LONGVARCHAR">
+            
+            
+        </column>
+        <column name="value" type="LONGVARCHAR" required="true"/>
+
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="space"/>
+            <unique-column name="value"/>
+        </unique>
+        <index>
+            <index-column name="name"/>
+        </index>
+        <index>
+            <index-column name="space"/>
+        </index>
+    </table>
+
+    <table name="account_setting">
+        <column name="account_setting_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="account_id" type="INTEGER" required="true"/>
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="value" type="LONGVARCHAR" required="true"/>
+
+        <foreign-key foreignTable="account" onDelete="cascade">
+        <reference local="account_id" foreign="account_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="account_id"/>
+            <unique-column name="name"/>
+        </unique>
+        <index>
+            <index-column name="name"/>
+        </index>
+    </table>
+    
+    <table name="account_profile">
+        <column name="account_profile_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="LONGVARCHAR" required="true"/>
+    </table>
+    
+    <table name="account_profile_setting">
+        <column name="account_profile_setting_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="account_profile_id" type="INTEGER" required="true"/>
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="value" type="LONGVARCHAR" required="true"/>
+              
+        <foreign-key foreignTable="account_profile" onDelete="cascade">
+        <reference local="account_profile_id" foreign="account_profile_id"/>
+        </foreign-key>
+        
+        <unique>
+            <unique-column name="account_profile_id"/>
+            <unique-column name="name"/>
+        </unique>
+        <index>
+            <index-column name="name"/>
+        </index>       
+    </table>
+    
+    <table name="account_profile_ref">
+        <column name="account_profile_ref_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="account_id" type="INTEGER" required="true">
+            
+        </column>
+        <column name="account_profile_id" type="INTEGER" required="true">
+            
+        </column>
+        <column name="sort_order" type="INTEGER"/>
+        
+        <foreign-key foreignTable="account" onDelete="cascade">
+        <reference local="account_id" foreign="account_id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="account_profile" onDelete="cascade">
+        <reference local="account_profile_id" foreign="account_profile_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="account_id"/>
+            <unique-column name="account_profile_id"/>
+        </unique>
+    </table>
+
+
+    <table name="account_group">
+        <column name="account_group_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="type" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR"/>
+
+        <unique>
+            <unique-column name="name"/>
+        </unique>
+    </table>
+
+    <table name="account_group_ref">
+        <column name="account_group_ref_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="account_id" type="INTEGER" required="true">
+            
+        </column>
+
+        <column name="account_group_id" type="INTEGER" required="true">
+            
+        </column>
+
+        <column name="role" type="LONGVARCHAR" description="custom field which can be used to further differentiate what a user does in a group, if its type is not enough"/>
+
+        <foreign-key foreignTable="account" onDelete="cascade">
+            <reference local="account_id" foreign="account_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="account_group" onDelete="cascade">
+            <reference local="account_group_id" foreign="account_group_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="account_id"/>
+            <unique-column name="account_group_id"/>
+        </unique>
+    </table>
+
+
+    <table name="form_config">
+        <column name="form_config_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="LONGVARCHAR" required="true"/> 
+        <column name="variation" type="LONGVARCHAR"/>        
+        
+        <column name="layout" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="variation"/>
+        </unique>
+        
+    </table>    
+    
+    <table name="form_config_field">
+        <column name="form_config_field_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="form_config_id" type="INTEGER" required="true"/>
+        
+        <column name="name" type="LONGVARCHAR" required="true"/> 
+        
+        <column name="read_only_flag" type="BOOLEAN"/>
+        <column name="hidden_flag" type="BOOLEAN"/>
+        
+        <column name="width" type="LONGVARCHAR"/>
+        <column name="height" type="LONGVARCHAR"/>
+
+        <foreign-key foreignTable="form_config" onDelete="cascade">
+        <reference local="form_config_id" foreign="form_config_id"/>
+        </foreign-key>
+    
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="form_config_id"/>
+        </unique>
+        
+    </table>
+    
+    <table name="lister_config">
+        <column name="lister_config_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="LONGVARCHAR" required="true"/> 
+        <column name="variation" type="LONGVARCHAR"/> 
+
+        <column name="filter_show_flag" type="BOOLEAN"/>
+        <column name="filter_server_id" type="LONGVARCHAR"/>
+
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="variation"/>
+        </unique>
+        
+    </table>    
+    
+    <table name="lister_config_column">
+        <column name="lister_config_column_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="lister_config_id" type="INTEGER" required="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"/> 
+        
+        <column name="sortable_flag" type="BOOLEAN"/>
+        <column name="editable_flag" type="BOOLEAN"/>
+        <column name="show_summary_flag" type="BOOLEAN"/>
+
+        <column name="width" type="LONGVARCHAR"/>
+        <column name="cell_template" type="LONGVARCHAR">
+            
+        </column>
+        <column name="cell_template_js" type="LONGVARCHAR">
+            
+        </column>
+        <column name="column_style_css" type="LONGVARCHAR"/>
+
+        <column name="sort_order" type="INTEGER"/>
+
+        <column name="sortby_order" type="INTEGER"/>
+        <column name="sortby_direction" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="truncate_chars" type="INTEGER"/>
+
+        <foreign-key foreignTable="lister_config" onDelete="cascade">
+        <reference local="lister_config_id" foreign="lister_config_id"/>
+        </foreign-key>
+    
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="lister_config_id"/>
+        </unique>
+        
+    </table>
+    
+    <table name="lookup">
+        <column name="lookup_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="domain_name" type="VARCHAR" size="50"/>
+        <column name="value" type="VARCHAR" size="50"/>
+        <column name="dec_it" type="LONGVARCHAR"/>
+        <column name="dec_en" type="LONGVARCHAR"/>
+        <column name="dec_es" type="LONGVARCHAR"/>
+        <column name="dec_pt" type="LONGVARCHAR"/>
+        <column name="sort_order" type="INTEGER"/>
+
+        <column name="schema_filter" type="LONGVARCHAR" sqlType="TEXT[]" description="this field allows to define specific lookup sets for multi tenant schemas"/>
+        <column name="filter" type="LONGVARCHAR" sqlType="TEXT[]"/>
+
+        <unique>
+            <unique-column name="domain_name"/>
+            <unique-column name="value"/>
+        </unique>
+
+        <behavior name="extendable"/>
+    </table>
+    
+    <table name="table_extension">
+        <column name="table_extension_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="db_schema" type="LONGVARCHAR" description="usually blank, refers to the physical schema in which the table resides"/>
+        <column name="db_table" type="LONGVARCHAR" description="FQN of the table, may be [table] for multitenant tables, or [schema].[table] for the others"/>
+        <column name="active_flag" type="BOOLEAN" default="TRUE"/>
+        <column name="description" type="LONGVARCHAR">
+            
+        </column>
+    </table>    
+    
+    <table name="table_extension_field">
+    
+        <column name="table_extension_field_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="table_extension_id" type="INTEGER"/>
+        <column name="field_definition_id" type="INTEGER"/>
+
+        <column name="require_index" type="BOOLEAN">
+            
+        </column>
+
+        <column name="active_flag" type="BOOLEAN" default="TRUE"/>
+
+        <foreign-key foreignTable="table_extension" onDelete="cascade">
+            <reference local="table_extension_id" foreign="table_extension_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="field_definition" onDelete="restrict">
+            <reference local="field_definition_id" foreign="field_definition_id"/>
+        </foreign-key>
+
+        
+
+    </table>
+
+    <table name="field_definition" description="generic table that contains definition of fields, which can be linked to table extensions or file properties">
+
+        <column name="field_definition_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="name" type="VARCHAR" size="50">
+            
+        </column>
+
+        <column name="type" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="control_type" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="lookup_type" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="lookup" type="LONGVARCHAR" description="table,OTLT: the domain name, FK: the FQN of the table this field contains a FK to, enum: comma separated list of values, valueMap: a namespaced class name implementing ValueMapInterface, valueMapService: the service id of the valueMap"/>
+
+        <column name="description" type="LONGVARCHAR">
+            
+        </column>
+
+    </table>
+
+    <table name="app_lock">
+    
+        <column name="app_lock_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="reason" type="LONGVARCHAR"/>
+        <column name="message" type="LONGVARCHAR"/>
+        <column name="from_date" type="TIMESTAMP"/>
+        <column name="to_date" type="TIMESTAMP"/>
+        <column name="active_flag" type="BOOLEAN"/>
+        
+        <column name="meta" type="LONGVARCHAR" sqlType="json"/>        
+        
+    </table>
+    
+    <table name="translation">
+        <column name="translation_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+         
+
+        <column name="domain_name" type="VARCHAR" size="100" required="true" default=""/>
+        <column name="locale" type="VARCHAR" size="5" required="true"/> 
+        
+        <column name="token" type="LONGVARCHAR" required="true" default=""/>
+        <column name="value" type="LONGVARCHAR" required="true"/>
+        
+        <column name="used_flag" type="BOOLEAN"/>       
+        <column name="active_flag" type="BOOLEAN"/>       
+        <column name="expose_flag" type="BOOLEAN"/>
+        <column name="last_usage_date" type="TIMESTAMP" description="in debug mode, this column gets populated by the translator"/>
+
+        <unique>
+            <unique-column name="domain_name"/>
+            <unique-column name="locale"/>
+            <unique-column name="token"/>
+        </unique>
+        
+        <index><index-column name="active_flag"/></index>                 
+        <index><index-column name="used_flag"/></index>       
+
+    </table>
+
+    <table name="pending_call">
+        <column name="pending_call_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="sid" type="LONGVARCHAR" description="twilio call SID"/>
+        <column name="recording_url" type="LONGVARCHAR" description="twilio recording URL"/>
+        <column name="client_sid" type="LONGVARCHAR" description="session id of the client that initiated the call"/>
+
+        <column name="creation_date" type="TIMESTAMP"/>
+
+        <column name="caller_user_id" type="INTEGER"/>
+        <column name="target" type="LONGVARCHAR" required="true"/>
+
+        <column name="serialized_call" type="LONGVARCHAR"/>
+
+        <column name="properties" type="LONGVARCHAR" sqlType="json"/>
+
+        <foreign-key foreignTable="account" onDelete="restrict">
+            <reference local="caller_user_id" foreign="account_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="sid"/>
+        </unique>
+    </table>
+
+    <table name="async_job" description="this table stores and tracks the execution of asynchronous jobs">
+        <column name="async_job_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="issuer_user_id" type="INTEGER" description="the user who started the job, requesting the operation"/>
+
+        <column name="context" type="LONGVARCHAR" description="used to group jobs and to only show them in specific contexts (such as projects)"/>
+
+        <column name="executor_type" type="LONGVARCHAR">
+            
+        </column>
+
+        <column name="execution_id" type="LONGVARCHAR" description="may contain a reference to the execution instance of the executor"/>
+
+        <column name="job_path" type="LONGVARCHAR" description="string pointer to the job"/>
+        <column name="parameters" type="LONGVARCHAR" sqlType="json" description="generic container for all the parameters that must be passed to the job"/>
+
+        <column name="start_date" type="TIMESTAMP"/>
+        <column name="completion_date" type="TIMESTAMP"/>
+        <column name="completion_percentage" type="INTEGER"/>
+
+        <column name="outcome" type="LONGVARCHAR">
+            
+        </column>
+
+        <column name="job_output" type="LONGVARCHAR" sqlType="json" description="container for the ouptut of the job, typically links to generated objects/files"/>
+
+        <foreign-key foreignTable="account" onDelete="restrict">
+            <reference local="issuer_user_id" foreign="account_id"/>
+        </foreign-key>
+
+        <behavior name="auditable">
+            <parameter name="target" value="EulogixCoolCoreBundle/core"/>
+        </behavior>
+
+    </table>
+
+    <table name="user_notification" description="this table stores temporary notifications for users">
+        <column name="user_notification_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="user_id" type="INTEGER"/>
+
+        <column name="context" type="LONGVARCHAR" description="used to group notifications and to only show them in specific contexts (such as projects)"/>
+
+        <column name="title" type="LONGVARCHAR" description="the notification title"/>
+        <column name="notification" type="LONGVARCHAR" description="the notification text"/>
+
+        <column name="notification_data" type="LONGVARCHAR" sqlType="json" description="container for additional data used in UI rendering"/>
+
+        <foreign-key foreignTable="account" onDelete="restrict">
+            <reference local="user_id" foreign="account_id"/>
+        </foreign-key>
+
+        <behavior name="auditable">
+            <parameter name="target" value="EulogixCoolCoreBundle/core"/>
+        </behavior>
+
+    </table>
+
+    <table name="file_property" description="this table stores the available file properties according to schema,table and category">
+        <column name="file_property_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="field_definition_id" type="INTEGER"/>
+
+        <column name="context_schema" type="LONGVARCHAR" required="true"/>
+        <column name="context_actual_schema" type="LONGVARCHAR"/>
+        <column name="context_table" type="LONGVARCHAR"/>
+        <column name="context_category" type="LONGVARCHAR"/>
+
+        <column name="show_in_list_flag" type="BOOLEAN" description="if set, the property will be shown in the file list view of the file explorer"/>
+
+        <foreign-key foreignTable="field_definition" onDelete="restrict">
+            <reference local="field_definition_id" foreign="field_definition_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="context_schema"/>
+            <unique-column name="context_table"/>
+            <unique-column name="context_category"/>
+            <unique-column name="field_definition_id"/>
+        </unique>
+        <index>
+            <index-column name="context_schema"/>
+        </index>
+        <index>
+            <index-column name="context_table"/>
+        </index>
+        <index>
+            <index-column name="context_category"/>
+        </index>
+
+        
+
+    </table>
+
+    <table name="user_reminder" description="this table stores the settings for the reminder component">
+
+        <column name="user_reminder_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true" description=""/>
+
+        <column name="type" type="LONGVARCHAR" required="true" default="SIMPLE" description="SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column">
+            
+            
+        </column>
+
+        <column name="category" type="LONGVARCHAR"/>
+
+        <column name="sort_order" type="INTEGER"/>
+
+        <column name="lister" type="LONGVARCHAR" required="false" description="fill this with a widgetId if you don't want the default one"/>
+        <column name="lister_translation_domain" type="LONGVARCHAR" description="set this with an existing translation domain to reuse translations already in place somewhere else"/>
+
+        <column name="parent_tables" type="LONGVARCHAR" description="use a comma separated list of tables here. Their fields will be visible in the lister"/>
+
+        <column name="context_schema" type="LONGVARCHAR" required="true" default="core"/>
+        <column name="sql_query" type="LONGVARCHAR" required="true">
+            
+        </column>
+
+        <unique>
+            <unique-column name="name"/>
+        </unique>
+    </table>
+
+</database>

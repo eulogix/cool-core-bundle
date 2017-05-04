@@ -1,0 +1,18 @@
+<table style="margin: 0; padding: 0;" data-dojo-attach-point="containerTable">
+    <tr style="height: 20px">
+        <td data-dojo-attach-point="uploadButtonNode" style="width: 200px;"></td>
+        <td data-dojo-attach-point="viewDataNode"></td>
+        <td rowspan="2" data-dojo-attach-point="buttonsNode" valign="top" style="display:none; text-align: left; padding-left: 5px;">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div data-dojo-attach-point="detailsNode" style="border:1px dashed #999999; padding: 10px; border-radius:5px; overflow-y: auto; height: 100%;"></div>
+        </td>
+    </tr>
+    <tr data-dojo-attach-point="progressBarNode" style="height: 20px">
+        <td colspan="3">
+            <div data-dojo-type="dijit/ProgressBar" style="width:100%" data-dojo-attach-point="progressBarWidget" data-dojo-props="maximum:100"></div>
+        </td>
+    </tr>
+</table>

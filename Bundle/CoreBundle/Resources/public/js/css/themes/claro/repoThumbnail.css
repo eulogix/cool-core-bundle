@@ -1,0 +1,11 @@
+.claro .repoThumbnail {
+    border:1px solid #313131;
+    border-radius: 2px;
+    cursor: hand;
+    transition: all 0.3s ease;
+}
+
+.claro .repoThumbnail:hover {
+    background-color: white;
+    opacity: 0.5;
+}

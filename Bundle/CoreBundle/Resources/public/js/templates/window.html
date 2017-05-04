@@ -1,0 +1,30 @@
+<div class="widgetBody">
+	<div class="widgetTitle" data-dojo-attach-point="titleBarNode" id="${id}_titleBarNode">
+
+        <div class="_dijitTitlePaneTitleFocus" style="width: 100%">
+			<div _data-dojo-attach-event="ondijitclick:_onTitleClick, onkeydown:_onTitleKey" data-dojo-attach-point="focusNode" style="float: left">
+
+                <span data-dojo-attach-point="arrowNode" role="presentation" style="display: none;"></span>
+                <span data-dojo-attach-point="arrowNodeInner" style="display: none;"></span>
+
+                <span data-dojo-attach-point="titleNode"></span>
+			</div>
+
+            <div data-dojo-attach-point='closeButtonNode' data-dojo-attach-event="ondijitclick: onClose"
+                 role="presentation"
+                 class="closeButtonNode">
+                    <span style="vertical-align: middle; display: table-cell;"><img src="/bundles/eulogixcoolcore/gfx/widget/winclose.png"></span>
+                 </div>
+
+            <div data-dojo-attach-point='actionsNode' role="presentation" style="float: right; height:100%; padding-top: 2px;"></div>
+
+        </div>
+	</div>
+	<div class="dijitTitlePaneContentOuter" data-dojo-attach-point="hideNode" role="presentation">
+		<div class="dijitReset" data-dojo-attach-point="wipeNode" role="presentation">
+			<div data-dojo-attach-point="containerNode" role="region" id="${id}_pane" aria-labelledby="${id}_titleBarNode">
+				<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->
+			</div>
+		</div>
+	</div>
+</div>

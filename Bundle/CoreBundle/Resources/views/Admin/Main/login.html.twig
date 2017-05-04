@@ -1,0 +1,27 @@
+{% extends 'EulogixCoolCoreBundle::_base/cool_base.html.twig' %}
+
+{% block _content %}
+    <script>
+
+        require(["cool/cool", "dijit/Dialog", "dojo/domReady!"], function(cool, Dialog){
+            cool.widgetFactory('EulogixCoolCore/Admin/LoginForm', {}, function(loginForm) {
+
+                loginDialog = new Dialog({
+                    title: "Login",
+                    content: "",
+                    draggable: false,
+                    closable: false,
+                    style: "width: 400px; height: 250px; overflow:auto;"
+                });
+
+                loginDialog.containerNode.style.padding = "0px";
+
+                loginForm.onlyContent = true;
+                loginDialog.addChild( loginForm );
+
+                loginDialog.show();
+            });
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,64 @@
+admin:
+    resource: "@EulogixCoolCoreBundle/Controller/Admin/MainController.php"
+    type:     annotation
+    prefix:   /cool/admin
+        
+ajax:
+    resource: "@EulogixCoolCoreBundle/Controller/AjaxController.php"
+    type:     annotation
+    prefix:   /cool/ajax
+
+widgetEditor:
+    resource: "@EulogixCoolCoreBundle/Controller/WidgetEditor/WidgetEditorController.php"
+    type:     annotation
+    prefix:   /cool/widgetEditor
+
+widget:
+    resource: "@EulogixCoolCoreBundle/Controller/WidgetController.php"
+    type:     annotation
+    prefix:   /cool/widget
+
+lister:
+    resource: "@EulogixCoolCoreBundle/Controller/ListerController.php"
+    type:     annotation
+    prefix:   /cool/lister
+ 
+api_propel:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/PropelController.php"
+    prefix:   /cool/api/db
+    type:     annotation
+
+api_files:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/RestFilesController.php"
+    prefix:   /cool/api/files
+    type:     annotation
+
+api_notifications:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/NotificationsController.php"
+    prefix:   /cool/api/notifications
+    type:     annotation
+
+reminders:
+    resource: "@EulogixCoolCoreBundle/Controller/Reminders/RemindersController.php"
+    prefix:   /cool/reminders
+    type:     annotation
+
+workflows:
+    resource: "@EulogixCoolCoreBundle/Controller/Workflows/WorkflowsController.php"
+    prefix:   /cool/workFlows
+    type:     annotation
+
+dataSourceDojoStore:
+    resource: "@EulogixCoolCoreBundle/Controller/DSStoreController.php"
+    prefix:   /cool/DSDojoStore
+    type:     annotation
+
+fileRepository:
+    resource: "@EulogixCoolCoreBundle/Controller/FileRepositoryController.php"
+    prefix:   /cool/fileRepository
+    type:     annotation
+
+RunDeck:
+    resource: "@EulogixCoolCoreBundle/Controller/RundeckController.php"
+    prefix:   /cool/RunDeck
+    type:     annotation

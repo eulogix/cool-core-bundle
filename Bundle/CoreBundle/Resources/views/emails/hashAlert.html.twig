@@ -1,0 +1,48 @@
+{% extends baseTemplate %}
+
+{% block head %}
+
+    <style>
+
+        .titlecell {
+            font-weight: bold;
+            background-color: #9fd4ff;
+            padding: 10px;
+            border: 1px solid #35485c;
+            border-collapse: collapse;
+        }
+
+        .contentcell {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #35485c;
+            border-collapse: collapse;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .detailsTable {
+            width: 100%;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    {%  if header %}<div class="header">{{ header }}</div>{% endif %}
+
+    <h4>{{ "items"|t }}:</h4>
+    <table class="detailsTable">
+    {% for key, item in items %}
+        <tr>
+            <td class="titlecell">{{ key|t }}</td>
+            <td class="contentcell">{{ item|evaluate }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

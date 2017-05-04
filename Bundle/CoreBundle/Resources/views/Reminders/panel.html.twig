@@ -1,0 +1,26 @@
+{% trans_default_domain "cool_reminders_panel" %}
+{% set uid="remindersPanel"~random() %}
+
+<script>
+    dojo.connect(_container_, "onLoad", function(){
+    });
+
+    dojo.connect(_container_, "onClose", function(){
+        dijit.byId('{{ uid }}panel').destroyRecursive();
+    });
+</script>
+
+<div id="{{ uid }}"></div>
+
+<script>
+    require([
+        "cool/reminders/panel"
+    ], function(panel){
+
+        var p = new panel({
+          //  id: '{{ uid }}panel',
+            showDays: 10
+        },"{{ uid }}");
+
+    });
+</script>

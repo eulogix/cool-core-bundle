@@ -1,0 +1,925 @@
+{
+    "settings": {
+        "tables": {
+            "core.account": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Account",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountQuery",
+                    "schema": "core",
+                    "rawname": "account",
+                    "editable": true,
+                    "defaultLister": "Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\User\\UserLister",
+                    "defaultEditor": "Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\User\\UserEditorForm",
+                    "valueMapDecodingSQL": "COALESCE(first_name,'') || COALESCE(' ' || last_name, '')"
+                },
+                "trigger": [
+                    {
+                        "name": "hash_password",
+                        "language": "plpgsql",
+                        "when": "BEFORE INSERT OR UPDATE",
+                        "body": "\n            \n                    NEW.hashed_password = md5(NEW.password);\n                    \/*NEW.password=''hidden'';*\/\n                    return NEW;\n                \n        "
+                    }
+                ],
+                "files": {
+                    "category": [
+                        {
+                            "name": "AVATAR",
+                            "maxCount": "1",
+                            "extensions": "jpg"
+                        },
+                        {
+                            "name": "UNCATEGORIZED",
+                            "maxSizeMb": "1",
+                            "default": true
+                        }
+                    ],
+                    "attributes": []
+                },
+                "columns": {
+                    "account_id": {
+                        "attributes": []
+                    },
+                    "login_name": {
+                        "attributes": []
+                    },
+                    "password": {
+                        "attributes": []
+                    },
+                    "hashed_password": {
+                        "attributes": []
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "CORE_USER_TYPE"
+                        }
+                    },
+                    "first_name": {
+                        "attributes": []
+                    },
+                    "last_name": {
+                        "attributes": []
+                    },
+                    "sex": {
+                        "attributes": [],
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "M,F"
+                        }
+                    },
+                    "email": {
+                        "attributes": []
+                    },
+                    "telephone": {
+                        "attributes": []
+                    },
+                    "mobile": {
+                        "attributes": []
+                    },
+                    "default_locale": {
+                        "attributes": []
+                    },
+                    "company_name": {
+                        "attributes": []
+                    },
+                    "validity": {
+                        "attributes": [],
+                        "control": {
+                            "type": "daterange"
+                        }
+                    },
+                    "roles": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.app_setting": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSetting",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSettingPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSettingQuery",
+                    "schema": "core",
+                    "rawname": "app_setting",
+                    "editable": true
+                },
+                "columns": {
+                    "app_setting_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "APP_SETTING_NAME"
+                        }
+                    },
+                    "space": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "APP_SETTING_SPACE"
+                        }
+                    },
+                    "value": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_setting": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSetting",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSettingPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSettingQuery",
+                    "schema": "core",
+                    "rawname": "account_setting"
+                },
+                "columns": {
+                    "account_setting_id": {
+                        "attributes": []
+                    },
+                    "account_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "value": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_profile": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfile",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfilePeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileQuery",
+                    "schema": "core",
+                    "rawname": "account_profile",
+                    "editable": true
+                },
+                "columns": {
+                    "account_profile_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_profile_setting": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSetting",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSettingPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSettingQuery",
+                    "schema": "core",
+                    "rawname": "account_profile_setting"
+                },
+                "columns": {
+                    "account_profile_setting_id": {
+                        "attributes": []
+                    },
+                    "account_profile_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "value": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_profile_ref": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRef",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRefPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRefQuery",
+                    "schema": "core",
+                    "rawname": "account_profile_ref"
+                },
+                "columns": {
+                    "account_profile_ref_id": {
+                        "attributes": []
+                    },
+                    "account_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    },
+                    "account_profile_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        }
+                    },
+                    "sort_order": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_group": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroup",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupQuery",
+                    "schema": "core",
+                    "rawname": "account_group",
+                    "editable": true,
+                    "valueMapDecodingSQL": "account_group_id::text || ' - ' || name"
+                },
+                "columns": {
+                    "account_group_id": {
+                        "attributes": []
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "CORE_GROUP_TYPE"
+                        }
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.account_group_ref": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRef",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRefPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRefQuery",
+                    "schema": "core",
+                    "rawname": "account_group_ref"
+                },
+                "columns": {
+                    "account_group_ref_id": {
+                        "attributes": []
+                    },
+                    "account_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    },
+                    "account_group_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    },
+                    "role": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.form_config": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfig",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigQuery",
+                    "schema": "core",
+                    "rawname": "form_config"
+                },
+                "columns": {
+                    "form_config_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "variation": {
+                        "attributes": []
+                    },
+                    "layout": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        },
+                        "lister_control": {
+                            "type": "textbox"
+                        }
+                    }
+                }
+            },
+            "core.form_config_field": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigField",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigFieldPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigFieldQuery",
+                    "schema": "core",
+                    "rawname": "form_config_field"
+                },
+                "columns": {
+                    "form_config_field_id": {
+                        "attributes": []
+                    },
+                    "form_config_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "read_only_flag": {
+                        "attributes": []
+                    },
+                    "hidden_flag": {
+                        "attributes": []
+                    },
+                    "width": {
+                        "attributes": []
+                    },
+                    "height": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.lister_config": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfig",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigQuery",
+                    "schema": "core",
+                    "rawname": "lister_config"
+                },
+                "columns": {
+                    "lister_config_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "variation": {
+                        "attributes": []
+                    },
+                    "filter_show_flag": {
+                        "attributes": []
+                    },
+                    "filter_server_id": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.lister_config_column": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumn",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumnPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumnQuery",
+                    "schema": "core",
+                    "rawname": "lister_config_column"
+                },
+                "columns": {
+                    "lister_config_column_id": {
+                        "attributes": []
+                    },
+                    "lister_config_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "sortable_flag": {
+                        "attributes": []
+                    },
+                    "editable_flag": {
+                        "attributes": []
+                    },
+                    "show_summary_flag": {
+                        "attributes": []
+                    },
+                    "width": {
+                        "attributes": []
+                    },
+                    "cell_template": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "cell_template_js": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "column_style_css": {
+                        "attributes": []
+                    },
+                    "sort_order": {
+                        "attributes": []
+                    },
+                    "sortby_order": {
+                        "attributes": []
+                    },
+                    "sortby_direction": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "ASC,DESC"
+                        }
+                    },
+                    "truncate_chars": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.lookup": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Lookup",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\LookupPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\LookupQuery",
+                    "schema": "core",
+                    "rawname": "lookup",
+                    "editable": true,
+                    "defaultLister": "Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\Lookup\\LookupLister"
+                },
+                "columns": {
+                    "lookup_id": {
+                        "attributes": []
+                    },
+                    "domain_name": {
+                        "attributes": []
+                    },
+                    "value": {
+                        "attributes": []
+                    },
+                    "dec_it": {
+                        "attributes": []
+                    },
+                    "dec_en": {
+                        "attributes": []
+                    },
+                    "dec_es": {
+                        "attributes": []
+                    },
+                    "dec_pt": {
+                        "attributes": []
+                    },
+                    "sort_order": {
+                        "attributes": []
+                    },
+                    "schema_filter": {
+                        "attributes": []
+                    },
+                    "filter": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.table_extension": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtension",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionQuery",
+                    "schema": "core",
+                    "rawname": "table_extension",
+                    "editable": true,
+                    "defaultEditor": "Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\TableExtension\\TableExtensionEditorForm"
+                },
+                "columns": {
+                    "table_extension_id": {
+                        "attributes": []
+                    },
+                    "db_schema": {
+                        "attributes": []
+                    },
+                    "db_table": {
+                        "attributes": []
+                    },
+                    "active_flag": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            },
+            "core.table_extension_field": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionField",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionFieldPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionFieldQuery",
+                    "schema": "core",
+                    "rawname": "table_extension_field",
+                    "defaultLister": "Eulogix\/Cool\/Bundle\/CoreBundle\/CWidget\/Core\/TableExtension\/TableExtensionFieldLister"
+                },
+                "trigger": [
+                    {
+                        "name": "DELETE_FIELDS",
+                        "language": "plpgsql",
+                        "when": "AFTER DELETE",
+                        "body": "\n            DELETE FROM field_definition WHERE field_definition_id = OLD.field_definition_id;\n            RETURN NULL; -- ignored, this is an AFTER trigger\n        "
+                    }
+                ],
+                "columns": {
+                    "table_extension_field_id": {
+                        "attributes": []
+                    },
+                    "table_extension_id": {
+                        "attributes": []
+                    },
+                    "field_definition_id": {
+                        "attributes": []
+                    },
+                    "require_index": {
+                        "attributes": [],
+                        "control": {
+                            "type": "number"
+                        }
+                    },
+                    "active_flag": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.field_definition": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinition",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinitionPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinitionQuery",
+                    "schema": "core",
+                    "rawname": "field_definition"
+                },
+                "columns": {
+                    "field_definition_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": [],
+                        "constraint": [
+                            {
+                                "type": "Regex",
+                                "regex": "^[a-z0-9_]+$",
+                                "regex_modifiers": "im",
+                                "name": "NO_SPECIAL_CHARACTERS"
+                            }
+                        ]
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "STRING,NUMBER,BOOLEAN"
+                        }
+                    },
+                    "control_type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "DATE,DATETIME,SELECT,XHRPICKER,INTEGER,DOUBLE,CURRENCY,TEXTBOX,TEXTAREA,CHECKBOX"
+                        }
+                    },
+                    "lookup_type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "OTLT,table,enum,FK,valueMap,valueMapService"
+                        }
+                    },
+                    "lookup": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            },
+            "core.app_lock": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLock",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLockPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLockQuery",
+                    "schema": "core",
+                    "rawname": "app_lock"
+                },
+                "columns": {
+                    "app_lock_id": {
+                        "attributes": []
+                    },
+                    "reason": {
+                        "attributes": []
+                    },
+                    "message": {
+                        "attributes": []
+                    },
+                    "from_date": {
+                        "attributes": []
+                    },
+                    "to_date": {
+                        "attributes": []
+                    },
+                    "active_flag": {
+                        "attributes": []
+                    },
+                    "meta": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.translation": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Translation",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TranslationPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TranslationQuery",
+                    "schema": "core",
+                    "rawname": "translation",
+                    "editable": true
+                },
+                "trigger": [
+                    {
+                        "name": "activate",
+                        "language": "plpgsql",
+                        "when": "BEFORE INSERT OR UPDATE",
+                        "body": "\n            \n                IF ( NOT(NEW.active_flag) OR NEW.active_flag IS NULL)\n                AND (NEW.value IS NOT NULL AND NOT(NEW.value ~ E'.*?[[T]]$')) THEN\n                        NEW.active_flag := true;\n                END IF;\n                RETURN NEW;\n            \n        "
+                    }
+                ],
+                "columns": {
+                    "translation_id": {
+                        "attributes": []
+                    },
+                    "domain_name": {
+                        "attributes": []
+                    },
+                    "locale": {
+                        "attributes": []
+                    },
+                    "token": {
+                        "attributes": []
+                    },
+                    "value": {
+                        "attributes": []
+                    },
+                    "used_flag": {
+                        "attributes": []
+                    },
+                    "active_flag": {
+                        "attributes": []
+                    },
+                    "expose_flag": {
+                        "attributes": []
+                    },
+                    "last_usage_date": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.pending_call": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCall",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCallPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCallQuery",
+                    "schema": "core",
+                    "rawname": "pending_call",
+                    "editable": false
+                },
+                "columns": {
+                    "pending_call_id": {
+                        "attributes": []
+                    },
+                    "sid": {
+                        "attributes": []
+                    },
+                    "recording_url": {
+                        "attributes": []
+                    },
+                    "client_sid": {
+                        "attributes": []
+                    },
+                    "creation_date": {
+                        "attributes": []
+                    },
+                    "caller_user_id": {
+                        "attributes": []
+                    },
+                    "target": {
+                        "attributes": []
+                    },
+                    "serialized_call": {
+                        "attributes": []
+                    },
+                    "properties": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.async_job": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJob",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJobPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJobQuery",
+                    "schema": "core",
+                    "rawname": "async_job",
+                    "editable": false
+                },
+                "columns": {
+                    "async_job_id": {
+                        "attributes": []
+                    },
+                    "issuer_user_id": {
+                        "attributes": []
+                    },
+                    "context": {
+                        "attributes": []
+                    },
+                    "executor_type": {
+                        "attributes": [],
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "rundeck"
+                        }
+                    },
+                    "execution_id": {
+                        "attributes": []
+                    },
+                    "job_path": {
+                        "attributes": []
+                    },
+                    "parameters": {
+                        "attributes": []
+                    },
+                    "start_date": {
+                        "attributes": []
+                    },
+                    "completion_date": {
+                        "attributes": []
+                    },
+                    "completion_percentage": {
+                        "attributes": []
+                    },
+                    "outcome": {
+                        "attributes": [],
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "success,failure"
+                        }
+                    },
+                    "job_output": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.user_notification": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotification",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotificationPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotificationQuery",
+                    "schema": "core",
+                    "rawname": "user_notification",
+                    "editable": false
+                },
+                "columns": {
+                    "user_notification_id": {
+                        "attributes": []
+                    },
+                    "user_id": {
+                        "attributes": []
+                    },
+                    "context": {
+                        "attributes": []
+                    },
+                    "title": {
+                        "attributes": []
+                    },
+                    "notification": {
+                        "attributes": []
+                    },
+                    "notification_data": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.file_property": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FileProperty",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FilePropertyPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FilePropertyQuery",
+                    "schema": "core",
+                    "rawname": "file_property",
+                    "editable": true,
+                    "defaultLister": "Eulogix\/Cool\/Bundle\/CoreBundle\/CWidget\/Core\/FileProperty\/FilePropertiesLister"
+                },
+                "trigger": [
+                    {
+                        "name": "DELETE_FIELDS",
+                        "language": "plpgsql",
+                        "when": "AFTER DELETE",
+                        "body": "\n            DELETE FROM field_definition WHERE field_definition_id = OLD.field_definition_id;\n            RETURN NULL; -- ignored, this is an AFTER trigger\n        "
+                    }
+                ],
+                "columns": {
+                    "file_property_id": {
+                        "attributes": []
+                    },
+                    "field_definition_id": {
+                        "attributes": []
+                    },
+                    "context_schema": {
+                        "attributes": []
+                    },
+                    "context_actual_schema": {
+                        "attributes": []
+                    },
+                    "context_table": {
+                        "attributes": []
+                    },
+                    "context_category": {
+                        "attributes": []
+                    },
+                    "show_in_list_flag": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.user_reminder": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminder",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminderPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminderQuery",
+                    "schema": "core",
+                    "rawname": "user_reminder",
+                    "editable": true
+                },
+                "columns": {
+                    "user_reminder_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "SIMPLE,DATED"
+                        }
+                    },
+                    "category": {
+                        "attributes": []
+                    },
+                    "sort_order": {
+                        "attributes": []
+                    },
+                    "lister": {
+                        "attributes": []
+                    },
+                    "lister_translation_domain": {
+                        "attributes": []
+                    },
+                    "parent_tables": {
+                        "attributes": []
+                    },
+                    "context_schema": {
+                        "attributes": []
+                    },
+                    "sql_query": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            }
+        },
+        "views": []
+    },
+    "database_name": "cool_db",
+    "namespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core"
+}

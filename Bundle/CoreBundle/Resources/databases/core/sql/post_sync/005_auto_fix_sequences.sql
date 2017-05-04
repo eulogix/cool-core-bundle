@@ -1,0 +1,26 @@
+SET lc_messages TO 'en_US.UTF-8';
+
+SET SCHEMA 'core';
+SELECT setval('core.account_account_id_seq', COALESCE((SELECT MAX(account_id)+1 FROM core.account), 1), false);
+SELECT setval('core.app_setting_app_setting_id_seq', COALESCE((SELECT MAX(app_setting_id)+1 FROM core.app_setting), 1), false);
+SELECT setval('core.account_setting_account_setting_id_seq', COALESCE((SELECT MAX(account_setting_id)+1 FROM core.account_setting), 1), false);
+SELECT setval('core.account_profile_account_profile_id_seq', COALESCE((SELECT MAX(account_profile_id)+1 FROM core.account_profile), 1), false);
+SELECT setval('core.account_profile_setting_account_profile_setting_id_seq', COALESCE((SELECT MAX(account_profile_setting_id)+1 FROM core.account_profile_setting), 1), false);
+SELECT setval('core.account_profile_ref_account_profile_ref_id_seq', COALESCE((SELECT MAX(account_profile_ref_id)+1 FROM core.account_profile_ref), 1), false);
+SELECT setval('core.account_group_account_group_id_seq', COALESCE((SELECT MAX(account_group_id)+1 FROM core.account_group), 1), false);
+SELECT setval('core.account_group_ref_account_group_ref_id_seq', COALESCE((SELECT MAX(account_group_ref_id)+1 FROM core.account_group_ref), 1), false);
+SELECT setval('core.form_config_form_config_id_seq', COALESCE((SELECT MAX(form_config_id)+1 FROM core.form_config), 1), false);
+SELECT setval('core.form_config_field_form_config_field_id_seq', COALESCE((SELECT MAX(form_config_field_id)+1 FROM core.form_config_field), 1), false);
+SELECT setval('core.lister_config_lister_config_id_seq', COALESCE((SELECT MAX(lister_config_id)+1 FROM core.lister_config), 1), false);
+SELECT setval('core.lister_config_column_lister_config_column_id_seq', COALESCE((SELECT MAX(lister_config_column_id)+1 FROM core.lister_config_column), 1), false);
+SELECT setval('core.lookup_lookup_id_seq', COALESCE((SELECT MAX(lookup_id)+1 FROM core.lookup), 1), false);
+SELECT setval('core.table_extension_table_extension_id_seq', COALESCE((SELECT MAX(table_extension_id)+1 FROM core.table_extension), 1), false);
+SELECT setval('core.table_extension_field_table_extension_field_id_seq', COALESCE((SELECT MAX(table_extension_field_id)+1 FROM core.table_extension_field), 1), false);
+SELECT setval('core.field_definition_field_definition_id_seq', COALESCE((SELECT MAX(field_definition_id)+1 FROM core.field_definition), 1), false);
+SELECT setval('core.app_lock_app_lock_id_seq', COALESCE((SELECT MAX(app_lock_id)+1 FROM core.app_lock), 1), false);
+SELECT setval('core.translation_translation_id_seq', COALESCE((SELECT MAX(translation_id)+1 FROM core.translation), 1), false);
+SELECT setval('core.pending_call_pending_call_id_seq', COALESCE((SELECT MAX(pending_call_id)+1 FROM core.pending_call), 1), false);
+SELECT setval('core.async_job_async_job_id_seq', COALESCE((SELECT MAX(async_job_id)+1 FROM core.async_job), 1), false);
+SELECT setval('core.user_notification_user_notification_id_seq', COALESCE((SELECT MAX(user_notification_id)+1 FROM core.user_notification), 1), false);
+SELECT setval('core.file_property_file_property_id_seq', COALESCE((SELECT MAX(file_property_id)+1 FROM core.file_property), 1), false);
+SELECT setval('core.user_reminder_user_reminder_id_seq', COALESCE((SELECT MAX(user_reminder_id)+1 FROM core.user_reminder), 1), false);

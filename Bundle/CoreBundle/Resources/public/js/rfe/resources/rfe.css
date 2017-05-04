@@ -1,0 +1,193 @@
+
+.rfe {
+    border: 1px solid #b5bcc7;
+}
+
+.rfe p {
+	margin: 0 0 10px 0;
+}
+
+
+.rfe .dgrid th {
+	font-weight: normal;
+	font-size: 0.8em;
+}
+
+.rfe .dijitTree {
+	height: 100%;
+}
+
+.rfe .dijitContentPane {
+	padding: 0;
+}
+
+.rfe .dijitBorderContainer {
+	padding: 0;
+}
+
+.rfe .dijitBorderContainer-child {
+    border:0;
+}
+.rfe .dijitSplitContainer-child {
+    border-collapse: collapse;
+}
+
+.rfe .dijitMenuPopup .dijitMenuItemLabel {
+	min-width: 120px;
+}
+
+
+
+.rfe .dgrid {
+    border: none;
+    height: 100%;
+}
+
+.rfe .dijitMenuBar {
+	border-width: 0 0 1px 0;
+}
+
+.rfe .dijitSplitter {
+	border: 1px solid #B5BCC7;
+}
+
+.rfe .dijitSplitterH {
+	border-width: 1px 0;
+}
+
+.rfe .dijitSplitterV {
+	border-width: 0 1px;
+}
+
+#rfeTbSeparatorSearch {
+	margin-right: 10px;
+}
+
+.rfeTreePane, .rfeGridPane, .rfeMenuPane {
+	padding: 0;
+
+}
+
+
+.rfe .dgrid-row-table {
+	border: none;
+}
+
+.rfe .dgrid-cell {
+	cursor: default;
+	border: none;
+}
+
+.rfe .dgrid-cell .dijitFolderClosed, .dgrid-cell .dijitLeaf {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.rfeIcon {
+	background: url("images/rfeToolbarIconsEnabled.png") no-repeat 0 0;
+	height: 16px;
+	text-align: center;
+	width: 16px;
+}
+
+.rfe .dijitDisabled .rfeIcon {
+	background-image: url("images/rfeToolbarIconsDisabled.png");
+}
+
+.rfeToolbarIconDirUp {
+	background-position: 0;
+}
+
+.rfeToolbarIconHistoryBack {
+	background-position: -32px;
+}
+
+.rfeToolbarIconHistoryForward {
+	background-position: -48px;
+}
+.rfeToolbarSort {
+	float: right;
+}
+.rfeToolbarSort .dijitSelect .dijitStretch {
+	min-width: 110px;
+}
+
+.rfeToolbarIconReload {
+	background-position: -16px;
+}
+.rfeToolbarIconSortDesc {
+	background-position: -160px;
+}
+.rfeToolbarIconSortAsc {
+	background-position: -176px;
+}
+.rfeMenuIconNew {
+	background-position: -112px;
+}
+.rfeMenuIconDir {
+	background-position: -64px;
+}
+.rfeMenuIconFile {
+	background-position: -96px;
+}
+.rfeMenuIconList {
+	background-position: -128px;
+}
+.rfeMenuIconThumbs {
+	background-position: -144px;
+}
+
+.rfeSearchBoxItemLabel {
+	color: #a6a6a6;
+	font-size: 0.8em;
+}
+
+.rfe .tblFileProperties td {
+	padding: 4px;
+}
+
+.rfe .tblFileProperties td:first-child {
+	color: #a6a6a6;
+	text-align: right;
+	padding-right: 8px;
+}
+
+.rfe .dialogContentIconImg, .dialogContentTxt {
+	display: inline-block;
+}
+
+.rfe .dialogContentIconImg {
+	margin: 0 12px 0 0;
+	vertical-align: top;
+}
+
+.rfe .gridViewIcons .dgrid-row {
+	display: inline-block;
+	margin: 5px;
+	text-align: center;
+	vertical-align: bottom;
+	min-width: 64px;
+	max-width: 90px;
+}
+
+.rfe .gridViewIcons img {
+	margin-bottom: 3px;
+	box-shadow: 2px 2px 4px #cccccc;
+}
+
+.rfe .buttIcon {
+	display: inline-block;
+	cursor: pointer;
+	border: 1px solid #B5BCC7;
+	border-radius: 4px;
+	padding: 0;
+	height: 18px;
+}
+
+/*.dijitDialog {
+	min-width: 300px;
+}
+*/
+.rfe .dijitDialogPaneContent {
+	padding: 10px 5px 5px 5px;
+}

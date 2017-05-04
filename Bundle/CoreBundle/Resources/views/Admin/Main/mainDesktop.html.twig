@@ -1,0 +1,131 @@
+{% extends 'EulogixCoolCoreBundle::_base/cool_base.html.twig' %}
+
+{% block _content %}
+<script>
+    function buildTree(parentElement, tabContainer) {
+
+        require(["dojo/_base/xhr"], function(xhr){
+            // The "xhrGet" method executing an HTTP GET
+            dojo.xhrGet({
+                // The URL to request
+                url: "{{ connectionsTreeUrl }}",
+                handleAs:"json",
+                // The method that handles the request's successful result
+                // Handle the response any way you'd like!
+                load: function(result) {
+
+                    var data = result;
+
+                    require([
+                        "dojo/_base/window", "dojo/store/Memory",
+                        "dijit/tree/ObjectStoreModel", "dijit/Tree",
+                        "dijit/layout/ContentPane",
+                        "cool/cool",
+                        "cool/form",
+                        "cool/lister",
+                        "dojo/domReady!"
+                    ], function(win, Memory, ObjectStoreModel, Tree, ContentPane, cool, coolForm, coolLister){
+
+                        // Create test store, adding the getChildren() method required by ObjectStoreModel
+                        var myStore = new Memory({
+                            data: data,
+
+                            getChildren: function(object){
+                                return this.query({parent: object.id});
+                            }
+                        });
+
+                        // Create the model
+                        var myModel = new ObjectStoreModel({
+                            store: myStore,
+                            query: {id: '_root'},
+                            mayHaveChildren: function(item) {
+                                return !item._leaf;
+                            }
+                        });
+
+                        // Create the Tree.
+                        var tree = new Tree({
+                            model: myModel,
+                            showRoot: false,
+
+                            getIconClass: function(/*dojo.store.Item*/ item, /*Boolean*/ opened){
+                                return !item._leaf ? (opened ? "dijitFolderOpened" : "dijitFolderClosed") : "dijitLeaf";
+                            },
+
+                            onClick: function(item) {
+                                // Get the URL from the item, and navigate to it
+                                if(item._leaf) {
+                                    var tab = new ContentPane({
+                                        title: item.tableName,
+                                        closable: true,
+                                        onClose: function(){
+                                            // confirm() returns true or false, so return that.
+                                            return confirm("Do you really want to Close this?");
+                                        }
+                                    });
+
+                                    tabContainer.addChild(tab);
+
+                                    tabContainer.selectChild(tab);
+
+                                    cool.widgetFactory( item.defaultLister, {databaseName: item.databaseName, tableName: item.tableName}, null, function(newLister) {
+                                        newLister.placeAt(tab.domNode);
+                                    });
+
+                                }
+                            }
+
+                        });
+                        tree.placeAt(parentElement);
+                        tree.startup();
+                    });
+
+                }
+            });
+
+        });
+
+    }
+
+
+    require([
+        "dijit/layout/BorderContainer",
+        "dijit/layout/ContentPane",
+        "dijit/layout/TabContainer",
+        "dojo/domReady!"
+
+    ], function(BorderContainer, ContentPane, TabContainer){
+        // create a BorderContainer as the top widget in the hierarchy
+        var bc = new BorderContainer({style: "height: 100%; width: 100%;"});
+
+        // create a ContentPane as the left pane in the BorderContainer
+        var cp1 = new ContentPane({
+            region: "left",
+            style: "width: 300px;",
+            content: "wait",
+            splitter: true
+        });
+
+
+
+        bc.addChild(cp1);
+
+        // create a TabContainer as the center pane in the BorderContainer,
+        // which itself contains two children
+        var tc = new TabContainer({region: "center"});
+        bc.addChild(tc);
+
+
+        buildTree(cp1.domNode, tc);
+
+        // put the top level widget into the document, and then call startup()
+        document.body.appendChild(bc.domNode);
+
+        bc.startup();
+
+    });
+
+</script>
+{% endblock %}
+

@@ -1,0 +1,94 @@
+{% set locale = cool.getFactory().getSession().getLocale() %}
+{% set sessionId = cool.getFactory().getSession().getId() %}
+
+<html lang="{{ locale }}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{% block title %}Title{% endblock %}</title>
+
+{% block head %}
+
+    {% stylesheets
+        'dojo/dijit/themes/claro/claro.css'
+        'dojo/dijit/themes/claro/document.css'
+        'dojo/gridx/resources/claro/Gridx.css'
+        'dojo/dojox/form/resources/TriStateCheckBox.css'
+        'dojo/dojox/image/resources/Lightbox.css'
+        'bower_components/vis/dist/vis.css'
+        'bower_components/chosen/chosen.css'
+
+        'bundles/eulogixcoolcore/js/css/cool.css'
+        'bundles/eulogixcoolcore/js/css/themes/claro/claro.css'
+        'bundles/eulogixcoolcore/js/css/themes/claro/gridx.css'
+        'bundles/eulogixcoolcore/js/css/themes/claro/repoThumbnail.css'
+        'bundles/eulogixcoolcore/js/css/themes/claro/form.css'
+        'bundles/eulogixcoolcore/js/rfe/resources/rfe.css'
+    filter="cssrewrite" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    <!-- for some reason this file misbehaves when included using assetic -->
+    <link rel="stylesheet" href="/dojo/dojox/calendar/themes/claro/Calendar.css"/>
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script>jQuery.noConflict();</script>
+    <script type="text/javascript" src="/bower_components/jqueryui/jquery-ui.min.js"></script>
+    <script>jQuery.noConflict();</script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    {% javascripts
+        '@FOSJsRoutingBundle/Resources/public/js/router.js'
+
+        'bundles/bazingajstranslation/js/translator.min.js'
+        'bower_components/d3/d3.min.js'
+        'bower_components/handlebars/handlebars.js'
+        'bower_components/json-editor/dist/jsoneditor.js'
+        'bower_components/moment/min/moment-with-locales.js'
+        'bower_components/vis/dist/vis.js'
+        'bower_components/chosen/chosen.jquery.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script src="/js/cool_translations.{{ app.environment }}.js"></script>
+    <script src="/js/fos_js_routes.{{ app.environment }}.js"></script>
+
+    <script>
+        dojoConfig = {
+            has: {
+                "dojo-firebug": false,
+                "dojo-debug-messages": false
+            },
+            parseOnLoad: false,
+            packages: [
+                {% block dojo_packages %}
+                {
+                    name: "cool",
+                    location: "/bundles/eulogixcoolcore/js"
+                }
+                {% endblock %}
+            ],
+            // Timeout after 10 seconds
+            waitSeconds: 10,
+                    map: {
+                // Instead of having to type "dojo/domReady!", we just want "ready!" instead
+                "*": {
+                    ready: "dojo/domReady"
+                }
+            },
+            cacheBust: {{ app.debug ? "true" : "false" }},
+            locale: '{{ locale }}',
+            useDeferredInstrumentation: true   //otherwise some exceptions get lost and unnoticed
+        };
+    </script>
+
+    <script type="text/javascript" src="{{ app.debug ? "/dojo/dojo/dojo.js" : "/js/dojo-built/dojo/dojo.js" }}" data-dojo-config="async: true"></script>
+
+    <script type="text/javascript" src="/bundles/eulogixcoolcore/jsnonamd/handlebar-helpers.js"></script>
+    <script type="text/javascript" src="/bundles/eulogixcoolcore/jsnonamd/cool-init.js"></script>
+{% endblock %}
+</head>
+<body class='{% block dojo_skin %}claro{% endblock %} cool'>
+{% block _content %}{% endblock %}
+</body>
+</html>

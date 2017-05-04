@@ -1,0 +1,76 @@
+{% trans_default_domain "cool_workflows_manager" %}
+{% set uid="workflowsManager"~random() %}
+
+<script>
+    dojo.connect(_container_, "onLoad", function(){
+        _container_.domNode.style.padding = '0';
+        _container_.getParent().resize()
+        setTimeout(function(){ _container_.getParent().resize() }, 500);
+    });
+
+    dojo.connect(_container_, "onClose", function(){
+        try {
+            dijit.byId('{{ uid }}panel').destroyRecursive();
+        } catch(e) {
+            console.warn(e);
+        }
+    });
+
+    function initWfPanel(widget) {
+        widget.domNode.style.height = "100%";
+        widget.onlyContent = true;
+        widget.fillContent = true;
+        widget.maxHeight = 0;
+    }
+
+    require([ 'dojo/parser' ], function (parser) {
+        parser.parse(_container_.domNode).then( function(){} );
+    });
+</script>
+
+
+    <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:true" id="{{ uid }}mainContainer" data-dojo-attach-point="mainContainer">
+
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'left'" style="width: 250px; padding: 0;">
+
+
+
+            <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:true" data-dojo-attach-point="sidePanel" style="padding: 0">
+
+                <div id="{{ uid }}tree" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding: 0; border:0; border-bottom: 1px solid #B5BCC7;">
+
+                </div>
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'bottom'" style="height: 75%; padding: 0; border:0; border-top: 1px solid #B5BCC7;">
+                    <div id="{{ uid }}filter" style="height:100%; padding:0; margin: 0"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding: 0px;">
+
+
+            <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:true" data-dojo-attach-point="listerPanel" style="padding: 0">
+
+                <div id="{{ uid }}lister" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding: 0; border:0; border-bottom: 1px solid #B5BCC7;">
+
+                </div>
+
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'bottom'" id="{{ uid }}editorPane" style="height: 20%; padding: 0; border:0; border-top: 1px solid #B5BCC7;">
+                    <div id="{{ uid }}editor" style="height:100%;"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+{{ coolWidget('EulogixCoolCore/Workflows/Explorer', {baseId:uid, baseProcessNamespace:baseProcessNamespace}) }}
+
+
+
+

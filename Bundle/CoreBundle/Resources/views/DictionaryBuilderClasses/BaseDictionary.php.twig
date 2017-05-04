@@ -1,0 +1,24 @@
+<?php
+
+namespace {{ nameSpace }};
+
+class {{ className }} extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
+
+    /*
+    Don't modify this class, use the overridable descendant instead    
+    */
+
+    public function getSettings() {
+        return {{ settingsArray|raw }};
+    }
+    
+    /** returns the schema name **/
+    public function getSchemaName() {
+        return  '{{ databaseName }}';
+    }
+    
+    public function getProjectDir() {
+        return  '{{ locatableProjectDir }}';
+    }
+       
+}

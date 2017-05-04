@@ -1,0 +1,31 @@
+<div style="padding: 0; color: white; height: 100%; width: 100%; position: relative">
+
+
+    <div style="float: right; height: 100%; margin-left: 5px;">
+        <img src="/bundles/eulogixcoolcore/gfx/phone/hangup30.png"
+             class="icon"
+             style="margin-top: 7px;"
+             onload="COOL.util.addAlphaRollover(this, 0.5, GlobalTranslator.trans('HANGUP_CALL'));"
+             data-dojo-attach-event="onClick:hangup"
+             data-dojo-attach-point="hangupImage"
+                />
+    </div>
+    <div style="float: right; height: 100%;">
+        <img src="/bundles/eulogixcoolcore/gfx/phone/mic30.png"
+             class="icon"
+             style="margin-top: 7px;"
+             onload="COOL.util.addAlphaRollover(this, 0.5, GlobalTranslator.trans('TOGGLE_MIC'));"
+             data-dojo-attach-event="onClick:toggleMic"
+             data-dojo-attach-point="micImage"
+                />
+    </div>
+
+    <div data-dojo-attach-point="maindiv" style="float: left; text-align: left; height: 100%;" >
+        <div><span data-dojo-attach-point="nameLabel"></span></div>
+        <div><span data-dojo-attach-point="nrLabel" style="font-size: 80%; color: #d1d1d1"></span></div>
+    </div>
+
+    <div style="position:absolute; top:15px; left:150px; color: white; font-size: 110%; font-weight: bold; text-shadow: 0 -1px rgba(0, 0, 0, .5);"><span data-dojo-attach-point="timerLabel"></span></div>
+    <div style="position:absolute; top:32px; font-size: 60%; color: #999999;"><span data-dojo-attach-point="statusLabel">ds</span></div>
+
+</div>

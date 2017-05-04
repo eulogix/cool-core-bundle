@@ -1,0 +1,135 @@
+services:
+    cool.cool:
+        class:            Eulogix\Cool\Lib\Cool
+        factory:          ['Eulogix\Cool\Lib\Cool', getInstance]
+
+    cool.factory:
+        class:     Eulogix\Cool\Lib\Factory\Factory
+
+    cool.user.manager:
+        class:     Eulogix\Cool\Lib\Security\UserManager
+
+    cool.group.manager:
+        class:     Eulogix\Cool\Lib\Security\GroupManager
+
+    cool.user.provider:
+        class: Eulogix\Cool\Bundle\CoreBundle\Security\User\CoolUserProvider
+
+    cool.locale.listener:
+        class: Eulogix\Cool\Bundle\CoreBundle\Listener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cool.ajax.listener:
+        class: Eulogix\Cool\Bundle\CoreBundle\Listener\AjaxAuthenticationListener
+        arguments: ["@session", "@router", "@request_stack", "%cool_exception_route%"]
+        tags:
+          - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
+    cool.translator:
+        class:     Eulogix\Cool\Lib\Translation\Translator
+    
+    cool.twig.cool_extension:
+        class: Eulogix\Cool\Bundle\CoreBundle\Twig\CoolExtension
+        tags:
+            - { name: twig.extension }
+
+    cool.email.message_renderer:
+        class: Eulogix\Cool\Lib\Email\MessageRenderer
+        arguments: ["%cool_email_message_renderer_domain%"]
+
+    cool.email.message_factory:
+        class: Eulogix\Cool\Lib\Email\MessageFactory
+        arguments: ["%mailer_default_from%", "@cool.email.message_renderer"]
+
+    cool.beanvalidator:
+        class: Eulogix\Lib\Validation\BeanValidator
+        arguments: [ "@validator" ]
+        shared: false
+
+    cool.cacher:
+        class: Eulogix\Lib\Cache\APCCacher
+        arguments: ["%cool.cacher.prefix%"]
+
+    cool.dbcacher:
+        class: Eulogix\Cool\Lib\Cache\DBCacher
+
+    cool.kvstore:
+        class: Eulogix\Cool\Lib\Cache\KVStore
+
+    cool.dummycacher:
+        class: Eulogix\Lib\Cache\DummyCacher
+
+    cool.file.temp_manager:
+        class: Eulogix\Cool\Lib\File\CacherTempManager
+        arguments: ["@cool.dbcacher"]
+
+    cool.ds.manager:
+        class: Eulogix\Cool\Lib\DataSource\DataSourceManager
+
+    cool.settings.manager:
+        class: Eulogix\Cool\Lib\App\Settings\Manager
+        arguments: ["%cool.app.settings.cache_duration_secs%"]
+
+    cool.locale.manager:
+        class: Eulogix\Cool\Lib\Translation\LocaleManager
+
+    cool.audit.logger:
+        class: Eulogix\Cool\Lib\Audit\AuditLogger
+
+    cool.widget.factory:
+        class: Eulogix\Cool\Lib\Widget\Factory\SymfonyBundleWidgetFactory
+        arguments: ["@service_container"]
+
+    cool.push.manager:
+        class: Eulogix\Cool\Lib\Push\PushManager
+        arguments: ["%wamp_server_backend_url%"]
+
+    ds.fileRepository:
+        class: Eulogix\Cool\Lib\DataSource\FileRepositoryDataSource
+        shared: false
+
+    file.repository.schema:
+        class:            Eulogix\Cool\Lib\File\CoolTableFileRepository
+        factory:          ['Eulogix\Cool\Lib\File\CoolTableFileRepository', fromRequest]
+        arguments:
+            - "@request_stack"
+
+    rundeck.client:
+        class: Eulogix\Lib\Rundeck\RundeckClient
+        arguments: ["%rundeck_url%", "%rundeck_auth_token%", "%rundeck_project_id%"]
+
+    rundeck.symfony_utils:
+        class: Eulogix\Lib\Rundeck\SymfonyUtils
+        arguments: ["%rundeck_command_user%", "%kernel.root_dir%"]
+
+    activiti.pdo:
+        class: PDO
+        arguments: ["%activiti_pdo_string%"]
+
+    activiti.client:
+        class: Eulogix\Lib\Activiti\ActivitiClient
+        arguments: ["%activiti_url%", "%activiti_user%", "%activiti_password%", "@activiti.pdo"]
+
+    java.bridge:
+        class: Eulogix\Lib\Java\Bridge
+        arguments: ["%java_bridge_url%"]
+
+    ds.userNotifications:
+        class: Eulogix\Cool\Lib\DataSource\Classes\Notifications\UserNotificationsDataSource
+        shared: false
+
+    cool.translator.global:
+        class:  Eulogix\Cool\Lib\Translation\Translator
+        factory: ['Eulogix\Cool\Lib\Translation\Translator', fromDomain]
+        arguments:
+            - "COOL_GLOBAL_TRANSLATOR"
+
+    vmaps.allUsers:
+        class:            Eulogix\Cool\Lib\DataSource\ValueMapInterface
+        factory:          ['Eulogix\Cool\Lib\DataSource\CoolValueMap', getValueMapFor]
+        arguments:
+            - "core"
+            - "core.account_setting"
+            - "account_id"

@@ -1,0 +1,43 @@
+#include this in the main app/config.yml
+
+parameters:
+    session.class: Eulogix\Cool\Lib\Session\CoolSession
+    cool.app.settings.cache_duration_secs: 40
+
+eulogix_cool_core:
+    schemas:
+        core:
+            namespace:  "\\Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core"
+
+twig:
+    globals:
+        cool: '@cool.cool'
+    paths:
+        "%kernel.root_dir%/../src/Eulogix/Cool/Bundle/CoreBundle/CWidget": CoodlWidgets
+
+propel:
+    build_properties:
+        propel.database:            pgsql
+        propel.database.driver:     pgsql
+
+        #needed for postgres
+        propel.disableIdentifierQuoting: true
+
+        propel.builder.tablemap.class: Eulogix\Cool\Lib\Database\Propel\generator\builder\PHP5TableMapBuilder
+        propel.builder.query.class: Eulogix\Cool\Lib\Database\Propel\generator\builder\QueryBuilder
+        propel.builder.object.class: Eulogix\Cool\Lib\Database\Propel\generator\builder\PHP5ObjectBuilder
+        propel.builder.peer.class: Eulogix\Cool\Lib\Database\Propel\generator\builder\PHP5PeerBuilder
+        propel.platform.class: Eulogix\Cool\Lib\Database\Propel\generator\platform\PgsqlPlatform
+
+        propel.behavior.extendable.class: Eulogix\Cool\Lib\Database\Propel\Behaviors\ExtendableBehavior
+        propel.behavior.auditable.class: Eulogix\Cool\Lib\Database\Propel\Behaviors\AuditableBehavior
+
+    dbal:
+        default_connection:         cool_db
+        connections:
+            cool_db:
+                driver:             pgsql
+                user:               "%propel_cool_db_user%"
+                password:           "%propel_cool_db_password%"
+                dsn:                "%propel_cool_db_pdo_string%"
+                classname:          "%propel_pdo_class%"

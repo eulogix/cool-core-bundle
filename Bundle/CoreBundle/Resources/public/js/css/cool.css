@@ -1,0 +1,41 @@
+/* needed by chosen, if a chosen control is close to the bottom of a form, it gets clipped */
+.cool .dijitTitlePane {
+    overflow: visible;
+}
+
+.cool,body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    /*overflow: hidden;  modified for popups, was like this
+    overflow: auto;*/
+    overflow-x: hidden;
+    padding: 0;
+}
+
+#appLayout {
+    height: 100%;
+}
+#leftCol {
+    width: 14em;
+}
+
+.claro .demoLayout .edgePanel {
+    background-color: #d0e9fc;
+}
+
+#viewsChart {
+    width: 550px;
+    height: 550px;
+}
+
+
+/*
+for json debugger of cwidgets: move away
+*/
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
