@@ -93,6 +93,7 @@ services:
     file.repository.schema:
         class:            Eulogix\Cool\Lib\File\CoolTableFileRepository
         factory:          ['Eulogix\Cool\Lib\File\CoolTableFileRepository', fromRequest]
+        shared: false
         arguments:
             - "@request_stack"
 
