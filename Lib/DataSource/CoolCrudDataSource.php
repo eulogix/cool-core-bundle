@@ -689,11 +689,8 @@ class CoolCrudDataSource extends CoolDataSource implements DataSourceInterface {
      * @return string
      */
     public function getSqlSelect($parameters = array()) {
-
         if( $r = $this->getShim()->callMethod(__METHOD__, func_get_args())) return $r;
-
-        $ret =  $this->getSqlBaseColumnsSelect($parameters).
-                 $this->getSqlExtendedColumnsSelect($parameters);
+        $ret =  $this->getSqlBaseColumnsSelect($parameters);
         return $ret;
     }
 
@@ -734,28 +731,6 @@ class CoolCrudDataSource extends CoolDataSource implements DataSourceInterface {
             $sql = "SELECT ".$this->getSQLPKExpression()." AS ".self::RECORD_IDENTIFIER.", ".implode(", \n",$filteredExpressions);
             
             return $sql;
-    }
-
-    /**
-     * returns the extended columns definitions
-     * @param mixed $parameters
-     * @return string
-     */
-    public function getSqlExtendedColumnsSelect($parameters = array()) {
-        $selCols = [];
-        foreach($this->tableRelations as $relation)
-            if(!$relation->isView()) {
-                $db = $relation->getSchema() ? $relation->getCoolSchema() : $this->getCoolSchema();
-                $tableName  = $relation->getTable();
-                $tableMap = $db->getDictionary()->getPropelTableMap($tableName);
-                $fields = $tableMap->getCoolFields();
-                foreach($fields as $fieldName => $coolField) {
-                    if($coolField->isExtension()) {
-                        $selCols[ $fieldName ] = $coolField->getExtensionContainer()."->>'$fieldName' AS \"$fieldName\"";
-                    }
-                }
-            }
-        return $selCols ? ' , '.implode(',', $selCols) : '';
     }
 
     /**

@@ -438,6 +438,8 @@ class CoolCrudTableRelation {
                         // we cast longvarchars to text to get around the fact that pg has no comparison functions for jsons, so they don't work in group bys
                         $cast = $coolField->getPropelColumn()->getType() == \PropelTypes::LONGVARCHAR ? '::TEXT' : '';
                         $expressions[ $prefix.$fieldName ] = $qualifier.".".$fieldName.$cast;
+                    } else {
+                        $expressions[ $prefix.$fieldName ] = $qualifier.".".$coolField->getExtensionContainer()."->>'$fieldName'";
                     }
 
                     if($coolField->getControl()->getType() == FieldInterface::TYPE_DATERANGE) {
