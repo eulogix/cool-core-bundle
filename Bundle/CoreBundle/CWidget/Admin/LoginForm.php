@@ -88,10 +88,10 @@ class LoginForm extends Form {
       return 
 '<table style="width:100%" margin=0>
 <tr>
-    <td valign=top style="width:180px; text-align:center"><img src="/cool/gfx/admin/login_logo.png"></td>
+    <td valign=top style="width:180px; text-align:center"><img src="/bundles/eulogixcoolcore/gfx/admin/login_logo.png"></td>
     <td valign=top><b>{{"TITLE"|t}}<b><br><br>
     '.$pl.'</td>
 </table>';
   }
-  
+
 }

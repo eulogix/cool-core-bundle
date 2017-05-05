@@ -34,7 +34,7 @@ class TableExtensionFieldLister extends Lister {
     }
 
     public function getDefaultEditorServerId() {
-        return 'Cool/TableExtension/TableExtensionFieldEditorForm';
+        return 'EulogixCoolCore/Core/TableExtension/TableExtensionFieldEditorForm';
     }
 
     /**

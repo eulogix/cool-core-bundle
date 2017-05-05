@@ -29,7 +29,7 @@ class AsyncJobLister extends Lister {
     }
 
     public function getDefaultEditorServerId() {
-        return 'Cool/AsyncJob/AsyncJobEditorForm';
+        return 'EulogixCoolCore/AsyncJob/AsyncJobEditorForm';
     }
 
     public function getId() {

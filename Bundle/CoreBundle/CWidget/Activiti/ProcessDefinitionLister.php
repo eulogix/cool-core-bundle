@@ -51,7 +51,7 @@ class ProcessDefinitionLister extends Lister {
      * @return string
      */
     public function getDefaultEditorServerId() {
-        return 'Cool/Activiti/ProcessDefinitionEditorForm';
+        return 'EulogixCoolCore/Activiti/ProcessDefinitionEditorForm';
     }
 
     /**

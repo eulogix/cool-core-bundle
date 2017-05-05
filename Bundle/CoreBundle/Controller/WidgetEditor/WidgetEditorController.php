@@ -23,23 +23,23 @@ class WidgetEditorController extends Controller
 {
     /**
      * @Route("/formEditor", name="_coolFormEditor", options={"expose"=true})
-     * @Template(engine="php")
+     * @Template()
      */
     public function formEditorAction()
     {       
-        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.php', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/FormEditor',
-            'editorTable' => 'form_config'
+        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/FormEditor',
+            'editorTable' => 'core.form_config'
         ));
     }
 
     /**
      * @Route("/listerEditor", name="_coolListerEditor", options={"expose"=true})
-     * @Template(engine="php")
+     * @Template()
      */
     public function listerEditorAction()
     {
-        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.php', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/ListerEditor',
-            'editorTable' => 'lister_config'
+        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/ListerEditor',
+            'editorTable' => 'core.lister_config'
         ));
     }
 }

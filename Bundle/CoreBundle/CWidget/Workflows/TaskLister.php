@@ -74,7 +74,7 @@ class TaskLister extends Lister {
     }
 
     public function getDefaultEditorServerId() {
-        return 'Cool/Workflows/TaskEditorForm';
+        return 'EulogixCoolCore/Workflows/TaskEditorForm';
     }
 
     /**
@@ -82,7 +82,7 @@ class TaskLister extends Lister {
      */
     public function getDefaultFilterWidget()
     {
-        return 'Cool/Workflows/TaskFilterForm';
+        return 'EulogixCoolCore/Workflows/TaskFilterForm';
     }
 
     /**

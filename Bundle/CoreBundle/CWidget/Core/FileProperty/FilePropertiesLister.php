@@ -34,7 +34,7 @@ class FilePropertiesLister extends Lister {
     }
 
     public function getDefaultEditorServerId() {
-        return 'Cool/FileProperty/FilePropertyEditorForm';
+        return 'EulogixCoolCore/Core/FileProperty/FilePropertyEditorForm';
     }
 
     /**
