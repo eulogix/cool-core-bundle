@@ -40,5 +40,9 @@
         "psr-4": {
             "Eulogix\\Cool\\": ""
         }
-    }
+    },
+    "bin": [
+        "bin/cool-install-apgdiff",
+        "bin/cool-install-dojo-deps"
+    ]
 }
