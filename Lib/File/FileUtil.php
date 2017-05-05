@@ -141,8 +141,8 @@ class FileUtil {
     private static function createDefaultThumbnail($type) {
         $tempImage = tempnam(sys_get_temp_dir(),'PIC');
         switch($type) {
-            case self::THUMB_EMPTY      : copy( Cool::getInstance()->getFactory()->getFileLocator()->locate('@EulogixCoolCoreBundle/Resources/res/gfx/system/preview-empty.jpg'), $tempImage); break;
-            case self::THUMB_CORRUPT    : copy( Cool::getInstance()->getFactory()->getFileLocator()->locate('@EulogixCoolCoreBundle/Resources/res/gfx/system/preview-corrupt.jpg'), $tempImage); break;
+            case self::THUMB_EMPTY      : copy( Cool::getInstance()->getFactory()->getFileLocator()->locate('@EulogixCoolCoreBundle/Resources/public/res/gfx/system/preview-empty.jpg'), $tempImage); break;
+            case self::THUMB_CORRUPT    : copy( Cool::getInstance()->getFactory()->getFileLocator()->locate('@EulogixCoolCoreBundle/Resources/public/res/gfx/system/preview-corrupt.jpg'), $tempImage); break;
         }
         return $tempImage;
     }
