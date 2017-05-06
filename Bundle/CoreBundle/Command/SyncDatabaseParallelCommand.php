@@ -57,7 +57,7 @@ EOF
         $connectionName = $input->getOption('connection');
         $schemaName = $input->getOption('schema');
 
-        $db = Cool::getInstance()->getSchema($connectionName);
+        $db = Cool::getInstance()->getSchema($schemaName);
         $rd = Cool::getInstance()->getFactory()->getRundeck();
         if($jobId = $rd->getJobIdByName('cool:sync-database')) {
             $executions = [];
@@ -65,20 +65,17 @@ EOF
 
             $schemas = $db->getSiblingSchemas();
             foreach($schemas as $schema) {
-                if (!$schemaName || $schema == $schemaName) {
-                    $output->writeln("Launching parallel processing on schema $schema...");
+                $output->writeln("Launching parallel processing on schema $schema...");
 
-                    $pendingExecutions[$schema] = 1;
-                    $executions[$schema] = $rd->runJob(
-                        $jobId,
-                        [
-                            'connection' => $connectionName,
-                            'schema' => $schemaName,
-                            'actual_schema' => $schema,
-                            'env' => 'prod'
-                        ]);
-
-                }
+                $pendingExecutions[$schema] = 1;
+                $executions[$schema] = $rd->runJob(
+                    $jobId,
+                    [
+                        'connection' => $connectionName,
+                        'schema' => $schemaName,
+                        'actual_schema' => $schema,
+                        'env' => 'prod'
+                    ]);
             }
 
             $totalSeconds = 0;
