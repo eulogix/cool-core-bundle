@@ -102,7 +102,7 @@ services:
         arguments: ["%rundeck_url%", "%rundeck_auth_token%", "%rundeck_project_id%"]
 
     rundeck.symfony_utils:
-        class: Eulogix\Lib\Rundeck\SymfonyUtils
+        class: Eulogix\Cool\Lib\Rundeck\CoolRDSymfonyUtils
         arguments: ["%rundeck_command_user%", "%kernel.root_dir%"]
 
     activiti.pdo:

@@ -38,8 +38,8 @@ class SyncDatabaseParallelCommand extends ContainerAwareCommand
         $this
             ->setName('cool:sync-database-parallel')
             ->setDescription('Sync database structures in parallel using Rundeck')
-            ->addOption('connection', null, InputOption::VALUE_REQUIRED, 'the connection name to sync')
-            ->addOption('schema', null, InputOption::VALUE_OPTIONAL, 'the schema to sync')
+            ->addOption('connection', null, InputOption::VALUE_REQUIRED, 'the connection name to sync, normally cool_db', 'cool_db')
+            ->addOption('schema', null, InputOption::VALUE_REQUIRED, 'the schema (class) to sync')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> Automatically migrates database structures for the given connection
 <info>php %command.full_name%</info>
@@ -73,7 +73,8 @@ EOF
                         $jobId,
                         [
                             'connection' => $connectionName,
-                            'schema' => $schema,
+                            'schema' => $schemaName,
+                            'actual_schema' => $schema,
                             'env' => 'prod'
                         ]);
 
@@ -84,7 +85,7 @@ EOF
             do {
                 foreach ($pendingExecutions as $schemaKey => $fake) {
                     $execution = $executions[$schemaKey];
-                    $exec = array_slice($execution, -1)[0]; //like array_pop but does not modify the array
+                    $exec = array_slice($execution, -1)[0];
                     $updatedExecWhole = $rd->getExecution($exec[ 'id' ]);
                     $updatedExec = array_pop($updatedExecWhole);
                     if ($updatedExec[ 'status' ] != 'running') {

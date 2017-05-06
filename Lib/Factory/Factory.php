@@ -29,7 +29,7 @@ use Eulogix\Lib\Cache\CacherInterface;
 use Eulogix\Lib\Java\Bridge;
 use Eulogix\Cool\Lib\Push\PushManager;
 use Eulogix\Lib\Rundeck\RundeckClient;
-use Eulogix\Cool\Lib\Rundeck\SymfonyUtils;
+use Eulogix\Lib\Rundeck\SymfonyUtils;
 use Eulogix\Cool\Lib\Translation\LocaleManager;
 use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
