@@ -15,7 +15,7 @@ use \RelationMap;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  *
- * @package    propel.generator.src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map
+ * @package    propel.generator.vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map
  */
 class AppSettingTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
 {
@@ -23,7 +23,7 @@ class AppSettingTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map.AppSettingTableMap';
+    const CLASS_NAME = 'vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map.AppSettingTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -38,7 +38,7 @@ class AppSettingTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->setName('core.app_setting');
         $this->setPhpName('AppSetting');
         $this->setClassname('Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSetting');
-        $this->setPackage('src.Eulogix.Cool.Bundle.CoreBundle.Model.Core');
+        $this->setPackage('vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core');
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('core.app_setting_app_setting_id_seq');
         // columns

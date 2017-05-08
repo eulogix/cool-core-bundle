@@ -15,7 +15,7 @@ use \RelationMap;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  *
- * @package    propel.generator.src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map
+ * @package    propel.generator.vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map
  */
 class FormConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
 {
@@ -23,7 +23,7 @@ class FormConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map.FormConfigTableMap';
+    const CLASS_NAME = 'vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map.FormConfigTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -38,7 +38,7 @@ class FormConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->setName('core.form_config');
         $this->setPhpName('FormConfig');
         $this->setClassname('Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfig');
-        $this->setPackage('src.Eulogix.Cool.Bundle.CoreBundle.Model.Core');
+        $this->setPackage('vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core');
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('core.form_config_form_config_id_seq');
         // columns

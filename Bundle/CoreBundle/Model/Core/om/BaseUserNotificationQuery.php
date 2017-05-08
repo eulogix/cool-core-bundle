@@ -963,7 +963,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     }
 
     // auditable behavior
-    
+
     /**
      * Filter by the latest updated
      *
@@ -975,7 +975,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     {
         return $this->addUsingAlias(UserNotificationPeer::UPDATE_DATE, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
-    
+
     /**
      * Order by update date desc
      *
@@ -985,7 +985,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     {
         return $this->addDescendingOrderByColumn(UserNotificationPeer::UPDATE_DATE);
     }
-    
+
     /**
      * Order by update date asc
      *
@@ -995,7 +995,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     {
         return $this->addAscendingOrderByColumn(UserNotificationPeer::UPDATE_DATE);
     }
-    
+
     /**
      * Filter by the latest created
      *
@@ -1007,7 +1007,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     {
         return $this->addUsingAlias(UserNotificationPeer::CREATION_DATE, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
-    
+
     /**
      * Order by create date desc
      *
@@ -1017,7 +1017,7 @@ abstract class BaseUserNotificationQuery extends ModelCriteria
     {
         return $this->addDescendingOrderByColumn(UserNotificationPeer::CREATION_DATE);
     }
-    
+
     /**
      * Order by create date asc
      *

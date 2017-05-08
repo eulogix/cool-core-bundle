@@ -15,7 +15,7 @@ use \RelationMap;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  *
- * @package    propel.generator.src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map
+ * @package    propel.generator.vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map
  */
 class ListerConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
 {
@@ -23,7 +23,7 @@ class ListerConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.Eulogix.Cool.Bundle.CoreBundle.Model.Core.map.ListerConfigTableMap';
+    const CLASS_NAME = 'vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core.map.ListerConfigTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -38,7 +38,7 @@ class ListerConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         $this->setName('core.lister_config');
         $this->setPhpName('ListerConfig');
         $this->setClassname('Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfig');
-        $this->setPackage('src.Eulogix.Cool.Bundle.CoreBundle.Model.Core');
+        $this->setPackage('vendor.eulogix.cool-core-bundle.Bundle.CoreBundle.Model.Core');
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('core.lister_config_lister_config_id_seq');
         // columns

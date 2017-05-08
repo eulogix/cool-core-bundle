@@ -1202,7 +1202,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     }
 
     // auditable behavior
-    
+
     /**
      * Filter by the latest updated
      *
@@ -1214,7 +1214,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     {
         return $this->addUsingAlias(AsyncJobPeer::UPDATE_DATE, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
-    
+
     /**
      * Order by update date desc
      *
@@ -1224,7 +1224,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     {
         return $this->addDescendingOrderByColumn(AsyncJobPeer::UPDATE_DATE);
     }
-    
+
     /**
      * Order by update date asc
      *
@@ -1234,7 +1234,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     {
         return $this->addAscendingOrderByColumn(AsyncJobPeer::UPDATE_DATE);
     }
-    
+
     /**
      * Filter by the latest created
      *
@@ -1246,7 +1246,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     {
         return $this->addUsingAlias(AsyncJobPeer::CREATION_DATE, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
-    
+
     /**
      * Order by create date desc
      *
@@ -1256,7 +1256,7 @@ abstract class BaseAsyncJobQuery extends ModelCriteria
     {
         return $this->addDescendingOrderByColumn(AsyncJobPeer::CREATION_DATE);
     }
-    
+
     /**
      * Order by create date asc
      *
