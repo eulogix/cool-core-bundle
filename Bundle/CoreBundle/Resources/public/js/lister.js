@@ -490,12 +490,14 @@ define("cool/lister",
                 _createStore: function(postVars) {
                     var lister = this;
 
+                    var wkPostVars = lang.mixin({}, lister.definition.parameters, postVars || {});
+
                     var url = Routing.generate('_lister_store', this.getActionParameters({serverId:this.serverId}));
 
                     lister.store = new Observable(
                         new listerStore({
                             target: url,
-                            postVars: postVars || {},
+                            postVars: wkPostVars,
 
                             widget: lister
                         })
