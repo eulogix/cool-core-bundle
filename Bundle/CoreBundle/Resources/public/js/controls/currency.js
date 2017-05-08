@@ -8,10 +8,8 @@ define("cool/controls/currency",
     "cool/functions/waiter",
     "dijit/form/CurrencyTextBox",
     "dojo/currency",
-
-    "dojo/cldr/nls/it/currency",
-    "dojo/cldr/nls/it/number"
-], function(declare, lang, array, cool, _control, coolWaiter, CurrencyTextBox, currency) {
+    "dojo/number"
+], function(declare, lang, array, cool, _control, coolWaiter, CurrencyTextBox, currencyLocale, numberLocale) {
  
     return declare("cool.controls.currency", [_control], {
 		
@@ -38,15 +36,26 @@ define("cool/controls/currency",
                 function() {
                     try{
                         field = new CurrencyTextBox({
-                            lang: 'it-it',
                             currency: "EUR",
-                            invalidMessage: "Invalid amount.  Example: " + currency.format(54775.53, {locale: 'it-it', currency: "EUR"}),
+                            invalidMessage: "Invalid amount.  Example: " + currencyLocale.format(54775.53, { currency: "EUR"}),
                             constraints:{fractional:true, places:'0,4'},
-
                             "class": control.cssClasses.join(' '),
                             "style": control.cssStyles.join(';')
                         }, targetNode);
+
+                        //little hack that makes sure that a proper decimal separator is always inputed when pressing
+                        //the numpad decimal key
+                        field.on('keyPress', function(event){
+                            if(event.code=='NumpadDecimal') {
+                                var decimalSeparator = numberLocale.format(1.1).substring(1,2);
+                                event.preventDefault();
+                                event.stopPropagation();
+                                field.set('value',field.get('value')+decimalSeparator);
+                            }
+                        });
+
                     } catch(e){ field = null; }
+
                     return field;
                 },
 
