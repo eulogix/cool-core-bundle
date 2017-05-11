@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 dir=$(d=${0%[/\\]*}; cd "$d"; cd ../../../../web && pwd)
 
 # See if we are running in Cygwin by checking for cygpath program
