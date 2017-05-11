@@ -9,12 +9,6 @@ eulogix_cool_core:
         core:
             namespace:  "\\Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core"
 
-twig:
-    globals:
-        cool: '@cool.cool'
-    paths:
-        "%kernel.root_dir%/../vendor/eulogix/cool-core-bundle/Bundle/CoreBundle/CWidget": CoolWidgets
-
 propel:
     build_properties:
         propel.database:            pgsql

@@ -53,7 +53,7 @@ class UserReminderDS extends BaseReminderDS
 
         $tables = explode(',',$userReminder->getParentTables());
         foreach($tables as $table)
-            $this->addFields($this->getDSFieldsFor( $table ));
+            $this->addFields($this->getCoolSchema()->getDSFieldsFor( $table ));
 
         return $this;
     }

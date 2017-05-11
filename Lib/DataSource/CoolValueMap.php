@@ -20,7 +20,7 @@ use Eulogix\Cool\Lib\Database\Propel\CoolTableMap;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class CoolValueMap extends BaseValueMap implements ValueMapInterface, Shimmable
+class CoolValueMap extends BaseValueMap implements Shimmable
 {
     /**
      * @var array
@@ -42,7 +42,6 @@ class CoolValueMap extends BaseValueMap implements ValueMapInterface, Shimmable
         $this->schemaName = $schemaName;
         $this->tableName = $tableName;
     }
-
 
     /**
      * @return CacheShim

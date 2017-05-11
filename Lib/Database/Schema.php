@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Lib\Database;
 
 use Eulogix\Cool\Lib\DataSource\CoolValueMap;
+use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\DSField;
 use Eulogix\Cool\Lib\Dictionary\Field;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
@@ -64,6 +65,12 @@ class Schema implements Shimmable
     protected $debug = false;
 
     /**
+     * pool of pre-built DataSources used for field decodification
+     * @var DataSourceInterface[]
+     */
+    private $dataSourcePool = [];
+
+    /**
      * @param string $name
      * @param string $propelModelNamespace
      */
@@ -108,6 +115,7 @@ class Schema implements Shimmable
             throw new \Exception("$schemaName is not a valid schema name for " . $this->name);
         }
         $this->currentSchema = $schemaName;
+        $this->dataSourcePool = [];
         Cool::getInstance()->refreshSearchPaths();
     }
 
@@ -525,7 +533,6 @@ class Schema implements Shimmable
 
     /**
      * helper that quickly decodes a field using its valueMap
-     * TODO: kinda slow, maybe pool the prebuilt datasources
      * @param string $tableName
      * @param string $fieldName
      * @param string $value
@@ -534,9 +541,11 @@ class Schema implements Shimmable
      */
     public function decodeField($tableName, $fieldName, $value, $recordId = null)
     {
-        $ds = CoolCrudDataSource::fromSchemaAndTable($this->getName(), $tableName);
-
-        return $ds->build()->getDecodedValue($fieldName, $value, $recordId);
+        if(!isset($this->dataSourcePool[$tableName])) {
+            $this->dataSourcePool[$tableName] = CoolCrudDataSource::fromSchemaAndTable($this->getName(), $tableName);
+            $this->dataSourcePool[$tableName]->build();
+        }
+        return $this->dataSourcePool[$tableName]->getDecodedValue($fieldName, $value, $recordId);
     }
 
     /**
@@ -720,7 +729,7 @@ class Schema implements Shimmable
     public function getDSFieldsFor($tableName, $prefix='', $lambdaFilter=null, $addConstraints=false) {
 
         if($lambdaFilter == null) {
-            if( $r = $this->getShim()->callMethod(__METHOD__, func_get_args())) return $r;
+            if( $r = $this->getShim()->callMethod(__METHOD__, func_get_args())) return array_copy($r);
         }
 
         $ret = [];
@@ -732,7 +741,7 @@ class Schema implements Shimmable
             $fields = $tableMap->getCoolFields();
             foreach($fields as $fieldName => $coolField)
                 if(!is_callable($lambdaFilter) || call_user_func($lambdaFilter, $fieldName)) {
-                    $DSfield =  new DSField($prefix.$fieldName);
+                    $DSfield = new DSField($prefix.$fieldName);
 
                     if( in_array($fieldName, $pk_arr) ) {
                         $DSfield->setIsPkInSource(true);

@@ -24,7 +24,7 @@ class TaskEditorForm extends Widget {
 
     public function build() {
 
-        $formServerId = "Cool/Workflows/PropertiesTaskEditorForm";
+        $formServerId = "EulogixCoolCore/Workflows/PropertiesTaskEditorForm";
 
         if($taskId = $this->getTaskId()) {
             $activiti = Cool::getInstance()->getFactory()->getActiviti();

@@ -11,25 +11,19 @@
 
 namespace Eulogix\Cool\Lib\DataSource;
 
-use Eulogix\Lib\Cache\CacheShim;
+use Eulogix\Cool\Lib\Traits\CoolCacheShimmed;
 use Eulogix\Lib\Cache\Shimmable;
 use Eulogix\Cool\Lib\Cool;
-use Eulogix\Cool\Lib\Dictionary\Field;
-use Eulogix\Cool\Lib\File\CoolTableFileRepository;
-use Eulogix\Cool\Lib\Form\Field\FieldInterface;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
 abstract class CoolDataSource extends SqlDataSource implements Shimmable {
-    
-    var $schemaName = "";
 
-    /**
-     * @var CacheShim
-     */
-    public $shim;
+    use CoolCacheShimmed;
+
+    var $schemaName = "";
 
     /**
      * @param string $schemaName
@@ -46,22 +40,6 @@ abstract class CoolDataSource extends SqlDataSource implements Shimmable {
      */
     public function getShimUID() {
         return $this->schemaName;
-    }
-
-    /**
-     * @return CacheShim
-     */
-    public function getShim() {
-        if(!$this->shim)
-            $this->setShim(new CacheShim($this, Cool::getInstance()->getFactory()->getCacher(), $this->getShimUID()));
-        return $this->shim;
-    }
-
-    /**
-     * @param CacheShim $shim
-     */
-    public function setShim( $shim ) {
-        $this->shim = $shim;
     }
 
     /**
