@@ -165,11 +165,13 @@ define("cool/_widget",
                             this.serverId = this.definition.clientParameters.serverId; 
                         }
 
-                        if(this.rebuildNeeded(data._definition)) {
-                            d = this.rebuild();
-                        } else d.resolve();
+                        var d2 = new Deferred();
 
-                        d.then(function(){
+                        if(this.rebuildNeeded(data._definition)) {
+                            d2 = this.rebuild();
+                        } else d2.resolve();
+
+                        d2.then(function(){
                             if(data._definition.hasOwnProperty('messages')) {
                                 self.renderMessages();
                             }
@@ -185,13 +187,12 @@ define("cool/_widget",
                             if(data._definition.hasOwnProperty('events')) {
                                 self.processEvents();
                             }
+
+                            d.resolve();
                         });
 
-                        return d;
+                    } else d.resolve();
 
-                    }
-
-                    d.resolve();
                     return d;
                 },
 

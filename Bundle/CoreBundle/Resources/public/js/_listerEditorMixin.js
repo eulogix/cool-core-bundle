@@ -78,8 +78,6 @@ define("cool/_listerEditorMixin",
                             newEditorForm.openerLister = lister;
                             newEditorForm.closeable = true;
 
-                            lister.emit('editorOpened', {editor: newEditorForm});
-
                             var oldEditorForm = lister.editorForm;
                             lister.own(newEditorForm); // Wires widget into destroyRecursive()
 
@@ -152,9 +150,10 @@ define("cool/_listerEditorMixin",
                             lister.editorForm = newEditorForm;
                             newEditorForm.placeAt(lister.editorDiv);
                             newEditorForm.startup();
-
                         },
-                        null,
+                        function(newEditorForm){
+                            lister.emit('editorOpened', {editor: newEditorForm});
+                        },
                         null,
                         {
                             autoScrollToMe: true

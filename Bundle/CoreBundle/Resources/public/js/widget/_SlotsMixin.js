@@ -18,10 +18,13 @@ define("cool/widget/_SlotsMixin",
             return declare("cool.widget._SlotsMixin", [], {
 
                 slotsTab : null,
-                widgetSlots: {}, //tracks already rendered slots
+                widgetSlots: {}, //keeps a reference of slotted widgets
+
+                slotPanes: {}, //tracks the contentPanes of the tabcontainer, key is the slot group
 
                 constructor: function() {
-                    this.widgetSlots = {}; //keeps a reference of slotted widgets
+                    this.widgetSlots = {};
+                    this.slotPanes = {};
                 },
 
                 renderSlots: function() {
@@ -87,6 +90,7 @@ define("cool/widget/_SlotsMixin",
 
                                     //small delay to ensure that the first tab renders correctly (otherwise the onShow event may not fire)
                                     (function(cpar){
+                                        self.slotPanes[groupName] = cpar;
                                         setTimeout(function(){ slotsTab.addChild(cpar); }, 10);
                                     }(tabElem));
                                 }
@@ -100,7 +104,18 @@ define("cool/widget/_SlotsMixin",
 
                             this.slotsTab = slotsTab;
                         }
+                    }
+                },
 
+                focusSlot: function(slotName) {
+                    var t = this;
+                    if(!this._skipNormalSlotRender(slotName)) {
+                        array.forEach(this.getAllSlotsFlat(), function(slot){
+                            if(slot.name == slotName && t.slotsTab) {
+                                console.log(t.slotPanes[slot.group]);
+                                t.slotsTab.selectChild(t.slotPanes[slot.group]);
+                            }
+                        });
                     }
                 },
 
