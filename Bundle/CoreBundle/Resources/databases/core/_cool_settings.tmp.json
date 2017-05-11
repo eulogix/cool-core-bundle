@@ -440,6 +440,9 @@
                     },
                     "truncate_chars": {
                         "attributes": []
+                    },
+                    "tooltip_max_width": {
+                        "attributes": []
                     }
                 }
             },

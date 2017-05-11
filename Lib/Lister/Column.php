@@ -21,6 +21,7 @@ use Eulogix\Cool\Lib\Form\Field\Field;
 class Column {
 
     const MAX_CHARACTERS = 50;
+    const MAX_TOOLTIP_WIDTH = -1;
 
     /**
     * parameters bag
@@ -60,7 +61,7 @@ class Column {
     /**
      * @var integer
      */
-    private $sortOrder, $maxChars;
+    private $sortOrder, $maxChars, $tooltipMaxWidth;
 
 
     /**
@@ -89,6 +90,7 @@ class Column {
             'sortable'=> $this->getSortable(),
             'sortOrder'=> $this->getSortOrder(),
             'maxChars'=> $this->getMaxChars(),
+            'tooltipMaxWidth'=> $this->getTooltipMaxWidth(),
         );
         if($this->getControl()) {
             $def['control'] = $this->getControl()->getDefinition();
@@ -381,6 +383,24 @@ class Column {
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getTooltipMaxWidth()
+    {
+        return $this->tooltipMaxWidth;
+    }
+
+    /**
+     * @param int $tooltipMaxWidth
+     * @return $this
+     */
+    public function setTooltipMaxWidth($tooltipMaxWidth)
+    {
+        $this->tooltipMaxWidth = $tooltipMaxWidth;
+        return $this;
+    }
+
     //helpers
 
     /**
@@ -440,10 +460,11 @@ class Column {
     private function truncate()
     {
         $maxChars = $this->getMaxChars() ? $this->getMaxChars() : self::MAX_CHARACTERS;
+        $maxTTWidth = $this->getTooltipMaxWidth() !== null ? $this->getTooltipMaxWidth() : self::MAX_TOOLTIP_WIDTH;
         $this->setDijitWidgetTemplate(
             "<div data-dojo-attach-point='truncator'
                   data-dojo-type='cool/renderers/truncator'
-                  data-dojo-props=\"maxChars: {$maxChars}\"
+                  data-dojo-props=\"maxChars: {$maxChars}, maxTooltipWidth: {$maxTTWidth}\"
                   class='gridxHasGridCellValue'
               ></div>")
             ->setSetValueJs("

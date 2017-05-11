@@ -735,6 +735,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'tooltip_max_width' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
       ),
     ),
     'core.lookup' => 

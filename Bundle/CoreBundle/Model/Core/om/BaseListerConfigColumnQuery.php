@@ -32,6 +32,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery orderBySortbyOrder($order = Criteria::ASC) Order by the sortby_order column
  * @method ListerConfigColumnQuery orderBySortbyDirection($order = Criteria::ASC) Order by the sortby_direction column
  * @method ListerConfigColumnQuery orderByTruncateChars($order = Criteria::ASC) Order by the truncate_chars column
+ * @method ListerConfigColumnQuery orderByTooltipMaxWidth($order = Criteria::ASC) Order by the tooltip_max_width column
  *
  * @method ListerConfigColumnQuery groupByListerConfigColumnId() Group by the lister_config_column_id column
  * @method ListerConfigColumnQuery groupByListerConfigId() Group by the lister_config_id column
@@ -47,6 +48,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery groupBySortbyOrder() Group by the sortby_order column
  * @method ListerConfigColumnQuery groupBySortbyDirection() Group by the sortby_direction column
  * @method ListerConfigColumnQuery groupByTruncateChars() Group by the truncate_chars column
+ * @method ListerConfigColumnQuery groupByTooltipMaxWidth() Group by the tooltip_max_width column
  *
  * @method ListerConfigColumnQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ListerConfigColumnQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -72,6 +74,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumn findOneBySortbyOrder(int $sortby_order) Return the first ListerConfigColumn filtered by the sortby_order column
  * @method ListerConfigColumn findOneBySortbyDirection(string $sortby_direction) Return the first ListerConfigColumn filtered by the sortby_direction column
  * @method ListerConfigColumn findOneByTruncateChars(int $truncate_chars) Return the first ListerConfigColumn filtered by the truncate_chars column
+ * @method ListerConfigColumn findOneByTooltipMaxWidth(int $tooltip_max_width) Return the first ListerConfigColumn filtered by the tooltip_max_width column
  *
  * @method array findByListerConfigColumnId(int $lister_config_column_id) Return ListerConfigColumn objects filtered by the lister_config_column_id column
  * @method array findByListerConfigId(int $lister_config_id) Return ListerConfigColumn objects filtered by the lister_config_id column
@@ -87,6 +90,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method array findBySortbyOrder(int $sortby_order) Return ListerConfigColumn objects filtered by the sortby_order column
  * @method array findBySortbyDirection(string $sortby_direction) Return ListerConfigColumn objects filtered by the sortby_direction column
  * @method array findByTruncateChars(int $truncate_chars) Return ListerConfigColumn objects filtered by the truncate_chars column
+ * @method array findByTooltipMaxWidth(int $tooltip_max_width) Return ListerConfigColumn objects filtered by the tooltip_max_width column
  */
 abstract class BaseListerConfigColumnQuery extends ModelCriteria
 {
@@ -192,7 +196,7 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars FROM core.lister_config_column WHERE lister_config_column_id = :p0';
+        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_max_width FROM core.lister_config_column WHERE lister_config_column_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -769,6 +773,48 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigColumnPeer::TRUNCATE_CHARS, $truncateChars, $comparison);
+    }
+
+    /**
+     * Filter the query on the tooltip_max_width column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTooltipMaxWidth(1234); // WHERE tooltip_max_width = 1234
+     * $query->filterByTooltipMaxWidth(array(12, 34)); // WHERE tooltip_max_width IN (12, 34)
+     * $query->filterByTooltipMaxWidth(array('min' => 12)); // WHERE tooltip_max_width >= 12
+     * $query->filterByTooltipMaxWidth(array('max' => 12)); // WHERE tooltip_max_width <= 12
+     * </code>
+     *
+     * @param     mixed $tooltipMaxWidth The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByTooltipMaxWidth($tooltipMaxWidth = null, $comparison = null)
+    {
+        if (is_array($tooltipMaxWidth)) {
+            $useMinMax = false;
+            if (isset($tooltipMaxWidth['min'])) {
+                $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, $tooltipMaxWidth['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($tooltipMaxWidth['max'])) {
+                $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, $tooltipMaxWidth['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, $tooltipMaxWidth, $comparison);
     }
 
     /**

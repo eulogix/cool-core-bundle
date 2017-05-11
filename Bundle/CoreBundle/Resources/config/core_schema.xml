@@ -262,6 +262,7 @@
         </column>
 
         <column name="truncate_chars" type="INTEGER"/>
+        <column name="tooltip_max_width" type="INTEGER"/>
 
         <foreign-key foreignTable="lister_config" onDelete="cascade">
         <reference local="lister_config_id" foreign="lister_config_id"/>
@@ -387,6 +388,7 @@
         <column name="active_flag" type="BOOLEAN"/>       
         <column name="expose_flag" type="BOOLEAN"/>
         <column name="last_usage_date" type="TIMESTAMP" description="in debug mode, this column gets populated by the translator"/>
+        
 
         <unique>
             <unique-column name="domain_name"/>
@@ -396,6 +398,9 @@
         
         <index><index-column name="active_flag"/></index>                 
         <index><index-column name="used_flag"/></index>       
+        
+        
+        
 
     </table>
 

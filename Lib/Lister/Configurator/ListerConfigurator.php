@@ -99,6 +99,7 @@ class ListerConfigurator extends WidgetConfigurator {
                         ->setCellTemplateJs( $configColumn->getCellTemplateJs() )
                         ->setColumnStyleCss( $configColumn->getColumnStyleCss() )
                         ->setHasSummary( $configColumn->getShowSummaryFlag() )
+                        ->setTooltipMaxWidth( $configColumn->getTooltipMaxWidth() )
                         ->setMaxChars( $configColumn->getTruncateChars() );
 
                 if($so = $configColumn->getSortOrder())
