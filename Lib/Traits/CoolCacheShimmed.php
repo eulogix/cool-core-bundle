@@ -30,7 +30,7 @@ trait CoolCacheShimmed {
      */
     public function getShim() {
         if(!$this->shim)
-            $this->setShim(new CacheShim($this, Cool::getInstance()->getFactory()->getCacher(), get_class($this)));
+            $this->setShim(new CacheShim($this, Cool::getInstance()->getFactory()->getCacher(), $this->getShimUID()));
         return $this->shim;
     }
 
@@ -39,6 +39,13 @@ trait CoolCacheShimmed {
      */
     public function setShim( $shim ) {
         $this->shim = $shim;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShimUID() {
+        return get_class($this);
     }
     
 }
