@@ -96,19 +96,7 @@ EOF
         if (is_dir($dir = $bundle->getPath().'/Resources/databases')) {
             $finder  = new Finder();
             return $finder->directories()->depth(0)->in($dir);
-
-        }    
-    }
-
-    /**
-     * returns the base src folder e.g /path/to/your/webapp/src
-     * @return string
-     */
-    protected function getBaseSrcFolder() {
-        $parts  = explode(DIRECTORY_SEPARATOR, realpath($this->bundle->getPath()));
-        $length = count(explode('\\', $this->bundle->getNamespace())) * (-1);
-        $baseSrcFolder = implode(DIRECTORY_SEPARATOR, array_slice($parts, 0, $length));
-        return $baseSrcFolder;
+        }
     }
 
     /**
@@ -135,7 +123,9 @@ EOF
                     }
                     case 'BUILD_DICTIONARY' : {
                         $settings = $b->retrieveSettings();
-                        $target_folder = str_replace("\\",DIRECTORY_SEPARATOR,$this->getBaseSrcFolder()."\\".$settings['namespace']);
+                        preg_match('/.+?(Model\\\\.+?)$/sim', $settings['namespace'], $m);
+                        $modelTargetRelativeToBundle = $m[1];
+                        $target_folder = $this->bundle->getPath().DIRECTORY_SEPARATOR.str_replace("\\",DIRECTORY_SEPARATOR,$modelTargetRelativeToBundle);
                         $b->build($projectDir->getFileName(), $settings, $target_folder, $this->getContainer()->get('templating') );
                         break;
                     }
