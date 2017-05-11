@@ -412,7 +412,8 @@ abstract class Lister extends Widget implements ListerInterface {
         $raw = $this->request->has("raw");
 
         $f = new SimpleFileProxy();
-        $f->setName( $this->getTitle().".".$format );
+        $cleanFileName = preg_replace('/[^a-z0-9-\[\]]/sim','',$this->getTitle());
+        $f->setName( $cleanFileName.".".$format );
 
         $data = $this->getExportData();
         if(count($data) > 0 && ($renderer = $this->getRenderer($format)) ) {

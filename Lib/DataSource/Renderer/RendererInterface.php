@@ -25,7 +25,6 @@ interface RendererInterface {
      * @param Column[] $listerColumnsDefinitions
      * @param array $rows
      * @param bool $raw
-     * @internal param array $columns
      * @return mixed
      */
     public function renderData(array $rows, $raw, array $listerColumnsDefinitions=null);
