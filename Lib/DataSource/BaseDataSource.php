@@ -72,7 +72,8 @@ abstract class BaseDataSource implements DataSourceInterface {
     */
     public function addFields($fields) {
         foreach($fields as $field)
-            $this->addField($field->getName(), $field);
+            if(!$this->hasField($field->getName()))
+                $this->addField($field->getName(), $field);
     }
 
     /**
