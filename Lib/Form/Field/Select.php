@@ -112,20 +112,19 @@ class Select extends Field {
      * @param string $vmapColumn
      */
     public function filterAnotherField($fieldName, $vmapColumn) {
-        $this->setOnChange("
-            var selectedValue = control.getSelectedOption().value;
-            widget.getField('$fieldName').filterOnFunction(function(option){
-                if(option.hasOwnProperty('$vmapColumn')) {
-                    var columnValue = option['$vmapColumn'];
-                    // if columnValue is an array, we look for selectedValue in it
-                    if(Array.isArray(columnValue)) {
-                        return dojo.indexOf(columnValue, selectedValue) >= 0;
-                    }
-                    // otherwise we check if the values match, or if the column value is null
-                    else return !columnValue || (columnValue == selectedValue);
-                } else return true;
-            });")
-            ->setOnLoad("control.emit('change',{});");
+        $f = "  var selectedValue = control.getSelectedOption().value;
+                widget.getField('$fieldName').filterOnFunction(function(option){
+                    if(option.hasOwnProperty('$vmapColumn')) {
+                        var columnValue = option['$vmapColumn'];
+                        // if columnValue is an array, we look for selectedValue in it
+                        if(Array.isArray(columnValue)) {
+                            return dojo.indexOf(columnValue, selectedValue) >= 0;
+                        }
+                        // otherwise we check if the values match, or if the column value is null
+                        else return !columnValue || (columnValue == selectedValue);
+                    } else return true;
+                });";
+        $this->setOnChangeOrLoad($f);
     }
 
 }

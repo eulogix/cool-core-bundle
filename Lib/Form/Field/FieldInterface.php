@@ -65,6 +65,11 @@ interface FieldInterface {
     public function hide();
 
     /**
+     * @return boolean
+     */
+    public function isHidden();
+
+    /**
     * returns an array describing all the form attributes and fields. This array is used by the Js Form component to render the form on the client
     * @return mixed
     */
@@ -143,6 +148,12 @@ interface FieldInterface {
      * @return $this
      */
     public function setOnchange($js);
+
+    /**
+     * @param string $js
+     * @return $this
+     */
+    public function addOnchange($js);
     
     /**
     * Convenience method that calls the getConstraints method of the form BeanValidator

@@ -173,6 +173,13 @@ class Field implements FieldInterface {
     /**
      * @inheritdoc
      */
+    public function isHidden() {
+        return $this->getType() == self::TYPE_HIDDEN;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setName($name) {
         $this->name = $name;
         return $this;
@@ -302,6 +309,14 @@ class Field implements FieldInterface {
     */
     public function setOnChange($js) {
         $this->getParameters()->set( self::EVT_ONCHANGE, $js );
+        return $this;
+    }
+
+    /**
+    * @inheritdoc
+    */
+    public function addOnChange($js) {
+        $this->getParameters()->set( self::EVT_ONCHANGE, $this->getParameters()->get( self::EVT_ONCHANGE ) ."\n". $js );
         return $this;
     }
 
