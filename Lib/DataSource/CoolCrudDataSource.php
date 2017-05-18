@@ -92,7 +92,7 @@ class CoolCrudDataSource extends CoolDataSource {
      * @return string
      */
     public function getShimUID() {
-        $UID = $this->schemaName . serialize($this->tableRelations) . serialize($this->getFieldNames()) . ($this->getCoolSchema()->isMultiTenant() ? $this->getCoolSchema()->getCurrentSchema() : "");
+        $UID = get_class($this). $this->schemaName . serialize($this->tableRelations) . serialize($this->getFieldNames()) . $this->getCoolSchema()->getCurrentSchema();
         return md5($UID);
     }
 

@@ -21,31 +21,45 @@ use Eulogix\Cool\Lib\Cool;
 trait CoolCacheShimmed {
 
     /**
-     * @var CacheShim
+     * @var CacheShim[]
      */
-    public $shim;
+    private $shims;
+
+    /**
+     * @var string
+     */
+    private $shimUID;
 
     /**
      * @return CacheShim
      */
     public function getShim() {
-        if(!$this->shim)
+        if(!isset($this->shims[$this->getShimUID()]))
             $this->setShim(new CacheShim($this, Cool::getInstance()->getFactory()->getCacher(), $this->getShimUID()));
-        return $this->shim;
+        return $this->shims[$this->getShimUID()];
     }
 
     /**
      * @param CacheShim $shim
      */
     public function setShim( $shim ) {
-        $this->shim = $shim;
+        $this->shims[$this->getShimUID()] = $shim;
+    }
+
+    /**
+     * @param string $uid
+     */
+    public function setShimUID( $uid) {
+        $this->shimUID = $uid;
     }
 
     /**
      * @return string
      */
     public function getShimUID() {
-        return get_class($this);
+        if(!$this->shimUID)
+            $this->setShimUID(get_class($this));
+        return $this->shimUID;
     }
     
 }

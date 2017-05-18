@@ -11,7 +11,7 @@
 
 namespace Eulogix\Cool\Lib\DataSource;
 
-use Eulogix\Lib\Cache\CacheShim;
+use Eulogix\Cool\Lib\Traits\CoolCacheShimmed;
 use Eulogix\Lib\Cache\Shimmable;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Propel\CoolTableMap;
@@ -22,6 +22,8 @@ use Eulogix\Cool\Lib\Database\Propel\CoolTableMap;
 
 class CoolValueMap extends BaseValueMap implements Shimmable
 {
+    use CoolCacheShimmed;
+
     /**
      * @var array
      */
@@ -33,33 +35,20 @@ class CoolValueMap extends BaseValueMap implements Shimmable
     private $schemaName, $tableName;
 
     /**
-     * @var CacheShim
+     * @param string $schemaName
+     * @param string $tableName
+     * @throws \Exception
      */
-    public $shim;
-
-
     public function __construct($schemaName, $tableName) {
         $this->schemaName = $schemaName;
         $this->tableName = $tableName;
     }
 
     /**
-     * @return CacheShim
+     * @inheritdoc
      */
-    public function getShim() {
-        if(!$this->shim) {
-            $UID = Cool::getInstance()->getSchema($this->schemaName)->getCurrentSchema().';'.$this->tableName;
-            $shimNS = md5($UID);
-            $this->setShim(new CacheShim($this, Cool::getInstance()->getFactory()->getCacher(), $shimNS));
-        }
-        return $this->shim;
-    }
-
-    /**
-     * @param CacheShim $shim
-     */
-    public function setShim( $shim ) {
-        $this->shim = $shim;
+    public function getShimUID() {
+        return md5(get_class($this).Cool::getInstance()->getSchema($this->schemaName)->getCurrentSchema().';'.$this->tableName);
     }
 
     /**
@@ -113,6 +102,25 @@ class CoolValueMap extends BaseValueMap implements Shimmable
             }
         } catch(\Exception $e) {
             // TODO: $columnName may be an extended field, which may have its valuemap defined somewhere in the extension itself
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $schemaName
+     * @param $tableName
+     * @return \Eulogix\Cool\Lib\DataSource\ValueMapInterface
+     */
+    public static function getValueMapForTable($schemaName, $tableName) {
+        $map = null;
+
+        try {
+            $schema = Cool::getInstance()->getSchema($schemaName);
+            $tableMap = $schema->getDictionary()->getPropelTableMap($tableName);
+            return $tableMap->getCoolValueMap();
+        } catch(\Exception $e) {
+
         }
 
         return false;

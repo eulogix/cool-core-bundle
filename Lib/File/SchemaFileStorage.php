@@ -27,10 +27,13 @@ class SchemaFileStorage {
     /**
      * @var string
      */
-    private $storagePath;
+    private $storagePath, $tableName;
+
+
 
     public function __construct(Schema $schema, $storagePath) {
         $this->schema = $schema;
+        $this->tableName = $schema->getFilesIndexTableName();
         $this->storagePath = $storagePath;
     }
 
@@ -61,9 +64,8 @@ class SchemaFileStorage {
     {
         $repo = CoolTableFileRepository::fromSchema($this->schema);
 
-        $schemaName = $this->schema->getName();
         $parameters = [];
-        $sql = "select * from {$schemaName}_files WHERE TRUE";
+        $sql = "select * from {$this->tableName} WHERE TRUE";
 
         if($table) {
             $sql.= " AND (source_table=:table)";
@@ -122,8 +124,7 @@ class SchemaFileStorage {
      */
     public function getById($id)
     {
-        $schemaName = $this->schema->getName();
-        $data = $this->schema->fetch("select * from {$schemaName}_files a
+        $data = $this->schema->fetch("select * from {$this->tableName} a
         where a.file_id=:file_id",[':file_id'=>$id]);
         if($data) {
             return $this->compileFileProxy($data);
@@ -136,8 +137,7 @@ class SchemaFileStorage {
      */
     public function removeById($id)
     {
-        $schemaName = $this->schema->getName();
-        $this->schema->query("DELETE FROM {$schemaName}_files WHERE file_id=:file_id", [':file_id'=>$id]);
+        $this->schema->query("DELETE FROM {$this->tableName} WHERE file_id=:file_id", [':file_id'=>$id]);
     }
 
     /**
@@ -147,10 +147,9 @@ class SchemaFileStorage {
      */
     public function setProperties($id, array $properties, $merge = false)
     {
-        $schemaName = $this->schema->getName();
         $finalProperties = $merge ? array_merge($this->getProperties($id), $properties) : $properties;
         $jsonProperties = json_encode($finalProperties);
-        $this->schema->query("UPDATE {$schemaName}_files SET properties=:props WHERE file_id=:file_id", [':file_id'=>$id, ':props'=>$jsonProperties]);
+        $this->schema->query("UPDATE {$this->tableName} SET properties=:props WHERE file_id=:file_id", [':file_id'=>$id, ':props'=>$jsonProperties]);
     }
 
     /**
@@ -159,8 +158,7 @@ class SchemaFileStorage {
      */
     public function getProperties($id)
     {
-        $schemaName = $this->schema->getName();
-        $jsonString = $this->schema->fetch("SELECT properties FROM {$schemaName}_files WHERE file_id=:file_id", [':file_id'=>$id]);
+        $jsonString = $this->schema->fetch("SELECT properties FROM {$this->tableName} WHERE file_id=:file_id", [':file_id'=>$id]);
         $ret = json_decode($jsonString, true);
         return $ret ? $ret : [];
     }
@@ -171,8 +169,7 @@ class SchemaFileStorage {
      */
     public function exists($id)
     {
-        $schemaName = $this->schema->getName();
-        return $this->schema->fetch("SELECT file_id FROM {$schemaName}_files WHERE file_id=:file_id", [':file_id'=>$id]) > 0;
+        return $this->schema->fetch("SELECT file_id FROM {$this->tableName} WHERE file_id=:file_id", [':file_id'=>$id]) > 0;
     }
 
     /**
@@ -208,13 +205,13 @@ class SchemaFileStorage {
         }
 
         if($id) {
-            $db->query("UPDATE {$schemaName}_files SET checksum_sha1=:sha1, file_name=:fname WHERE file_id=:file_id",[':file_id'=>$id, ':sha1'=>$hash,
+            $db->query("UPDATE {$this->tableName} SET checksum_sha1=:sha1, file_name=:fname WHERE file_id=:file_id",[':file_id'=>$id, ':sha1'=>$hash,
                     ':fname'=>$file->getName()]);
             $this->storeContent($hash, $file);
             return $id;
         } else {
             $newId = $db->fetch(
-                "INSERT INTO {$schemaName}_files ( file_id, file_name, file_size, checksum_sha1, category, source_table, source_table_id, upload_date, last_modification_date, uploaded_by_user)
+                "INSERT INTO {$this->tableName} ( file_id, file_name, file_size, checksum_sha1, category, source_table, source_table_id, upload_date, last_modification_date, uploaded_by_user)
                             VALUES (DEFAULT, :fname, :size, :sha1::text, :category, :tbl_name, :pk, now(), :lastmdate, core.get_logged_user()) RETURNING file_id",
                 [
                     ':sha1'=>$hash,
@@ -238,9 +235,8 @@ class SchemaFileStorage {
      */
     public function move($id, $table, $pk, $category=null) {
         $db = $this->schema;
-        $schemaName = $db->getName();
 
-        $db->query("UPDATE {$schemaName}_files SET source_table=:table, source_table_id=:pk, category=:category WHERE file_id=:file_id",
+        $db->query("UPDATE {$this->tableName} SET source_table=:table, source_table_id=:pk, category=:category WHERE file_id=:file_id",
             [
                 ':file_id'=>$id,
                 ':table'=>$table,
@@ -255,9 +251,8 @@ class SchemaFileStorage {
      */
     public function rename($id, $newName) {
         $db = $this->schema;
-        $schemaName = $db->getName();
 
-        $db->query("UPDATE {$schemaName}_files SET file_name=:newName WHERE file_id=:file_id",
+        $db->query("UPDATE {$this->tableName} SET file_name=:newName WHERE file_id=:file_id",
             [
                 ':file_id'=>$id,
                 ':newName'=>$newName
