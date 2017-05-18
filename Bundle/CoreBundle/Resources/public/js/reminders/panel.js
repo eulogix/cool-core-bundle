@@ -290,7 +290,8 @@ define("cool/reminders/panel",
                                 grid.select.cell.deselectById(row, col);
                         }
                         //open details for cell
-                        t.openDetail(row, col);
+                        if(col != 'key')
+                            t.openDetail(row, col);
                     });
 
                     d.resolve(grid);
@@ -433,7 +434,7 @@ define("cool/reminders/panel",
              * @param matrix
              */
             buildLayout: function(matrix) {
-                console.log(matrix);
+
                 var self = this;
 
                 var layout = [
