@@ -27,6 +27,7 @@ class UserEditorForm extends CoolForm {
         $h = Cool::getInstance()->getContainer()->getParameter('security.role_hierarchy.roles');
 
         $this->addFieldMultiSelect('ROLES_ALL')
+            ->setUseChosen(true)
             ->setValueMap(new SimpleValueMap(array_keys($h)));
 
         parent::build();
