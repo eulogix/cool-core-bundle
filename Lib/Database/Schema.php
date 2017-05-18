@@ -799,7 +799,9 @@ class Schema implements Shimmable
                     $ret[$prefix.$fieldName] = $DSfield;
                 }
             }
-        } else return $this->getDSFieldsForView($tableName, $prefix, $lambdaFilter);
+        } elseif($tableName == $this->getFilesIndexTableName())
+             return $this->getDSFieldsForFilesIndex($prefix);
+        else return $this->getDSFieldsForView($tableName, $prefix, $lambdaFilter);
 
         return $ret;
     }
@@ -843,6 +845,38 @@ class Schema implements Shimmable
             $field->setIsPkInSource(false);
 
         return $ret;
+    }
+
+    /**
+     * builds an array of fields for the schema files index
+     *
+     * @param string $prefix
+     * @returns DSField[]
+     */
+    public function getDSFieldsForFilesIndex($prefix='') {
+        $ret = [];
+
+        $fileId         = new DSField($n = $prefix.'file_id');                  $fileId->setType(\PropelTypes::INTEGER);            $ret[$n] = $fileId;
+        $fileSize       = new DSField($n = $prefix.'file_size');                $fileSize->setType(\PropelTypes::INTEGER);          $ret[$n] = $fileSize;
+        $fileName       = new DSField($n = $prefix.'file_name');                $fileName->setType(\PropelTypes::LONGVARCHAR);      $ret[$n] = $fileName;
+        $uploadDate     = new DSField($n = $prefix.'upload_date');              $uploadDate->setType(\PropelTypes::TIMESTAMP);      $ret[$n] = $uploadDate;
+        $lastModDate    = new DSField($n = $prefix.'last_modification_date');   $lastModDate->setType(\PropelTypes::TIMESTAMP);     $ret[$n] = $lastModDate;
+
+        $uploadedBy     = new DSField($n = $prefix.'uploaded_by_user');         $uploadedBy->setType(\PropelTypes::INTEGER);        $ret[$n] = $uploadedBy;
+        $uploadedBy->setValueMap(CoolValueMap::getValueMapForTable('core', 'account'));
+
+        $sha1           = new DSField($n = $prefix.'checksum_sha1');            $sha1->setType(\PropelTypes::LONGVARCHAR);          $ret[$n] = $sha1;
+        $sourceTable    = new DSField($n = $prefix.'source_table');             $sourceTable->setType(\PropelTypes::LONGVARCHAR);   $ret[$n] = $sourceTable;
+        $category       = new DSField($n = $prefix.'category');                 $category->setType(\PropelTypes::LONGVARCHAR);      $ret[$n] = $category;
+
+        return $ret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilesIndexTableName() {
+        return $this->getName().'_files';
     }
 
     /**
