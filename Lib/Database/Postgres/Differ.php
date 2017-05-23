@@ -513,6 +513,7 @@ CREATE EXTENSION IF NOT EXISTS hstore SCHEMA pg_catalog;
             $twigTemplate = $twig->createTemplate(file_get_contents( $tmp ));
             try {
                 $buf = $twigTemplate->render( [
+                    'currentDatabase' => $this->database,
                     'currentSchema' => $this->schema,
                     'auditSchema' => $this->auditSchema,
                     'appUser'      => $this->appUser,
