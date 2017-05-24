@@ -96,7 +96,7 @@ class DSstore implements StoreInterface {
 
         $primaryKeyField = $this->dataSource->getPrimaryKey();
 
-        $DSRecord = $this->dataSource->getDSRecord(@$postedRecord[ $primaryKeyField ]);
+        $DSRecord = $this->dataSource->getDSRecord(@$postedRecord[ $primaryKeyField ], $dojoRequest->getParameters());
 
         $dsr = new DSRequest();
         $dsr->setOperationType( $DSRecord->isNew() ? $dsr::OPERATION_TYPE_ADD : $dsr::OPERATION_TYPE_UPDATE )

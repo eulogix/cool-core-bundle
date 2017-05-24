@@ -14,6 +14,10 @@ namespace Eulogix\Cool\Lib\Reminder;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminder;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\Database\Propel\CoolPropelObject;
+use Eulogix\Cool\Lib\Database\Propel\CoolTableMap;
+use Eulogix\Cool\Lib\DataSource\DSRequest;
+use Eulogix\Cool\Lib\DataSource\DSResponse;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -94,7 +98,94 @@ class UserReminderDS extends BaseReminderDS
             'parameters' => $where['parameters']
         ];
 
+        if($recordId = @$parameters[self::RECORD_IDENTIFIER]) {
+            @$ret[ 'statement' ] .= " WHERE (".self::RECORD_IDENTIFIER." = :_recordid) ";
+            @$ret[ 'parameters' ][ ':_recordid' ] = $recordId;
+
+        }
+
         return $ret;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function executeUpdate(DSRequest $req) {
+        $success = true;
+        $dsresponse = new DSResponse($this);
+        if($db = $this->getCoolSchema()) {
+
+            $parentTables = explode(',',$this->userReminder->getParentTables());
+            $parentTableMaps = [];
+            foreach($parentTables as $parentTable) {
+                $parentTableMaps[$parentTable] = $db->getDictionary()->getPropelTableMap($parentTable);
+            }
+
+            $connection = $db->getConnection();
+            $fillData = $req->getValues();
+            $recordId = $req->getParameters()[ self::RECORD_IDENTIFIER ];
+
+            $connection->beginTransaction();
+            try {
+                if ($this->isUnioned() && ($hashSchema = @$fillData[ self::SCHEMA_IDENTIFIER ]) && $db->isSchemaNameValid($hashSchema)) {
+                    $db->setCurrentSchema($hashSchema);
+                }
+
+                /**
+                 * @var CoolPropelObject[] $propelObjects
+                 */
+                $propelObjects = [];
+                foreach($parentTableMaps as $parentTableName => $tm) {
+                    /**
+                     * @var CoolTableMap $tm
+                     */
+                    $pkFields = $tm->getPkFields();
+                    if(count($pkFields)==1 && isset($fillData[$pkFields[0]])) {
+                        $propelObjects[$parentTableName] = $db->getPropelObject($parentTableName, $fillData[$pkFields[0]]);
+                    }
+                }
+
+                $errors = $this->validate($fillData);
+                if (!$errors->hasErrors()) {
+
+                    $oldRecord = $this->getDSRecord($recordId, $req->getParameters());
+                    $oldValues = $oldRecord->getValues();
+                    foreach($oldValues as $fieldName => $oldValue) {
+                        if(isset($fillData[$fieldName]) && $fillData[$fieldName] != $oldValue) {
+                            foreach($propelObjects as $obj)
+                                if($obj->getCoolTableMap()->hasColumn($fieldName))
+                                    $obj->setByName($fieldName, $fillData[$fieldName], \BasePeer::TYPE_FIELDNAME);
+                        }
+                    }
+
+                    foreach($propelObjects as $obj)
+                        if($obj->isModified())
+                            $obj->save();
+
+
+                }
+                $connection->commit();
+            } catch (\Exception $e) {
+                $dsresponse->getErrorReport()->addGeneralError("EXCEPTION");
+                $dsresponse->getErrorReport()->addGeneralError($e->getMessage());
+                $dsresponse->setData([]);
+
+                $connection->rollback();
+                $success = false;
+            }
+
+            $dsresponse->setAttribute(self::RECORD_IDENTIFIER, $recordId);
+            $newRecord = $this->getDSRecord($recordId, $req->getParameters());
+            $finalHash = $newRecord->getValues();
+
+            if($req->getIncludeDecodings()) {
+                $finalHash = $this->addDecodedValuesToHash($finalHash);
+            }
+
+            $dsresponse->setData( $finalHash );
+        }
+        $dsresponse->setStatus($success);
+        return $dsresponse;
     }
 
 }

@@ -346,24 +346,24 @@ abstract class BaseDataSource implements DataSourceInterface {
 
     /**
      * @param $recordId
+     * @param array $requestParameters
      * @return DSResponse
      */
-    public function getSingleRecordResponse($recordId) {
+    public function getSingleRecordResponse($recordId, $requestParameters = []) {
         $dsr = new DSRequest();
 
         $dsr ->setOperationType($dsr::OPERATION_TYPE_FETCH)
-             ->setParameters([$this->getPrimaryKey() => $recordId]);
+             ->setParameters(array_merge($requestParameters, [$this->getPrimaryKey() => $recordId]));
 
         return $this->execute($dsr);
     }
 
     /**
-     * @param $recordId
-     * @return DSRecord
+     * @inheritdoc
      */
-    public function getDSRecord($recordId) {
+    public function getDSRecord($recordId, $requestParameters = []) {
         if($recordId !== null) {
-            return $this->getSingleRecordResponse($recordId)->getDSRecord();
+            return $this->getSingleRecordResponse($recordId, $requestParameters)->getDSRecord();
         } else return new DSRecord($this);
     }
 

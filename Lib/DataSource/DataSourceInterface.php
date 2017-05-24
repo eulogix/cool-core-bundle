@@ -249,9 +249,10 @@ interface DataSourceInterface {
 
     /**
      * @param $recordId
+     * @param array $requestParameters
      * @return DSRecord
      */
-    public function getDSRecord($recordId);
+    public function getDSRecord($recordId, $requestParameters = []);
 
     /**
      * returns the default file repository instance that retrieves and stores files, for a given fieldname or recordid
