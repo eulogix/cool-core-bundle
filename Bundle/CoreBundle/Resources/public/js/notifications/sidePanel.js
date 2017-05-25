@@ -110,12 +110,14 @@ define("cool/notifications/sidePanel",
                 t.entries = [];
 
                 array.forEach(t.data, function(item){
-                    var entry = new sidePanelEntry(lang.mixin({}, item, {
+                    var initHash = lang.mixin({}, item, {
                         creation_date: t.formatEntryDate(item.creation_date),
                         notification_id: item.user_notification_id,
                         parentPanel: t,
                         notificationData: item
-                    }));
+                    });
+                    delete initHash.title; //or you get a stupid HTML tooltip
+                    var entry = new sidePanelEntry(initHash);
                     entry.startup();
                     t.own(entry);
                     t.entries.push(entry);
