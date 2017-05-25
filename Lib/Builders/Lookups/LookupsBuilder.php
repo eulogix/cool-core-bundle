@@ -197,6 +197,23 @@ class LookupsBuilder {
     }
 
     /**
+     * @return string
+     */
+    private function getLookupFunctionsScript() {
+        $sql ="SET lc_messages TO 'en_US.UTF-8';\n\n";
+
+        $schemaName = $this->getSchema()->getName();
+
+        $sql.= "CREATE or REPLACE FUNCTION {{ currentSchema }}.decode_table_column(table_name text, column_name text, locale text, value text, filter text) RETURNS text AS $$\n".
+               "\tSELECT core.decode_table_column('{$schemaName}', table_name, column_name, locale, value, '{{ currentSchema }}', filter);\n".
+               "$$ LANGUAGE SQL IMMUTABLE;\n";
+
+        return $sql;
+    }
+
+
+
+    /**
      * @param string $targetFile
      */
     public function outputTableScript($targetFile) {
@@ -210,6 +227,15 @@ class LookupsBuilder {
      */
     public function outputEnumScript($targetFile) {
         if($script = $this->getEnumScript()) {
+            file_put_contents($targetFile, $script);
+        }
+    }
+
+    /**
+     * @param $targetFile
+     */
+    public function outputLookupFunctions($targetFile) {
+        if($script = $this->getLookupFunctionsScript()) {
             file_put_contents($targetFile, $script);
         }
     }

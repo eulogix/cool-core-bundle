@@ -15,6 +15,7 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\TableExtensionFieldQuery;
 use Eulogix\Cool\Lib\Database\Propel\CoolTableMap;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
+use Eulogix\Lib\Cache\Cached;
 
 /**
  * Provides convenience method to deal with custom database properties
@@ -23,6 +24,8 @@ use Eulogix\Cool\Lib\Form\Field\FieldInterface;
  */
 
 abstract class Dictionary {
+
+    use Cached;
 
     const TBL_ATT_EDITABLE   = 'editable';      
     const TBL_ATT_SCHEMA = 'schema';
@@ -232,13 +235,16 @@ abstract class Dictionary {
      * @return array []
      */
     public function getTableColumns($tableName, $physicalSchemaName=null) {
-
-        $ret = array_merge(
-            $this->getSettings()['tables'][$tableName]['columns'],
-            $this->getExtendedTableColumns($tableName, $physicalSchemaName)
-        );
-
-        return $ret;
+        $c = $this->getCacher();
+        $tk = $c->tokenize([__METHOD__, $tableName, $physicalSchemaName]);
+        if(!$c->exists($tk)) {
+            $ret = array_merge(
+                $this->getSettings()['tables'][$tableName]['columns'],
+                $this->getExtendedTableColumns($tableName, $physicalSchemaName)
+            );
+            $c->store($tk, $ret);
+        }
+        return $c->fetch($tk);
     }
 
     /**
@@ -249,7 +255,6 @@ abstract class Dictionary {
      * @return array
      */
     public function getExtendedTableColumns($tableName, $physicalSchemaName=null) {
-
         $coolSchema = Cool::getInstance()->getCoreSchema();
         $extensions = $coolSchema->getTableExtensions($tableName, $physicalSchemaName);
         $ret = [];
@@ -297,13 +302,16 @@ abstract class Dictionary {
         if(!is_array($inlineAttributes))
             $inlineAttributes = [];
 
+        if(@$inlineAttributes[$attributeName])
+            return $inlineAttributes[$attributeName];
+
         $nestedAttributes = $this->getTableColumns($tableName)[ $columnName ];
         if(!is_array($nestedAttributes))
             $nestedAttributes = [];
 
-        $ret = @array_merge($inlineAttributes, $nestedAttributes)[$attributeName];
+        if(@$nestedAttributes[$attributeName])
+            return $nestedAttributes[$attributeName];
 
-        return $ret;
     }
 
     
