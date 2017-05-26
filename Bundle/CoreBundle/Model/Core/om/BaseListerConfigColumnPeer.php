@@ -31,13 +31,13 @@ abstract class BaseListerConfigColumnPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\ListerConfigColumnTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 15;
+    const NUM_COLUMNS = 18;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 15;
+    const NUM_HYDRATE_COLUMNS = 18;
 
     /** the column name for the lister_config_column_id field */
     const LISTER_CONFIG_COLUMN_ID = 'core.lister_config_column.lister_config_column_id';
@@ -81,8 +81,17 @@ abstract class BaseListerConfigColumnPeer
     /** the column name for the truncate_chars field */
     const TRUNCATE_CHARS = 'core.lister_config_column.truncate_chars';
 
+    /** the column name for the tooltip_js_expression field */
+    const TOOLTIP_JS_EXPRESSION = 'core.lister_config_column.tooltip_js_expression';
+
+    /** the column name for the tooltip_url_js_expression field */
+    const TOOLTIP_URL_JS_EXPRESSION = 'core.lister_config_column.tooltip_url_js_expression';
+
     /** the column name for the tooltip_max_width field */
     const TOOLTIP_MAX_WIDTH = 'core.lister_config_column.tooltip_max_width';
+
+    /** the column name for the tooltip_delay_msec field */
+    const TOOLTIP_DELAY_MSEC = 'core.lister_config_column.tooltip_delay_msec';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -103,12 +112,12 @@ abstract class BaseListerConfigColumnPeer
      * e.g. ListerConfigColumnPeer::$fieldNames[ListerConfigColumnPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId', 'ListerConfigId', 'Name', 'SortableFlag', 'EditableFlag', 'ShowSummaryFlag', 'Width', 'CellTemplate', 'CellTemplateJs', 'ColumnStyleCss', 'SortOrder', 'SortbyOrder', 'SortbyDirection', 'TruncateChars', 'TooltipMaxWidth', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId', 'listerConfigId', 'name', 'sortableFlag', 'editableFlag', 'showSummaryFlag', 'width', 'cellTemplate', 'cellTemplateJs', 'columnStyleCss', 'sortOrder', 'sortbyOrder', 'sortbyDirection', 'truncateChars', 'tooltipMaxWidth', ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID, ListerConfigColumnPeer::LISTER_CONFIG_ID, ListerConfigColumnPeer::NAME, ListerConfigColumnPeer::SORTABLE_FLAG, ListerConfigColumnPeer::EDITABLE_FLAG, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG, ListerConfigColumnPeer::WIDTH, ListerConfigColumnPeer::CELL_TEMPLATE, ListerConfigColumnPeer::CELL_TEMPLATE_JS, ListerConfigColumnPeer::COLUMN_STYLE_CSS, ListerConfigColumnPeer::SORT_ORDER, ListerConfigColumnPeer::SORTBY_ORDER, ListerConfigColumnPeer::SORTBY_DIRECTION, ListerConfigColumnPeer::TRUNCATE_CHARS, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID', 'LISTER_CONFIG_ID', 'NAME', 'SORTABLE_FLAG', 'EDITABLE_FLAG', 'SHOW_SUMMARY_FLAG', 'WIDTH', 'CELL_TEMPLATE', 'CELL_TEMPLATE_JS', 'COLUMN_STYLE_CSS', 'SORT_ORDER', 'SORTBY_ORDER', 'SORTBY_DIRECTION', 'TRUNCATE_CHARS', 'TOOLTIP_MAX_WIDTH', ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id', 'lister_config_id', 'name', 'sortable_flag', 'editable_flag', 'show_summary_flag', 'width', 'cell_template', 'cell_template_js', 'column_style_css', 'sort_order', 'sortby_order', 'sortby_direction', 'truncate_chars', 'tooltip_max_width', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId', 'ListerConfigId', 'Name', 'SortableFlag', 'EditableFlag', 'ShowSummaryFlag', 'Width', 'CellTemplate', 'CellTemplateJs', 'ColumnStyleCss', 'SortOrder', 'SortbyOrder', 'SortbyDirection', 'TruncateChars', 'TooltipJsExpression', 'TooltipUrlJsExpression', 'TooltipMaxWidth', 'TooltipDelayMsec', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId', 'listerConfigId', 'name', 'sortableFlag', 'editableFlag', 'showSummaryFlag', 'width', 'cellTemplate', 'cellTemplateJs', 'columnStyleCss', 'sortOrder', 'sortbyOrder', 'sortbyDirection', 'truncateChars', 'tooltipJsExpression', 'tooltipUrlJsExpression', 'tooltipMaxWidth', 'tooltipDelayMsec', ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID, ListerConfigColumnPeer::LISTER_CONFIG_ID, ListerConfigColumnPeer::NAME, ListerConfigColumnPeer::SORTABLE_FLAG, ListerConfigColumnPeer::EDITABLE_FLAG, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG, ListerConfigColumnPeer::WIDTH, ListerConfigColumnPeer::CELL_TEMPLATE, ListerConfigColumnPeer::CELL_TEMPLATE_JS, ListerConfigColumnPeer::COLUMN_STYLE_CSS, ListerConfigColumnPeer::SORT_ORDER, ListerConfigColumnPeer::SORTBY_ORDER, ListerConfigColumnPeer::SORTBY_DIRECTION, ListerConfigColumnPeer::TRUNCATE_CHARS, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID', 'LISTER_CONFIG_ID', 'NAME', 'SORTABLE_FLAG', 'EDITABLE_FLAG', 'SHOW_SUMMARY_FLAG', 'WIDTH', 'CELL_TEMPLATE', 'CELL_TEMPLATE_JS', 'COLUMN_STYLE_CSS', 'SORT_ORDER', 'SORTBY_ORDER', 'SORTBY_DIRECTION', 'TRUNCATE_CHARS', 'TOOLTIP_JS_EXPRESSION', 'TOOLTIP_URL_JS_EXPRESSION', 'TOOLTIP_MAX_WIDTH', 'TOOLTIP_DELAY_MSEC', ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id', 'lister_config_id', 'name', 'sortable_flag', 'editable_flag', 'show_summary_flag', 'width', 'cell_template', 'cell_template_js', 'column_style_css', 'sort_order', 'sortby_order', 'sortby_direction', 'truncate_chars', 'tooltip_js_expression', 'tooltip_url_js_expression', 'tooltip_max_width', 'tooltip_delay_msec', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
     /**
@@ -118,12 +127,12 @@ abstract class BaseListerConfigColumnPeer
      * e.g. ListerConfigColumnPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId' => 0, 'ListerConfigId' => 1, 'Name' => 2, 'SortableFlag' => 3, 'EditableFlag' => 4, 'ShowSummaryFlag' => 5, 'Width' => 6, 'CellTemplate' => 7, 'CellTemplateJs' => 8, 'ColumnStyleCss' => 9, 'SortOrder' => 10, 'SortbyOrder' => 11, 'SortbyDirection' => 12, 'TruncateChars' => 13, 'TooltipMaxWidth' => 14, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId' => 0, 'listerConfigId' => 1, 'name' => 2, 'sortableFlag' => 3, 'editableFlag' => 4, 'showSummaryFlag' => 5, 'width' => 6, 'cellTemplate' => 7, 'cellTemplateJs' => 8, 'columnStyleCss' => 9, 'sortOrder' => 10, 'sortbyOrder' => 11, 'sortbyDirection' => 12, 'truncateChars' => 13, 'tooltipMaxWidth' => 14, ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID => 0, ListerConfigColumnPeer::LISTER_CONFIG_ID => 1, ListerConfigColumnPeer::NAME => 2, ListerConfigColumnPeer::SORTABLE_FLAG => 3, ListerConfigColumnPeer::EDITABLE_FLAG => 4, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG => 5, ListerConfigColumnPeer::WIDTH => 6, ListerConfigColumnPeer::CELL_TEMPLATE => 7, ListerConfigColumnPeer::CELL_TEMPLATE_JS => 8, ListerConfigColumnPeer::COLUMN_STYLE_CSS => 9, ListerConfigColumnPeer::SORT_ORDER => 10, ListerConfigColumnPeer::SORTBY_ORDER => 11, ListerConfigColumnPeer::SORTBY_DIRECTION => 12, ListerConfigColumnPeer::TRUNCATE_CHARS => 13, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH => 14, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID' => 0, 'LISTER_CONFIG_ID' => 1, 'NAME' => 2, 'SORTABLE_FLAG' => 3, 'EDITABLE_FLAG' => 4, 'SHOW_SUMMARY_FLAG' => 5, 'WIDTH' => 6, 'CELL_TEMPLATE' => 7, 'CELL_TEMPLATE_JS' => 8, 'COLUMN_STYLE_CSS' => 9, 'SORT_ORDER' => 10, 'SORTBY_ORDER' => 11, 'SORTBY_DIRECTION' => 12, 'TRUNCATE_CHARS' => 13, 'TOOLTIP_MAX_WIDTH' => 14, ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id' => 0, 'lister_config_id' => 1, 'name' => 2, 'sortable_flag' => 3, 'editable_flag' => 4, 'show_summary_flag' => 5, 'width' => 6, 'cell_template' => 7, 'cell_template_js' => 8, 'column_style_css' => 9, 'sort_order' => 10, 'sortby_order' => 11, 'sortby_direction' => 12, 'truncate_chars' => 13, 'tooltip_max_width' => 14, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId' => 0, 'ListerConfigId' => 1, 'Name' => 2, 'SortableFlag' => 3, 'EditableFlag' => 4, 'ShowSummaryFlag' => 5, 'Width' => 6, 'CellTemplate' => 7, 'CellTemplateJs' => 8, 'ColumnStyleCss' => 9, 'SortOrder' => 10, 'SortbyOrder' => 11, 'SortbyDirection' => 12, 'TruncateChars' => 13, 'TooltipJsExpression' => 14, 'TooltipUrlJsExpression' => 15, 'TooltipMaxWidth' => 16, 'TooltipDelayMsec' => 17, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId' => 0, 'listerConfigId' => 1, 'name' => 2, 'sortableFlag' => 3, 'editableFlag' => 4, 'showSummaryFlag' => 5, 'width' => 6, 'cellTemplate' => 7, 'cellTemplateJs' => 8, 'columnStyleCss' => 9, 'sortOrder' => 10, 'sortbyOrder' => 11, 'sortbyDirection' => 12, 'truncateChars' => 13, 'tooltipJsExpression' => 14, 'tooltipUrlJsExpression' => 15, 'tooltipMaxWidth' => 16, 'tooltipDelayMsec' => 17, ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID => 0, ListerConfigColumnPeer::LISTER_CONFIG_ID => 1, ListerConfigColumnPeer::NAME => 2, ListerConfigColumnPeer::SORTABLE_FLAG => 3, ListerConfigColumnPeer::EDITABLE_FLAG => 4, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG => 5, ListerConfigColumnPeer::WIDTH => 6, ListerConfigColumnPeer::CELL_TEMPLATE => 7, ListerConfigColumnPeer::CELL_TEMPLATE_JS => 8, ListerConfigColumnPeer::COLUMN_STYLE_CSS => 9, ListerConfigColumnPeer::SORT_ORDER => 10, ListerConfigColumnPeer::SORTBY_ORDER => 11, ListerConfigColumnPeer::SORTBY_DIRECTION => 12, ListerConfigColumnPeer::TRUNCATE_CHARS => 13, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION => 14, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION => 15, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH => 16, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC => 17, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID' => 0, 'LISTER_CONFIG_ID' => 1, 'NAME' => 2, 'SORTABLE_FLAG' => 3, 'EDITABLE_FLAG' => 4, 'SHOW_SUMMARY_FLAG' => 5, 'WIDTH' => 6, 'CELL_TEMPLATE' => 7, 'CELL_TEMPLATE_JS' => 8, 'COLUMN_STYLE_CSS' => 9, 'SORT_ORDER' => 10, 'SORTBY_ORDER' => 11, 'SORTBY_DIRECTION' => 12, 'TRUNCATE_CHARS' => 13, 'TOOLTIP_JS_EXPRESSION' => 14, 'TOOLTIP_URL_JS_EXPRESSION' => 15, 'TOOLTIP_MAX_WIDTH' => 16, 'TOOLTIP_DELAY_MSEC' => 17, ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id' => 0, 'lister_config_id' => 1, 'name' => 2, 'sortable_flag' => 3, 'editable_flag' => 4, 'show_summary_flag' => 5, 'width' => 6, 'cell_template' => 7, 'cell_template_js' => 8, 'column_style_css' => 9, 'sort_order' => 10, 'sortby_order' => 11, 'sortby_direction' => 12, 'truncate_chars' => 13, 'tooltip_js_expression' => 14, 'tooltip_url_js_expression' => 15, 'tooltip_max_width' => 16, 'tooltip_delay_msec' => 17, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
     /**
@@ -211,7 +220,10 @@ abstract class BaseListerConfigColumnPeer
             $criteria->addSelectColumn(ListerConfigColumnPeer::SORTBY_ORDER);
             $criteria->addSelectColumn(ListerConfigColumnPeer::SORTBY_DIRECTION);
             $criteria->addSelectColumn(ListerConfigColumnPeer::TRUNCATE_CHARS);
+            $criteria->addSelectColumn(ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION);
+            $criteria->addSelectColumn(ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION);
             $criteria->addSelectColumn(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH);
+            $criteria->addSelectColumn(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC);
         } else {
             $criteria->addSelectColumn($alias . '.lister_config_column_id');
             $criteria->addSelectColumn($alias . '.lister_config_id');
@@ -227,7 +239,10 @@ abstract class BaseListerConfigColumnPeer
             $criteria->addSelectColumn($alias . '.sortby_order');
             $criteria->addSelectColumn($alias . '.sortby_direction');
             $criteria->addSelectColumn($alias . '.truncate_chars');
+            $criteria->addSelectColumn($alias . '.tooltip_js_expression');
+            $criteria->addSelectColumn($alias . '.tooltip_url_js_expression');
             $criteria->addSelectColumn($alias . '.tooltip_max_width');
+            $criteria->addSelectColumn($alias . '.tooltip_delay_msec');
         }
     }
 

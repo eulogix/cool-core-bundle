@@ -123,10 +123,28 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     protected $truncate_chars;
 
     /**
+     * The value for the tooltip_js_expression field.
+     * @var        string
+     */
+    protected $tooltip_js_expression;
+
+    /**
+     * The value for the tooltip_url_js_expression field.
+     * @var        string
+     */
+    protected $tooltip_url_js_expression;
+
+    /**
      * The value for the tooltip_max_width field.
      * @var        int
      */
     protected $tooltip_max_width;
+
+    /**
+     * The value for the tooltip_delay_msec field.
+     * @var        int
+     */
+    protected $tooltip_delay_msec;
 
     /**
      * @var        ListerConfig
@@ -308,6 +326,28 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     }
 
     /**
+     * Get the [tooltip_js_expression] column value.
+     *
+     * @return string
+     */
+    public function getTooltipJsExpression()
+    {
+
+        return $this->tooltip_js_expression;
+    }
+
+    /**
+     * Get the [tooltip_url_js_expression] column value.
+     *
+     * @return string
+     */
+    public function getTooltipUrlJsExpression()
+    {
+
+        return $this->tooltip_url_js_expression;
+    }
+
+    /**
      * Get the [tooltip_max_width] column value.
      *
      * @return int
@@ -316,6 +356,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     {
 
         return $this->tooltip_max_width;
+    }
+
+    /**
+     * Get the [tooltip_delay_msec] column value.
+     *
+     * @return int
+     */
+    public function getTooltipDelayMsec()
+    {
+
+        return $this->tooltip_delay_msec;
     }
 
     /**
@@ -641,6 +692,48 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     } // setTruncateChars()
 
     /**
+     * Set the value of [tooltip_js_expression] column.
+     *
+     * @param  string $v new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setTooltipJsExpression($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->tooltip_js_expression !== $v) {
+            $this->tooltip_js_expression = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION;
+        }
+
+
+        return $this;
+    } // setTooltipJsExpression()
+
+    /**
+     * Set the value of [tooltip_url_js_expression] column.
+     *
+     * @param  string $v new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setTooltipUrlJsExpression($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->tooltip_url_js_expression !== $v) {
+            $this->tooltip_url_js_expression = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION;
+        }
+
+
+        return $this;
+    } // setTooltipUrlJsExpression()
+
+    /**
      * Set the value of [tooltip_max_width] column.
      *
      * @param  int $v new value
@@ -660,6 +753,27 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
 
         return $this;
     } // setTooltipMaxWidth()
+
+    /**
+     * Set the value of [tooltip_delay_msec] column.
+     *
+     * @param  int $v new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setTooltipDelayMsec($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->tooltip_delay_msec !== $v) {
+            $this->tooltip_delay_msec = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC;
+        }
+
+
+        return $this;
+    } // setTooltipDelayMsec()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -707,7 +821,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $this->sortby_order = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
             $this->sortby_direction = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
             $this->truncate_chars = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->tooltip_max_width = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
+            $this->tooltip_js_expression = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->tooltip_url_js_expression = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->tooltip_max_width = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
+            $this->tooltip_delay_msec = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -717,7 +834,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 15; // 15 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 18; // 18 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ListerConfigColumn object", $e);
@@ -997,8 +1114,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::TRUNCATE_CHARS)) {
             $modifiedColumns[':p' . $index++]  = 'truncate_chars';
         }
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION)) {
+            $modifiedColumns[':p' . $index++]  = 'tooltip_js_expression';
+        }
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION)) {
+            $modifiedColumns[':p' . $index++]  = 'tooltip_url_js_expression';
+        }
         if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH)) {
             $modifiedColumns[':p' . $index++]  = 'tooltip_max_width';
+        }
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC)) {
+            $modifiedColumns[':p' . $index++]  = 'tooltip_delay_msec';
         }
 
         $sql = sprintf(
@@ -1053,8 +1179,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                     case 'truncate_chars':
                         $stmt->bindValue($identifier, $this->truncate_chars, PDO::PARAM_INT);
                         break;
+                    case 'tooltip_js_expression':
+                        $stmt->bindValue($identifier, $this->tooltip_js_expression, PDO::PARAM_STR);
+                        break;
+                    case 'tooltip_url_js_expression':
+                        $stmt->bindValue($identifier, $this->tooltip_url_js_expression, PDO::PARAM_STR);
+                        break;
                     case 'tooltip_max_width':
                         $stmt->bindValue($identifier, $this->tooltip_max_width, PDO::PARAM_INT);
+                        break;
+                    case 'tooltip_delay_msec':
+                        $stmt->bindValue($identifier, $this->tooltip_delay_msec, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1238,7 +1373,16 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 return $this->getTruncateChars();
                 break;
             case 14:
+                return $this->getTooltipJsExpression();
+                break;
+            case 15:
+                return $this->getTooltipUrlJsExpression();
+                break;
+            case 16:
                 return $this->getTooltipMaxWidth();
+                break;
+            case 17:
+                return $this->getTooltipDelayMsec();
                 break;
             default:
                 return null;
@@ -1283,7 +1427,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $keys[11] => $this->getSortbyOrder(),
             $keys[12] => $this->getSortbyDirection(),
             $keys[13] => $this->getTruncateChars(),
-            $keys[14] => $this->getTooltipMaxWidth(),
+            $keys[14] => $this->getTooltipJsExpression(),
+            $keys[15] => $this->getTooltipUrlJsExpression(),
+            $keys[16] => $this->getTooltipMaxWidth(),
+            $keys[17] => $this->getTooltipDelayMsec(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1371,7 +1518,16 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 $this->setTruncateChars($value);
                 break;
             case 14:
+                $this->setTooltipJsExpression($value);
+                break;
+            case 15:
+                $this->setTooltipUrlJsExpression($value);
+                break;
+            case 16:
                 $this->setTooltipMaxWidth($value);
+                break;
+            case 17:
+                $this->setTooltipDelayMsec($value);
                 break;
         } // switch()
     }
@@ -1411,7 +1567,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if (array_key_exists($keys[11], $arr)) $this->setSortbyOrder($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setSortbyDirection($arr[$keys[12]]);
         if (array_key_exists($keys[13], $arr)) $this->setTruncateChars($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setTooltipMaxWidth($arr[$keys[14]]);
+        if (array_key_exists($keys[14], $arr)) $this->setTooltipJsExpression($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setTooltipUrlJsExpression($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setTooltipMaxWidth($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setTooltipDelayMsec($arr[$keys[17]]);
     }
 
     /**
@@ -1437,7 +1596,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::SORTBY_ORDER)) $criteria->add(ListerConfigColumnPeer::SORTBY_ORDER, $this->sortby_order);
         if ($this->isColumnModified(ListerConfigColumnPeer::SORTBY_DIRECTION)) $criteria->add(ListerConfigColumnPeer::SORTBY_DIRECTION, $this->sortby_direction);
         if ($this->isColumnModified(ListerConfigColumnPeer::TRUNCATE_CHARS)) $criteria->add(ListerConfigColumnPeer::TRUNCATE_CHARS, $this->truncate_chars);
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION)) $criteria->add(ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION, $this->tooltip_js_expression);
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION)) $criteria->add(ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION, $this->tooltip_url_js_expression);
         if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH)) $criteria->add(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, $this->tooltip_max_width);
+        if ($this->isColumnModified(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC)) $criteria->add(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, $this->tooltip_delay_msec);
 
         return $criteria;
     }
@@ -1514,7 +1676,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $copyObj->setSortbyOrder($this->getSortbyOrder());
         $copyObj->setSortbyDirection($this->getSortbyDirection());
         $copyObj->setTruncateChars($this->getTruncateChars());
+        $copyObj->setTooltipJsExpression($this->getTooltipJsExpression());
+        $copyObj->setTooltipUrlJsExpression($this->getTooltipUrlJsExpression());
         $copyObj->setTooltipMaxWidth($this->getTooltipMaxWidth());
+        $copyObj->setTooltipDelayMsec($this->getTooltipDelayMsec());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1644,7 +1809,10 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $this->sortby_order = null;
         $this->sortby_direction = null;
         $this->truncate_chars = null;
+        $this->tooltip_js_expression = null;
+        $this->tooltip_url_js_expression = null;
         $this->tooltip_max_width = null;
+        $this->tooltip_delay_msec = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

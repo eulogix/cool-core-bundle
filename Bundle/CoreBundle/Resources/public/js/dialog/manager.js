@@ -8,11 +8,12 @@ define([
         "dojo/dom-construct",
         "dojo/dom-style",
         "dojo/window",
+        "dojo/request",
 
         "dijit/Tooltip",
         "dojox/widget/DialogSimple"
 
-    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, win, Tooltip, Dialog) {
+    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, win, request, Tooltip, Dialog) {
 
     return {
 
@@ -112,15 +113,25 @@ define([
             Tooltip.hide(node);
         },
 
-        bindTooltip: function(node, content, maxWidth) {
+        bindTooltip: function(node, content, maxWidth, url) {
 
-            if(maxWidth)
-                content = "<div style='max-width:"+maxWidth+"px'>" + content + "</div>";
+            var renderFunc = function(rawContent) {
+                return maxWidth ? "<div style='max-width:"+maxWidth+"px'>" + rawContent + "</div>" : rawContent;
+            };
 
-            this.unbindTooltip(node);
+            node._tooltip_content = renderFunc(content);
+            node._tooltip_url = url;
 
             node._toolTipEnterSignal = on(node, mouse.enter, function(){
-                Tooltip.show(content, node);
+                if(node._tooltip_url) {
+                    if(!node._last_tooltip_url || node._last_tooltip_url != node._tooltip_url) {
+                        request(node._tooltip_url).then(function(fetchedContent){
+                            node._last_tooltip_url = node._tooltip_url;
+                            node._tooltip_content = renderFunc(fetchedContent);
+                            Tooltip.show(node._tooltip_content, node);
+                        });
+                    } else Tooltip.show(node._tooltip_content, node);
+                } else Tooltip.show(node._tooltip_content, node);
             });
 
             node._toolTipLeaveSignal = on(node, mouse.leave, function(){

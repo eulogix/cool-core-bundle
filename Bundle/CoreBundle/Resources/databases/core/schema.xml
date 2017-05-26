@@ -310,7 +310,11 @@
         </column>
 
         <column name="truncate_chars" type="INTEGER"/>
+
+        <column name="tooltip_js_expression" type="LONGVARCHAR"/>
+        <column name="tooltip_url_js_expression" type="LONGVARCHAR"/>
         <column name="tooltip_max_width" type="INTEGER"/>
+        <column name="tooltip_delay_msec" type="INTEGER"/>
 
         <foreign-key foreignTable="lister_config" onDelete="cascade">
         <reference

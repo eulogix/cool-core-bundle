@@ -12,7 +12,11 @@
 namespace Eulogix\Cool\Lib\Form;
 
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\DataSource\ValueMapInterface;
 use Eulogix\Cool\Lib\Form\Event\FormEvent;
+use Eulogix\Cool\Lib\Form\Field\FieldInterface;
+use Eulogix\Cool\Lib\Form\Field\MultiSelect;
+use Eulogix\Lib\Database\Postgres\PgUtils;
 use Eulogix\Lib\Validation\ConstraintBuilder;
 use Eulogix\Cool\Lib\Widget\Message;
 
@@ -285,4 +289,27 @@ class DSCRUDForm extends Form  {
         }
     }
 
+    /**
+     * switches a field to a MultiSelect, picking its value from data returned from the DS as a PG array
+     *
+     * @param string $fieldName
+     * @param ValueMapInterface $vmap
+     * @return MultiSelect
+     */
+    public function setUpFieldAsMultiselectPGArray($fieldName, ValueMapInterface $vmap = null) {
+        /**
+         * @var $this DSCRUDForm
+         */
+        $field = $this->getField($fieldName);
+        $pgArray = $field->getValue();
+        /**
+         * @var MultiSelect $field
+         */
+        $field = $field->setType(FieldInterface::TYPE_MULTISELECT);
+        $field->setUseChosen(true);
+        if($vmap)
+            $field->setValueMap($vmap);
+        $field->setValue( PgUtils::fromPGArray($pgArray) );
+        return $field;
+    }
 }

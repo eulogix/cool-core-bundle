@@ -5,9 +5,9 @@ define("cool/controls/select",
     "dojo/_base/array",
     "cool/controls/_control",
     "dojo/Evented",
-    "dijit/form/Select"
-
-], function(declare, lang, array, _control, Evented, Select) {
+    "dijit/form/Select",
+    "cool/dialog/manager"
+], function(declare, lang, array, _control, Evented, Select, dialogManager) {
  
     return declare("cool.controls.select", [_control], {
 
@@ -43,6 +43,15 @@ define("cool/controls/select",
                 });
 
                 this.options = options;
+
+                if(this._hasTooltip()) {
+                    dialogManager.trackMouseOver(field.domNode);
+                    if(this.definition.tooltip.url) {
+                        this.on('tooltipUrlChanged', function(newTooltipUrl){
+                            dialogManager.bindTooltip(field.domNode, null, this.definition.tooltip.maxWidth, newTooltipUrl);
+                        });
+                    } else dialogManager.bindTooltip(field.domNode, this.definition.tooltip.content, this.definition.tooltip.maxWidth);
+                }
 
                 if(this.definition.value !== undefined) {
                     this.set('value', this.definition.value);

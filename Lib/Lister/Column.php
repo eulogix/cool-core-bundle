@@ -61,7 +61,17 @@ class Column {
     /**
      * @var integer
      */
-    private $sortOrder, $maxChars, $tooltipMaxWidth;
+    private $sortOrder, $maxChars;
+
+    /**
+     * @var string
+     */
+    protected $tooltipJsExpression, $tooltipUrlJsExpression, $tooltipDelay;
+
+    /**
+     * @var integer
+     */
+    protected $tooltipMaxWidth;
 
 
     /**
@@ -89,9 +99,9 @@ class Column {
             'editable' => $this->getEditable(),
             'sortable'=> $this->getSortable(),
             'sortOrder'=> $this->getSortOrder(),
-            'maxChars'=> $this->getMaxChars(),
-            'tooltipMaxWidth'=> $this->getTooltipMaxWidth(),
+            'maxChars'=> $this->getMaxChars()
         );
+
         if($this->getControl()) {
             $def['control'] = $this->getControl()->getDefinition();
         }
@@ -178,7 +188,6 @@ class Column {
     public function setDijitWidgetTemplate($dijitWidgetTemplate)
     {
         $this->dijitWidgetTemplate = $dijitWidgetTemplate;
-
         return $this;
     }
 
@@ -206,7 +215,22 @@ class Column {
      */
     public function getSetValueJs()
     {
-        return $this->setValueJs;
+        $ret = $this->setValueJs;
+
+        if($this->hasTooltip()) {
+            $maxWidth = $this->getTooltipMaxWidth() ?? 'null';
+            $jsContent = $this->getTooltipJsExpression() ?? 'null';
+            $jsUrl = $this->getTooltipUrlJsExpression() ?? 'null';
+
+            $ret .= "\nCOOL.getDialogManager().trackMouseOver(cellWidget.domNode);
+                       COOL.getDialogManager().unbindTooltip(cellWidget.domNode);";
+
+            if($this->getTooltipUrlJsExpression())
+                 $ret .= "\nCOOL.getDialogManager().bindTooltip(cellWidget.domNode, null, {$maxWidth}, {$jsUrl});";
+            else $ret .= "\nCOOL.getDialogManager().bindTooltip(cellWidget.domNode, {$jsContent}, {$maxWidth});";
+        }
+
+        return $ret;
     }
 
     /**
@@ -383,6 +407,31 @@ class Column {
         return $this;
     }
 
+
+    /**
+     * @param string $jsContentExpression JS expression returning a string, will be eval'd in setValueJs body
+     * @param string $jsUrlExpression JS expression returning a string, will be eval'd in setValueJs body
+     * @param int $maxWidth
+     * @param int $delay msec
+     * @return $this
+     */
+    public function setTooltip($jsContentExpression, $jsUrlExpression = null, $maxWidth = 300, $delay = 200)
+    {
+        $this->setTooltipJsExpression($jsContentExpression);
+        $this->setTooltipUrlJsExpression($jsUrlExpression);
+        $this->setTooltipMaxWidth($maxWidth);
+        $this->setTooltipDelay($delay);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTooltip() {
+        return $this->getTooltipJsExpression() || $this->getTooltipUrlJsExpression();
+    }
+
     /**
      * @return int
      */
@@ -398,6 +447,61 @@ class Column {
     public function setTooltipMaxWidth($tooltipMaxWidth)
     {
         $this->tooltipMaxWidth = $tooltipMaxWidth;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTooltipJsExpression()
+    {
+        return $this->tooltipJsExpression;
+    }
+
+    /**
+     * @param string $tooltipJsExpression
+     * @return $this
+     */
+    public function setTooltipJsExpression($tooltipJsExpression)
+    {
+        $this->tooltipJsExpression = $tooltipJsExpression;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTooltipUrlJsExpression()
+    {
+        return $this->tooltipUrlJsExpression;
+    }
+
+    /**
+     * @param string $tooltipUrlJsExpression
+     * @return $this
+     */
+    public function setTooltipUrlJsExpression($tooltipUrlJsExpression)
+    {
+        $this->tooltipUrlJsExpression = $tooltipUrlJsExpression;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTooltipDelay()
+    {
+        return $this->tooltipDelay;
+    }
+
+    /**
+     * @param string $tooltipDelay
+     * @return $this
+     */
+    public function setTooltipDelay($tooltipDelay)
+    {
+        $this->tooltipDelay = $tooltipDelay;
         return $this;
     }
 

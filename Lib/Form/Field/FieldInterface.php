@@ -122,6 +122,15 @@ interface FieldInterface {
     public function getRawValue();
 
     /**
+     * set a lambda function that processes the output of getValue()
+     * used, if set, by getPersistableValue
+     * @param callable $lambda
+     * @return $this
+     */
+    public function setPersistableValueLambda(callable $lambda);
+
+    /**
+     * returns the value as it meant to be persisted to the DB
      * @return mixed
      */
     public function getPersistableValue();
@@ -136,6 +145,15 @@ interface FieldInterface {
      * @return string
      */
     public function getLabel();
+
+    /**
+     * @param string $content A static tooltip content
+     * @param string $url A URL to retrieve tooltip content. substring prop_value will be replaced with the field value at runtime
+     * @param int $maxWidth
+     * @param int $delay msec
+     * @return FieldInterface
+     */
+    public function setTooltip($content, $url = null, $maxWidth = 300, $delay = 200);
 
     /**
      * @param string $js

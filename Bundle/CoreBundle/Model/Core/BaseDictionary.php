@@ -735,7 +735,25 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'tooltip_js_expression' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'tooltip_url_js_expression' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'tooltip_max_width' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'tooltip_delay_msec' => 
         array (
           'attributes' => 
           array (

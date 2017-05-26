@@ -32,7 +32,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery orderBySortbyOrder($order = Criteria::ASC) Order by the sortby_order column
  * @method ListerConfigColumnQuery orderBySortbyDirection($order = Criteria::ASC) Order by the sortby_direction column
  * @method ListerConfigColumnQuery orderByTruncateChars($order = Criteria::ASC) Order by the truncate_chars column
+ * @method ListerConfigColumnQuery orderByTooltipJsExpression($order = Criteria::ASC) Order by the tooltip_js_expression column
+ * @method ListerConfigColumnQuery orderByTooltipUrlJsExpression($order = Criteria::ASC) Order by the tooltip_url_js_expression column
  * @method ListerConfigColumnQuery orderByTooltipMaxWidth($order = Criteria::ASC) Order by the tooltip_max_width column
+ * @method ListerConfigColumnQuery orderByTooltipDelayMsec($order = Criteria::ASC) Order by the tooltip_delay_msec column
  *
  * @method ListerConfigColumnQuery groupByListerConfigColumnId() Group by the lister_config_column_id column
  * @method ListerConfigColumnQuery groupByListerConfigId() Group by the lister_config_id column
@@ -48,7 +51,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery groupBySortbyOrder() Group by the sortby_order column
  * @method ListerConfigColumnQuery groupBySortbyDirection() Group by the sortby_direction column
  * @method ListerConfigColumnQuery groupByTruncateChars() Group by the truncate_chars column
+ * @method ListerConfigColumnQuery groupByTooltipJsExpression() Group by the tooltip_js_expression column
+ * @method ListerConfigColumnQuery groupByTooltipUrlJsExpression() Group by the tooltip_url_js_expression column
  * @method ListerConfigColumnQuery groupByTooltipMaxWidth() Group by the tooltip_max_width column
+ * @method ListerConfigColumnQuery groupByTooltipDelayMsec() Group by the tooltip_delay_msec column
  *
  * @method ListerConfigColumnQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ListerConfigColumnQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -74,7 +80,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumn findOneBySortbyOrder(int $sortby_order) Return the first ListerConfigColumn filtered by the sortby_order column
  * @method ListerConfigColumn findOneBySortbyDirection(string $sortby_direction) Return the first ListerConfigColumn filtered by the sortby_direction column
  * @method ListerConfigColumn findOneByTruncateChars(int $truncate_chars) Return the first ListerConfigColumn filtered by the truncate_chars column
+ * @method ListerConfigColumn findOneByTooltipJsExpression(string $tooltip_js_expression) Return the first ListerConfigColumn filtered by the tooltip_js_expression column
+ * @method ListerConfigColumn findOneByTooltipUrlJsExpression(string $tooltip_url_js_expression) Return the first ListerConfigColumn filtered by the tooltip_url_js_expression column
  * @method ListerConfigColumn findOneByTooltipMaxWidth(int $tooltip_max_width) Return the first ListerConfigColumn filtered by the tooltip_max_width column
+ * @method ListerConfigColumn findOneByTooltipDelayMsec(int $tooltip_delay_msec) Return the first ListerConfigColumn filtered by the tooltip_delay_msec column
  *
  * @method array findByListerConfigColumnId(int $lister_config_column_id) Return ListerConfigColumn objects filtered by the lister_config_column_id column
  * @method array findByListerConfigId(int $lister_config_id) Return ListerConfigColumn objects filtered by the lister_config_id column
@@ -90,7 +99,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method array findBySortbyOrder(int $sortby_order) Return ListerConfigColumn objects filtered by the sortby_order column
  * @method array findBySortbyDirection(string $sortby_direction) Return ListerConfigColumn objects filtered by the sortby_direction column
  * @method array findByTruncateChars(int $truncate_chars) Return ListerConfigColumn objects filtered by the truncate_chars column
+ * @method array findByTooltipJsExpression(string $tooltip_js_expression) Return ListerConfigColumn objects filtered by the tooltip_js_expression column
+ * @method array findByTooltipUrlJsExpression(string $tooltip_url_js_expression) Return ListerConfigColumn objects filtered by the tooltip_url_js_expression column
  * @method array findByTooltipMaxWidth(int $tooltip_max_width) Return ListerConfigColumn objects filtered by the tooltip_max_width column
+ * @method array findByTooltipDelayMsec(int $tooltip_delay_msec) Return ListerConfigColumn objects filtered by the tooltip_delay_msec column
  */
 abstract class BaseListerConfigColumnQuery extends ModelCriteria
 {
@@ -196,7 +208,7 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_max_width FROM core.lister_config_column WHERE lister_config_column_id = :p0';
+        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_js_expression, tooltip_url_js_expression, tooltip_max_width, tooltip_delay_msec FROM core.lister_config_column WHERE lister_config_column_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -776,6 +788,64 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the tooltip_js_expression column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTooltipJsExpression('fooValue');   // WHERE tooltip_js_expression = 'fooValue'
+     * $query->filterByTooltipJsExpression('%fooValue%'); // WHERE tooltip_js_expression LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $tooltipJsExpression The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByTooltipJsExpression($tooltipJsExpression = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($tooltipJsExpression)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $tooltipJsExpression)) {
+                $tooltipJsExpression = str_replace('*', '%', $tooltipJsExpression);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION, $tooltipJsExpression, $comparison);
+    }
+
+    /**
+     * Filter the query on the tooltip_url_js_expression column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTooltipUrlJsExpression('fooValue');   // WHERE tooltip_url_js_expression = 'fooValue'
+     * $query->filterByTooltipUrlJsExpression('%fooValue%'); // WHERE tooltip_url_js_expression LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $tooltipUrlJsExpression The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByTooltipUrlJsExpression($tooltipUrlJsExpression = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($tooltipUrlJsExpression)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $tooltipUrlJsExpression)) {
+                $tooltipUrlJsExpression = str_replace('*', '%', $tooltipUrlJsExpression);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION, $tooltipUrlJsExpression, $comparison);
+    }
+
+    /**
      * Filter the query on the tooltip_max_width column
      *
      * Example usage:
@@ -815,6 +885,48 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, $tooltipMaxWidth, $comparison);
+    }
+
+    /**
+     * Filter the query on the tooltip_delay_msec column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTooltipDelayMsec(1234); // WHERE tooltip_delay_msec = 1234
+     * $query->filterByTooltipDelayMsec(array(12, 34)); // WHERE tooltip_delay_msec IN (12, 34)
+     * $query->filterByTooltipDelayMsec(array('min' => 12)); // WHERE tooltip_delay_msec >= 12
+     * $query->filterByTooltipDelayMsec(array('max' => 12)); // WHERE tooltip_delay_msec <= 12
+     * </code>
+     *
+     * @param     mixed $tooltipDelayMsec The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByTooltipDelayMsec($tooltipDelayMsec = null, $comparison = null)
+    {
+        if (is_array($tooltipDelayMsec)) {
+            $useMinMax = false;
+            if (isset($tooltipDelayMsec['min'])) {
+                $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, $tooltipDelayMsec['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($tooltipDelayMsec['max'])) {
+                $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, $tooltipDelayMsec['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, $tooltipDelayMsec, $comparison);
     }
 
     /**

@@ -183,8 +183,8 @@ define("cool/_listerModelMixin",
                                 //TODO: not sure if passing rowIndex is correct, maybe we have to pass rowData._recordid
                                 staticTemplateOutput = withoutWidgetsDecorator(gridData, rowIndex);
                             }
-
                             var f = lister.createFunction(columnDefinition.setValueJs, false, {
+                                lister:lister,
                                 gridData:gridData,
                                 storeData:storeData,
                                 cellWidget:cellWidget,

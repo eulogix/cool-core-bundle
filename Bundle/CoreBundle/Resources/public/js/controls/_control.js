@@ -123,6 +123,21 @@ define("cool/controls/_control",
                     self.emit("load", {});
                 });
 
+            if(this._hasTooltip()) {
+                if(this.definition.tooltip.url) {
+                    var f = function() {
+                        var currentTooltipUrl = self.definition.tooltip.url.replace('prop_value', self.get('value'));
+                        self.emit('tooltipUrlChanged', currentTooltipUrl);
+                    };
+                    this.on('change', f);
+                    this.on('valueInit',f);
+                }
+            }
+
+        },
+
+        _hasTooltip : function() {
+            return this.definition.tooltip.content || this.definition.tooltip.url;
         },
 
         _addActionButton: function( js, icon, label) {

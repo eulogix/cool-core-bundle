@@ -56,7 +56,10 @@ class ListerConfigColumnTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolT
         $this->addColumn('sortby_order', 'SortbyOrder', 'INTEGER', false, null, null);
         $this->addColumn('sortby_direction', 'SortbyDirection', 'LONGVARCHAR', false, null, null);
         $this->addColumn('truncate_chars', 'TruncateChars', 'INTEGER', false, null, null);
+        $this->addColumn('tooltip_js_expression', 'TooltipJsExpression', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('tooltip_url_js_expression', 'TooltipUrlJsExpression', 'LONGVARCHAR', false, null, null);
         $this->addColumn('tooltip_max_width', 'TooltipMaxWidth', 'INTEGER', false, null, null);
+        $this->addColumn('tooltip_delay_msec', 'TooltipDelayMsec', 'INTEGER', false, null, null);
         // validators
     } // initialize()
 

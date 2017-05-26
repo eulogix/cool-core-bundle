@@ -441,7 +441,16 @@
                     "truncate_chars": {
                         "attributes": []
                     },
+                    "tooltip_js_expression": {
+                        "attributes": []
+                    },
+                    "tooltip_url_js_expression": {
+                        "attributes": []
+                    },
                     "tooltip_max_width": {
+                        "attributes": []
+                    },
+                    "tooltip_delay_msec": {
                         "attributes": []
                     }
                 }

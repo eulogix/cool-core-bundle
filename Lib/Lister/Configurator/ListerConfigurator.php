@@ -100,6 +100,9 @@ class ListerConfigurator extends WidgetConfigurator {
                         ->setColumnStyleCss( $configColumn->getColumnStyleCss() )
                         ->setHasSummary( $configColumn->getShowSummaryFlag() )
                         ->setTooltipMaxWidth( $configColumn->getTooltipMaxWidth() )
+                        ->setTooltipJsExpression( $configColumn->getTooltipJsExpression() )
+                        ->setTooltipUrlJsExpression( $configColumn->getTooltipUrlJsExpression() )
+                        ->setTooltipDelay( $configColumn->getTooltipDelayMsec() )
                         ->setMaxChars( $configColumn->getTruncateChars() );
 
                 if($so = $configColumn->getSortOrder())

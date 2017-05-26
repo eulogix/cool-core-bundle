@@ -31,6 +31,16 @@ class Field implements FieldInterface {
     /**
      * @var string
      */
+    protected $tooltipContent, $tooltipUrl, $tooltipDelay;
+
+    /**
+     * @var integer
+     */
+    protected $tooltipMaxWidth;
+
+    /**
+     * @var string
+     */
     protected $coolDojoWidget = "cool/controls/textbox";
 
     /**
@@ -61,6 +71,11 @@ class Field implements FieldInterface {
      * @var FormInterface
      */
     protected $form;
+
+    /**
+     * @var callable
+     */
+    protected $persistableValueLambda;
 
     /**
      * @var ValueMapInterface
@@ -116,6 +131,14 @@ class Field implements FieldInterface {
             "value" => $this->getRawValue(),
             "name" => $this->getName(),
             "label" => $this->getLabel(),
+
+            "tooltip" => [
+                'content' => $this->tooltipContent,
+                'url' => $this->tooltipUrl,
+                'maxWidth' => $this->tooltipMaxWidth,
+                'delay' => $this->tooltipDelay
+            ],
+
             "coolDojoWidget" => $this->getCoolDojoWidget(),
             "CSSStyles" => $this->getCSSStyles(),
             "CSSClasses" => $this->getCSSClasses()
@@ -242,8 +265,15 @@ class Field implements FieldInterface {
     /**
      * @inheritdoc
      */
+    public function setPersistableValueLambda(callable $lambda) {
+        $this->persistableValueLambda = $lambda;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getPersistableValue() {
-        return $this->getValue();
+        return $this->persistableValueLambda ? call_user_func($this->persistableValueLambda, $this->getValue()) : $this->getValue();
     }
 
     /**
@@ -259,6 +289,18 @@ class Field implements FieldInterface {
      */
     public function getLabel() {
         return $this->label;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setTooltip($content, $url = null, $maxWidth = 300, $delay = 200)
+    {
+        $this->tooltipContent = $content;
+        $this->tooltipUrl = $url;
+        $this->tooltipMaxWidth = $maxWidth;
+        $this->tooltipDelay = $delay;
+        return $this;
     }
 
     /**
