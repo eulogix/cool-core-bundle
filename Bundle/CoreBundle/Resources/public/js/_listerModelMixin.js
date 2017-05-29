@@ -139,7 +139,7 @@ define("cool/_listerModelMixin",
                         return "SET A WIDGET TEMPLATE!";
                     };
 
-                    var withWidgets = columnDefinition.dijitWidgetTemplate != null;
+                    var withWidgets = (columnDefinition.setValueJs ||columnDefinition.dijitWidgetTemplate) != null;
 
                     cLayout = {
                         id:columnName,

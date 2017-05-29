@@ -230,6 +230,10 @@ class Column {
             else $ret .= "\nCOOL.getDialogManager().bindTooltip(cellWidget.domNode, {$jsContent}, {$maxWidth});";
         }
 
+        if($ret && !$this->getDijitWidgetTemplate()) {
+            $ret .= "\ncellWidget.domNode.innerHTML = staticTemplateOutput;";
+        }
+
         return $ret;
     }
 
