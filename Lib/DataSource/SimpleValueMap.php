@@ -46,6 +46,8 @@ class SimpleValueMap  extends BaseValueMap implements ValueMapInterface
                 $this->addValue($value, is_numeric($key) ? $value : $key);
             } elseif( isset($value['label']) && isset($value['value']) ) {
                 $this->addValueHash( $value );
+            } elseif( isset($value['value'])) {
+                $this->addValue( $value['value'], '[NT] '.$value['value'] );
             } else {
                 throw new \Exception("bad option value : ".var_export($value, true));
             }
