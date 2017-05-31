@@ -51,6 +51,15 @@ class SimpleFileProxy extends BaseFileProxy
         return $f;
     }
 
+    public static function fromValues($name, $id, $parentId, $isDir = false) {
+        $f = new self();
+        $f  ->setIsDirectory($isDir)
+            ->setName( $name )
+            ->setId( $id )
+            ->setParentId( $parentId );
+        return $f;
+    }
+
     /**
      * @inheritdoc
      */
