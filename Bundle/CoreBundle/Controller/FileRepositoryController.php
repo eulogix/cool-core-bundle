@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\Controller;
 
+use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
@@ -66,6 +67,25 @@ class FileRepositoryController extends Controller
     }
 
     /**
+     * downloads a file using the storage directly
+     * @Route("/downloadDirect/{schema}/{actualSchema}/{fileId}", name="frepoDownloadDirect", options={"expose"=true})
+     */
+    public function downloadDirectAction($schema, $actualSchema, $fileId)
+    {
+        $schema = Cool::getInstance()->getSchema($schema);
+        $schema->setCurrentSchema($actualSchema);
+        $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
+
+        $fileProxy = $storage->getById($fileId);
+
+        $response = new Response($fileProxy->getContent(), 200);
+        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+        $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
+
+        return $response;
+    }
+
+    /**
      * @Route("/serve/{repositoryId}", name="frepoServe", options={"expose"=true})
      */
     public function serveAction($repositoryId)
@@ -75,6 +95,24 @@ class FileRepositoryController extends Controller
 
         $filePath = $this->get('request')->query->get('filePath');
         $fileProxy = $repo->get($filePath);
+
+        $response = new Response($fileProxy->getContent(), 200);
+        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+
+        return $response;
+    }
+
+    /**
+     * serves a file using the storage directly
+     * @Route("/serveDirect/{schema}/{actualSchema}/{fileId}", name="frepoServe", options={"expose"=true})
+     */
+    public function serveDirectAction($schema, $actualSchema, $fileId)
+    {
+        $schema = Cool::getInstance()->getSchema($schema);
+        $schema->setCurrentSchema($actualSchema);
+        $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
+
+        $fileProxy = $storage->getById($fileId);
 
         $response = new Response($fileProxy->getContent(), 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));

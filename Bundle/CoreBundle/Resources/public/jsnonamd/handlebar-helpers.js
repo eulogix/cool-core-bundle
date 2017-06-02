@@ -37,5 +37,17 @@ function(dateLocale){
         return '<img src="/bower_components/fugue/icons/tick' + (boolValue ? '' : '-red') + '.png">';
     });
 
+    Handlebars.registerHelper('fileSize', function(fileSizeInBytes) {
+        var i = -1;
+        var byteUnits = [' Kb', ' Mb', ' Gb', ' Tb', 'Pb', 'Eb', 'Zb', 'Yb'];
+        fileSizeInBytes = parseInt(fileSizeInBytes);
+        do {
+            fileSizeInBytes = fileSizeInBytes / 1024;
+            i++;
+        } while (fileSizeInBytes > 1024);
+
+        return Math.max(fileSizeInBytes, 0).toFixed(1) + byteUnits[i];
+    });
+
 });
 
