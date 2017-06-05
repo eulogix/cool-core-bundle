@@ -104,7 +104,7 @@ class FileRepositoryController extends Controller
 
     /**
      * serves a file using the storage directly
-     * @Route("/serveDirect/{schema}/{actualSchema}/{fileId}", name="frepoServe", options={"expose"=true})
+     * @Route("/serveDirect/{schema}/{actualSchema}/{fileId}", name="frepoServeDirect", options={"expose"=true})
      */
     public function serveDirectAction($schema, $actualSchema, $fileId)
     {
