@@ -262,7 +262,7 @@
         </column>
 
         <column name="truncate_chars" type="INTEGER"/>
-        
+
         <column name="tooltip_js_expression" type="LONGVARCHAR"/>
         <column name="tooltip_url_js_expression" type="LONGVARCHAR"/>
         <column name="tooltip_max_width" type="INTEGER"/>
@@ -553,6 +553,116 @@
         <unique>
             <unique-column name="name"/>
         </unique>
+    </table>
+
+    <table name="rule">
+        <column name="rule_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR"/>
+
+        <column name="category" type="LONGVARCHAR" required="true">
+            
+            
+        </column>
+
+        <column name="expression_type" type="LONGVARCHAR" required="true" default="HOA">
+            
+            
+        </column>
+
+        <column name="expression" type="LONGVARCHAR" required="true">
+            
+        </column>
+
+        <unique>
+            <unique-column name="name"/>
+        </unique>
+    </table>
+
+    <table name="rule_code">
+        <column name="rule_code_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="rule_id" type="INTEGER" required="true"/>
+
+        <column name="type" type="LONGVARCHAR" required="true" default="VARIABLE">
+            
+            
+        </column>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+
+        <column name="code_snippet_id" type="INTEGER"/>
+        <column name="code_snippet_variables" type="LONGVARCHAR" sqlType="json"/>
+
+        <column name="raw_code" type="LONGVARCHAR">
+            
+        </column>
+
+        <foreign-key foreignTable="rule" onDelete="restrict">
+            <reference local="rule_id" foreign="rule_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="code_snippet" onDelete="restrict">
+            <reference local="code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="name"/>
+            <unique-column name="rule_id"/>
+        </unique>
+    </table>
+
+    <table name="code_snippet" description="holds code snippets useful to encapsulate implementation details for rules variables">
+        <column name="code_snippet_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="category" type="LONGVARCHAR" required="true">
+            
+            
+        </column>
+
+        <column name="language" type="LONGVARCHAR" required="true" default="PHP">
+            
+            
+        </column>
+
+        <column name="type" type="LONGVARCHAR" required="true" default="EXPRESSION">
+            
+            
+        </column>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR" required="true"/>
+
+        <column name="snippet" type="LONGVARCHAR" required="true">
+            
+        </column>
+    </table>
+
+    <table name="code_snippet_variable">
+        <column name="code_snippet_variable_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="code_snippet_id" type="INTEGER" required="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR" required="true"/>
+
+        <foreign-key foreignTable="code_snippet" onDelete="restrict">
+            <reference local="code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+    </table>
+
+    <table name="widget_rule">
+        <column name="widget_rule_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="widget_id" type="LONGVARCHAR" required="true"/> 
+        <column name="rule_id" type="INTEGER" required="true"/>
+
+        <column name="evaluation" type="LONGVARCHAR" required="true" default="BEFORE_DEFINITION">
+            
+            
+        </column>
+
+        <foreign-key foreignTable="rule" onDelete="restrict">
+            <reference local="rule_id" foreign="rule_id"/>
+        </foreign-key>
     </table>
 
 </database>

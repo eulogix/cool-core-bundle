@@ -337,4 +337,9 @@ interface WidgetInterface {
      * @return $this
      */
     public function downloadFile(FileProxyInterface $f);
+
+    /**
+     * @return array
+     */
+    public function getRuleContext();
 }

@@ -51,4 +51,4 @@ CREATE TABLE IF NOT EXISTS core_files (
         FOR EACH ROW
         EXECUTE PROCEDURE account_files_delete();
 
-                                                                                                                                                                                    
+                                                                                                                                                                                                                            

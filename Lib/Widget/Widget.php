@@ -11,6 +11,10 @@
 
 namespace Eulogix\Cool\Lib\Widget;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
 use Eulogix\Cool\Lib\Audit\AuditSchema;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\Classes\Audit\DSFieldAuditTrailDataSource;
@@ -284,6 +288,8 @@ abstract class Widget implements WidgetInterface {
     */
     public function getDefinition() {
 
+        $this->processRules(WidgetRule::EVALUATION_TYPE_BEFORE_DEFINITION);
+
         $this->dispatcher->dispatch(self::EVENT_DEFINITION_REQUESTED, new WidgetEvent($this));
 
         $d = new Definition($this->parameters->get('_hashes'));
@@ -534,6 +540,38 @@ abstract class Widget implements WidgetInterface {
     }
 
     /**
+     * @param string $evaluationType
+     */
+    public function processRules($evaluationType = null) {
+        $query = WidgetRuleQuery::create()->filterByWidgetId( $this->getId() );
+        if($evaluationType)
+            $query = $query->filterByEvaluation($evaluationType);
+
+        $widgetRules = $query->find();
+
+        $hash = [];
+
+        $ruleContext = $this->getRuleContext();
+
+        /** @var WidgetRule $widgetRule */
+        foreach($widgetRules as $widgetRule) {
+            $rule = $widgetRule->getRule();
+            try {
+                $ruleValid = $rule->assert( $ruleContext );
+                $hash[ $rule->getName() ] = [
+                    'valid' => $ruleValid,
+                    'executedCodes' => $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext)
+                ];
+            } catch(\Exception $e) {
+                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
+            }
+        }
+
+        $rules = $this->getAttributes()->get('rules') ?? [];
+        $this->getAttributes()->set('rules', array_merge($rules, $hash));
+    }
+
+    /**
      * @inheritdoc
     */
     public function getTranslatorDomains() {
@@ -676,6 +714,13 @@ abstract class Widget implements WidgetInterface {
         return [
             'trail' => $buf
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getRuleContext() {
+        return ['widget'=>$this];
     }
 
 }

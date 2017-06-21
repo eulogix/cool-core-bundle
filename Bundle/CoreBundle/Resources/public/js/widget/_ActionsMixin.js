@@ -2,7 +2,7 @@
 define("cool/widget/_ActionsMixin",
         [
             "dojo/_base/declare",
-
+            "dojo/_base/lang",
             "dojo/dom",
 
             "dijit/form/Button",
@@ -10,7 +10,7 @@ define("cool/widget/_ActionsMixin",
             "dijit/DropDownMenu"
         ], 
 
-function(declare,
+function(declare, lang,
          dom,
          Button, DropDownButton, DropDownMenu) {
   
@@ -119,7 +119,18 @@ function(declare,
         },
 
         _getSystemMenuItems: function() {
-            return [];
+            var widget = this;
+            var p = [];
+            if(lang.exists('definition.attributes._configurable', this) && this.definition.attributes._configurable) {
+                p.push({
+                    label: this.getCommonTranslator().trans("DEBUG"),
+                    onClick: function() {
+                        console.log(widget);
+                    },
+                    icon: '/bower_components/fugue/icons/bug.png'
+                });
+            }
+            return p;
         }
 
     });

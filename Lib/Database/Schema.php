@@ -356,6 +356,7 @@ class Schema implements Shimmable
     public function query($sql, $bindParams = null, $purgeParams = false)
     {
         $con = $this->getConnection();
+        $con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $sth = $con->prepare($sql);
 
         $bindParams = @count($bindParams) > 0 ? $bindParams : null;

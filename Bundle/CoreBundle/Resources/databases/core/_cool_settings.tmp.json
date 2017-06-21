@@ -928,6 +928,208 @@
                         }
                     }
                 }
+            },
+            "core.rule": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Rule",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RulePeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleQuery",
+                    "schema": "core",
+                    "rawname": "rule",
+                    "editable": true
+                },
+                "columns": {
+                    "rule_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    },
+                    "category": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "RULE_CATEGORY"
+                        }
+                    },
+                    "expression_type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "HOA,PHP"
+                        }
+                    },
+                    "expression": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            },
+            "core.rule_code": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCode",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodePeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodeQuery",
+                    "schema": "core",
+                    "rawname": "rule_code",
+                    "editable": true,
+                    "defaultEditor": "Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\Rule\\RuleCodeEditorForm"
+                },
+                "columns": {
+                    "rule_code_id": {
+                        "attributes": []
+                    },
+                    "rule_id": {
+                        "attributes": []
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "VARIABLE,EXEC_IF_TRUE,EXEC_IF_FALSE"
+                        }
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "code_snippet_id": {
+                        "attributes": []
+                    },
+                    "code_snippet_variables": {
+                        "attributes": []
+                    },
+                    "raw_code": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            },
+            "core.code_snippet": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetQuery",
+                    "schema": "core",
+                    "rawname": "code_snippet",
+                    "editable": true
+                },
+                "columns": {
+                    "code_snippet_id": {
+                        "attributes": []
+                    },
+                    "category": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "CODE_SNIPPET_CATEGORY"
+                        }
+                    },
+                    "language": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "PHP"
+                        }
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "EXPRESSION,FUNCTION_BODY"
+                        }
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    },
+                    "snippet": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
+            },
+            "core.code_snippet_variable": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariable",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariablePeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariableQuery",
+                    "schema": "core",
+                    "rawname": "code_snippet_variable",
+                    "editable": true
+                },
+                "columns": {
+                    "code_snippet_variable_id": {
+                        "attributes": []
+                    },
+                    "code_snippet_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    }
+                }
+            },
+            "core.widget_rule": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRulePeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRuleQuery",
+                    "schema": "core",
+                    "rawname": "widget_rule"
+                },
+                "columns": {
+                    "widget_rule_id": {
+                        "attributes": []
+                    },
+                    "widget_id": {
+                        "attributes": []
+                    },
+                    "rule_id": {
+                        "attributes": []
+                    },
+                    "evaluation": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "BEFORE_DEFINITION,BEFORE_VALIDATION"
+                        }
+                    }
+                }
             }
         },
         "views": []

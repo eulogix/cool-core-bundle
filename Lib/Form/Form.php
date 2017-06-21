@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Lib\Form;
 
 use ArrayIterator;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\ValueMapInterface;
@@ -267,6 +268,9 @@ class Form extends Widget implements FormInterface {
      * @inheritdoc
      */
     public function validate($limitFields = false, $limitContexts = null) {
+
+        $this->processRules(WidgetRule::EVALUATION_TYPE_BEFORE_VALIDATION);
+
         $valueHash = $this->getValues($limitFields);
 
         if($limitContexts)
@@ -737,4 +741,12 @@ class Form extends Widget implements FormInterface {
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getRuleContext() {
+        return array_merge(parent::getRuleContext(), [
+            'fields' => $this->getValues()
+        ]);
+    }
 }

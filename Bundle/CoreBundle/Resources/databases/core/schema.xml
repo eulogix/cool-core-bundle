@@ -651,4 +651,117 @@
         </unique>
     </table>
 
-</database>  
+    <table name="rule" _editable="true">
+        <column name="rule_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"></column>
+        <column name="description" type="LONGVARCHAR"></column>
+
+        <column name="category" type="LONGVARCHAR" required="true">
+            <_lookup type="table" domainName="RULE_CATEGORY"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="expression_type" type="LONGVARCHAR" required="true" default="HOA">
+            <_lookup type="enum" validValues="HOA,PHP"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="expression" type="LONGVARCHAR" required="true">
+            <_control type="textarea"></_control>
+        </column>
+
+        <unique>
+            <unique-column name="name"></unique-column>
+        </unique>
+    </table>
+
+    <table name="rule_code" _editable="true"
+           _defaultEditor="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Rule\RuleCodeEditorForm"
+            >
+        <column name="rule_code_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="rule_id" type="INTEGER" required="true" />
+
+        <column name="type" type="LONGVARCHAR" required="true" default="VARIABLE">
+            <_lookup type="enum" validValues="VARIABLE,EXEC_IF_TRUE,EXEC_IF_FALSE"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="name" type="LONGVARCHAR" required="true"></column>
+
+        <column name="code_snippet_id" type="INTEGER"/>
+        <column name="code_snippet_variables" type="LONGVARCHAR" sqlType="json"/>
+
+        <column name="raw_code" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+
+        <foreign-key foreignTable="rule" onDelete="restrict">
+            <reference local="rule_id" foreign="rule_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="code_snippet" onDelete="restrict">
+            <reference local="code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="name"></unique-column>
+            <unique-column name="rule_id"></unique-column>
+        </unique>
+    </table>
+
+    <table name="code_snippet" _editable="true"
+           description="holds code snippets useful to encapsulate implementation details for rules variables">
+        <column name="code_snippet_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+
+        <column name="category" type="LONGVARCHAR" required="true">
+            <_lookup type="table" domainName="CODE_SNIPPET_CATEGORY"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="language" type="LONGVARCHAR" required="true" default="PHP">
+            <_lookup type="enum" validValues="PHP"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="type" type="LONGVARCHAR" required="true" default="EXPRESSION">
+            <_lookup type="enum" validValues="EXPRESSION,FUNCTION_BODY"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="name" type="LONGVARCHAR" required="true"></column>
+        <column name="description" type="LONGVARCHAR" required="true"></column>
+
+        <column name="snippet" type="LONGVARCHAR" required="true">
+            <_control type="textarea"></_control>
+        </column>
+    </table>
+
+    <table name="code_snippet_variable" _editable="true">
+        <column name="code_snippet_variable_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="code_snippet_id" type="INTEGER" required="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"></column>
+        <column name="description" type="LONGVARCHAR" required="true"></column>
+
+        <foreign-key foreignTable="code_snippet" onDelete="restrict">
+            <reference local="code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+    </table>
+
+    <table name="widget_rule">
+        <column name="widget_rule_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
+        <column name="widget_id" type="LONGVARCHAR" required="true"/> <!-- the unique textual identifier of the widget -->
+        <column name="rule_id" type="INTEGER" required="true" />
+
+        <column name="evaluation" type="LONGVARCHAR" required="true" default="BEFORE_DEFINITION">
+            <_lookup type="enum" validValues="BEFORE_DEFINITION,BEFORE_VALIDATION"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
+        <foreign-key foreignTable="rule" onDelete="restrict">
+            <reference local="rule_id" foreign="rule_id"/>
+        </foreign-key>
+    </table>
+
+</database>

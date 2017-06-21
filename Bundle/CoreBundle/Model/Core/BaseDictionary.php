@@ -1565,6 +1565,324 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         ),
       ),
     ),
+    'core.rule' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Rule',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RulePeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleQuery',
+        'schema' => 'core',
+        'rawname' => 'rule',
+        'editable' => true,
+      ),
+      'columns' => 
+      array (
+        'rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'category' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'table',
+            'domainName' => 'RULE_CATEGORY',
+          ),
+        ),
+        'expression_type' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'HOA,PHP',
+          ),
+        ),
+        'expression' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+      ),
+    ),
+    'core.rule_code' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCode',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodePeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodeQuery',
+        'schema' => 'core',
+        'rawname' => 'rule_code',
+        'editable' => true,
+        'defaultEditor' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\CWidget\\Core\\Rule\\RuleCodeEditorForm',
+      ),
+      'columns' => 
+      array (
+        'rule_code_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'type' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'VARIABLE,EXEC_IF_TRUE,EXEC_IF_FALSE',
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'code_snippet_variables' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'raw_code' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+      ),
+    ),
+    'core.code_snippet' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetPeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetQuery',
+        'schema' => 'core',
+        'rawname' => 'code_snippet',
+        'editable' => true,
+      ),
+      'columns' => 
+      array (
+        'code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'category' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'table',
+            'domainName' => 'CODE_SNIPPET_CATEGORY',
+          ),
+        ),
+        'language' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'PHP',
+          ),
+        ),
+        'type' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'EXPRESSION,FUNCTION_BODY',
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'snippet' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+      ),
+    ),
+    'core.code_snippet_variable' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariable',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariablePeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariableQuery',
+        'schema' => 'core',
+        'rawname' => 'code_snippet_variable',
+        'editable' => true,
+      ),
+      'columns' => 
+      array (
+        'code_snippet_variable_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+      ),
+    ),
+    'core.widget_rule' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRulePeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRuleQuery',
+        'schema' => 'core',
+        'rawname' => 'widget_rule',
+      ),
+      'columns' => 
+      array (
+        'widget_rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'widget_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'evaluation' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'BEFORE_DEFINITION,BEFORE_VALIDATION',
+          ),
+        ),
+      ),
+    ),
   ),
   'views' => 
   array (

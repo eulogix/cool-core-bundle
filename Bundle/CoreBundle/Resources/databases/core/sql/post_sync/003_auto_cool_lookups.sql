@@ -132,4 +132,70 @@ DO $$ BEGIN ALTER TABLE lookups.core_group_type ADD COLUMN notes TEXT; EXCEPTION
                             REFERENCES lookups.core_group_type (value)
                             ON DELETE RESTRICT
                             ON UPDATE CASCADE;
+                            CREATE TABLE IF NOT EXISTS lookups.rule_category
+                    (value TEXT,
+dec_en TEXT,
+dec_es TEXT,
+dec_pt TEXT,
+dec_it TEXT,
+sort_order INTEGER,
+mandatory_flag BOOLEAN,
+filter TEXT[],
+schema_filter TEXT[],
+original_value TEXT,
+notes TEXT,
+PRIMARY KEY (value)
+                    );
+
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN dec_en TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN dec_es TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN dec_pt TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN dec_it TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN sort_order INTEGER; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN mandatory_flag BOOLEAN; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN schema_filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN original_value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.rule_category ADD COLUMN notes TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+
+     ALTER TABLE core.rule DROP CONSTRAINT IF EXISTS core_rule_category_FK;
+     ALTER TABLE core.rule ADD CONSTRAINT core_rule_category_FK
+                            FOREIGN KEY (category)
+                            REFERENCES lookups.rule_category (value)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE;
+                            CREATE TABLE IF NOT EXISTS lookups.code_snippet_category
+                    (value TEXT,
+dec_en TEXT,
+dec_es TEXT,
+dec_pt TEXT,
+dec_it TEXT,
+sort_order INTEGER,
+mandatory_flag BOOLEAN,
+filter TEXT[],
+schema_filter TEXT[],
+original_value TEXT,
+notes TEXT,
+PRIMARY KEY (value)
+                    );
+
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN dec_en TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN dec_es TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN dec_pt TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN dec_it TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN sort_order INTEGER; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN mandatory_flag BOOLEAN; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN schema_filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN original_value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.code_snippet_category ADD COLUMN notes TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+
+     ALTER TABLE core.code_snippet DROP CONSTRAINT IF EXISTS core_code_snippet_category_FK;
+     ALTER TABLE core.code_snippet ADD CONSTRAINT core_code_snippet_category_FK
+                            FOREIGN KEY (category)
+                            REFERENCES lookups.code_snippet_category (value)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE;
                             

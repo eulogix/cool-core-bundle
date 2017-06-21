@@ -13,6 +13,7 @@ namespace Eulogix\Cool\Lib;
 
 use Eulogix\Cool\Lib\Factory\Factory;
 use Eulogix\Cool\Lib\Security\CoolUser;
+use PDO;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Eulogix\Cool\Lib\Database\Schema;
 

@@ -34,7 +34,8 @@
         "eulogix/libs-activiti": "*@dev",
         "eulogix/libs-rundeck": "*@dev",
         "mathiasverraes/money": "*@dev",
-        "propel/propel-bundle": "1.5.2"
+        "propel/propel-bundle": "1.5.2",
+        "hoa/ruler": "~2.0"
     },
     "autoload": {
         "psr-4": {

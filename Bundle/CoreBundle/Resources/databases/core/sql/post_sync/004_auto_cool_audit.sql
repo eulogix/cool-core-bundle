@@ -360,3 +360,18 @@ SELECT {{ auditSchema }}._set_audit_strategy_settings('core.file_property', 'non
 -- set default audit strategy to none
 SELECT {{ auditSchema }}._set_audit_strategy_settings('core.user_reminder', 'none', 0, FALSE);
             
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.rule', 'none', 0, FALSE);
+            
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.rule_code', 'none', 0, FALSE);
+            
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.code_snippet', 'none', 0, FALSE);
+            
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.code_snippet_variable', 'none', 0, FALSE);
+            
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.widget_rule', 'none', 0, FALSE);
+            

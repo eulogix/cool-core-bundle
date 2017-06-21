@@ -25,3 +25,18 @@ SET lc_messages TO 'en_US.UTF-8';
                         ALTER TABLE user_reminder DROP CONSTRAINT IF EXISTS user_reminder_enum_type;
                         ALTER TABLE user_reminder ADD CONSTRAINT user_reminder_enum_type CHECK (type IN('SIMPLE','DATED'));
                  
+                        ALTER TABLE rule DROP CONSTRAINT IF EXISTS rule_enum_expression_type;
+                        ALTER TABLE rule ADD CONSTRAINT rule_enum_expression_type CHECK (expression_type IN('HOA','PHP'));
+                 
+                        ALTER TABLE rule_code DROP CONSTRAINT IF EXISTS rule_code_enum_type;
+                        ALTER TABLE rule_code ADD CONSTRAINT rule_code_enum_type CHECK (type IN('VARIABLE','EXEC_IF_TRUE','EXEC_IF_FALSE'));
+                 
+                        ALTER TABLE code_snippet DROP CONSTRAINT IF EXISTS code_snippet_enum_language;
+                        ALTER TABLE code_snippet ADD CONSTRAINT code_snippet_enum_language CHECK (language IN('PHP'));
+                 
+                        ALTER TABLE code_snippet DROP CONSTRAINT IF EXISTS code_snippet_enum_type;
+                        ALTER TABLE code_snippet ADD CONSTRAINT code_snippet_enum_type CHECK (type IN('EXPRESSION','FUNCTION_BODY'));
+                 
+                        ALTER TABLE widget_rule DROP CONSTRAINT IF EXISTS widget_rule_enum_evaluation;
+                        ALTER TABLE widget_rule ADD CONSTRAINT widget_rule_enum_evaluation CHECK (evaluation IN('BEFORE_DEFINITION','BEFORE_VALIDATION'));
+                 

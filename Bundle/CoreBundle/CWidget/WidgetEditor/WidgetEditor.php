@@ -15,6 +15,7 @@ use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\Form\CoolForm;
 use Eulogix\Cool\Lib\Widget\Message;
 use Eulogix\Cool\Lib\DataSource\DSRequest;
+use Eulogix\Cool\Lib\Widget\WidgetSlot;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -116,8 +117,20 @@ class WidgetEditor extends CoolForm {
         //variation string is calculated from the tab state
         $variation = $configurator->getVariationString( $this->getVariationFromFields() );
         $this->getField('variation')->setValue( $variation );
-        
-        //$this->parameters->set('_debug', true);
+
+
+        if(!$this->getDSRecord()->isNew()) {
+
+            $widgetId = $this->getDSRecord()->get('name');
+            $this->addMessageInfo($widgetId);
+
+            $filter = json_encode(['widget_id'=>$widgetId]);
+
+            $this->setSlot("Rules", new WidgetSlot("EulogixCoolCore/Core/Rule/WidgetRuleLister", [
+                '_filter' => $filter
+            ]), "Rules");
+        }
+
         return $this;
     }  
     
