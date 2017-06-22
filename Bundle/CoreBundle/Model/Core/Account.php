@@ -77,4 +77,12 @@ class Account extends BaseAccount
             return $avatars->fetch()[0];
         return null;
     }
+
+    /**
+     * @param AccountGroup $group
+     * @return bool
+     */
+    public function isInGroup(AccountGroup $group) {
+        return AccountGroupRefQuery::create()->filterByAccountGroup($group)->filterByAccount($this)->count() > 0;
+    }
 }

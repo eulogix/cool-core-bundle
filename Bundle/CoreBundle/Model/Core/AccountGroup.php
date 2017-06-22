@@ -27,4 +27,12 @@ class AccountGroup extends BaseAccountGroup
             $ret[] = $obj->getAccount();
         return $ret;
     }
+
+    /**
+     * @param Account $account
+     * @return bool
+     */
+    public function containsAccount(Account $account) {
+        return AccountGroupRefQuery::create()->filterByAccountGroup($this)->filterByAccount($account)->count() > 0;
+    }
 }

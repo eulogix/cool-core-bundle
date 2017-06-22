@@ -40,11 +40,19 @@ class GroupManager {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AccountGroup
      */
     public function getGroup($id) {
         return AccountGroupQuery::create()->findPk($id);
+    }
+
+    /**
+     * @param string $name
+     * @return AccountGroup
+     */
+    public function getGroupByName($name) {
+        return AccountGroupQuery::create()->findOneByName($name);
     }
 
 }
