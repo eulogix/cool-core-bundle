@@ -23,11 +23,11 @@ trait EventHolder {
     private $events;
 
     /**
-     * @param string $evt
+     * @param string $eventName
      * @param array $payload
      */
-    public function addEvent($evt, $payload=[]) {
-        $this->events[] = ['event'=>$evt, 'payload'=>$payload];
+    public function addEvent($eventName, $payload=[]) {
+        $this->events[] = ['event'=>$eventName, 'payload'=>$payload];
     }
 
     /**
@@ -42,6 +42,17 @@ trait EventHolder {
      */
     public function hasEvents() {
         return !empty($this->events);
+    }
+
+    /**
+     * @param string $eventName
+     * @return bool
+     */
+    public function hasEvent($eventName) {
+        foreach($this->getEvents() as $evt)
+            if($evt['event'] == $eventName)
+                return true;
+        return false;
     }
     
 }

@@ -92,25 +92,58 @@ class NotificationsControllerTest extends baseTestCase
         $r ->setName("a test rule".microtime())
            ->setCategory("c1")
            ->setExpressionType( Rule::EXPRESSION_TYPE_HOA )
-           ->setExpression("sum(sn1,sn2) = 10")
+           ->setExpression("sum(sn1,sn2) = 20")
            ->save();
 
+        // sn1 = 11
         $rv = new RuleCode();
         $rv ->setType(RuleCode::TYPE_VARIABLE)
             ->setName("sn1")
             ->setRule($r)
             ->setCodeSnippet($sn)
-            ->setCodeSnippetVariables(json_encode(["var1"=>1, "var2"=>2]))
+            ->setCodeSnippetVariables(json_encode(["var1"=>'$sn2', "var2"=>2]))
             ->save();
 
+        // sn2 = 9
         $rv2 = new RuleCode();
         $rv2->setType(RuleCode::TYPE_VARIABLE)
             ->setName("sn2")
             ->setRule($r)
             ->setCodeSnippet($sn2)
-            ->setCodeSnippetVariables(json_encode(["var1"=>5, "var2"=>2]))
+            ->setCodeSnippetVariables(json_encode(["var1"=>'$sn4', "var2"=>2]))
             ->save();
 
+        // sn4 = 13
+        $rv3 = new RuleCode();
+        $rv3 ->setType(RuleCode::TYPE_VARIABLE)
+            ->setName("sn3")
+            ->setRule($r)
+            ->setCodeSnippet($sn)
+            ->setCodeSnippetVariables(json_encode(["var1"=>'$sn1', "var2"=>2]))
+            ->save();
+
+        // sn4 = 7
+        $rv4 = new RuleCode();
+        $rv4 ->setType(RuleCode::TYPE_VARIABLE)
+            ->setName("sn4")
+            ->setRule($r)
+            ->setCodeSnippet($sn)
+            ->setCodeSnippetVariables(json_encode(["var1"=>'$sn5', "var2"=>'$sn1']))
+            ->save();
+
+        // sn5 = 3
+        $rv5 = new RuleCode();
+        $rv5 ->setType(RuleCode::TYPE_VARIABLE)
+            ->setName("sn5")
+            ->setRule($r)
+            ->setCodeSnippet($sn)
+            ->setCodeSnippetVariables(json_encode(["var1"=>1, "var2"=>2]))
+            ->save();
+
+        //$this->expectExceptionMessage("Variables sn1,sn2,sn4 define an unresolvable loop.");
+        //$this->assertTrue( $r->assert() );
+
+        $rv4->setCodeSnippetVariables(json_encode(["var1"=>'$sn5', "var2"=>4]))->save();
         $this->assertTrue( $r->assert() );
     }
 }

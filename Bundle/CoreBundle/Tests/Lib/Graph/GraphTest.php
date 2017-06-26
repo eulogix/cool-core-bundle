@@ -22,37 +22,22 @@ class GraphTest extends \PHPUnit_Framework_TestCase
 
     public function testVertexSort()
     {
-        $g = $this->getGraph();
-        print_r($g->getVertices());
+        $g = $this->getTSGraph();
         $g->TopologicalVertexSort();
-        print_r($g->getVertices());
+        $this->assertEquals(['D','B','C','A'], array_keys($g->getVertices()));
+    }
+
+    public function testSC()
+    {
+        $g = $this->getSCGraph();
+        $sc = $g->getStronglyConnectedComponents();
+        $this->assertEquals(['H' => ['H','I','G'], 'C' => ['C','J','F','D']], $sc);
     }
 
     /**
      * @return Graph
      */
-    private function _getGraph() {
-        $g = new Graph();
-        $g->addVertex(1);
-        $g->addVertex(2);
-        $g->addVertex(3);
-        $g->addVertex(4);
-        $g->addVertex(5);
-        $g->addEdge(null, 4, 4);
-        $g->addEdge(null, 4, 3);
-        $g->addEdge(null, 4, 2);
-        $g->addEdge(null, 3, 2);
-        $g->addEdge(null, 3, 1);
-        $g->addEdge(null, 2, 1);
-        $g->addEdge(null, 1, 5);
-        $g->addEdge(null, 1, 2);
-        return $g;
-    }
-
-    /**
-     * @return Graph
-     */
-    private function getGraph() {
+    private function getTSGraph() {
         $data = ['aprop'=>'avalue'];
         $g = new Graph();
         $g->addVertex('A',$data);
@@ -65,4 +50,39 @@ class GraphTest extends \PHPUnit_Framework_TestCase
         $g->addEdge(null, 'B', 'A');
         return $g;
     }
+
+    /**
+     * @return Graph
+     * @see https://stackoverflow.com/questions/33590974/how-to-find-strongly-connected-components-in-a-graph
+     */
+    private function getSCGraph() {
+        $data = ['aprop'=>'avalue'];
+        $g = new Graph();
+        $g->addVertex('A',$data);
+        $g->addVertex('B',$data);
+        $g->addVertex('C',$data);
+        $g->addVertex('D',$data);
+        $g->addVertex('E',$data);
+        $g->addVertex('F',$data);
+        $g->addVertex('G',$data);
+        $g->addVertex('H',$data);
+        $g->addVertex('I',$data);
+        $g->addVertex('J',$data);
+        $g->addEdge(null, 'C', 'D');
+        $g->addEdge(null, 'A', 'C');
+        $g->addEdge(null, 'A', 'H');
+        $g->addEdge(null, 'J', 'C');
+        $g->addEdge(null, 'F', 'J');
+        $g->addEdge(null, 'D', 'F');
+        $g->addEdge(null, 'H', 'F');
+        $g->addEdge(null, 'H', 'G');
+        $g->addEdge(null, 'I', 'H');
+        $g->addEdge(null, 'E', 'A');
+        $g->addEdge(null, 'E', 'I');
+        $g->addEdge(null, 'B', 'A');
+        $g->addEdge(null, 'B', 'G');
+        $g->addEdge(null, 'G', 'I');
+        return $g;
+    }
+
 }
