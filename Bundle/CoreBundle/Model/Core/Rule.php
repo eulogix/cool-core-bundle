@@ -18,18 +18,20 @@ class Rule extends BaseRule
      */
     public function assert(array $contextArray=[]) {
         $ruler = new Ruler();
-        $context = new Context(array_merge($contextArray, $this->getEvaluatedVariables()));
+        $finalContext = $this->getEvaluatedVariables($contextArray);
+        $context = new Context($finalContext);
         return $ruler->assert($this->getExpression(), $context);
 
     }
 
     /**
+     * @param array $contextArray
      * @return array
      * @throws \Exception
      * @throws \PropelException
      */
-    private function getEvaluatedVariables() {
-        $evaluatedVariables = [];
+    private function getEvaluatedVariables(array $contextArray) {
+        $evaluatedVariables = $contextArray;
         $order = $this->getVariableExecutionOrder();
         foreach($order as $varName) {
             $var = RuleCodeQuery::create()->filterByRule($this)->filterByType( RuleCode::TYPE_VARIABLE )->findOneByName( $varName );
@@ -44,7 +46,7 @@ class Rule extends BaseRule
      * @return array
      */
     public function execCodes($type, $context) {
-        $wkContext = array_merge($context, $this->getEvaluatedVariables());
+        $wkContext = $this->getEvaluatedVariables($context);
 
         $report = [];
         $codes = $this->getCodes( $type );
@@ -53,7 +55,7 @@ class Rule extends BaseRule
                 'return_value' => $code->evaluate($wkContext)
             ];
         }
-        
+
         return $report;
     }
 

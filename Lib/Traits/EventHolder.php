@@ -20,7 +20,7 @@ trait EventHolder {
     /**
      * @var array
      */
-    private $events;
+    private $events = [];
 
     /**
      * @param string $eventName
