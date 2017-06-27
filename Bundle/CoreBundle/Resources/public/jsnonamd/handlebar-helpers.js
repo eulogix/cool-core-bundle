@@ -1,5 +1,8 @@
-require(["dojo/date/locale"],
-function(dateLocale){
+require([
+        "dojo/date/locale",
+        "dojo/currency"
+    ],
+function(dateLocale, currencyLocale){
 
     Handlebars.registerHelper ('truncate', function (str, len) {
         if (str && str.length > len && str.length > 0) {
@@ -47,6 +50,10 @@ function(dateLocale){
         } while (fileSizeInBytes > 1024);
 
         return Math.max(fileSizeInBytes, 0).toFixed(1) + byteUnits[i];
+    });
+
+    Handlebars.registerHelper('currency', function(decimalNumber) {
+        return currencyLocale.format(decimalNumber);
     });
 
 });
