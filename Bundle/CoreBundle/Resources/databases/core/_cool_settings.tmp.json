@@ -1007,7 +1007,10 @@
                         "attributes": []
                     },
                     "code_snippet_id": {
-                        "attributes": []
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
                     },
                     "code_snippet_variables": {
                         "attributes": []
@@ -1027,7 +1030,8 @@
                     "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetQuery",
                     "schema": "core",
                     "rawname": "code_snippet",
-                    "editable": true
+                    "editable": true,
+                    "valueMapDecodingSQL": "name"
                 },
                 "columns": {
                     "code_snippet_id": {
@@ -1126,7 +1130,7 @@
                         },
                         "lookup": {
                             "type": "enum",
-                            "validValues": "BEFORE_DEFINITION,BEFORE_VALIDATION"
+                            "validValues": "ON_LOAD,BEFORE_DEFINITION,BEFORE_VALIDATION"
                         }
                     }
                 }

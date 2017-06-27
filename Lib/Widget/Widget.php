@@ -11,7 +11,6 @@
 
 namespace Eulogix\Cool\Lib\Widget;
 
-use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
@@ -197,6 +196,9 @@ abstract class Widget implements WidgetInterface {
         $this->clear();
         $this->build();
         $this->configure();
+
+        $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
+
         return $this;
     }
 

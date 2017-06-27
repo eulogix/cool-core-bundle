@@ -689,7 +689,10 @@
 
         <column name="name" type="LONGVARCHAR" required="true"></column>
 
-        <column name="code_snippet_id" type="INTEGER"/>
+        <column name="code_snippet_id" type="INTEGER">
+            <_control type="xhrpicker"></_control>
+        </column>
+
         <column name="code_snippet_variables" type="LONGVARCHAR" sqlType="json"/>
 
         <column name="raw_code" type="LONGVARCHAR">
@@ -711,6 +714,7 @@
     </table>
 
     <table name="code_snippet" _editable="true"
+           _valueMapDecodingSQL="name"
            description="holds code snippets useful to encapsulate implementation details for rules variables">
         <column name="code_snippet_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
@@ -755,7 +759,7 @@
         <column name="rule_id" type="INTEGER" required="true" />
 
         <column name="evaluation" type="LONGVARCHAR" required="true" default="BEFORE_DEFINITION">
-            <_lookup type="enum" validValues="BEFORE_DEFINITION,BEFORE_VALIDATION"></_lookup>
+            <_lookup type="enum" validValues="ON_LOAD,BEFORE_DEFINITION,BEFORE_VALIDATION"></_lookup>
             <_control type="select"></_control>
         </column>
 

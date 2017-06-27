@@ -26,11 +26,18 @@ class WidgetEvent extends Event
     protected $widget;
 
     /**
-     * @param WidgetInterface $widget
+     * @var array
      */
-    public function __construct(WidgetInterface $widget)
+    protected $attributes;
+
+    /**
+     * @param WidgetInterface $widget
+     * @param array $eventAttributes
+     */
+    public function __construct(WidgetInterface $widget, array $eventAttributes = [])
     {
         $this->widget = $widget;
+        $this->attributes = $eventAttributes;
     }
 
     /**
@@ -39,5 +46,13 @@ class WidgetEvent extends Event
     public function getWidget()
     {
         return $this->widget;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

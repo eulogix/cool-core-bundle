@@ -591,7 +591,10 @@
 
         <column name="name" type="LONGVARCHAR" required="true"/>
 
-        <column name="code_snippet_id" type="INTEGER"/>
+        <column name="code_snippet_id" type="INTEGER">
+            
+        </column>
+
         <column name="code_snippet_variables" type="LONGVARCHAR" sqlType="json"/>
 
         <column name="raw_code" type="LONGVARCHAR">

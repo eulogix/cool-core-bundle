@@ -1690,6 +1690,10 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'attributes' => 
           array (
           ),
+          'control' => 
+          array (
+            'type' => 'xhrpicker',
+          ),
         ),
         'code_snippet_variables' => 
         array (
@@ -1719,6 +1723,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         'schema' => 'core',
         'rawname' => 'code_snippet',
         'editable' => true,
+        'valueMapDecodingSQL' => 'name',
       ),
       'columns' => 
       array (
@@ -1878,7 +1883,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'lookup' => 
           array (
             'type' => 'enum',
-            'validValues' => 'BEFORE_DEFINITION,BEFORE_VALIDATION',
+            'validValues' => 'ON_LOAD,BEFORE_DEFINITION,BEFORE_VALIDATION',
           ),
         ),
       ),

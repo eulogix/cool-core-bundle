@@ -25,6 +25,7 @@ use Eulogix\Cool\Lib\Form\Field\MultiSelect;
 use Eulogix\Cool\Lib\Form\Field\Number;
 use Eulogix\Cool\Lib\Form\Field\Time;
 use Eulogix\Cool\Lib\Form\Field\XhrPicker;
+use Eulogix\Cool\Lib\Widget\Event\WidgetEvent;
 use Eulogix\Lib\Error\ErrorReport;
 use Eulogix\Cool\Lib\Widget\Message;
 use Eulogix\Cool\Lib\Widget\Widget;
@@ -72,6 +73,7 @@ class Form extends Widget implements FormInterface {
      */
     protected $validator;
 
+    const EVENT_VALIDATION_FAILED = "event_form_validation_failed";
 
     public static function getClientWidget() {
         return 'cool/form';
@@ -272,23 +274,24 @@ class Form extends Widget implements FormInterface {
         $this->processRules(WidgetRule::EVALUATION_TYPE_BEFORE_VALIDATION);
 
         $valueHash = $this->getValues($limitFields);
+        $validator = $this->getValidator();
 
         if($limitContexts)
-            $this->getValidator()->setOperatingContexts($limitContexts);
+            $validator->setOperatingContexts($limitContexts);
 
-        $errorList = $this->getValidator()->validateHash( $valueHash );
+        $errorList = $validator->validateHash( $valueHash );
         if($errorList->getFlatViolations()->count() > 0) {
             $allViolations = $errorList->getViolations();
             foreach($allViolations as $fieldName => $fieldViolations) {
                 foreach($fieldViolations as $violation) {
-                    /**
-                     * @var $violation ConstraintViolationInterface
-                     */
+                    /** @var $violation ConstraintViolationInterface */
                     $this->getField($fieldName)->addError( $violation->getMessage() );
                 }
             }
+            $this->dispatcher->dispatch(self::EVENT_VALIDATION_FAILED, new WidgetEvent($this, ['errorList' => $errorList]));
             return false;
         }
+
         return true;
     }
 
