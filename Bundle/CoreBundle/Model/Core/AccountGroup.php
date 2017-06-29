@@ -35,4 +35,11 @@ class AccountGroup extends BaseAccountGroup
     public function containsAccount(Account $account) {
         return AccountGroupRefQuery::create()->filterByAccountGroup($this)->filterByAccount($account)->count() > 0;
     }
+
+    /**
+     * @return array
+     */
+    public function getAccountIds() {
+        return $this->getCoolDatabase()->fetchArrayWithNumericKeys("SELECT account_id FROM account_group_ref WHERE account_group_id=:id", [':id' => $this->getPrimaryKey()]);
+    }
 }
