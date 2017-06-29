@@ -19,7 +19,7 @@ class RuleCode extends BaseRuleCode
         if($rawCode = $this->getRawCode())
             return evaluate_in_lambda($rawCode, $context);
         if($sn = $this->getCodeSnippet()) {
-            return $sn->evaluate(array_merge($this->getSubstitutedSnippetVariables($context), $context));
+            return $sn->evaluate( array_merge($this->getSubstitutedSnippetVariables($context), $context) );
         }
     }
 
@@ -30,16 +30,38 @@ class RuleCode extends BaseRuleCode
      */
     public function getSubstitutedSnippetVariables(array $context) {
         $vars = $this->getSnippetVariablesAsArray();
+
         foreach($vars as $varName => &$var) {
-            preg_match_all('/\$(\w+)/sim', $var, $matches, PREG_SET_ORDER);
-            if($matches) {
-                foreach($matches as $match) {
-                    $variablePlaceHolder = $match[0];
-                    $varName = $match[1];
-                    $var = str_replace($variablePlaceHolder, @$context[$varName], $var);
+
+            if(preg_match('/^\$([a-z0-9_]+)$/sim', $var, $matches)) {
+
+                /**
+                 * check if the variable provided is exactly a single variable reference, like "$var"
+                 * in this case, we try to assign an existing variable from the context
+                 * passing its PHP reference directly
+                 */
+
+                $varName = $matches[1];
+                if(isset($context[$varName]))
+                    $var = $context[$varName];
+            } else {
+
+                /**
+                 * if the variable provided contains references to more than one variable, like "$var ($var2)"
+                 * we assume that this is a template and we perform a basic string replacement
+                 */
+
+                preg_match_all('/\$(\w+)/sim', $var, $matches, PREG_SET_ORDER);
+                if($matches) {
+                    foreach($matches as $match) {
+                        $variablePlaceHolder = $match[0];
+                        $varName = $match[1];
+                        $var = str_replace($variablePlaceHolder, @$context[$varName], $var);
+                    }
                 }
             }
         }
+
         return $vars;
     }
 
