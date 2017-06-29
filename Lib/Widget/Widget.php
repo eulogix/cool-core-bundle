@@ -564,6 +564,10 @@ abstract class Widget implements WidgetInterface {
                     'valid' => $ruleValid,
                     'executedCodes' => $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext)
                 ];
+            } catch(\Error $e) {
+                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
+            } catch(\Throwable $e) {
+                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
             } catch(\Exception $e) {
                 $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
             }
