@@ -1067,6 +1067,16 @@
                             "validValues": "EXPRESSION,FUNCTION_BODY"
                         }
                     },
+                    "return_type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "STRING,NUMBER,ARRAY,OBJECT,NONE"
+                        }
+                    },
                     "name": {
                         "attributes": []
                     },

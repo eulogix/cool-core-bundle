@@ -633,6 +633,11 @@
             
         </column>
 
+        <column name="return_type" type="LONGVARCHAR" required="true" default="NONE">
+            
+            
+        </column>
+
         <column name="name" type="LONGVARCHAR" required="true"/>
         <column name="description" type="LONGVARCHAR" required="true"/>
 

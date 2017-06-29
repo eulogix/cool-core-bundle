@@ -46,6 +46,7 @@ class CodeSnippetTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('category', 'Category', 'LONGVARCHAR', true, null, null);
         $this->addColumn('language', 'Language', 'LONGVARCHAR', true, null, 'PHP');
         $this->addColumn('type', 'Type', 'LONGVARCHAR', true, null, 'EXPRESSION');
+        $this->addColumn('return_type', 'ReturnType', 'LONGVARCHAR', true, null, 'NONE');
         $this->addColumn('name', 'Name', 'LONGVARCHAR', true, null, null);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', true, null, null);
         $this->addColumn('snippet', 'Snippet', 'LONGVARCHAR', true, null, null);

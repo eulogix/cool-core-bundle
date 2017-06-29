@@ -30,13 +30,13 @@ abstract class BaseCodeSnippetPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\CodeSnippetTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the code_snippet_id field */
     const CODE_SNIPPET_ID = 'core.code_snippet.code_snippet_id';
@@ -49,6 +49,9 @@ abstract class BaseCodeSnippetPeer
 
     /** the column name for the type field */
     const TYPE = 'core.code_snippet.type';
+
+    /** the column name for the return_type field */
+    const RETURN_TYPE = 'core.code_snippet.return_type';
 
     /** the column name for the name field */
     const NAME = 'core.code_snippet.name';
@@ -78,12 +81,12 @@ abstract class BaseCodeSnippetPeer
      * e.g. CodeSnippetPeer::$fieldNames[CodeSnippetPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId', 'Category', 'Language', 'Type', 'Name', 'Description', 'Snippet', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId', 'category', 'language', 'type', 'name', 'description', 'snippet', ),
-        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID, CodeSnippetPeer::CATEGORY, CodeSnippetPeer::LANGUAGE, CodeSnippetPeer::TYPE, CodeSnippetPeer::NAME, CodeSnippetPeer::DESCRIPTION, CodeSnippetPeer::SNIPPET, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID', 'CATEGORY', 'LANGUAGE', 'TYPE', 'NAME', 'DESCRIPTION', 'SNIPPET', ),
-        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id', 'category', 'language', 'type', 'name', 'description', 'snippet', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId', 'Category', 'Language', 'Type', 'ReturnType', 'Name', 'Description', 'Snippet', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId', 'category', 'language', 'type', 'returnType', 'name', 'description', 'snippet', ),
+        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID, CodeSnippetPeer::CATEGORY, CodeSnippetPeer::LANGUAGE, CodeSnippetPeer::TYPE, CodeSnippetPeer::RETURN_TYPE, CodeSnippetPeer::NAME, CodeSnippetPeer::DESCRIPTION, CodeSnippetPeer::SNIPPET, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID', 'CATEGORY', 'LANGUAGE', 'TYPE', 'RETURN_TYPE', 'NAME', 'DESCRIPTION', 'SNIPPET', ),
+        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id', 'category', 'language', 'type', 'return_type', 'name', 'description', 'snippet', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -93,12 +96,12 @@ abstract class BaseCodeSnippetPeer
      * e.g. CodeSnippetPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId' => 0, 'Category' => 1, 'Language' => 2, 'Type' => 3, 'Name' => 4, 'Description' => 5, 'Snippet' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'name' => 4, 'description' => 5, 'snippet' => 6, ),
-        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID => 0, CodeSnippetPeer::CATEGORY => 1, CodeSnippetPeer::LANGUAGE => 2, CodeSnippetPeer::TYPE => 3, CodeSnippetPeer::NAME => 4, CodeSnippetPeer::DESCRIPTION => 5, CodeSnippetPeer::SNIPPET => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID' => 0, 'CATEGORY' => 1, 'LANGUAGE' => 2, 'TYPE' => 3, 'NAME' => 4, 'DESCRIPTION' => 5, 'SNIPPET' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'name' => 4, 'description' => 5, 'snippet' => 6, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId' => 0, 'Category' => 1, 'Language' => 2, 'Type' => 3, 'ReturnType' => 4, 'Name' => 5, 'Description' => 6, 'Snippet' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'returnType' => 4, 'name' => 5, 'description' => 6, 'snippet' => 7, ),
+        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID => 0, CodeSnippetPeer::CATEGORY => 1, CodeSnippetPeer::LANGUAGE => 2, CodeSnippetPeer::TYPE => 3, CodeSnippetPeer::RETURN_TYPE => 4, CodeSnippetPeer::NAME => 5, CodeSnippetPeer::DESCRIPTION => 6, CodeSnippetPeer::SNIPPET => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID' => 0, 'CATEGORY' => 1, 'LANGUAGE' => 2, 'TYPE' => 3, 'RETURN_TYPE' => 4, 'NAME' => 5, 'DESCRIPTION' => 6, 'SNIPPET' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'return_type' => 4, 'name' => 5, 'description' => 6, 'snippet' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -176,6 +179,7 @@ abstract class BaseCodeSnippetPeer
             $criteria->addSelectColumn(CodeSnippetPeer::CATEGORY);
             $criteria->addSelectColumn(CodeSnippetPeer::LANGUAGE);
             $criteria->addSelectColumn(CodeSnippetPeer::TYPE);
+            $criteria->addSelectColumn(CodeSnippetPeer::RETURN_TYPE);
             $criteria->addSelectColumn(CodeSnippetPeer::NAME);
             $criteria->addSelectColumn(CodeSnippetPeer::DESCRIPTION);
             $criteria->addSelectColumn(CodeSnippetPeer::SNIPPET);
@@ -184,6 +188,7 @@ abstract class BaseCodeSnippetPeer
             $criteria->addSelectColumn($alias . '.category');
             $criteria->addSelectColumn($alias . '.language');
             $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.return_type');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.snippet');

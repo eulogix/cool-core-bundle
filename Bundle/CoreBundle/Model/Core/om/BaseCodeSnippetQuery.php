@@ -23,6 +23,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippetQuery orderByCategory($order = Criteria::ASC) Order by the category column
  * @method CodeSnippetQuery orderByLanguage($order = Criteria::ASC) Order by the language column
  * @method CodeSnippetQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method CodeSnippetQuery orderByReturnType($order = Criteria::ASC) Order by the return_type column
  * @method CodeSnippetQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method CodeSnippetQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method CodeSnippetQuery orderBySnippet($order = Criteria::ASC) Order by the snippet column
@@ -31,6 +32,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippetQuery groupByCategory() Group by the category column
  * @method CodeSnippetQuery groupByLanguage() Group by the language column
  * @method CodeSnippetQuery groupByType() Group by the type column
+ * @method CodeSnippetQuery groupByReturnType() Group by the return_type column
  * @method CodeSnippetQuery groupByName() Group by the name column
  * @method CodeSnippetQuery groupByDescription() Group by the description column
  * @method CodeSnippetQuery groupBySnippet() Group by the snippet column
@@ -53,6 +55,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippet findOneByCategory(string $category) Return the first CodeSnippet filtered by the category column
  * @method CodeSnippet findOneByLanguage(string $language) Return the first CodeSnippet filtered by the language column
  * @method CodeSnippet findOneByType(string $type) Return the first CodeSnippet filtered by the type column
+ * @method CodeSnippet findOneByReturnType(string $return_type) Return the first CodeSnippet filtered by the return_type column
  * @method CodeSnippet findOneByName(string $name) Return the first CodeSnippet filtered by the name column
  * @method CodeSnippet findOneByDescription(string $description) Return the first CodeSnippet filtered by the description column
  * @method CodeSnippet findOneBySnippet(string $snippet) Return the first CodeSnippet filtered by the snippet column
@@ -61,6 +64,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method array findByCategory(string $category) Return CodeSnippet objects filtered by the category column
  * @method array findByLanguage(string $language) Return CodeSnippet objects filtered by the language column
  * @method array findByType(string $type) Return CodeSnippet objects filtered by the type column
+ * @method array findByReturnType(string $return_type) Return CodeSnippet objects filtered by the return_type column
  * @method array findByName(string $name) Return CodeSnippet objects filtered by the name column
  * @method array findByDescription(string $description) Return CodeSnippet objects filtered by the description column
  * @method array findBySnippet(string $snippet) Return CodeSnippet objects filtered by the snippet column
@@ -169,7 +173,7 @@ abstract class BaseCodeSnippetQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT code_snippet_id, category, language, type, name, description, snippet FROM core.code_snippet WHERE code_snippet_id = :p0';
+        $sql = 'SELECT code_snippet_id, category, language, type, return_type, name, description, snippet FROM core.code_snippet WHERE code_snippet_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -408,6 +412,35 @@ abstract class BaseCodeSnippetQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CodeSnippetPeer::TYPE, $type, $comparison);
+    }
+
+    /**
+     * Filter the query on the return_type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByReturnType('fooValue');   // WHERE return_type = 'fooValue'
+     * $query->filterByReturnType('%fooValue%'); // WHERE return_type LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $returnType The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CodeSnippetQuery The current query, for fluid interface
+     */
+    public function filterByReturnType($returnType = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($returnType)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $returnType)) {
+                $returnType = str_replace('*', '%', $returnType);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CodeSnippetPeer::RETURN_TYPE, $returnType, $comparison);
     }
 
     /**

@@ -1778,6 +1778,21 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
             'validValues' => 'EXPRESSION,FUNCTION_BODY',
           ),
         ),
+        'return_type' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'STRING,NUMBER,ARRAY,OBJECT,NONE',
+          ),
+        ),
         'name' => 
         array (
           'attributes' => 

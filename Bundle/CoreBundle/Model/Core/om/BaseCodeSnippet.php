@@ -69,6 +69,13 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
     protected $type;
 
     /**
+     * The value for the return_type field.
+     * Note: this column has a database default value of: 'NONE'
+     * @var        string
+     */
+    protected $return_type;
+
+    /**
      * The value for the name field.
      * @var        string
      */
@@ -140,6 +147,7 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
     {
         $this->language = 'PHP';
         $this->type = 'EXPRESSION';
+        $this->return_type = 'NONE';
     }
 
     /**
@@ -194,6 +202,17 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
     {
 
         return $this->type;
+    }
+
+    /**
+     * Get the [return_type] column value.
+     *
+     * @return string
+     */
+    public function getReturnType()
+    {
+
+        return $this->return_type;
     }
 
     /**
@@ -314,6 +333,27 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
     } // setType()
 
     /**
+     * Set the value of [return_type] column.
+     *
+     * @param  string $v new value
+     * @return CodeSnippet The current object (for fluent API support)
+     */
+    public function setReturnType($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->return_type !== $v) {
+            $this->return_type = $v;
+            $this->modifiedColumns[] = CodeSnippetPeer::RETURN_TYPE;
+        }
+
+
+        return $this;
+    } // setReturnType()
+
+    /**
      * Set the value of [name] column.
      *
      * @param  string $v new value
@@ -394,6 +434,10 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
                 return false;
             }
 
+            if ($this->return_type !== 'NONE') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -420,9 +464,10 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
             $this->category = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->language = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->snippet = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->return_type = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->description = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->snippet = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -432,7 +477,7 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 7; // 7 = CodeSnippetPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = CodeSnippetPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CodeSnippet object", $e);
@@ -705,6 +750,9 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(CodeSnippetPeer::TYPE)) {
             $modifiedColumns[':p' . $index++]  = 'type';
         }
+        if ($this->isColumnModified(CodeSnippetPeer::RETURN_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'return_type';
+        }
         if ($this->isColumnModified(CodeSnippetPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = 'name';
         }
@@ -736,6 +784,9 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
                         break;
                     case 'type':
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
+                    case 'return_type':
+                        $stmt->bindValue($identifier, $this->return_type, PDO::PARAM_STR);
                         break;
                     case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
@@ -902,12 +953,15 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
                 return $this->getType();
                 break;
             case 4:
-                return $this->getName();
+                return $this->getReturnType();
                 break;
             case 5:
-                return $this->getDescription();
+                return $this->getName();
                 break;
             case 6:
+                return $this->getDescription();
+                break;
+            case 7:
                 return $this->getSnippet();
                 break;
             default:
@@ -943,9 +997,10 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
             $keys[1] => $this->getCategory(),
             $keys[2] => $this->getLanguage(),
             $keys[3] => $this->getType(),
-            $keys[4] => $this->getName(),
-            $keys[5] => $this->getDescription(),
-            $keys[6] => $this->getSnippet(),
+            $keys[4] => $this->getReturnType(),
+            $keys[5] => $this->getName(),
+            $keys[6] => $this->getDescription(),
+            $keys[7] => $this->getSnippet(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1006,12 +1061,15 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
                 $this->setType($value);
                 break;
             case 4:
-                $this->setName($value);
+                $this->setReturnType($value);
                 break;
             case 5:
-                $this->setDescription($value);
+                $this->setName($value);
                 break;
             case 6:
+                $this->setDescription($value);
+                break;
+            case 7:
                 $this->setSnippet($value);
                 break;
         } // switch()
@@ -1042,9 +1100,10 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setCategory($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setLanguage($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setType($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setName($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDescription($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setSnippet($arr[$keys[6]]);
+        if (array_key_exists($keys[4], $arr)) $this->setReturnType($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setName($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDescription($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setSnippet($arr[$keys[7]]);
     }
 
     /**
@@ -1060,6 +1119,7 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(CodeSnippetPeer::CATEGORY)) $criteria->add(CodeSnippetPeer::CATEGORY, $this->category);
         if ($this->isColumnModified(CodeSnippetPeer::LANGUAGE)) $criteria->add(CodeSnippetPeer::LANGUAGE, $this->language);
         if ($this->isColumnModified(CodeSnippetPeer::TYPE)) $criteria->add(CodeSnippetPeer::TYPE, $this->type);
+        if ($this->isColumnModified(CodeSnippetPeer::RETURN_TYPE)) $criteria->add(CodeSnippetPeer::RETURN_TYPE, $this->return_type);
         if ($this->isColumnModified(CodeSnippetPeer::NAME)) $criteria->add(CodeSnippetPeer::NAME, $this->name);
         if ($this->isColumnModified(CodeSnippetPeer::DESCRIPTION)) $criteria->add(CodeSnippetPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(CodeSnippetPeer::SNIPPET)) $criteria->add(CodeSnippetPeer::SNIPPET, $this->snippet);
@@ -1129,6 +1189,7 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
         $copyObj->setCategory($this->getCategory());
         $copyObj->setLanguage($this->getLanguage());
         $copyObj->setType($this->getType());
+        $copyObj->setReturnType($this->getReturnType());
         $copyObj->setName($this->getName());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setSnippet($this->getSnippet());
@@ -1705,6 +1766,7 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
         $this->category = null;
         $this->language = null;
         $this->type = null;
+        $this->return_type = null;
         $this->name = null;
         $this->description = null;
         $this->snippet = null;

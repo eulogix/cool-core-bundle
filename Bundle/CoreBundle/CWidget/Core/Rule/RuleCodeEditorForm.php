@@ -37,7 +37,7 @@ class RuleCodeEditorForm extends CoolForm {
             $varValues = json_decode($this->getField('code_snippet_variables')->getValue(), true);
             $snippetVars = $snippet->getCodeSnippetVariables();
             foreach($snippetVars as $var) {
-                $this->addFieldTextBox('snippet_var_'.$var->getName())->setValue(@$varValues[ $var->getName() ]);
+                $this->addFieldTextArea('snippet_var_'.$var->getName())->setValue(@$varValues[ $var->getName() ]);
             }
         } else $this->getField('raw_code')->setReadOnly(false);
     }
@@ -92,15 +92,18 @@ class RuleCodeEditorForm extends CoolForm {
         if($snippet = $this->getSnippet()) {
             $snippetVars = $snippet->getCodeSnippetVariables();
             foreach($snippetVars as $var) {
-                $snippetFields.="\n".'<raw>'.$var->getDescription().'</raw>,snippet_var_'.$var->getName().":400|nolabel";
+                $snippetFields.="\n<FIELDS title=\"{$var->getName()} - {$var->getDescription()}\">
+snippet_var_{$var->getName()}:100%:50px|nolabel@!
+</FIELDS>";
             }
         }
 
         return "<FIELDS c1w='250px'>
 type:200,name:400
 raw_code:100%:200@!
-code_snippet_id:600@!{$snippetFields}
-save|align=center
-</FIELDS>";
+code_snippet_id:600@!
+</FIELDS>
+{$snippetFields}
+<FIELDS>save|align=center</FIELDS>";
     }
 }
