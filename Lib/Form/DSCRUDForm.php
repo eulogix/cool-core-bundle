@@ -17,7 +17,6 @@ use Eulogix\Cool\Lib\Form\Event\FormEvent;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
 use Eulogix\Cool\Lib\Form\Field\MultiSelect;
 use Eulogix\Lib\Database\Postgres\PgUtils;
-use Eulogix\Lib\Validation\ConstraintBuilder;
 use Eulogix\Cool\Lib\Widget\Message;
 
 use Eulogix\Cool\Lib\DataSource\DSRequest;
@@ -70,6 +69,8 @@ class DSCRUDForm extends Form  {
 
         if(!$this->getReadOnly())
             $this->addFieldSubmit("save");
+
+        $this->storeOriginalValues();
 
         return $this;
     }
@@ -240,16 +241,18 @@ class DSCRUDForm extends Form  {
             switch($dsresponse->getStatus()) {
                 
                 case $dsresponse::STATUS_TRANSACTION_SUCCESS : {
-                    
-                    $this->clear()->build();
+
+                    $originalValues = $this->getOriginalValues();
+
                     $this->setDSRecord(null);
                     $this->setRecordId( $this->getRecordIdFromDSR( $dsresponse->getAttribute(D::RECORD_IDENTIFIER) ) );
-                    $this->fill( $this->getDSRecord()->getValues() );
+                    $this->reBuild();
+
+                    $this->storeOriginalValues( $originalValues );
+
                     $this->addEvent("recordSaved");
                     $this->dispatcher->dispatch(self::EVENT_RECORD_SAVED, new FormEvent($this));
 
-                    $this->addMessage(Message::TYPE_INFO,"SAVED");    
-                    
                     return true;
                     
                     break;
@@ -280,13 +283,12 @@ class DSCRUDForm extends Form  {
 
         if($this->validate( array_keys($parameters) ) ) {
             if( $this->updateOrCreateRecord() ) {
-                //we don't call rebuild as it would clear the form, including messages and commands
-                //this way we ensure that dependant widgets get shown on record insertion
-                $this->build()->configure();
+                $this->addMessage(Message::TYPE_INFO,"SAVED");
             }
         } else {
             $this->addMessage(Message::TYPE_ERROR, "NOT VALIDATED");
         }
+
     }
 
     /**

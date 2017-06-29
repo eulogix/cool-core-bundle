@@ -44,8 +44,6 @@ use Eulogix\Cool\Lib\Form\Field\Currency;
 
 use Eulogix\Cool\Lib\Form\Configurator\FormConfigurator;
 
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
-
 use Eulogix\Lib\Validation\BeanValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -74,6 +72,9 @@ class Form extends Widget implements FormInterface {
     protected $validator;
 
     const EVENT_VALIDATION_FAILED = "event_form_validation_failed";
+
+    //stores the set of values considered the initial state of the form
+    const ATTRIBUTE_ORIGINAL_VALUES = "original_values";
 
     public static function getClientWidget() {
         return 'cool/form';
@@ -106,7 +107,7 @@ class Form extends Widget implements FormInterface {
 
         $fields = [];
         foreach($this->fields as $name => $a) {
-        $fields[$name] = $a->getDefinition();
+            $fields[$name] = $a->getDefinition();
         }
 
         $d->setBlock('fields', $fields);
@@ -228,12 +229,16 @@ class Form extends Widget implements FormInterface {
      * @param bool $skipEmptyValues
      */
     public function fill($data, $skipEmptyValues=false) {
+
         foreach($data as $k=>$v)
             if(!$skipEmptyValues || !empty($v)) {
                 if($f = $this->getField($k)) {
                     $f->setValue($v);
                 } //?
         }
+
+        if(!$this->getOriginalValues())
+            $this->storeOriginalValues();
     }
 
     /**
@@ -243,12 +248,16 @@ class Form extends Widget implements FormInterface {
      * @param bool $skipEmptyValues
      */
     public function rawFill($data, $skipEmptyValues=false) {
+
         foreach($data as $k=>$v)
             if(!$skipEmptyValues || !empty($v)) {
                 if($f = $this->getField($k)) {
                     $f->setRawValue($v);
                 } //?
         }
+
+        if(!$this->getOriginalValues())
+            $this->storeOriginalValues();
     }
     
     /**
@@ -745,11 +754,43 @@ class Form extends Widget implements FormInterface {
     }
 
     /**
+     * @param array $values
+     */
+    public function storeOriginalValues(array $values = null) {
+        $this->getAttributes()->set( self::ATTRIBUTE_ORIGINAL_VALUES, $values ?? $this->getValues() );
+    }
+
+    /**
+     * @return array
+     */
+    public function getOriginalValues() {
+        return $this->getAttributes()->get( self::ATTRIBUTE_ORIGINAL_VALUES );
+    }
+
+    /**
+     * @return array
+     */
+    public function getChangedFields() {
+        $oldValues = $this->getOriginalValues();
+        $newValues = $this->getValues();
+
+        $changedFields = [];
+        foreach($oldValues as $fieldName => $fieldValue)
+            if($fieldValue != $newValues[$fieldName])
+                $changedFields[$fieldName] = [
+                    'old' => $fieldValue,
+                    'new' => $newValues[$fieldName]
+                ];
+        return $changedFields;
+    }
+
+    /**
      * @return array
      */
     public function getRuleContext() {
         return array_merge(parent::getRuleContext(), [
-            'fields' => $this->getValues()
+            'fields' => $this->getValues(),
+            'changedFields' => $this->getChangedFields()
         ]);
     }
 }
