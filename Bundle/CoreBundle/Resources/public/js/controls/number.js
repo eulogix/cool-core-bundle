@@ -66,7 +66,7 @@ define("cool/controls/number",
         },
 
 		_setValueAttr: function(value) {
-            if(isNaN(value) || value===null) {
+            if(isNaN(value) || value===null || value=='') {
                 this.field.set('value', null );
             }
             else this.field.set('value', Number(value) );
