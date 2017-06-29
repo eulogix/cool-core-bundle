@@ -99,7 +99,7 @@ class RuleCodeEditorForm extends CoolForm {
         return "<FIELDS c1w='250px'>
 type:200,name:400
 raw_code:100%:200@!
-code_snippet_id:200{$snippetFields}
+code_snippet_id:600@!{$snippetFields}
 save|align=center
 </FIELDS>";
     }
