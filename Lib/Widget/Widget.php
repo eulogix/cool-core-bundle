@@ -197,8 +197,6 @@ abstract class Widget implements WidgetInterface {
         $this->build();
         $this->configure();
 
-        $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
-
         return $this;
     }
 
@@ -539,6 +537,7 @@ abstract class Widget implements WidgetInterface {
         if(($c = $this->getConfigurator()) && $c->load()) {
             $c->apply();
         }
+        $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
     }
 
     /**
