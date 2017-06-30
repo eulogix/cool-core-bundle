@@ -764,7 +764,7 @@ class Form extends Widget implements FormInterface {
      * @return array
      */
     public function getOriginalValues() {
-        return $this->getAttributes()->get( self::ATTRIBUTE_ORIGINAL_VALUES );
+        return $this->getAttributes()->get( self::ATTRIBUTE_ORIGINAL_VALUES ) ?? [];
     }
 
     /**
@@ -776,10 +776,10 @@ class Form extends Widget implements FormInterface {
 
         $changedFields = [];
         foreach($oldValues as $fieldName => $fieldValue)
-            if($fieldValue != $newValues[$fieldName])
+            if($fieldValue != @$newValues[$fieldName])
                 $changedFields[$fieldName] = [
                     'old' => $fieldValue,
-                    'new' => $newValues[$fieldName]
+                    'new' => @$newValues[$fieldName]
                 ];
         return $changedFields;
     }
