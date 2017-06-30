@@ -64,7 +64,17 @@ class CoolPropelObject extends \BaseObject {
      * @return string
      */
     public function getDecodedField($fieldName) {
-        return $this->getCoolDatabase()->decodeField($this->_getTableName(), $fieldName, $this->getByName($fieldName, \BasePeer::TYPE_FIELDNAME));
+        try {
+            $fieldValue = $this->getByName($fieldName, \BasePeer::TYPE_FIELDNAME);
+        } catch(\Exception $e) {
+            try {
+                $fieldValue = $this->getCalculatedField($fieldName);
+            } catch(\Exception $e) {
+                return $fieldName.'[?]';
+            }
+        }
+
+        return $this->getCoolDatabase()->decodeField( $this->_getTableName(), $fieldName, $fieldValue );
     }
 
     /**
@@ -320,6 +330,15 @@ class CoolPropelObject extends \BaseObject {
         }
 
         trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+    }
+
+    /**
+     * @return $this
+     */
+    public function reloadCalculatedFields() {
+        //TODO modify the OM builder so that this method is called with the standard reload() method
+        $this->calculatedFields = null;
+        return $this;
     }
 
 }
