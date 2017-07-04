@@ -13,6 +13,7 @@ namespace Eulogix\Cool\Lib\Reminder;
 
 use Eulogix\Cool\Lib\Traits\ParametersHolder;
 use Eulogix\Cool\Lib\Util\DateFunctions;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * This class manages the various notification providers, and is the entry point and collector for all the implementations
@@ -112,28 +113,59 @@ abstract class RemindersManager {
         $allCounts = [];
         $retDays = [];
 
+
+
         $dateEnd = clone $dateStart;
         $dateEnd->add(new \DateInterval("P".($days-1)."D"));
 
         $daysDiff = ($dateEnd->getTimestamp() - $dateStart->getTimestamp())/(3600*24);
 
+        $stopwatch = new Stopwatch();
+
         foreach($this->getDatedProviders() as $uniqueName => $p) {
+
+            $errors = [];
+            $stopwatch->start($uniqueName);
 
             $p->getParameters()->replace($this->getParameters()->all());
 
             $dayCounts = [];
-            for($i=0; $i<=$daysDiff; $i++) {
-                $day = clone $dateStart;
-                $dayCounts[] = $p->countAtDate($day->add(new \DateInterval("P{$i}D")));
+
+            try {
+                $before = $includeBoundaries ? $p->countBeforeDate($dateStart) : null;
+            } catch(\Exception $e) {
+                $before = -1;
+                $errors[] = $e->getMessage();
             }
 
-            $allCounts[ $uniqueName ] = [
-                'before' => $includeBoundaries ? $p->countBeforeDate($dateStart) : null,
-                'days' => $dayCounts,
-                'after' => $includeBoundaries ? $p->countAfterDate($dateEnd) : null,
+            try {
+                $after = $includeBoundaries ? $p->countAfterDate($dateEnd) : null;
+            } catch(\Exception $e) {
+                $after = -1;
+                $errors[] = $e->getMessage();
+            }
 
+            for($i=0; $i<=$daysDiff; $i++) {
+                $day = clone $dateStart;
+                try {
+                    $dayCounts[] = $p->countAtDate($day->add(new \DateInterval("P{$i}D")));
+                } catch(\Exception $e) {
+                    $dayCounts[] = -1;
+                    $errors[] = $e->getMessage();
+                }
+            }
+
+            $event = $stopwatch->stop($uniqueName);
+
+            $allCounts[ $uniqueName ] = [
+                'before' => $before,
+                'days' => $dayCounts,
+                'after' => $after,
                 'detailsLister' => $p->getDetailsLister(),
                 'detailsTranslationDomain' => $this->providerTranslationDomains[ $uniqueName ],
+                'processingDuration' => $event->getDuration(),
+                'processingMemoryUsage' => $event->getMemory(),
+                'errors' => $errors
             ];
         }
 
@@ -162,15 +194,35 @@ abstract class RemindersManager {
     {
         $allCounts = [];
 
+
+        $stopwatch = new Stopwatch();
+
         foreach($this->getSimpleProviders() as $uniqueName => $p) {
+
+            $errors = [];
+
+            $stopwatch->start($uniqueName);
 
             $p->getParameters()->replace($this->getParameters()->all());
 
+            try {
+                $count = $p->countAll();
+            } catch(\Exception $e) {
+                $count = -1;
+                $errors[] = $e->getMessage();
+            }
+
+            $event = $stopwatch->stop($uniqueName);
+
             $allCounts[ $uniqueName ] = [
-                'count' => $p->countAll(),
+                'count' => $count,
 
                 'detailsLister' => $p->getDetailsLister(),
                 'detailsTranslationDomain' => $this->providerTranslationDomains[ $uniqueName ],
+
+                'processingDuration' => $event->getDuration(),
+                'processingMemoryUsage' => $event->getMemory(),
+                'errors' => $errors
             ];
         }
 

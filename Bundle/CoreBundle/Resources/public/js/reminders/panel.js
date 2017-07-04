@@ -30,6 +30,7 @@ define("cool/reminders/panel",
 
         'gridx/allModules',
         'gridx/modules/select/Cell',
+        "gridx/modules/CellWidget",
         'cool/cool',
         'cool/translator',
         'cool/dialog/manager',
@@ -52,7 +53,7 @@ define("cool/reminders/panel",
                 on, date, locale, stamp, Memory, xhr,
                 coreFx, fx,
                 mods,
-                selectCell,
+                selectCell, CellWidget,
                 cool, ctr, dialogManager,
 
                 template){
@@ -261,7 +262,8 @@ define("cool/reminders/panel",
                         autoHeight: true,
                         modules: [
                            // mods.VirtualVScroller,
-                            selectCell
+                            selectCell,
+                            CellWidget
                         ]
                     });
 
@@ -275,7 +277,6 @@ define("cool/reminders/panel",
 
                     t.viewContainer.domNode.appendChild(grid.domNode);
 
-                    grid.startup();
 
                     dojo.connect(grid, "onCellClick", function(evt){
                     });
@@ -294,6 +295,20 @@ define("cool/reminders/panel",
                             t.openDetail(row, col);
                     });
 
+                    //if there are errors, the line is red
+                    dojo.connect(grid.body, 'onAfterRow', function(row){
+
+                        var rowData = row.rawData();
+                        var node = row.node();
+
+                        if(rowData.errors.length > 0) {
+                            domClass.remove(node, "gridxRowOdd");
+                            domClass.toggle(node, "gridxRowError", true);
+                        }
+
+                    });
+
+                    grid.startup();
                     d.resolve(grid);
 
                 }, function(err){
@@ -307,7 +322,7 @@ define("cool/reminders/panel",
             refreshSimpleGrid: function() {
                 var d = new deferred();
 
-                var t = this;
+                var self = this;
                 var url = Routing.generate('getSimpleMatrix',{});
 
                 xhr(url, {
@@ -317,11 +332,42 @@ define("cool/reminders/panel",
                 }).then(function(matrix){
 
                     var layout = [
-                        {id: 'key', field: 'key', name: t.getTranslator().trans("Key"), width: '80%', formatter: function(row, value){ return t.getTranslator().trans(value) }},
-                        {id: 'count', field: 'count', name: t.getTranslator().trans("Count"), width: '20%', decorator:t._cellDecorator}
+                        {id: 'key', field: 'key', name: self.getTranslator().trans("Key"), width: '80%',
+
+                            widgetsInCell: true,
+
+                            setCellValue: function(gridData, storeData, cellWidget){
+
+                                var rawData = cellWidget.cell.row.rawData();
+
+                                dialogManager.trackMouseOver(cellWidget.domNode);
+                                dialogManager.unbindTooltip(cellWidget.domNode);
+
+                                var label = '';
+                                var tooltip = '';
+
+                                if(rawData.processingDuration > 50) {
+                                    label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
+                                    tooltip += '<br><b>Execution time (ms):</b>'+rawData.processingDuration+'<br><br>';
+                                }
+
+                                if(rawData.errors.length > 0) {
+                                    label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
+                                    tooltip += '<br><b>Errors:</b><br><br>'+rawData.errors.join('<br>');
+                                }
+
+                                label += self.getTranslator().trans(storeData);
+
+                                cellWidget.domNode.innerHTML = label;
+                                if(tooltip != '')
+                                    dialogManager.bindTooltip(cellWidget.domNode, tooltip, '700');
+                            }
+
+                        },
+                        {id: 'count', field: 'count', name: self.getTranslator().trans("Count"), width: '20%', decorator:self._cellDecorator}
                     ];
 
-                    var store = t.buildSimpleStore(matrix);
+                    var store = self.buildSimpleStore(matrix);
 
                     var grid = new Grid({
                         store: store,
@@ -329,21 +375,33 @@ define("cool/reminders/panel",
                         autoHeight: true,
                         modules: [
                             // mods.VirtualVScroller,
-                            selectCell
+                            selectCell,
+                            CellWidget
                         ]
                     });
 
-                    t.own(grid);
+                    self.own(grid);
 
-                    if(lang.isFunction(t.simpleGrid.destroyRecursive)) {
-                        t.simpleGrid.destroyRecursive();
+                    if(lang.isFunction(self.simpleGrid.destroyRecursive)) {
+                        self.simpleGrid.destroyRecursive();
                     }
 
-                    t.simpleGrid = grid;
+                    self.simpleGrid = grid;
 
-                    t.simpleGridContainer.domNode.appendChild(grid.domNode);
+                    self.simpleGridContainer.domNode.appendChild(grid.domNode);
 
-                    grid.startup();
+                    //if there are errors, the line is red
+                    dojo.connect(grid.body, 'onAfterRow', function(row){
+
+                        var rowData = row.rawData();
+                        var node = row.node();
+
+                        if(rowData.errors.length > 0) {
+                            domClass.remove(node, "gridxRowOdd");
+                            domClass.toggle(node, "gridxRowError", true);
+                        }
+
+                    });
 
                     dojo.connect(grid, "onCellClick", function(evt){
                     });
@@ -357,9 +415,10 @@ define("cool/reminders/panel",
                             if((row!=cell.row.id) || (col!=cell.column.id))
                                 grid.select.cell.deselectById(row, col);
                         }
-                        t.openSimpleDetail(row);
+                        self.openSimpleDetail(row);
                     });
 
+                    grid.startup();
                     d.resolve(grid);
 
                 }, function(err){
@@ -438,7 +497,38 @@ define("cool/reminders/panel",
                 var self = this;
 
                 var layout = [
-                    {id: 'key', field: 'key', name: this.getTranslator().trans("Key"), width: '200px', formatter: function(row, value){ return self.getTranslator().trans(value) }},
+                    {id: 'key', field: 'key', name: this.getTranslator().trans("Key"), width: '200px',
+
+                        widgetsInCell: true,
+
+                        setCellValue: function(gridData, storeData, cellWidget){
+
+                            var rawData = cellWidget.cell.row.rawData();
+
+                            dialogManager.trackMouseOver(cellWidget.domNode);
+                            dialogManager.unbindTooltip(cellWidget.domNode);
+
+                            var label = '';
+                            var tooltip = '';
+
+                            if(rawData.processingDuration > 100) {
+                                label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
+                                tooltip += '<br><b>Execution time (ms):</b>'+rawData.processingDuration+'<br><br>';
+                            }
+
+                            if(rawData.errors.length > 0) {
+                                label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
+                                tooltip += '<br><b>Errors:</b><br><br>'+rawData.errors.join('<br>');
+                            }
+
+                            label += self.getTranslator().trans(storeData);
+
+                            cellWidget.domNode.innerHTML = label;
+                            if(tooltip != '')
+                                dialogManager.bindTooltip(cellWidget.domNode, tooltip, '700');
+                        }
+                    },
+
                     {id: 'before', field: 'before', name: this.getTranslator().trans("Past"), width: '80px', isoDate: this.startDate.toISOString(), comparison: 'smaller', style : "background-color:rgba(255,255,0,0.1);", decorator:self._cellDecorator}
                 ];
 
@@ -473,19 +563,26 @@ define("cool/reminders/panel",
 
                 for(var countSet in matrix.counts)
                     if(matrix.counts.hasOwnProperty(countSet)) {
+
                         cs = matrix.counts[countSet];
+
                         var row = {
                             id: countSet,
                             key: countSet,
                             before: cs.before,
-                            after: cs.after
+                            after: cs.after,
+
+                            detailsLister : cs.detailsLister,
+                            detailsTranslationDomain : cs.detailsTranslationDomain,
+
+                            errors: cs.errors,
+                            processingDuration: cs.processingDuration,
+                            processingMemoryUsage: cs.processingMemoryUsage
                         };
+
                         for(var i=0; i<cs.days.length; i++) {
                             row['d'+i] =  cs.days[i];
                         }
-
-                        row.detailsLister = cs.detailsLister;
-                        row.detailsTranslationDomain = cs.detailsTranslationDomain;
 
                         rows.push(row);
                     }
@@ -506,7 +603,11 @@ define("cool/reminders/panel",
                             key: countSet,
                             count: cs.count,
                             detailsLister: cs.detailsLister,
-                            detailsTranslationDomain: cs.detailsTranslationDomain
+                            detailsTranslationDomain: cs.detailsTranslationDomain,
+
+                            errors: cs.errors,
+                            processingDuration: cs.processingDuration,
+                            processingMemoryUsage: cs.processingMemoryUsage
                         };
 
                         rows.push(row);
