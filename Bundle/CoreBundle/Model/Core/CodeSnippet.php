@@ -26,12 +26,15 @@ class CodeSnippet extends BaseCodeSnippet
      */
     public function evaluate(array $context=[]) {
 
+        $wkContext = $context;
         $vars = $this->getCodeSnippetVariables();
+
+        //default to NULL for missing vars
         foreach($vars as $var)
             if(!in_array($var->getName(), array_keys($context)))
-                throw new \Exception("Can't evaluate snippet. Context variable ".$var->getName()." missing.");
+                $wkContext[ $var->getName() ] = null;
 
-        return evaluate_in_lambda($this->getSnippet(), $context, $this->getType() == self::TYPE_EXPRESSION);
+        return evaluate_in_lambda($this->getSnippet(), $wkContext, $this->getType() == self::TYPE_EXPRESSION);
     }
 
 }
