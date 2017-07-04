@@ -134,12 +134,12 @@ class DSCRUDForm extends Form  {
             return $this->record;
 
         if($ds = $this->getDataSource()) {
-            if($this->getRecordId()) {
+            $recordId = $this->getRecordId();
+            if($recordId !== null && $recordId !== '') {
                 $dsr = new DSRequest();
 
                 $dsr->setOperationType($dsr::OPERATION_TYPE_FETCH);
-                if($this->getRecordId())
-                    $dsr->setParameters( [D::RECORD_IDENTIFIER => $this->getRecordIdForDSR() ]);
+                $dsr->setParameters( [D::RECORD_IDENTIFIER => $this->getRecordIdForDSR() ]);
 
                 $dsresponse = $ds->execute($dsr);
                 $this->record = $dsresponse->getDSRecord();

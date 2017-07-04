@@ -851,14 +851,15 @@ class CoolCrudDataSource extends CoolDataSource {
             }
          }
 
-        if($recordId = @$parameters[self::RECORD_IDENTIFIER]) {
+        $recordId = @$parameters[self::RECORD_IDENTIFIER];
 
+        if($recordId !== null && $recordId !== '') {
             $recordPks = $this->extractRelationPks($recordId);
             $pkCursor = $this->isUnioned() ? 1 : 0; //skip the first PK which is always the schema
 
             foreach($this->tableRelations as $relation) {
                 $relationPk = @$recordPks[ $pkCursor++ ];
-                if($relationPk && ($relationPk != self::NULL_PK_SYMBOL)) {
+                if($relationPk !== null && $relationPk !== '' && $relationPk != self::NULL_PK_SYMBOL) {
                     $qualifier = $relation->getQualifier();
                     $pkField = $relation->getPKfields()[ 0 ];
                     $variableName = ":a" . md5('record_pk' . $qualifier);
@@ -867,7 +868,6 @@ class CoolCrudDataSource extends CoolDataSource {
                     @$ret[ 'parameters' ][ $variableName ] = $relationPk;
                 }
             }
-
          }
 
          return $ret;

@@ -165,38 +165,39 @@ class CoolValueMap extends BaseValueMap implements Shimmable
 
         if(($searchText == "") && ($r = $this->getShim()->callMethod(__METHOD__, func_get_args()))) return $r;
 
+        $emptyValue = $value === null || $value === '';
         $tMap = $this->getTableMap();
         $pk = $tMap->getPkFields()[0];
 
         $defaultLabelExpression = "'".$this->getTableName()."' || CAST($pk AS TEXT)";
-        $labelExpression = ($dl = $tMap->getCoolValueMapDecodingSQL()) ? $dl : $defaultLabelExpression;
+        $labelExpression = ($customLabelExpression = $tMap->getCoolValueMapDecodingSQL()) ? $customLabelExpression : $defaultLabelExpression;
 
-        if($value !== null && $value != '')
-                 $ret = $this->getSchema()->fetchArray("SELECT $pk AS value, CASE WHEN $labelExpression != '' THEN $labelExpression ELSE $defaultLabelExpression END AS label FROM {$this->getTableName()} WHERE $pk=:value", [':value'=>$value]);
-            else {
-                $sql = "SELECT $pk AS value, COALESCE($labelExpression,'') AS label FROM {$this->getTableName()}";
+        if(!$emptyValue)
+            $ret = $this->getSchema()->fetchArray("SELECT $pk AS value, CASE WHEN $labelExpression != '' THEN $labelExpression ELSE $defaultLabelExpression END AS label FROM {$this->getTableName()} WHERE $pk=:value", [':value'=>$value]);
+        else {
+            $sql = "SELECT $pk AS value, COALESCE($labelExpression,'') AS label FROM {$this->getTableName()}";
 
-                if($this->allowedValues) {
-                    $sql.=" WHERE $pk IN (".implode(',',$this->allowedValues).")";
-                } else $sql.=" WHERE TRUE ";
+            if($this->allowedValues) {
+                $sql.=" WHERE $pk IN (".implode(',',$this->allowedValues).")";
+            } else $sql.=" WHERE TRUE ";
 
-                $sqlParams = [];
-                if($searchText) {
-                    $sqlParams[':query'] = "$searchText";
-                    $sqlParams[':rquery'] = "$searchText%";
-                    $sqlParams[':lquery'] = "%$searchText";
-                    $sqlParams[':lrquery'] = "%$searchText%";
-                    if($searchSQL = $tMap->getCoolValueMapSearchSQL())
-                        $sql.= " AND ".$searchSQL;
-                    else $sql.= "AND ($labelExpression) ILIKE :lrquery";
-                }
-
-                $ret = $this->getSchema()->fetchArray($sql.($limit?" LIMIT $limit":""), !empty($sqlParams) ? $sqlParams : null, true);
+            $sqlParams = [];
+            if($searchText) {
+                $sqlParams[':query'] = "$searchText";
+                $sqlParams[':rquery'] = "$searchText%";
+                $sqlParams[':lquery'] = "%$searchText";
+                $sqlParams[':lrquery'] = "%$searchText%";
+                if($searchSQL = $tMap->getCoolValueMapSearchSQL())
+                    $sql.= " AND ".$searchSQL;
+                else $sql.= "AND ($labelExpression) ILIKE :lrquery";
             }
+
+            $ret = $this->getSchema()->fetchArray($sql.($limit?" LIMIT $limit":""), !empty($sqlParams) ? $sqlParams : null, true);
+        }
 
         //if the class overrides the getHumanDescription method, we use that to build the decodification string of the object
         $overridesHD = null;
-        if(!$dl) {
+        if(!$customLabelExpression) {
             foreach($ret as &$row) {
                 if($overridesHD !== false) {
                     $obj = $this->getSchema()->getPropelObject($this->getTableName(), $row['value']);
@@ -212,7 +213,7 @@ class CoolValueMap extends BaseValueMap implements Shimmable
             }
         }
 
-        return $value ? @$ret[0] : $ret;
+        return $emptyValue ? $ret : @$ret[0];
     }
 
     /**

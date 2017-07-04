@@ -32,7 +32,7 @@ class DSRecord {
     * @return boolean
     */
     public function isNew() {
-        return $this->getRecordId()==null;
+        return $this->getRecordId() === null;
     }
     
     /**
