@@ -1898,7 +1898,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'lookup' => 
           array (
             'type' => 'enum',
-            'validValues' => 'ON_LOAD,BEFORE_DEFINITION,BEFORE_VALIDATION',
+            'validValues' => 'ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION',
           ),
         ),
       ),

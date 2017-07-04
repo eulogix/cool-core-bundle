@@ -764,7 +764,7 @@
         <column name="rule_id" type="INTEGER" required="true" />
 
         <column name="evaluation" type="LONGVARCHAR" required="true" default="BEFORE_DEFINITION">
-            <_lookup type="enum" validValues="ON_LOAD,BEFORE_DEFINITION,BEFORE_VALIDATION"></_lookup>
+            <_lookup type="enum" validValues="ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION"></_lookup>
             <_control type="select"></_control>
         </column>
 
