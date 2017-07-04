@@ -46,6 +46,13 @@ class NotificationsControllerTest extends baseTestCase
             ->setDescription('second number')
             ->save();
 
+        //we test that no exception is raised
+        $var3 = new CodeSnippetVariable();
+        $var3->setCodeSnippet($sn)
+            ->setName('var3_optional')
+            ->setDescription('an optional var')
+            ->save();
+
         $this->assertEquals( 7, $sn->evaluate(["var1"=>1, "var2"=>2, 'thirdNumber' => 4]));
 
         return $sn;
@@ -84,6 +91,7 @@ class NotificationsControllerTest extends baseTestCase
      * @depends testFunctionSnippet
      * @param CodeSnippet $sn
      * @param CodeSnippet $sn2
+     * @return Rule
      * @throws \Exception
      * @throws \PropelException
      */
@@ -140,10 +148,69 @@ class NotificationsControllerTest extends baseTestCase
             ->setCodeSnippetVariables(json_encode(["var1"=>1, "var2"=>2]))
             ->save();
 
-        //$this->expectExceptionMessage("Variables sn1,sn2,sn4 define an unresolvable loop.");
-        //$this->assertTrue( $r->assert() );
+        //test the unresolvable loop
+        try {
+            $this->assertTrue( $r->assert() );
+        } catch (\Exception $e) { $emess = $e->getMessage(); }
 
+        $this->assertEquals("Variables sn1,sn2,sn4 define an unresolvable loop.", $emess);
+
+        //fix the rule and assert it via HOA
         $rv4->setCodeSnippetVariables(json_encode(["var1"=>'$sn5', "var2"=>4]))->save();
         $this->assertTrue( $r->assert() );
+
+        //test PHP evaluation
+        $r->setExpressionType(Rule::EXPRESSION_TYPE_PHP)
+            ->setExpression("\$avar = \$sn1 + \$sn2; return \$avar == 20;")
+            ->save();
+
+        $this->assertTrue( $r->assert() );
+
+        return $r;
+    }
+
+
+    /**
+     * @depends testRule
+     * @param Rule $r
+     * @throws \Exception
+     * @throws \PropelException
+     */
+    public function testExecCodes($r) {
+
+        $sn = new CodeSnippet();
+        $sn ->setCategory('c1')
+            ->setLanguage( CodeSnippet::LANGUAGE_PHP )
+            ->setType( CodeSnippet::TYPE_FUNCTION_BODY )
+            ->setDescription('a test snippet that returns a value')
+            ->setName('test_ret')
+            ->setSnippet("return \$value;")
+            ->save();
+
+        $var1 = new CodeSnippetVariable();
+        $var1->setCodeSnippet($sn)
+            ->setName('value')
+            ->setDescription('the value to return')
+            ->save();
+
+        $rv = new RuleCode();
+        $rv ->setType(RuleCode::TYPE_EXEC_IF_TRUE)
+            ->setName("exec2")
+            ->setRule($r)
+            ->setCodeSnippet($sn)
+            ->setCodeSnippetVariables(json_encode(["value"=>'This code should be executed last. Return value of previous code should be 2 : $exec1_ret returned']))
+            ->save();
+
+        $rv = new RuleCode();
+        $rv ->setType(RuleCode::TYPE_EXEC_IF_TRUE)
+            ->setName("exec1_ret")
+            ->setRule($r)
+            ->setCodeSnippet($sn)
+            ->setCodeSnippetVariables(json_encode(["value"=>2]))
+            ->save();
+
+        $report = $r->execCodes(RuleCode::TYPE_EXEC_IF_TRUE, []);
+        $this->assertEquals(['exec1_ret','exec2'], array_keys($report));
+
     }
 }

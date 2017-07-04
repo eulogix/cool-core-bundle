@@ -17,11 +17,21 @@ class Rule extends BaseRule
      * @return mixed
      */
     public function assert(array $contextArray=[]) {
-        $ruler = new Ruler();
-        $finalContext = $this->getEvaluatedVariables($contextArray);
-        $context = new Context($finalContext);
-        return $ruler->assert($this->getExpression(), $context);
 
+        $finalContext = $this->getEvaluatedVariables($contextArray);
+
+        switch($this->getExpressionType()) {
+            case self::EXPRESSION_TYPE_HOA: {
+                $ruler = new Ruler();
+                $context = new Context($finalContext);
+                return $ruler->assert($this->getExpression(), $context);
+                break;
+            }
+            case self::EXPRESSION_TYPE_PHP: {
+                return evaluate_in_lambda($this->getExpression(), $finalContext, !preg_match('/return[ \t]+.+?;$/sim', $this->getExpression()) );
+                break;
+            }
+        }
     }
 
     /**
@@ -32,7 +42,7 @@ class Rule extends BaseRule
      */
     private function getEvaluatedVariables(array $contextArray) {
         $evaluatedVariables = $contextArray;
-        $order = $this->getVariableExecutionOrder();
+        $order = $this->getCodeExecutionOrder( $this->getCodeVariables() );
         foreach($order as $varName) {
             $var = RuleCodeQuery::create()->filterByRule($this)->filterByType( RuleCode::TYPE_VARIABLE )->findOneByName( $varName );
             $evaluatedVariables[ $var->getName() ] = $var->evaluate($evaluatedVariables);
@@ -49,10 +59,16 @@ class Rule extends BaseRule
         $wkContext = $this->getEvaluatedVariables($context);
 
         $report = [];
+
         $codes = $this->getCodes( $type );
-        foreach($codes as $code) {
-            $report[ $code->getName() ] = [
-                'return_value' => $code->evaluate($wkContext)
+        $order = $this->getCodeExecutionOrder( $codes );
+
+        foreach($order as $varName) {
+            $var = RuleCodeQuery::create()->filterByRule($this)->filterByType( $type )->findOneByName( $varName );
+            $returnValue = $var->evaluate($wkContext);
+            $wkContext[ $var->getName() ] = $returnValue;
+            $report[ $var->getName() ] = [
+                'return_value' => $returnValue
             ];
         }
 
@@ -69,19 +85,26 @@ class Rule extends BaseRule
         return RuleCodeQuery::create()->filterByRule($this)->filterByType( $type )->find();
     }
 
+    /**
+     * @return RuleCode[]
+     */
+    private function getCodeVariables() {
+        return $this->getCodes( RuleCode::TYPE_VARIABLE );
+    }
+
 
     /**
-     * @return string[]
+     * @param RuleCode[] $ruleCodes
+     * @return \string[]
      * @throws \Exception
      */
-    private function getVariableExecutionOrder() {
-        $vars = $this->getCodes( RuleCode::TYPE_VARIABLE );
+    private function getCodeExecutionOrder($ruleCodes) {
 
         // Create a graph with one vertex per variable
         $g = new Graph();
-        foreach($vars as $var) {
-            $definedVars = $var->getSnippetVariablesAsArray();
-            $g->addVertex( $var->getName(), $definedVars );
+        foreach($ruleCodes as $code) {
+            $definedVars = $code->getSnippetVariablesAsArray();
+            $g->addVertex( $code->getName(), $definedVars );
         }
 
         // now, if one variable vv of a vertex v depends on another variable vv1, we suppose that vv1 is the name of a vertex
