@@ -757,14 +757,14 @@ class Form extends Widget implements FormInterface {
      * @param array $values
      */
     public function storeOriginalValues(array $values = null) {
-        $this->getAttributes()->set( self::ATTRIBUTE_ORIGINAL_VALUES, $values ?? $this->getValues() );
+        $this->getServerAttributes()->set( self::ATTRIBUTE_ORIGINAL_VALUES, $values ?? $this->getValues() );
     }
 
     /**
      * @return array
      */
     public function getOriginalValues() {
-        return $this->getAttributes()->get( self::ATTRIBUTE_ORIGINAL_VALUES ) ?? [];
+        return $this->getServerAttributes()->get( self::ATTRIBUTE_ORIGINAL_VALUES ) ?? [];
     }
 
     /**

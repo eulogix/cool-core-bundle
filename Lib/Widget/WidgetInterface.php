@@ -249,6 +249,7 @@ interface WidgetInterface {
     public function getAttributes();
 
     /**
+     * this bag is not propagated to the client definition
      ** @return ParameterBag
      */
     public function getServerAttributes();

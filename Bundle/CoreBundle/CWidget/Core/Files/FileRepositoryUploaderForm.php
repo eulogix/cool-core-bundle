@@ -44,7 +44,7 @@ class FileRepositoryUploaderForm extends Form {
         $parameters = $this->request->all();
         $this->fill( $parameters );
 
-        if($f =  $this->getField('files')->getUploadedFiles()) {
+        if($f = $this->getField('files')->getUploadedFiles()) {
             foreach($f as $file) {
 
                 //$file->setProperty(CoolTableFileRepository::PROP_CATEGORY, $categoryName);
