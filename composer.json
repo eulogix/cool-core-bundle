@@ -33,6 +33,7 @@
         "eulogix/libs-misc": "*@dev",
         "eulogix/libs-activiti": "*@dev",
         "eulogix/libs-rundeck": "*@dev",
+        "eulogix/libs-pentaho": "*@dev",
         "mathiasverraes/money": "*@dev",
         "propel/propel-bundle": "1.5.2",
         "hoa/ruler": "~2.0"
