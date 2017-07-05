@@ -146,11 +146,10 @@ class CoolUser implements UserInterface {
     }
 
     /**
-     * Whether this user is or not able to assign dossier to other users or groups
      * @return boolean
      */
     public function isAdmin() {
-        return $this->getAccount()->getLoginName() == 'admin';
+        return $this->hasRole( self::ROLE_ADMIN );
     }
 
 }

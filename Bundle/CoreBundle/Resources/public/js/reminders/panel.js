@@ -34,6 +34,7 @@ define("cool/reminders/panel",
         'cool/cool',
         'cool/translator',
         'cool/dialog/manager',
+        "cool/dijit/iconButton",
 
         "dojo/text!./templates/panel.html"
     ], function(declare, lang, event, deferred, Evented,
@@ -54,7 +55,7 @@ define("cool/reminders/panel",
                 coreFx, fx,
                 mods,
                 selectCell, CellWidget,
-                cool, ctr, dialogManager,
+                cool, ctr, dialogManager, iconButton,
 
                 template){
 
@@ -65,6 +66,10 @@ define("cool/reminders/panel",
             startDate: null,
 
             showDays: 7,
+
+            showDebug: false,
+
+            debugMode: false,
 
             templateString: template,
 
@@ -133,6 +138,22 @@ define("cool/reminders/panel",
 
             initialize: function() {
                 var d = new deferred();
+
+                var t = this;
+
+                var debugButton = new iconButton({
+                    label: this.getTranslator().trans('debug'),
+                    onClick: function() {
+                        t.toggleDebugMode();
+                    },
+                    style: "float:right;",
+                    iconSrc: "/bower_components/fugue/icons/bug.png",
+                    showLabel: false,
+                    tooltip: this.getTranslator().trans('debug_tip')
+                });
+
+                this.toolbar.addChild(debugButton);
+
                 d.resolve();
                 return d;
             },
@@ -301,7 +322,8 @@ define("cool/reminders/panel",
                         var rowData = row.rawData();
                         var node = row.node();
 
-                        if(rowData.errors.length > 0) {
+
+                        if( t.debugMode && rowData.errors.length > 0) {
                             domClass.remove(node, "gridxRowOdd");
                             domClass.toggle(node, "gridxRowError", true);
                         }
@@ -346,14 +368,16 @@ define("cool/reminders/panel",
                                 var label = '';
                                 var tooltip = '';
 
-                                if(rawData.processingDuration > 50) {
-                                    label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
-                                    tooltip += '<br><b>Execution time (ms):</b>'+rawData.processingDuration+'<br><br>';
-                                }
+                                if(self.debugMode) {
+                                    if (rawData.processingDuration > 50)
+                                        label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
 
-                                if(rawData.errors.length > 0) {
-                                    label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
-                                    tooltip += '<br><b>Errors:</b><br><br>'+rawData.errors.join('<br>');
+                                    tooltip += '<br><b>Execution time (ms):</b>' + rawData.processingDuration + '<br><br>';
+
+                                    if (rawData.errors.length > 0) {
+                                        label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
+                                        tooltip += '<br><b>Errors:</b><br><br>' + rawData.errors.join('<br>');
+                                    }
                                 }
 
                                 label += self.getTranslator().trans(storeData);
@@ -396,7 +420,7 @@ define("cool/reminders/panel",
                         var rowData = row.rawData();
                         var node = row.node();
 
-                        if(rowData.errors.length > 0) {
+                        if(self.debugMode && rowData.errors.length > 0) {
                             domClass.remove(node, "gridxRowOdd");
                             domClass.toggle(node, "gridxRowError", true);
                         }
@@ -511,14 +535,16 @@ define("cool/reminders/panel",
                             var label = '';
                             var tooltip = '';
 
-                            if(rawData.processingDuration > 100) {
-                                label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
-                                tooltip += '<br><b>Execution time (ms):</b>'+rawData.processingDuration+'<br><br>';
-                            }
+                            if(self.debugMode) {
+                                if(rawData.processingDuration > 100)
+                                    label += "<img src='/bower_components/fugue/icons/hourglass--exclamation.png' style='vertical-align:middle'/>&nbsp;";
 
-                            if(rawData.errors.length > 0) {
-                                label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
-                                tooltip += '<br><b>Errors:</b><br><br>'+rawData.errors.join('<br>');
+                                tooltip += '<br><b>Execution time (ms):</b>'+rawData.processingDuration+'<br><br>';
+
+                                if(rawData.errors.length > 0) {
+                                    label += "<img src='/bower_components/fugue/icons/exclamation-red.png' style='vertical-align:middle'/>&nbsp;";
+                                    tooltip += '<br><b>Errors:</b><br><br>'+rawData.errors.join('<br>');
+                                }
                             }
 
                             label += self.getTranslator().trans(storeData);
@@ -668,6 +694,13 @@ define("cool/reminders/panel",
                 });
 
                 return this.translator;
+            },
+
+            toggleDebugMode: function() {
+                var t = this;
+                t.debugMode = !t.debugMode;
+                t.simpleGrid.body.refresh();
+                t.grid.body.refresh();
             }
 
         });
