@@ -28,6 +28,7 @@ use Eulogix\Cool\Lib\File\SchemaFileStorage;
 use Eulogix\Lib\Cache\CacherInterface;
 use Eulogix\Lib\Java\Bridge;
 use Eulogix\Cool\Lib\Push\PushManager;
+use Eulogix\Lib\Pentaho\PDIConnector;
 use Eulogix\Lib\Rundeck\RundeckClient;
 use Eulogix\Lib\Rundeck\SymfonyUtils;
 use Eulogix\Cool\Lib\Translation\LocaleManager;
@@ -160,6 +161,13 @@ class Factory {
      */
     public static function getActiviti() {
         return Cool::getInstance()->getContainer()->get('activiti.client');
+    }
+
+    /**
+     * @return PDIConnector
+     */
+    public static function getPDIConnector() {
+        return Cool::getInstance()->getContainer()->get('pentaho.connector');
     }
 
     /**
