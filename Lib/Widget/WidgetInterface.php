@@ -34,6 +34,9 @@ interface WidgetInterface {
     const ATTRIBUTE_ONLY_CONTENT     =    'onlyContent';
     const ATTRIBUTE_DISABLED     =    'disabled';
 
+    //stores the last called action, used to catch it in a rule if the on* method is not defined in PHP
+    const ATTRIBUTE_LAST_CALLED_ACTION = 'lastCalledAction';
+
     //fired just before the definition is returned. allows you to make some last final adjustments
     const EVENT_DEFINITION_REQUESTED = "event_definition_requested";
 
@@ -79,10 +82,10 @@ interface WidgetInterface {
     public function callAction($actionName);
     
     /**
-    * tells wether the widget has received an action call or not (a submit)
-    * @return boolean
+    * return the last action called (if any)
+    * @return string
     */
-    public function actionCalled();
+    public function getLastCalledAction();
 
     /**
      * instructs the client to execute a js command upon receiving the widget definition

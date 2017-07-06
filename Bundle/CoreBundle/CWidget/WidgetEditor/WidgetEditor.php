@@ -70,7 +70,7 @@ class WidgetEditor extends CoolForm {
                 }
                 $fieldName = 'cat_'.$cat;
                 //if the form is submitted, we look in the request, otherwise we pick the current state of the edited form
-                $value = $this->actionCalled() ? $this->request->get($fieldName) : $widget->getActiveLevelVariant($cat);
+                $value = $this->getLastCalledAction() ? $this->request->get($fieldName) : $widget->getActiveLevelVariant($cat);
                 
                 $tabOptions[$cat] = $options;    
                 $this->addFieldTab($fieldName)

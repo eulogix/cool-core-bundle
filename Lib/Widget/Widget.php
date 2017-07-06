@@ -268,19 +268,21 @@ abstract class Widget implements WidgetInterface {
     * @inheritdoc
     */
     public function callAction($actionName) {
+        $this->getAttributes()->set(self::ATTRIBUTE_LAST_CALLED_ACTION, $actionName);
+
         $method = 'on'.ucfirst($actionName);
         if(method_exists($this, $method)) {
            $ret = $this->$method();
            if($ret !== null)
                return $ret;
-        } else throw new \Exception("missing method: $method in class ".get_class($this));
+        }
     }
     
     /**
     * @inheritdoc
     */
-    public function actionCalled() {
-        return $this->request->count() > 0;
+    public function getLastCalledAction() {
+        return $this->getAttributes()->get(self::ATTRIBUTE_LAST_CALLED_ACTION);
     }
     
     /**
