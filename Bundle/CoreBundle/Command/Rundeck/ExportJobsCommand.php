@@ -64,9 +64,16 @@ class ExportJobsCommand extends CoolCommand
         $utils = Cool::getInstance()->getFactory()->getRundeckSymfonyUtils();
         $simulate = $input->getOption('simulate');
 
+        $defaultCommandUser = $this->getContainer()->getParameter('rundeck_command_user');
+
         $counter = 0;
         $commands = $this->getApplication()->all($input->getArgument('namespace'));
         foreach($commands as $command) {
+
+            if($command instanceof CoolCommand && ($customUser = $command->getSchedulerCommandUser()))
+                $utils->setCommandUser($customUser);
+            else $utils->setCommandUser($defaultCommandUser);
+
             $j = $utils->getRundeckJob( $command );
 
             $levels = explode(':',$command->getName());
@@ -80,6 +87,8 @@ class ExportJobsCommand extends CoolCommand
             $output->writeln(sprintf('<comment>%s</comment> OK', $j->getName()));
             $counter++;
         }
+
+        $utils->setCommandUser($defaultCommandUser);
 
         $output->writeln('');
         $output->writeln(sprintf('<comment>%s</comment> Commands successfully imported', $counter));

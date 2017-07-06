@@ -52,6 +52,14 @@ class CoolCommand extends ContainerAwareCommand {
     }
 
     /**
+     * if set, this command when exported in a scheduler such as Rundeck, will be executed as the specified user
+     * @return string
+     */
+    public function getSchedulerCommandUser() {
+        return null;
+    }
+
+    /**
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
