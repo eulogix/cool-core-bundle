@@ -198,7 +198,7 @@ class NotificationsControllerTest extends baseTestCase
             ->setName("exec2")
             ->setRule($r)
             ->setCodeSnippet($sn)
-            ->setCodeSnippetVariables(json_encode(["value"=>'This code should be executed last. Return value of previous code should be 2 : $exec1_ret returned']))
+            ->setCodeSnippetVariables(json_encode(["value"=>'sn1 is $sn1 This code should be executed last. Return value of previous code should be 2 : $exec1_ret returned']))
             ->save();
 
         $rv = new RuleCode();

@@ -56,40 +56,43 @@ class Rule extends BaseRule
      * @return array
      */
     public function execCodes($type, $context) {
-        $wkContext = $this->getEvaluatedVariables($context);
+        $wkContext = $context;
 
         $report = [];
 
-        $codes = $this->getCodes( $type );
+        $codes = $this->getCodes( [RuleCode::TYPE_VARIABLE, $type] );
         $order = $this->getCodeExecutionOrder( $codes );
 
         foreach($order as $varName) {
-            $var = RuleCodeQuery::create()->filterByRule($this)->filterByType( $type )->findOneByName( $varName );
+            $var = RuleCodeQuery::create()->filterByRule($this)->findOneByName( $varName );
             $returnValue = $var->evaluate($wkContext);
             $wkContext[ $var->getName() ] = $returnValue;
-            $report[ $var->getName() ] = [
-                'return_value' => $returnValue
-            ];
+            
+            if($var->getType() == $type)
+                $report[ $var->getName() ] = [
+                    'return_value' => $returnValue
+                ];
         }
 
         return $report;
     }
 
     /**
-     * @param string $type
+     * @param string[] $types
      * @return RuleCode[]
      * @throws \PropelException
      */
-    private function getCodes( $type = null)
+    private function getCodes( array $types )
     {
-        return RuleCodeQuery::create()->filterByRule($this)->filterByType( $type )->find();
+        return RuleCodeQuery::create()->filterByRule($this)
+            ->filterByType( $types )->find();
     }
 
     /**
      * @return RuleCode[]
      */
     private function getCodeVariables() {
-        return $this->getCodes( RuleCode::TYPE_VARIABLE );
+        return $this->getCodes( [RuleCode::TYPE_VARIABLE] );
     }
 
 
