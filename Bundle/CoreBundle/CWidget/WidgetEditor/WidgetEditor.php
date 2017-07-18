@@ -122,7 +122,6 @@ class WidgetEditor extends CoolForm {
         if(!$this->getDSRecord()->isNew()) {
 
             $widgetId = $this->getDSRecord()->get('name');
-            $this->addMessageInfo($widgetId);
 
             $filter = json_encode(['widget_id'=>$widgetId]);
 

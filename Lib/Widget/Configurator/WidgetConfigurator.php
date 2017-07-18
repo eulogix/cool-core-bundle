@@ -110,7 +110,7 @@ abstract class WidgetConfigurator implements WidgetConfiguratorInterface {
         } else $sql.=" AND variation IS NULL";
 
         $idb = $cdb->fetch($sql, array(':name'=>$name, ':variation'=>$vs), true);
-        return $idb ? $idb : false;
+        return $idb ? $idb : null;
     }
 
     /**
