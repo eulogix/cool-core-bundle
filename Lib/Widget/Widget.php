@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Widget;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
 use Eulogix\Cool\Lib\Audit\AuditSchema;
@@ -548,6 +549,8 @@ abstract class Widget implements WidgetInterface {
             $rule = $widgetRule->getRule();
             try {
                 $ruleValid = $rule->assert( $ruleContext );
+                $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext);
+
                 $hash[ $rule->getName() ] = [
                     'valid' => $ruleValid,
                     'report' => $rule->getLastExecutionReport()
