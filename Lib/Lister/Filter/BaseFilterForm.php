@@ -50,26 +50,6 @@ class BaseFilterForm extends Form {
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getVariationLevels()
-    {
-        return [
-            'mode' => [self::MODE_NORMAL,self::MODE_ADVANCED],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getActiveLevelVariant($level)
-    {
-        switch ($level) {
-            case 'mode': return $this->getMode();
-        }
-    }
-
-    /**
      * @param array $parameters
      * @throws \Exception
      */
@@ -99,6 +79,9 @@ class BaseFilterForm extends Form {
         if($this->getMode() == self::MODE_ADVANCED)
              $this->addAction('normalMode')->setOnClick("widget.callAction('normalMode');");
         else $this->addAction('advancedMode')->setOnClick("widget.callAction('advancedMode');");
+
+        //for usage in rules
+        $this->getAttributes()->set('mode', $this->getMode());
 
         return $this;
     }

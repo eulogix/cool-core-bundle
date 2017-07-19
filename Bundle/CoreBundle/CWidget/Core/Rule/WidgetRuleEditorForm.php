@@ -36,9 +36,10 @@ class WidgetRuleEditorForm extends DSCRUDForm {
 
             $filter = json_encode(['rule_id'=> $this->getDSRecord()->get('rule_id')]);
 
-            $this->setSlot("Variables", new WidgetSlot('Eulogix\Cool\Lib\Lister\CoolLister', [
+            $this->setSlot("Variables", new WidgetSlot('EulogixCoolCore/Core/Rule/WidgetRuleCodeLister', [
                 'databaseName' => 'core',
                 'tableName' => 'core.rule_code',
+                '_ruleLog' => $this->getParameters()->get('_ruleLog'),
                 '_filter'=>$filter
             ]));
         }

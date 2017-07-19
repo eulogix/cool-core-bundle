@@ -32,7 +32,6 @@ class CoolLister extends Lister {
      *
      * @param array $parameters
      * @throws \Exception
-     * @internal param array $request
      */
     public function __construct($parameters = [])
     {

@@ -21,24 +21,6 @@ use Eulogix\Cool\Lib\Lister\Lister;
 
 class TaskLister extends Lister {
 
-    public function getVariationLevels()
-    {
-        return array_merge(
-            [
-                'context' => ['NORMAL','SELECTOR']
-            ]);
-    }
-
-    public function getActiveLevelVariant($level)
-    {
-        switch ($level) {
-            case 'context':
-            {
-                return $this->parameters->get('context') == 'SELECTOR' ? 'SELECTOR' : 'NORMAL';
-            }
-        }
-    }
-
     public function __construct($parameters = [])
     {
         parent::__construct($parameters);

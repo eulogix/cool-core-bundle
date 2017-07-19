@@ -338,6 +338,14 @@ define("cool/_widget",
                     return this.getDefinitionAttribute('readOnly') == true;
                 },
 
+                getWidgetId: function() {
+                    return this.getDefinitionAttribute('widgetId');
+                },
+
+                getCurrentVariation: function() {
+                    return this.getDefinitionAttribute('currentVariation');
+                },
+
                 moveContent: function(target, newRoot) {
                     if ( this.domNode.hasChildNodes() ) {
                           var children = this.domNode.childNodes;

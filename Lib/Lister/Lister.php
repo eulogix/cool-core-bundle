@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Lister;
 
+use Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor\BaseConfigEditorForm;
 use Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor\WidgetEditor;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
@@ -643,7 +644,7 @@ abstract class Lister extends Widget implements ListerInterface {
     protected function removeUndefaultedColumns($ignoreEditorToken=false) {
         //if the lister is being instantiated by the editor, specifically asking for the default columns,
         //we want all the columns from the DS to be returned, so this method has to be inhibited
-        if($this->parameters->has(WidgetEditor::WIDGET_EDITOR_TOKEN) && !$ignoreEditorToken)
+        if($this->parameters->has(BaseConfigEditorForm::WIDGET_EDITOR_TOKEN) && !$ignoreEditorToken)
             return;
 
         $cols = $this->getColumnNames();

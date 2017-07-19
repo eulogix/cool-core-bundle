@@ -22,7 +22,7 @@ use Eulogix\Cool\Lib\DataSource\CoolCrudTableRelation as Rel;
 
 class WidgetRulesDataSource extends CD {
 
-    public function __construct($partyType=null)
+    public function __construct()
     {
         $dsTables = [
             CD::PARAM_TABLE_RELATIONS=>[
@@ -40,7 +40,13 @@ class WidgetRulesDataSource extends CD {
             ]
         ];
 
-        return parent::__construct('core', $dsTables);
+        $ret = parent::__construct('core', $dsTables);
+
+        $this->addField('valid')->setType(\PropelTypes::BOOLEAN);
+        $this->addField(Rule::REPORT_EXECUTION_TIME)->setType(\PropelTypes::INTEGER);
+        $this->addField(Rule::REPORT_MEMORY_USAGE)->setType(\PropelTypes::INTEGER);
+
+        return $ret;
     }
 
     /**

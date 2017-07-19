@@ -209,8 +209,8 @@ class NotificationsControllerTest extends baseTestCase
             ->setCodeSnippetVariables(json_encode(["value"=>2]))
             ->save();
 
-        $report = $r->execCodes(RuleCode::TYPE_EXEC_IF_TRUE, []);
-        $this->assertEquals(['exec1_ret','exec2'], array_keys($report));
+        $r->execCodes(RuleCode::TYPE_EXEC_IF_TRUE, []);
+        $this->assertEquals(['exec1_ret','exec2'], array_keys($r->getLastExecutionReport()));
 
     }
 }

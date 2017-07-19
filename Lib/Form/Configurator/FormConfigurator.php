@@ -11,8 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Form\Configurator;
 
-use Eulogix\Cool\Bundle\CoreBundle\Model\Core\FormConfigPeer;
-use Eulogix\Cool\Lib\Form\FormInterface;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\FormConfigQuery;
 use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
 
 /**
@@ -22,49 +21,32 @@ use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
 class FormConfigurator extends WidgetConfigurator {
 
     /**
-     * @var FormInterface
-     */
-    protected $widget;
-
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @inheritdoc
      */
-    protected function getTable() {
-        return 'form_config';
+    public function configurationExists()
+    {
+        return $this->getConfigQuery()->count() >= 1;
     }
 
     /**
-     * @inheritdoc
+     * applies the stored configuration for the widget in its current state
      */
-    protected function getWidgetId() {
-        return $this->widget->getId();
+    public function applyConfiguration()
+    {
+        if($this->configurationExists()) {
+            $config = $this->getConfigQuery()->findOne();
+            $this->widget->setLayout( $config->getLayout() );
+        }
+        return $this;
     }
 
     /**
-    * @inheritdoc
-    */
-    public function load() {
-        $id = $this->getBestMatchingStoredId();
-        if($id) {
-            $obj = FormConfigPeer::retrieveByPK($id);
-            $this->config['layout'] = $obj->getLayout();
-            return true;            
-        } 
-        return false;
+     * @return FormConfigQuery
+     */
+    private function getConfigQuery() {
+        $currentVariation = $this->widget->getCurrentVariation();
+        return FormConfigQuery::create()
+            ->filterByName( $this->widget->getId() )
+            ->filterByVariation( $currentVariation );
     }
-
-    /**
-    * @inheritdoc
-    */
-    public function apply() {
-        if($this->config) {
-            $this->widget->setLayout($this->config['layout']);
-        }        
-    }
-    
 }

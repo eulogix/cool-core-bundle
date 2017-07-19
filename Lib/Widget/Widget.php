@@ -11,7 +11,6 @@
 
 namespace Eulogix\Cool\Lib\Widget;
 
-use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
 use Eulogix\Cool\Lib\Audit\AuditSchema;
@@ -302,9 +301,9 @@ abstract class Widget implements WidgetInterface {
             $d->setBlock('parameters', $this->parameters->all());
         }
         
-        if($this->attributes->count()>0) {
-            $d->setBlock('attributes', $this->attributes->all());
-        }
+        $this->getAttributes()->set(self::ATTRIBUTE_ID, $this->getId());
+
+        $d->setBlock('attributes', $this->attributes->all());
 
         if(!$this->isDisabled()) {
             $msgs = [];
@@ -492,30 +491,18 @@ abstract class Widget implements WidgetInterface {
     }
 
     /**
-    * @inheritdoc
-    */
-    public function getVariation() {
-        $varr = [];
-        if($vl = $this->getVariationLevels()) {
-            foreach($vl as $cat=>$levels) {
-                $varr[$cat] = $this->getActiveLevelVariant($cat);
-            }
-        } 
-        return $varr;
+     * @inheritdoc
+     */
+    public function setCurrentVariation($variation) {
+        $this->getAttributes()->set(self::ATTRIBUTE_CURRENT_VARIATION, $variation);
+        return $this;
     }
-    
+
     /**
-    * @inheritdoc
-    */
-    public function getVariationLevels() {
-        return null;
-    }
-    
-    /**
-    * @inheritdoc
-    */
-    public function getActiveLevelVariant($level) {
-        return null;
+     * @inheritdoc
+     */
+    public function getCurrentVariation() {
+        return $this->getAttributes()->get(self::ATTRIBUTE_CURRENT_VARIATION);
     }
 
     /**
@@ -536,8 +523,8 @@ abstract class Widget implements WidgetInterface {
      * @inheritdoc
      */
     public function configure() {
-        if(($c = $this->getConfigurator()) && $c->load()) {
-            $c->apply();
+        if(($c = $this->getConfigurator()) && $c->configurationExists()) {
+            $c->applyConfiguration();
         }
         $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
     }
@@ -563,7 +550,7 @@ abstract class Widget implements WidgetInterface {
                 $ruleValid = $rule->assert( $ruleContext );
                 $hash[ $rule->getName() ] = [
                     'valid' => $ruleValid,
-                    'executedCodes' => $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext)
+                    'report' => $rule->getLastExecutionReport()
                 ];
             } catch(\Error $e) {
                 $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());

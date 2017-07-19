@@ -11,10 +11,10 @@
 
 namespace Eulogix\Cool\Lib\Lister\Configurator;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
 use Eulogix\Cool\Lib\Lister\ListerInterface;
 use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
 
-use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfig;
 use Eulogix\Cool\Lib\Widget\WidgetSlot;
 
 /**
@@ -24,62 +24,32 @@ use Eulogix\Cool\Lib\Widget\WidgetSlot;
 class ListerConfigurator extends WidgetConfigurator {
 
     /**
-     * @var ListerInterface
-     */
-    protected $widget;
-
-    /**
-     * @var ListerConfig
-     */
-    protected $config;
-
-    /**
      * @inheritdoc
      */
-    protected function getTable() {
-        return 'lister_config';
+    public function configurationExists()
+    {
+        return $this->getConfigQuery()->count() >= 1;
     }
 
     /**
-     * @inheritdoc
+     * applies the stored configuration for the widget in its current state
      */
-    protected function getWidgetId() {
-        return $this->widget->getId();
-    }
-
-    /**
-     * @param int $id
-     * @return ListerConfig
-     */
-    protected function getConfigObj($id) {
-        return  $this->getCoolSchema()->getPropelObject($this->getTable(), $id);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function load() {
-        $id = $this->getBestMatchingStoredId();
-        if($id) {
-            $this->config = $this->getConfigObj($id);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function apply() {
-        if($this->config) {
-            if($this->config->getFilterShowFlag()) {
-                $serverId = $this->config->getFilterServerId() ? $this->config->getFilterServerId() : $this->widget->getDefaultFilterWidget();
-                $params = $this->widget->getParameters()->all();
-                $params['_parent'] = get_class($this->widget);
-                $this->widget->setFilterSlot( new WidgetSlot($serverId, $params) );
+    public function applyConfiguration()
+    {
+        if($this->configurationExists()) {
+            $config = $this->getConfigQuery()->findOne();
+            
+            /** @var ListerInterface $widget */
+            $widget = $this->widget;
+            
+            if($config->getFilterShowFlag()) {
+                $serverId = $config->getFilterServerId() ? $config->getFilterServerId() : $widget->getDefaultFilterWidget();
+                $params = $widget->getParameters()->all();
+                $params['_parent'] = get_class($widget);
+                $widget->setFilterSlot( new WidgetSlot($serverId, $params) );
             }
 
-            $configColumns = $this->config->getListerConfigColumns();
+            $configColumns = $config->getListerConfigColumns();
             $configColumnNames = [];
 
             $tempInitialSort = [];
@@ -88,22 +58,22 @@ class ListerConfigurator extends WidgetConfigurator {
             foreach($configColumns as $configColumn) {
                 $configColumnNames[] = $configColumn->getName();
 
-                $widgetColumn = $this->widget->getColumn($configColumn->getName());
+                $widgetColumn = $widget->getColumn($configColumn->getName());
                 if(!$widgetColumn)
-                    $widgetColumn = $this->widget->addNewColumn($configColumn->getName());
+                    $widgetColumn = $widget->addNewColumn($configColumn->getName());
 
                 $widgetColumn->setWidth( $configColumn->getWidth() )
-                        ->setSortable( $configColumn->getSortableFlag() )
-                        ->setEditable( $configColumn->getEditableFlag() )
-                        ->setCellTemplate( $configColumn->getCellTemplate() )
-                        ->setCellTemplateJs( $configColumn->getCellTemplateJs() )
-                        ->setColumnStyleCss( $configColumn->getColumnStyleCss() )
-                        ->setHasSummary( $configColumn->getShowSummaryFlag() )
-                        ->setTooltipMaxWidth( $configColumn->getTooltipMaxWidth() )
-                        ->setTooltipJsExpression( $configColumn->getTooltipJsExpression() )
-                        ->setTooltipUrlJsExpression( $configColumn->getTooltipUrlJsExpression() )
-                        ->setTooltipDelay( $configColumn->getTooltipDelayMsec() )
-                        ->setMaxChars( $configColumn->getTruncateChars() );
+                    ->setSortable( $configColumn->getSortableFlag() )
+                    ->setEditable( $configColumn->getEditableFlag() )
+                    ->setCellTemplate( $configColumn->getCellTemplate() )
+                    ->setCellTemplateJs( $configColumn->getCellTemplateJs() )
+                    ->setColumnStyleCss( $configColumn->getColumnStyleCss() )
+                    ->setHasSummary( $configColumn->getShowSummaryFlag() )
+                    ->setTooltipMaxWidth( $configColumn->getTooltipMaxWidth() )
+                    ->setTooltipJsExpression( $configColumn->getTooltipJsExpression() )
+                    ->setTooltipUrlJsExpression( $configColumn->getTooltipUrlJsExpression() )
+                    ->setTooltipDelay( $configColumn->getTooltipDelayMsec() )
+                    ->setMaxChars( $configColumn->getTruncateChars() );
 
                 if($so = $configColumn->getSortOrder())
                     $widgetColumn->setSortOrder( $so );
@@ -124,22 +94,34 @@ class ListerConfigurator extends WidgetConfigurator {
                 $initialSort[$ts['field']] = $ts['dir'];
 
             if(!empty($initialSort))
-                $this->widget->setInitialSort($initialSort);
+                $widget->setInitialSort($initialSort);
 
             //then remove columns not specified in the configuration
             if(count($configColumnNames)>0) {
-                $ds = $this->widget->getDataSource();
-                $listerColumns = $this->widget->getColumnNames();
+                $ds = $widget->getDataSource();
+                $listerColumns = $widget->getColumnNames();
                 foreach($listerColumns as $listerColumn)
                     if(!in_array($listerColumn, $configColumnNames)) {
                         if($ds->hasField($listerColumn)) {
-                            if(!$this->widget->isColumnPropagated($listerColumn))
-                                $this->widget->getDataSource()->getField($listerColumn)->setLazyFetch(true);
-                            $this->widget->removeColumn($listerColumn);
-                        } else $this->widget->addMessageWarning("The lister definition contains a column ({1}) not defined in the datasource ({2}). Check the PHP code!", $listerColumn, get_class($ds));
+                            if(!$widget->isColumnPropagated($listerColumn))
+                                $widget->getDataSource()->getField($listerColumn)->setLazyFetch(true);
+                            $widget->removeColumn($listerColumn);
+                        } else $widget->addMessageWarning("The lister definition contains a column ({1}) not defined in the datasource ({2}). Check the PHP code!", $listerColumn, get_class($ds));
                     }
             }
+
         }
+        return $this;
     }
 
+    /**
+     * @return ListerConfigQuery
+     */
+    private function getConfigQuery() {
+        $currentVariation = $this->widget->getCurrentVariation();
+        return ListerConfigQuery::create()
+            ->filterByName( $this->widget->getId() )
+            ->filterByVariation( $currentVariation );
+    }
+    
 }

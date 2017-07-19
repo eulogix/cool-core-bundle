@@ -32,11 +32,15 @@ totals bar
 
 
 
-
-
 .gridxRowError {
     background-color: rgba(255, 0, 0, 0.3);
 }
+
+.gridxRowHighlightBlue {
+    background-color: rgba(0, 0, 255, 0.3);
+}
+
+
 
 
 /**

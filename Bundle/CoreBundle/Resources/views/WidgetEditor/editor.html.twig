@@ -1,21 +1,91 @@
 {% extends 'EulogixCoolCoreBundle::_base/cool_base.html.twig' %}
 
 {% block _content %}
-<div id="editorDiv" style="position: relative; width:100%; height:100%; overflow: auto"></div>
+
+    {% trans_default_domain "widget_editor" %}
+
+    <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false, style:"width: 100%;"' id="mainTabContainer">
+
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"{{"RULES"|t}}", _name:"RULES"'>
+
+            <div style="margin-top: 10px;" id="rulesDiv"></div>
+
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"{{"VARIANTS"|t}}", _name:"VARIANTS"'>
+
+            <div id="variantsDiv"></div>
+
+        </div>
+
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"{{"INFO"|t}}", _name:"INFO"' id="infoDiv" class="formContainer" style="padding: 10px">
+
+
+        </div>
+
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"{{"DEFINITON"|t}}", _name:"LINKS"' id="definitionDiv"/>
+
+    </div>
+
 
 <script>
-    require(["cool/cool","dojo/domReady!"], function(cool){
 
-        cool.widgetFactory('{{ editorServerId }}', {
-                databaseName:'core',
-                tableName:'{{ editorTable }}',
-                edit_serverid: window.opener.widgetInEdit.serverId,
-                edit_parameters:JSON.stringify( window.opener.widgetInEdit.definition.parameters )
-            },
-            function(widgetInstance){
-                widgetInstance.placeAt(document.getElementById("editorDiv"));
-                //target.addChild(widgetInstance);
-            });
+    require([
+        "cool/cool",
+        "cool/util/GridUtils",
+        "cool/util/DataUtils",
+        "dojo/parser",
+        "dojo/domReady!"
+    ], function(cool, gridUtils, dataUtils, parser){
+
+        parser.parse();
+
+        var editedWidget = window.opener.widgetInEdit;
+        var widgetId = editedWidget.getWidgetId();
+        var currentVariation = editedWidget.getCurrentVariation();
+
+        var rulesLog = editedWidget.getDefinitionAttribute('rules');
+
+        var serverId = editedWidget.serverId;
+        var widgetParameters = JSON.stringify( editedWidget.definition.parameters );
+
+
+        gridUtils.renderSimpleGrid(
+                dataUtils.kvFromObj(editedWidget.definition.parameters),
+                '<div class="sectionTitle"><img src="/bower_components/fugue/icons/gear.png" style="vertical-align: middle"> Parameters</div>',
+                document.getElementById("infoDiv")
+        );
+
+        gridUtils.renderSimpleGrid(
+                dataUtils.kvFromObj(editedWidget.definition.attributes),
+                '<div class="sectionTitle"><img src="/bower_components/fugue/icons/document-attribute.png" style="vertical-align: middle"> Attributes</div>',
+                document.getElementById("infoDiv")
+        );
+
+        document.getElementById("definitionDiv").innerHTML = editedWidget.jhl(editedWidget.definition);
+
+        cool.widgetFactory('{{ listerConfigServerId }}', {
+                    _widgetCurrentVariation: currentVariation,
+                    _filter: JSON.stringify({name : widgetId}),
+
+                    edit_serverid: serverId,
+                    edit_parameters: widgetParameters
+                },
+                function(widgetInstance){
+                    widgetInstance.placeAt(document.getElementById("variantsDiv"));
+                });
+
+        cool.widgetFactory('EulogixCoolCore/Core/Rule/WidgetRuleLister', {
+                    _executionLog: JSON.stringify(rulesLog),
+                    _filter: JSON.stringify({widget_id : widgetId})
+                },
+                function(widgetInstance){
+                    widgetInstance.placeAt(document.getElementById("rulesDiv"));
+                });
+
     });
 </script>
+
 {% endblock %}
+
+
+

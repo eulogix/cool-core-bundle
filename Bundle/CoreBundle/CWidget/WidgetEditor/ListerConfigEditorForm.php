@@ -11,30 +11,60 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumn;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnPeer;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
+use Eulogix\Cool\Lib\DataSource\Classes\WidgetEditor\ListerConfigDataSource;
+use Eulogix\Cool\Lib\Form\DSCRUDForm;
 use Eulogix\Cool\Lib\Lister\ListerInterface;
 use Eulogix\Cool\Lib\Widget\Message;
-
-use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumn;
+use Eulogix\Cool\Lib\Widget\WidgetSlot;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class ListerEditor extends WidgetEditor {
+class ListerConfigEditorForm extends BaseConfigEditorForm {
+
+    public function __construct($parameters = [])
+    {
+        parent::__construct($parameters);
+        $ds = new ListerConfigDataSource();
+        $this->setDataSource($ds->build());
+    }
 
     public function build() {
+
         parent::build();
-        $this->addAction('fetch_defaults')->setOnClick("widget.callAction('fetchDefaults');");
+
+        if(!$this->getDSRecord()->isNew()) {
+
+            $this->addAction('fetch_defaults')->setOnClick("widget.callAction('fetchDefaults');");
+
+            $filter = json_encode(['lister_config_id'=> $this->getDSRecord()->get('lister_config_id')]);
+
+            $this->setSlot("Columns", new WidgetSlot('Eulogix\Cool\Lib\Lister\CoolLister', [
+                'databaseName' => 'core',
+                'tableName' => 'core.lister_config_column',
+                '_filter'=>$filter
+            ]));
+        }
+
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId() {
+        return "COOL_LISTER_CONFIG_EDITOR_FORM";
     }
 
     public function onFetchDefaults() {
         if($this->getDSRecord()->isNew()) {
             $this->addMessage(Message::TYPE_ERROR, 'SAVE THE RECORD FIRST');
         } else {
-        
+
             $configId = $this->getDSRecord()->get('lister_config_id');
             $config = ListerConfigQuery::create()->findPk($configId);
 
@@ -70,7 +100,7 @@ class ListerEditor extends WidgetEditor {
                     $idx = array_search($fieldName, array_keys($defaultSort));
                     if($idx !== false) {
                         $configColumn->setSortbyOrder($idx+1)
-                                     ->setSortbyDirection(strtoupper($defaultSort[$fieldName]));
+                            ->setSortbyDirection(strtoupper($defaultSort[$fieldName]));
                     }
 
                     $configColumn->save();
@@ -84,14 +114,6 @@ class ListerEditor extends WidgetEditor {
 
             $this->forceRedraw();
         }
-    }
-
-    public function getLayout() {
-        $layout="<fields>".
-            $this->getBaseLayout().
-            "filter_show_flag, filter_server_id:300
-            save|align=center@!</fields>";
-        return $layout;
     }
 
 }

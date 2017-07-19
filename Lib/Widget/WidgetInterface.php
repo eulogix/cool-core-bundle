@@ -12,8 +12,8 @@
 namespace Eulogix\Cool\Lib\Widget;
 
 use Eulogix\Cool\Lib\File\FileProxyInterface;
+use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
 use Eulogix\Lib\Error\ErrorReport;
-use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfiguratorInterface;
 use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
 use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 
@@ -36,6 +36,11 @@ interface WidgetInterface {
 
     //stores the last called action, used to catch it in a rule if the on* method is not defined in PHP
     const ATTRIBUTE_LAST_CALLED_ACTION = 'lastCalledAction';
+
+    //stores the Id of the widget, used to retrieve configs and translations
+    const ATTRIBUTE_ID = 'widgetId';
+
+    const ATTRIBUTE_CURRENT_VARIATION = 'currentVariation';
 
     //fired just before the definition is returned. allows you to make some last final adjustments
     const EVENT_DEFINITION_REQUESTED = "event_definition_requested";
@@ -167,31 +172,19 @@ interface WidgetInterface {
     public function setId($id);
     
     /**
-    * returns a hash that represent the "variation", or "state" of the widget, for each of its levels
-    * 
-    * @return array
-    */
-    public function getVariation();
-    
+     * The variation string is used by the configurator to fetch a "config" from the stored ones.
+     * Configs are containers of settings to quickly configure a widget.
+     * Usually set by rules
+     *
+     * @param string $variation
+     * @return $this
+     */
+    public function setCurrentVariation($variation);
+
     /**
-    * returns an array of categories that drive the possible configuration of the widget
-    * for example, if you have a widget that depends on some user attribute named "userKind", you may return array("userKind"=>array("admins","default")).
-    * if you widget depends on both "userKind" and "systemLocale", you may return array("userKind"=>array("admins","default"), "systemLocale"=>array("it","en"))
-    * return null if the widget is not supposed to vary / be editable
-    * 
-    * @return array
-    */
-    public function getVariationLevels();
-    
-    /**
-    * returns the currently active variant for a given level. This function can look into system state, widget state, or whatever else.
-    * Suppose that the current system locale is "english", and you want to select the variation level "en" for this widget on the level "systemLocale":
-    * return $sys->getLocale()=="english"? "en" : "it";
-    * 
-    * @param string $level
-    * @return string
-    */
-    public function getActiveLevelVariant($level);
+     * @return string
+     */
+    public function getCurrentVariation();
 
     /**
      * tells whether the widget is configurable with the editor.
@@ -201,7 +194,7 @@ interface WidgetInterface {
 
     /**
     * returns the configurator for this widget
-    * @returns WidgetConfiguratorInterface
+    * @returns WidgetConfigurator
     */
     public function getConfigurator();
     

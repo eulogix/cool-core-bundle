@@ -27,9 +27,9 @@ class WidgetEditorController extends Controller
      */
     public function formEditorAction()
     {       
-        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/FormEditor',
-            'editorTable' => 'core.form_config'
-        ));
+        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', [
+                'listerConfigServerId' => 'EulogixCoolCore/WidgetEditor/FormConfigLister',
+        ]);
     }
 
     /**
@@ -38,8 +38,9 @@ class WidgetEditorController extends Controller
      */
     public function listerEditorAction()
     {
-        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', array('editorServerId' => 'EulogixCoolCore/WidgetEditor/ListerEditor',
-            'editorTable' => 'core.lister_config'
-        ));
+        return $this->render('EulogixCoolCoreBundle:WidgetEditor:editor.html.twig', [
+            'listerConfigServerId' => 'EulogixCoolCore/WidgetEditor/ListerConfigLister',
+        ]);
     }
+
 }

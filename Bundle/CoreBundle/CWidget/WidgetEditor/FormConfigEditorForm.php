@@ -11,31 +11,40 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor;
 
+use Eulogix\Cool\Lib\DataSource\Classes\WidgetEditor\FormConfigDataSource;
+use Eulogix\Cool\Lib\Form\FormInterface;
+
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class FormEditor extends WidgetEditor {
+class FormConfigEditorForm extends BaseConfigEditorForm {
+
+    public function __construct($parameters = [])
+    {
+        parent::__construct($parameters);
+        $ds = new FormConfigDataSource();
+        $this->setDataSource($ds->build());
+    }
 
     public function build() {
         parent::build();
-        //add misc actions
         $this->addAction('fetch_defaults')->setOnClick("widget.callAction('fetchDefaults');");
         return $this;
     }
 
     public function onFetchDefaults() {
+        /** @var FormInterface $widget */
         $widget = $this->getEditedWidget();
         $this->addFieldTextArea('layout');
         $this->getField('layout')->setValue( $widget->getDefaultLayout() );
     }
 
-    public function getLayout() {
-        $layout="<fields>".
-            $this->getBaseLayout().
-            "layout:100%:200px@!
-            save|align=center@!</fields>";
-        return $layout;
+    /**
+     * @inheritdoc
+     */
+    public function getId() {
+        return "COOL_FORM_CONFIG_EDITOR_FORM";
     }
-
+                                                                                                                                        
 }
