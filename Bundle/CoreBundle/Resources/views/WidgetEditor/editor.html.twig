@@ -74,13 +74,19 @@
                     widgetInstance.placeAt(document.getElementById("variantsDiv"));
                 });
 
-        cool.widgetFactory('EulogixCoolCore/Core/Rule/WidgetRuleLister', {
-                    _executionLog: JSON.stringify(rulesLog),
-                    _filter: JSON.stringify({widget_id : widgetId})
-                },
-                function(widgetInstance){
-                    widgetInstance.placeAt(document.getElementById("rulesDiv"));
-                });
+        cool.callCommand('_cacheData', function(tempKey){
+
+            cool.widgetFactory('EulogixCoolCore/Core/Rule/WidgetRuleLister', {
+                        _filter: JSON.stringify({widget_id : widgetId}),
+                        _logKey: tempKey
+                    },
+                    function(widgetInstance){
+                        widgetInstance.placeAt(document.getElementById("rulesDiv"));
+                    });
+
+        }, {}, {
+            data: JSON.stringify(rulesLog)
+        });
 
     });
 </script>

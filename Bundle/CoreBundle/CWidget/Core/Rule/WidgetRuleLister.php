@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Rule;
 
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
+use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\Classes\Rules\WidgetRulesDataSource;
 use Eulogix\Cool\Lib\Lister\Lister;
 
@@ -27,10 +28,12 @@ class WidgetRuleLister extends Lister {
     {
         parent::__construct($parameters);
 
-        $this->executionLog = json_decode(@$parameters['_executionLog'], true) ?? [];
+        if($logKey = @$parameters['_logKey']) {
+            $this->executionLog = json_decode(Cool::getInstance()->getFactory()->getCacher()->fetch($logKey), true) ?? [];
+        }
+
         $ds = new WidgetRulesDataSource();
         $this->setDataSource($ds->build());
-        $this->propagateColumn('_ruleLog');
     }
 
     /**
@@ -67,7 +70,6 @@ class WidgetRuleLister extends Lister {
             $row['valid'] = $logRow['valid'] ?? false;
             $row[Rule::REPORT_EXECUTION_TIME] = $logRow['report'][Rule::REPORT_EXECUTION_TIME] ?? null;
             $row[Rule::REPORT_MEMORY_USAGE] = $logRow['report'][Rule::REPORT_MEMORY_USAGE] ?? null;
-            $row['_ruleLog'] = json_encode($logRow);
         }
 
         return $this;

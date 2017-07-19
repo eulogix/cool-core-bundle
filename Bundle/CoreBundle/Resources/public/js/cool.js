@@ -42,7 +42,7 @@ define([
             // preBind: Function?
             //		function that will be executed with the newly instantiated widget as argument, just before
             //		the widget receives the server data with the bindToUrl method
-            // afetBind: Function?
+            // afterBind: Function?
             //      this one will be called just after bindToUrl
             // data: Object
             //      this object contains the widget definition. If it is null or undefined, a server side call will

@@ -185,4 +185,15 @@ class AjaxController extends Controller
         return new JsonResponse($translator->trans($this->get('request')->query->get('id')));
     }
 
+    /**
+     * @Route("/cacheData", name="_cacheData", options={"expose"=true})
+     */
+    public function cacheDataAction()
+    {
+        $data = $this->get('request')->request->get('data');
+        $tempKey = md5(serialize($data));
+        Cool::getInstance()->getFactory()->getCacher()->store($tempKey, $data);
+        return new JsonResponse($tempKey);
+    }
+
 }

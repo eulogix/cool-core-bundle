@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Rule;
 
+use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\Classes\Rules\WidgetRuleCodeDataSource;
 use Eulogix\Cool\Lib\Lister\Lister;
 
@@ -20,15 +21,34 @@ use Eulogix\Cool\Lib\Lister\Lister;
 
 class WidgetRuleCodeLister extends Lister {
 
-    private $ruleLog = [];
+    private $executionLog = [];
 
     public function __construct($parameters = [])
     {
         parent::__construct($parameters);
 
-        $this->ruleLog = json_decode(@$parameters['_ruleLog'], true) ?? [];
+        if($logKey = @$parameters['_logKey']) {
+            $this->executionLog = json_decode(Cool::getInstance()->getFactory()->getCacher()->fetch($logKey), true) ?? [];
+        }
+
         $ds = new WidgetRuleCodeDataSource();
         $this->setDataSource($ds->build());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function build() {
+        parent::build();
+        $this->addAction('new Code')->setOnClick("widget.openNewRecordEditor();");
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultEditorServerId() {
+        return 'EulogixCoolCore/Core/Rule/RuleCodeEditorForm';
     }
 
     /**
@@ -41,10 +61,14 @@ class WidgetRuleCodeLister extends Lister {
     public function processRows(&$rows) {
         parent::processRows($rows);
 
-        $log = @$this->ruleLog['report']['codes'];
+        $globalLog = $this->executionLog;
+
+        $ruleLog = @$globalLog[ $this->getParameters()->get('_rule_name') ] ?? [];
+
+        $codesLog = @$ruleLog['report']['codes'];
 
         foreach($rows as &$row) {
-            $logRow = @$log[ $row['name'] ] ?? [];
+            $logRow = @$codesLog[ $row['name'] ] ?? [];
 
            // $row['valid'] = $logRow['valid'] ?? false;
            // $row['logRow'] = json_encode($logRow);

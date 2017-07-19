@@ -54,7 +54,7 @@ class SymfonyBundleWidgetFactory extends BaseWidgetFactory implements WidgetFact
         if($bundleNameSpace = @$bundles[$bundleName."Bundle"]) {
             $nameSpace = str_replace($bundleName."Bundle","CWidget\\".str_replace("/","\\",$file), $bundleNameSpace);
             if(class_exists($nameSpace)) {
-                return new $nameSpace( $parameters );  //GET data as init parameters
+                return new $nameSpace( $parameters );
             }          
         }
         return false;

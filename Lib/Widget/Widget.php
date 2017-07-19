@@ -714,7 +714,11 @@ abstract class Widget implements WidgetInterface {
      * @return array
      */
     public function getRuleContext() {
-        return ['widget'=>$this];
+        return [
+            'widget' => $this,
+            'parameters' => $this->getParameters()->all(),
+            'attributes' => $this->getAttributes()->all(),
+        ];
     }
 
 }
