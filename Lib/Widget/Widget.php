@@ -524,10 +524,10 @@ abstract class Widget implements WidgetInterface {
      * @inheritdoc
      */
     public function configure() {
+        $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
         if(($c = $this->getConfigurator()) && $c->configurationExists()) {
             $c->applyConfiguration();
         }
-        $this->processRules(WidgetRule::EVALUATION_TYPE_ON_LOAD);
     }
 
     /**
