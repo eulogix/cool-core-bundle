@@ -28,7 +28,7 @@ class WidgetRuleCodeLister extends Lister {
         parent::__construct($parameters);
 
         if($logKey = @$parameters['_logKey']) {
-            $this->executionLog = json_decode(Cool::getInstance()->getFactory()->getCacher()->fetch($logKey), true) ?? [];
+            $this->executionLog = json_decode(Cool::getInstance()->getFactory()->getSharedCacher()->fetch($logKey), true) ?? [];
         }
 
         $ds = new WidgetRuleCodeDataSource();

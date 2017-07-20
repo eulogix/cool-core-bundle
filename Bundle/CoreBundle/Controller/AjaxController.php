@@ -192,7 +192,7 @@ class AjaxController extends Controller
     {
         $data = $this->get('request')->request->get('data');
         $tempKey = md5(serialize($data));
-        Cool::getInstance()->getFactory()->getCacher()->store($tempKey, $data);
+        Cool::getInstance()->getFactory()->getSharedCacher()->store($tempKey, $data);
         return new JsonResponse($tempKey);
     }
 
