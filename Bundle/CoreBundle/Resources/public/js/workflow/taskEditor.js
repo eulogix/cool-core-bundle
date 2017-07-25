@@ -23,8 +23,13 @@ function(declare, Deferred, cool, _cwidget, lang, array, all, coolForm, coolList
 
             try {
                 var slot = this.definition.slots._base.actualForm;
-                this._putSlot(slot, 'actualForm', this.contentNode);
-            } catch(e) {}
+                return this._putSlot(slot, 'actualForm', this.contentNode);
+            } catch(e) {
+
+                var d = new Deferred();
+                d.resolve();
+                return d;
+            }
 
         }
 

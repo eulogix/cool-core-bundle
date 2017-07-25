@@ -124,15 +124,26 @@ class TaskDataSource extends ActivitiDataSource {
             $reqParameters = $req->getParameters();
             if($filter = json_decode(@$reqParameters['_filter_raw_values'], true)) {
 
-                    $bkeyLike = @$filter['baseProcessNamespace'];
+                $bkeyLike = @$filter['baseProcessNamespace'];
                 if($cluster = @$filter['cluster'])
                     $bkeyLike.='/'.$cluster;
                 $bkeyLike.='%';
                 $params['processInstanceBusinessKeyLike'] = $bkeyLike;
 
+                if($bkl = json_decode( @$filter['processInstanceBusinessKeyLikes'], true ) ) {
+                    $params['processInstanceBusinessKeyLike'] = $bkl;
+                }
+
+                if($groups = json_decode( @$filter['candidateGroups'], true ) ) {
+                    $params['candidateGroup'] = $groups;
+                }
+
                 foreach($filter as $filterField => $filterValue)
                 if($filterValue != '') {
                     switch($filterField) {
+                        case 'assignee' :
+                        case 'candidateUser' :
+                        case 'candidateGroup' :
                         case 'involvedUser' :
                         case 'processDefinitionKeyLike' :
                             $params[$filterField] = $filterValue;
@@ -141,7 +152,7 @@ class TaskDataSource extends ActivitiDataSource {
                 }
             }
 
-            $params = array_merge($params, $this->getParamsFromQuery($req->getQuery()));
+            $params = array_merge($params, $this->getParamsFromQuery($req->getQuery() ?? []));
 
             $tasks = $this->client->getFlatListOfTasks($params);
 
@@ -216,10 +227,10 @@ class TaskDataSource extends ActivitiDataSource {
     }
 
     /**
-     * @param DSQuery $query
+     * @param array $query
      * @return array|bool|mixed
      */
-    private function getParamsFromQuery($query)
+    private function getParamsFromQuery(array $query)
     {
         if($expr = $this->getQueryExpression($query)) {
             return($expr);

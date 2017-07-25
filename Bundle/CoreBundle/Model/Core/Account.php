@@ -85,4 +85,11 @@ class Account extends BaseAccount
     public function isInGroup(AccountGroup $group) {
         return AccountGroupRefQuery::create()->filterByAccountGroup($group)->filterByAccount($this)->count() > 0;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getGroupIds() {
+        return $this->getCoolDatabase()->fetchArrayWithNumericKeys("SELECT account_group_id FROM account_group_ref WHERE account_id = :id", [':id' => $this->getAccountId()]);
+    }
 }

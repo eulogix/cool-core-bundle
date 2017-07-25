@@ -31,6 +31,8 @@ define("cool/widget/_SlotsMixin",
                     var self = this;
                     var definition = this.definition;
 
+                    var d = new Deferred();
+
                     this.clearSlots();
 
                     var regularSlots = this.getRegularSlotsFlat();
@@ -105,6 +107,8 @@ define("cool/widget/_SlotsMixin",
                             this.slotsTab = slotsTab;
                         }
                     }
+                    d.resolve();
+                    return d;
                 },
 
                 focusSlot: function(slotName) {

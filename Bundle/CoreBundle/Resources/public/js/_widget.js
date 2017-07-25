@@ -176,17 +176,21 @@ define("cool/_widget",
                                 self.renderMessages();
                             }
 
+                            var f = function() {
+                                if(data._definition.hasOwnProperty('commands')) {
+                                    self.executeCommands();
+                                }
+
+                                if(data._definition.hasOwnProperty('events')) {
+                                    self.processEvents();
+                                }
+                            };
+
                             if(data._definition.hasOwnProperty('slots')) {
-                                self.renderSlots();
-                            }
-
-                            if(data._definition.hasOwnProperty('commands')) {
-                                self.executeCommands();
-                            }
-
-                            if(data._definition.hasOwnProperty('events')) {
-                                self.processEvents();
-                            }
+                                self.renderSlots().then( function() {
+                                    f();
+                                });
+                            } else f();
 
                             d.resolve();
                         });

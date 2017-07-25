@@ -4,7 +4,7 @@
 <script>
     dojo.connect(_container_, "onLoad", function(){
         _container_.domNode.style.padding = '0';
-        _container_.getParent().resize()
+        _container_.getParent().resize();
         setTimeout(function(){ _container_.getParent().resize() }, 500);
     });
 

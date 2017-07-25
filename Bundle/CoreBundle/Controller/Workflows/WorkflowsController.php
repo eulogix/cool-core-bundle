@@ -43,24 +43,25 @@ class WorkflowsController extends Controller
         $activiti = Cool::getInstance()->getFactory()->getActiviti();
         $userName = Cool::getInstance()->getLoggedUser()->getUsername();
 
-        $params = $this->get('request')->query->all();
-
-        $queryHash = [];
+            $params = $this->get('request')->query->all();
+        unset($params['processDefinitionKeyLike']);
 
         $bkeyLike = @$params['baseProcessNamespace'];
         if($cluster = @$params['cluster'])
             $bkeyLike.='/'.$cluster;
         $bkeyLike.='%';
+        $params['processInstanceBusinessKeyLike'] = $bkeyLike;
 
-        $queryHash['processInstanceBusinessKeyLike'] = $bkeyLike;
+        if($bkl = json_decode( @$params['processInstanceBusinessKeyLikes'], true ) ) {
+            $params['processInstanceBusinessKeyLike'] = $bkl;
+        }
 
-       /* $involved = $activiti->getListOfTasks(array_merge($queryHash, [
-                'involvedUser' => $userName
-            ]));
-       */
+        if($groups = json_decode( @$params['candidateGroups'], true ) ) {
+            $params['candidateGroup'] = $groups;
+        }
 
         return new JsonResponse( [
-            'inbox' => $activiti->getUserTaskCount($userName, $queryHash)->getData(),
+            'inbox' => $activiti->getUserTaskCount($userName, $params)->getData(),
          //   'involved' => [ 'count'=> $involved->getSize(), 'user'=>$userName ]
         ]);
     }

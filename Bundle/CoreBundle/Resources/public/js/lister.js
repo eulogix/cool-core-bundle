@@ -173,9 +173,11 @@ define("cool/lister",
 
                             filterForm.onlyContent = true;
 
-                            filterForm.on('filterLinkedLister', function() {
-                                lister.applyFilter();
-                                lister.reloadRows();
+                            lister.on('loadComplete', function() {
+                                filterForm.on('filterLinkedLister', function() {
+                                    lister.applyFilter();
+                                    lister.reloadRows();
+                                });
                             });
 
                             lister.filterForm = filterForm;

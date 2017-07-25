@@ -11,6 +11,8 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Workflows;
 
+use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\SimpleValueMap;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
 
@@ -28,10 +30,43 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     protected $id = "COOL_ACTIVITI_TASK_FORM";
 
     public function build() {
+        $this->setReadOnly(false);
+
+        $activiti = Cool::getInstance()->getFactory()->getActiviti();
+        $taskId = $this->getTaskId();
+
+        $user = Cool::getInstance()->getLoggedUser();
         $this->buildActivitiForm();
         $td = $this->getTaskDefinition();
         $this->id = "USER_TASK_FORM_".preg_replace('/:[0-9]+:[0-9]+$/sim', '', $td['processDefinitionId']).'/'.$td['taskDefinitionKey'];
+
+        if(!$td['assignee']) {
+            $this->setReadOnly(true);
+            $this->addCallActionAction('claim')->setReadOnly(false);
+        } else if($td['assignee'] != $user->getUsername()) {
+            $this->setReadOnly(true);
+        }
+
+        //for debugging
+        $vars = $this->getTaskVariables();
+        $this->getAttributes()->set('activiti_variables_dump', "<pre>".print_r($vars, true)."</pre>");
+
         return parent::build();
+    }
+
+    public function onClaim() {
+        $user = Cool::getInstance()->getLoggedUser();
+        $activiti = Cool::getInstance()->getFactory()->getActiviti();
+        $td = $this->getTaskDefinition();
+
+        try {
+            $activiti->claimTask($td[ 'id' ], $user->getUsername());
+            $this->reBuild();
+            $this->addMessageInfo("Task claimed.");
+            $this->addEvent("recordSaved");
+        } catch(\Exception $e) {
+            $this->addMessageError($e->getMessage());
+        }
     }
 
     /**

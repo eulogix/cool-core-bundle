@@ -110,7 +110,7 @@ abstract class BaseTaskEditorForm extends Form {
         if($this->taskVariables)
             return $this->taskVariables;
 
-        $activiti = $activiti = Cool::getInstance()->getFactory()->getActiviti();
+        $activiti = Cool::getInstance()->getFactory()->getActiviti();
         $taskId = $this->getTaskId();
         $globalVars = $activiti->getAllVariablesForTask($taskId, "global");
 
@@ -123,8 +123,7 @@ abstract class BaseTaskEditorForm extends Form {
         foreach($globalVars as $v) {
             if($v['type']=='serializable') {
                 $var = $activiti->fetch('GET', $v['valueUrl']);
-                $jo = $jser->deserializeBase64String(base64_encode($var));
-                $ret[$v['name']] = json_decode($jser->toJSON($jo));
+                $ret[$v['name']] = json_decode($jser->toJSON( $jser->deserializeBase64String( base64_encode($var) )), true);
             } else $ret[$v['name']] = $v['value'];
         }
         error_reporting($oe);

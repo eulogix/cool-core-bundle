@@ -124,6 +124,7 @@ define("cool/workflow/explorer",
                                 case 'inbox' : {
                                     self.lister.filterForm.getField('processDefinitionKeyLike').set('value', item.processDefinitionKey);
                                     self.lister.applyFilter();
+                                    self.lister.reloadRows();
                                     break;
                                 }
                                 /*case 'involved' : {
@@ -169,7 +170,7 @@ define("cool/workflow/explorer",
                     ];
 
                     array.forEach(data.inbox, function(task, i){
-                        retData.push({id:task+i, processDefinitionKey:task.key_, name:task.key_+' ('+task.task_count+')', parent:'inbox', _leaf:true, _type:'inbox'});
+                        retData.push({id:'defkey'+i, processDefinitionKey : task.processDefinitionKey, name:task.processDefinitionKey+' ('+task.task_count+')', parent:'inbox', _leaf:true, _type:'inbox'});
                     });
 
                     ret.resolve(retData);
