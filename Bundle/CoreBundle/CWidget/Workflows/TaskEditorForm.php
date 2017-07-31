@@ -34,8 +34,11 @@ class TaskEditorForm extends Widget {
         }
 
         $this->getAttributes()->set(self::ATTRIBUTE_ONLY_CONTENT, true);
+        $this->getAttributes()->set(self::ATTRIBUTE_HIDE_TOOLBAR, true);
 
-        $this->setSlot('actualForm', new WidgetSlot($formServerId, $p = $this->getParameters()->all()));
+        $slotParameters = $this->getParameters()->all();
+        $slotParameters['rand'] = rand(0,9999);
+        $this->setSlot('actualForm', new WidgetSlot($formServerId, $slotParameters, ['closeable' => true]));
 
         //propagate the recordSaved and close event from the inner form so that the lister is notified
         $this->addCommandJs("widget.widgetSlots.actualForm.on('recordSaved', function() { widget.emit('recordSaved'); });");
@@ -48,7 +51,8 @@ class TaskEditorForm extends Widget {
 
         widget.widgetSlots.actualForm.on('taskFlow', function(payload) {
             setTimeout(function(){
-                widget.definition.parameters._recordid = payload.task_id; widget.reBind();
+                widget.definition.parameters._recordid = payload.task_id;
+                widget.reBind();
                 widget.emit('taskFlow', payload);
             },3000);
         });

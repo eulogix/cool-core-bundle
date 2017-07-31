@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Factory;
 
+use Eulogix\Cool\Lib\Activiti\WorkFlowEngine;
 use Eulogix\Cool\Lib\App\Settings\Manager;
 use Eulogix\Cool\Lib\DataSource\DataSourceManager;
 use Eulogix\Cool\Lib\Email\MessageFactory;
@@ -161,6 +162,13 @@ class Factory {
      */
     public static function getActiviti() {
         return Cool::getInstance()->getContainer()->get('activiti.client');
+    }
+
+    /**
+     * @return WorkFlowEngine
+     */
+    public static function getWorkflowEngine() {
+        return Cool::getInstance()->getContainer()->get('cool.workflowEngine');
     }
 
     /**

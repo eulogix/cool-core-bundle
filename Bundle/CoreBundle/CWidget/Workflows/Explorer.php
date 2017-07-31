@@ -23,4 +23,9 @@ class Explorer extends Widget {
     {
         return "cool/workflow/explorer";
     }
+
+    public function build() {
+        $this->getAttributes()->set(self::ATTRIBUTE_HIDE_TOOLBAR, true);
+        return parent::build();
+    }
 }

@@ -34,6 +34,8 @@ abstract class BaseTaskEditorForm extends Form {
         if($this->validate( array_keys($parameters) ) ) {
 
             $activiti = Cool::getInstance()->getFactory()->getActiviti();
+            $wfEngine = Cool::getInstance()->getFactory()->getWorkflowEngine();
+            $loggedUser =  Cool::getInstance()->getLoggedUser();
 
             try {
                 $taskDef = $activiti->getTask($taskId);
@@ -49,8 +51,8 @@ abstract class BaseTaskEditorForm extends Form {
                             ]);
                         if(@$currentPendingTasks->getSize()==1) {
                             $task = new Task( $currentPendingTasks->getRow(0), $activiti);
-                            if($task->getAssignee() == Cool::getInstance()->getLoggedUser()->getUsername() || Cool::getInstance()->getLoggedUser()->isAdmin()) {
-                                $this->addEvent("taskFlow", ['task_id'=>$task->getId()]);
+                            if($task->isAssignedTo($loggedUser->getUsername()) || $wfEngine->canTaskBeClaimedByLoggedUser($task)) {
+                                $this->addEvent("taskFlow", ['task_id' => $task->getId()] );
                             }
                         }
                     }
@@ -90,6 +92,14 @@ abstract class BaseTaskEditorForm extends Form {
         $taskId = $this->getTaskId();
         $taskDef = $activiti->getTask($taskId);
         return $taskDef;
+    }
+
+    /**
+     * @return Task
+     */
+    protected function getTaskObject() {
+        $activiti = Cool::getInstance()->getFactory()->getActiviti();
+        return new Task($this->getTaskDefinition(), $activiti);
     }
 
     /**

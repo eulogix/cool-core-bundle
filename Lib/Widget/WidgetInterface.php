@@ -32,6 +32,7 @@ interface WidgetInterface {
 
     const ATTRIBUTE_READONLY     =    'readOnly';
     const ATTRIBUTE_ONLY_CONTENT     =    'onlyContent';
+    const ATTRIBUTE_HIDE_TOOLBAR     =    'hideToolbar';
     const ATTRIBUTE_DISABLED     =    'disabled';
 
     //stores the last called action, used to catch it in a rule if the on* method is not defined in PHP

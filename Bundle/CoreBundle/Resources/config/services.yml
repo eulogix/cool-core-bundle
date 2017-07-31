@@ -113,6 +113,10 @@ services:
         class: Eulogix\Lib\Activiti\ActivitiClient
         arguments: ["%activiti_url%", "%activiti_user%", "%activiti_password%", "@activiti.pdo"]
 
+    cool.workflowEngine:
+        class: Eulogix\Cool\Lib\Activiti\WorkFlowEngine
+        arguments: ["@activiti.client", "%activiti_tenant_id%", "%activiti_cool_user_id%"]
+
     pentaho.connector:
         class: Eulogix\Lib\Pentaho\PDIConnector
         arguments: ["%pdi_default_repository%", "%pdi_default_user%", "%pdi_default_password%"]

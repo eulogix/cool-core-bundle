@@ -15,6 +15,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountQuery;
 use Eulogix\Lib\Activiti\ActivitiClient;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Lib\Activiti\om\ProcessInstance;
+use Eulogix\Lib\Activiti\om\Task;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -147,4 +148,14 @@ class WorkFlowEngine {
         return ['_cool'=>$ret];
     }
 
+    /**
+     * utility functions that wraps the logic needed to fetch the logged user and its groups
+     * @param Task $task
+     * @return bool
+     */
+    public function canTaskBeClaimedByLoggedUser(Task $task) {
+        $loggedUser =  Cool::getInstance()->getLoggedUser();
+        $loggedUserGroupIds = $loggedUser->getAccount()->getGroupIds();
+        return $task->canBeClaimedBy($loggedUser->getUsername(), $loggedUserGroupIds);
+    }
 } 

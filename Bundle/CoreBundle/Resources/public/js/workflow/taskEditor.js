@@ -19,6 +19,9 @@ function(declare, Deferred, cool, _cwidget, lang, array, all, coolForm, coolList
 
         //very basic implementation that ignores everything but the actual form, and renders it directly in the contentNode
         renderSlots: function() {
+
+            this.clearSlots();
+
             this.contentNode.innerHTML = '';
 
             try {

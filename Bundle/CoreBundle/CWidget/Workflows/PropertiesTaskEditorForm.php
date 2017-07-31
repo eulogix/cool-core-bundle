@@ -15,6 +15,7 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\SimpleValueMap;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
+use Eulogix\Lib\Activiti\om\Task;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -32,18 +33,18 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     public function build() {
         $this->setReadOnly(false);
 
-        $activiti = Cool::getInstance()->getFactory()->getActiviti();
-        $taskId = $this->getTaskId();
-
+        $wfEngine = Cool::getInstance()->getFactory()->getWorkflowEngine();
         $user = Cool::getInstance()->getLoggedUser();
         $this->buildActivitiForm();
-        $td = $this->getTaskDefinition();
-        $this->id = "USER_TASK_FORM_".preg_replace('/:[0-9]+:[0-9]+$/sim', '', $td['processDefinitionId']).'/'.$td['taskDefinitionKey'];
+        $task = $this->getTaskObject();
 
-        if(!$td['assignee']) {
+        $this->id = "USER_TASK_FORM_".preg_replace('/:[0-9]+:[0-9]+$/sim', '', $task->getProcessDefinitionId().'/'.$task->getTaskDefinitionKey());
+
+        if(!$task->getAssignee()) {
             $this->setReadOnly(true);
-            $this->addCallActionAction('claim')->setReadOnly(false);
-        } else if($td['assignee'] != $user->getUsername()) {
+            if($wfEngine->canTaskBeClaimedByLoggedUser($task))
+                $this->addCallActionAction('claim')->setReadOnly(false);
+        } else if($task->getAssignee() != $user->getUsername()) {
             $this->setReadOnly(true);
         }
 
@@ -57,10 +58,10 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     public function onClaim() {
         $user = Cool::getInstance()->getLoggedUser();
         $activiti = Cool::getInstance()->getFactory()->getActiviti();
-        $td = $this->getTaskDefinition();
+        $task = $this->getTaskObject();
 
         try {
-            $activiti->claimTask($td[ 'id' ], $user->getUsername());
+            $activiti->claimTask($task->getId(), $user->getUsername());
             $this->reBuild();
             $this->addMessageInfo("Task claimed.");
             $this->addEvent("recordSaved");

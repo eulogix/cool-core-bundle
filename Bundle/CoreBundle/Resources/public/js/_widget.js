@@ -81,9 +81,12 @@ define("cool/_widget",
                     this.inherited(arguments);
                 },
 
-                getActionParameters: function(obj) {
+                getActionParameters: function(obj, includeHashes) {
                     obj = obj || {};
-                    return lang.mixin({}, obj, this.definition.parameters, {_hashes:this.hashes, _client_id:this.id});
+                    var ret = lang.mixin({}, obj, this.definition.parameters, {_hashes:this.hashes, _client_id:this.id});
+                    if(includeHashes === false)
+                        delete ret._hashes;
+                    return ret;
                 },
 
                 getContainer: function() {
@@ -103,7 +106,8 @@ define("cool/_widget",
                     this.definition.parameters = parameters != undefined ? parameters : this.definition.parameters;
                     var cwidget = this;
                     if(data==undefined) {
-                        var url = Routing.generate('_widget_get_definition', this.getActionParameters({serverId:serverId}));
+                        //we don't propagate the hashes here as otherwise the server response could be incomplete
+                        var url = Routing.generate('_widget_get_definition', this.getActionParameters({serverId:serverId}, false));
                         xhr(url, {
                             handleAs: "json"
                         }).then(function(data){
@@ -127,6 +131,7 @@ define("cool/_widget",
                 
 
                 reBind : function() {
+                    this.clear();
                     this.bindToUrl(this.serverId, this.definition.parameters);
                 },
 
@@ -268,6 +273,11 @@ define("cool/_widget",
                         });
                         this.toolbar.placeAt( this.actionsNode, "first");
                         this.toolbar.startup();
+                        if(this.getDefinitionAttribute('hideToolbar')) {
+                            domStyle.set(this.toolbar.domNode, {
+                                display: "none"
+                            });
+                        }
                     }
                     return this.toolbar;
                 },
@@ -401,7 +411,7 @@ define("cool/_widget",
                 containerWindow: null,
 
                 decorateWindow: function() {
-                    if(!this.onlyContent && !this.getDefinitionAttribute('only_content')) {
+                    if(!this.onlyContent && !this.getDefinitionAttribute('onlyContent')) {
                         var widget = this;
                         var content = dojo.doc.createElement('div');
                         var w = new coolWindow({
@@ -489,8 +499,6 @@ define("cool/_widget",
 
                     var d = new Deferred();
 
-                    this.clear();
-
                     if(!this.alreadyBuilt) {
                         //in the constructor we set up the various container nodes in the correct order
                         this.actionsNode = dojo.doc.createElement('div');      
@@ -516,6 +524,8 @@ define("cool/_widget",
                         this.updateDebug();
                     }
                     //refresh the debug pane content
+
+                    this.clear();
 
                     this.renderActions();
 

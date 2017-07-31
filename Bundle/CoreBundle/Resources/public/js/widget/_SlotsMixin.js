@@ -28,6 +28,7 @@ define("cool/widget/_SlotsMixin",
                 },
 
                 renderSlots: function() {
+
                     var self = this;
                     var definition = this.definition;
 

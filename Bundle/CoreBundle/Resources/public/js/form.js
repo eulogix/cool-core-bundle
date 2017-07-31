@@ -61,6 +61,8 @@ define("cool/form",
                         this.contentNode.innerHTML = '';
                     }
 
+                    t.clearSlots();
+
                     for(var slotName in this.skippedSlotsTargets) {
                         t.clearSlot(slotName);
                     }
