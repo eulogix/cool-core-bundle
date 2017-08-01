@@ -119,7 +119,7 @@ services:
 
     pentaho.connector:
         class: Eulogix\Lib\Pentaho\PDIConnector
-        arguments: ["%pdi_default_repository%", "%pdi_default_user%", "%pdi_default_password%"]
+        arguments: ["%pdi_default_repository%", "%pdi_default_user%", "%pdi_default_password%", "%pdi_command_user%"]
 
     java.bridge:
         class: Eulogix\Lib\Java\Bridge

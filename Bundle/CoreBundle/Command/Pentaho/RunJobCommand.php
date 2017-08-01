@@ -44,14 +44,6 @@ class RunJobCommand extends CoolCommand
     }
 
     /**
-     * if set, this command when exported in a scheduler such as Rundeck, will be executed as the specified user
-     * @return string
-     */
-    public function getSchedulerCommandUser() {
-        return $this->getContainer()->getParameter('pdi_command_user');
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -65,18 +57,18 @@ class RunJobCommand extends CoolCommand
         $password = $input->getOption('password');
         $jobParamsJSON = $input->getOption('job_parameters_json');
 
-        $c = Cool::getInstance()->getFactory()->getPDIConnector();
+        $pdi = Cool::getInstance()->getFactory()->getPDIConnector();
 
         if($user)
-            $c->setUser($user);
+            $pdi->setUser($user);
         if($password)
-            $c->setPassword($password);
+            $pdi->setPassword($password);
         if($repositoryName)
-            $c->setRepositoryName($repositoryName);
+            $pdi->setRepositoryName($repositoryName);
 
         $jobParams = $jobParamsJSON ? json_decode($jobParamsJSON, true) : [];
 
-        $commandOutput = $c->runJob($job, $jobPath ?? PDIConnector::DEFAULT_JOB_PATH, $jobParams);
+        $commandOutput = $pdi->runJob($job, $jobPath ?? PDIConnector::DEFAULT_JOB_PATH, $jobParams);
 
         $output->write($commandOutput);
     }
