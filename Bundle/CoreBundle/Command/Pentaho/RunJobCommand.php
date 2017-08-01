@@ -44,6 +44,14 @@ class RunJobCommand extends CoolCommand
     }
 
     /**
+     * if set, this command when exported in a scheduler such as Rundeck, will be executed as the specified user
+     * @return string
+     */
+    public function getSchedulerCommandUser() {
+        return $this->getContainer()->getParameter('pdi_command_user');
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
