@@ -11,7 +11,9 @@
 
 namespace Eulogix\Cool\Lib\Activiti;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountQuery;
+use Eulogix\Cool\Lib\Widget\WidgetInterface;
 use Eulogix\Lib\Activiti\ActivitiClient;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Lib\Activiti\om\ProcessInstance;
@@ -149,13 +151,46 @@ class WorkFlowEngine {
     }
 
     /**
-     * utility functions that wraps the logic needed to fetch the logged user and its groups
      * @param Task $task
+     * @param Account $user if left blank, logged user will be used
      * @return bool
      */
-    public function canTaskBeClaimedByLoggedUser(Task $task) {
-        $loggedUser =  Cool::getInstance()->getLoggedUser();
-        $loggedUserGroupIds = $loggedUser->getAccount()->getGroupIds();
-        return $task->canBeClaimedBy($loggedUser->getUsername(), $loggedUserGroupIds);
+    public function canTaskBeClaimedByUser(Task $task, Account $user = null) {
+        $wkUser = $user ?? Cool::getInstance()->getLoggedUser()->getAccount();
+        $userGroupIds = $wkUser->getGroupIds();
+        return $task->canBeClaimedBy($wkUser->getLoginName(), $userGroupIds);
+    }
+
+    /**
+     * returns the first pending (assigned to or claimable task in a process instance for a given account)
+     *
+     * @param ProcessInstance $processInstance
+     * @param Account $user if left blank, logged user will be used
+     * @return Task
+     */
+    public function getFirstPendingTaskForUser($processInstance, Account $user = null) {
+        $wkUser = $user ?? Cool::getInstance()->getLoggedUser()->getAccount();
+        if(!@$processInstance->getEnded()) {
+            $currentPendingTasks = $processInstance->getPendingTasks();
+            foreach($currentPendingTasks as $task)
+                if($task->isAssignedTo($wkUser->getLoginName()) || $this->canTaskBeClaimedByUser($task, $wkUser))
+                    return $task;
+        }
+        return null;
+    }
+
+    /**
+     * this method instructs a widget to pop up a user task, if it is assigned to or claimable by the current user
+     *
+     * @param ProcessInstance $processInstance
+     * @param WidgetInterface $widget
+     * @return bool
+     */
+    public function popupTaskFormForCurrentUser($processInstance, WidgetInterface $widget) {
+        if($task = $this->getFirstPendingTaskForUser($processInstance)) {
+            $widget->addCommandJs("var d = COOL.getDialogManager().openWidgetDialog('EulogixCoolCore/Workflows/TaskEditorForm', 'Complete Task', {_recordid: {$task->getId()}});");
+            return true;
+        }
+        return false;
     }
 } 

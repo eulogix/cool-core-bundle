@@ -15,6 +15,7 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\Form\Form;
 use Eulogix\Cool\Lib\Widget\Message;
+use Eulogix\Lib\Activiti\om\ProcessInstance;
 use Eulogix\Lib\Activiti\om\Task;
 
 /**
@@ -35,7 +36,6 @@ abstract class BaseTaskEditorForm extends Form {
 
             $activiti = Cool::getInstance()->getFactory()->getActiviti();
             $wfEngine = Cool::getInstance()->getFactory()->getWorkflowEngine();
-            $loggedUser =  Cool::getInstance()->getLoggedUser();
 
             try {
                 $taskDef = $activiti->getTask($taskId);
@@ -43,18 +43,9 @@ abstract class BaseTaskEditorForm extends Form {
                 $ret = $activiti->submitTaskFormData($taskId, $activitiGroupValues);
 
                 try {
-                    $processInstance = $activiti->getProcessInstance($taskDef['processInstanceId']);
-                    if(!$processInstance['ended']) {
-                        $currentPendingTasks = $activiti->getListOfTasks([
-                                'taskDefinitionKey' => $processInstance['activityId'],
-                                'processInstanceId' => $processInstance['id']
-                            ]);
-                        if(@$currentPendingTasks->getSize()==1) {
-                            $task = new Task( $currentPendingTasks->getRow(0), $activiti);
-                            if($task->isAssignedTo($loggedUser->getUsername()) || $wfEngine->canTaskBeClaimedByLoggedUser($task)) {
-                                $this->addEvent("taskFlow", ['task_id' => $task->getId()] );
-                            }
-                        }
+                    $processInstance = new ProcessInstance($activiti->getProcessInstance($taskDef['processInstanceId']), $wfEngine->getClient());
+                    if($pendingTask = $wfEngine->getFirstPendingTaskForUser($processInstance)) {
+                        $this->addEvent("taskFlow", ['task_id' => $pendingTask->getId()] );
                     }
                 } catch(\Exception $e) {
                     $this->addMessage(Message::TYPE_INFO, "WORKFLOW COMPLETED");
@@ -70,7 +61,6 @@ abstract class BaseTaskEditorForm extends Form {
             $this->addMessage(Message::TYPE_ERROR, "NOT VALIDATED");
         }
     }
-
 
     /**
      * @return array
