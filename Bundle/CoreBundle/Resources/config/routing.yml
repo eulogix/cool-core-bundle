@@ -38,6 +38,11 @@ api_notifications:
     prefix:   /cool/api/notifications
     type:     annotation
 
+api_pentaho:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/PentahoController.php"
+    prefix:   /cool/api/pentaho
+    type:     annotation
+
 reminders:
     resource: "@EulogixCoolCoreBundle/Controller/Reminders/RemindersController.php"
     prefix:   /cool/reminders

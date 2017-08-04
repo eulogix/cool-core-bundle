@@ -26,13 +26,15 @@ use Symfony\Component\Console\Output\Output;
 
 class RunJobCommand extends CoolCommand
 {
+    const NAME = 'cool:pentaho:runjob';
+
     /**
      * {@inheritDoc}
      */
     protected function configure()
     {
         $this
-            ->setName('cool:pentaho:runjob')
+            ->setName(self::NAME)
             ->addArgument('job', InputArgument::REQUIRED, 'The name of the job to run')
             ->addArgument('job_path', InputArgument::OPTIONAL, '(optional) The path of the job to run')
             ->addArgument('repository_name', InputArgument::OPTIONAL, '(optional) The name of the kettle repository to use')

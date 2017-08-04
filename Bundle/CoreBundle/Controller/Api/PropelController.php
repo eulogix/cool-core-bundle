@@ -13,9 +13,9 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Controller\Api;
 
 
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\Symfony\Controller\BaseRestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class PropelController extends FOSRestController {
+class PropelController extends BaseRestController {
 
     /**
      * @Route("{schemaName}/{actualSchema}/{table}/{pk}")
@@ -111,30 +111,5 @@ class PropelController extends FOSRestController {
             return $this->returnError(404, $e->getMessage());
         }
         return false;
-    }
-
-    /**
-     * @param int $code
-     * @param string $message
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function returnError($code, $message="")
-    {
-        if(!$message) {
-            switch($code) {
-                case 500: $message = "Internal error"; break;
-                case 404: $message = "Resource not found"; break;
-            }
-        }
-
-        $view = $this->view(
-            [
-                'statusCode' => $code,
-                'errorMessage' => $message
-            ],
-            $code
-        );
-
-        return $this->handleView($view);
     }
 } 

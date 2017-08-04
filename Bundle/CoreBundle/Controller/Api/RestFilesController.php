@@ -14,9 +14,9 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Controller\Api;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
 use Eulogix\Cool\Lib\File\SimpleFileProxy;
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\Symfony\Controller\BaseRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,7 +26,7 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class RestFilesController extends FOSRestController
+class RestFilesController extends BaseRestController
 {
     /**
      * @Route("upload")
@@ -448,30 +448,5 @@ class RestFilesController extends FOSRestController
             return $this->returnError(404, $e->getMessage());
         }
         return false;
-    }
-
-    /**
-     * @param int $code
-     * @param string $message
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function returnError($code, $message="")
-    {
-        if(!$message) {
-            switch($code) {
-                case 500: $message = "Internal error"; break;
-                case 404: $message = "Resource not found"; break;
-            }
-        }
-
-        $view = $this->view(
-            [
-                'statusCode' => $code,
-                'errorMessage' => $message
-            ],
-            $code
-        );
-
-        return $this->handleView($view);
     }
 }
