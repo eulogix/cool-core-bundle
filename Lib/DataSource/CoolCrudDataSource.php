@@ -523,12 +523,33 @@ class CoolCrudDataSource extends CoolDataSource {
      * @return array
      */
     public function getFullSelectSql($parameters = array(), $query=null) {
+        return $this->buildFullSelectSql($parameters, $query);
+    }
+
+    /**
+     * returns a SELECT which only contains one fake field, used to COUNT more efficiently
+     *
+     * @param mixed $parameters
+     * @param null $query
+     * @return array
+     */
+    public function getStrippedCountSelectSql($parameters = array(), $query=null) {
+        return $this->buildFullSelectSql($parameters, $query, 'SELECT 0 as fake ');
+    }
+
+    /**
+     * @param mixed $parameters
+     * @param array $query
+     * @param string $selectPortion
+     * @return array
+     */
+    private function buildFullSelectSql($parameters = array(), $query = null, $selectPortion = null) {
         $where = $this->getSqlWhere($parameters, $query);
 
-        $select = $this->getSqlSelect($parameters).' '.
+        $select = ($selectPortion ?? $this->getSqlSelect($parameters)).' '.
             $this->getSqlFrom($parameters).' '.
-            $where['statement'].
-            " ".$this->getSqlGroupBy($parameters);
+            $where['statement'].' '.
+            $this->getSqlGroupBy($parameters);
 
         if($this->isUnioned()) {
             $sql = "SELECT * FROM (\n";
@@ -638,7 +659,7 @@ class CoolCrudDataSource extends CoolDataSource {
 
     public function getTotalRows($parameters = array(), $query=null) {
         if($db = $this->getCoolSchema()) {
-            $select = $this->getFullSelectSql($parameters, $query);
+            $select = $this->getStrippedCountSelectSql($parameters, $query);
             return $db->fetch("SELECT COUNT(*) FROM ({$select['statement']}) as _tmp_", $select['parameters']);
         }
         return 0;

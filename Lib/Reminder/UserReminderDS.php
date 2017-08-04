@@ -67,11 +67,45 @@ class UserReminderDS extends BaseReminderDS
      */
     public function getFullSelectSql($parameters = array(), $query = null)
     {
+        return $this->buildFullSelectSql($parameters, $query);
+    }
+
+    /**
+     * returns a SELECT which only contains one fake field, used to COUNT more efficiently
+     *
+     * @param mixed $parameters
+     * @param null $query
+     * @return array
+     */
+    public function getStrippedCountSelectSql($parameters = array(), $query=null)
+    {
+        return $this->buildFullSelectSql($parameters, $query, true);
+    }
+
+    /**
+     * @param array $parameters
+     * @param string $query
+     * @param bool $stripSelect
+     * @return array
+     */
+    private function buildFullSelectSql($parameters = array(), $query = null, $stripSelect = false)
+    {
         $user = Cool::getInstance()->getLoggedUser();
 
         $where = $this->getSqlWhere($parameters, $query);
 
         $select = str_replace(self::USER_ID_PLACEHOLDER, $user->getId(), $this->userReminder->getSqlQuery()); ;
+
+        /**
+         * replaces the SELECT portion of the query with a simple fake field for counting. If _date is found, it is
+         * kept as this drives the dated matrix
+         */
+        if($stripSelect && preg_match('/select[ \t\r\n]*(.+?)(?!.*?[ \t\r\n]from )/sim', $select, $matches)) {
+            $selectFieldsPortion = $matches[1];
+            if(preg_match('/(,|)([^,]+? as _date)[, \r\n]/sim', $selectFieldsPortion, $dateExpressionMatches))
+                $select = str_replace($selectFieldsPortion, $dateExpressionMatches[2].' ', $select);
+            else $select = str_replace($selectFieldsPortion, ' 0 as fake ', $select);
+        }
 
         $mtPlaceHolder = self::MULTITENANT_SCHEMA_PLACEHOLDER;
         $schemaIdentifier = self::SCHEMA_IDENTIFIER;
