@@ -36,6 +36,28 @@ CREATE TABLE IF NOT EXISTS core_files (
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
+/*
+DO $$ BEGIN CREATE INDEX files_idx_1 ON core_files (source_table_id); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_2 ON core_files (source_table); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_3 ON core_files (category); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_4 ON core_files (file_name); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_5 ON core_files (file_size); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_6 ON core_files (upload_date); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_7 ON core_files (last_modification_date); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_8 ON core_files (uploaded_by_user); EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN CREATE INDEX files_idx_9 ON core_files (checksum_sha1); EXCEPTION WHEN OTHERS THEN END; $$;
+*/
+
+CREATE INDEX files_idx_1 ON core_files (source_table_id);
+CREATE INDEX files_idx_2 ON core_files (source_table);
+CREATE INDEX files_idx_3 ON core_files (category);
+CREATE INDEX files_idx_4 ON core_files (file_name);
+CREATE INDEX files_idx_5 ON core_files (file_size);
+CREATE INDEX files_idx_6 ON core_files (upload_date);
+CREATE INDEX files_idx_7 ON core_files (last_modification_date);
+CREATE INDEX files_idx_8 ON core_files (uploaded_by_user);
+CREATE INDEX files_idx_9 ON core_files (checksum_sha1);
+
         
     CREATE FUNCTION account_files_delete() RETURNS trigger
         LANGUAGE plpgsql

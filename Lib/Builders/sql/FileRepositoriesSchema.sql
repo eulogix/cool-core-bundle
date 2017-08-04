@@ -33,6 +33,16 @@ CREATE TABLE IF NOT EXISTS [[ globalSchemaName ]]_files (
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
+CREATE INDEX files_idx_1 ON [[ globalSchemaName ]]_files (source_table_id);
+CREATE INDEX files_idx_2 ON [[ globalSchemaName ]]_files (source_table);
+CREATE INDEX files_idx_3 ON [[ globalSchemaName ]]_files (category);
+CREATE INDEX files_idx_4 ON [[ globalSchemaName ]]_files (file_name);
+CREATE INDEX files_idx_5 ON [[ globalSchemaName ]]_files (file_size);
+CREATE INDEX files_idx_6 ON [[ globalSchemaName ]]_files (upload_date);
+CREATE INDEX files_idx_7 ON [[ globalSchemaName ]]_files (last_modification_date);
+CREATE INDEX files_idx_8 ON [[ globalSchemaName ]]_files (uploaded_by_user);
+CREATE INDEX files_idx_9 ON [[ globalSchemaName ]]_files (checksum_sha1);
+
 {{% for tableName,tableMap in tableMaps %}}
     {{% set fileCategories = tableMap.getFileCategories() %}}
     {{% if fileCategories|length > 0 %}}
