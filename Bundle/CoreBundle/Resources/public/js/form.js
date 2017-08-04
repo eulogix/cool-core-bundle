@@ -61,8 +61,7 @@ define("cool/form",
                         this.contentNode.innerHTML = '';
                     }
 
-                    t.clearSlots();
-
+                    //we don't clear all slots, only those that are rendered by the form in a non standard way
                     for(var slotName in this.skippedSlotsTargets) {
                         t.clearSlot(slotName);
                     }
