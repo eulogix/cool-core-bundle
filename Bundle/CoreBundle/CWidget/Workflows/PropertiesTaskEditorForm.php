@@ -28,8 +28,6 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
      */
     private $embeddedFormsLayout;
 
-    protected $id = "COOL_ACTIVITI_TASK_FORM";
-
     public function build() {
         $this->setReadOnly(false);
 
@@ -38,11 +36,11 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
         $this->buildActivitiForm();
         $task = $this->getTaskObject();
 
-        $this->id = "USER_TASK_FORM_".preg_replace('/:[0-9]+:[0-9]+$/sim', '', $task->getProcessDefinitionId().'/'.$task->getTaskDefinitionKey());
+        $this->setId(implode('/', ['WORKFLOW_FORM', $task->getProcessDefinitionKey(), $task->getTaskDefinitionKey()]));
 
         if(!$task->getAssignee()) {
             $this->setReadOnly(true);
-            if($wfEngine->canTaskBeClaimedByLoggedUser($task))
+            if($wfEngine->canTaskBeClaimedByUser($task))
                 $this->addCallActionAction('claim')->setReadOnly(false);
         } else if($task->getAssignee() != $user->getUsername()) {
             $this->setReadOnly(true);
@@ -68,13 +66,6 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
         } catch(\Exception $e) {
             $this->addMessageError($e->getMessage());
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getId() {
-        return $this->id;
     }
 
     /**
