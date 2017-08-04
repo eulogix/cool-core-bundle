@@ -27,29 +27,33 @@ class RuleCode extends BaseRuleCode
      */
     public function evaluate(array $context=[]) {
 
-        $this->resetLastExecutionReport();
+        try {
+            $this->resetLastExecutionReport();
 
-        $ret = null;
+            $ret = null;
 
-        $stopwatch = new Stopwatch();
-        $stopwatch->start('eval');
+            $stopwatch = new Stopwatch();
+            $stopwatch->start('eval');
 
-        if($rawCode = $this->getRawCode())
-            $ret = evaluate_in_lambda($rawCode, $context);
-        if($sn = $this->getCodeSnippet()) {
-            $ret = $sn->evaluate( array_merge($this->getSubstitutedSnippetVariables($context), $context) );
+            if($rawCode = $this->getRawCode())
+                $ret = evaluate_in_lambda($rawCode, $context);
+            if($sn = $this->getCodeSnippet()) {
+                $ret = $sn->evaluate( array_merge($this->getSubstitutedSnippetVariables($context), $context) );
+            }
+
+            $event = $stopwatch->stop('eval');
+
+            $this->lastExecutionReport[self::REPORT_RETURN_VALUE] = $ret;
+            $this->lastExecutionReport[self::REPORT_EXECUTION_TIME] = $event->getDuration();
+            $this->lastExecutionReport[self::REPORT_MEMORY_USAGE] = $event->getMemory();
+
+            //TODO fill properly
+            $this->lastExecutionReport['errors'] = [];
+
+            return $ret;
+        } catch(\Throwable $e) {
+            throw new \Exception("Error in Rule code ".$this->getRuleCodeId().': '.$e->getMessage(), 0, $e);
         }
-
-        $event = $stopwatch->stop('eval');
-
-        $this->lastExecutionReport[self::REPORT_RETURN_VALUE] = $ret;
-        $this->lastExecutionReport[self::REPORT_EXECUTION_TIME] = $event->getDuration();
-        $this->lastExecutionReport[self::REPORT_MEMORY_USAGE] = $event->getMemory();
-
-        //TODO fill properly
-        $this->lastExecutionReport['errors'] = [];
-
-        return $ret;
     }
 
     /**

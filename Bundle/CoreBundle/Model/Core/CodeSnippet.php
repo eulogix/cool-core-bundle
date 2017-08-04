@@ -26,15 +26,23 @@ class CodeSnippet extends BaseCodeSnippet
      */
     public function evaluate(array $context=[]) {
 
-        $wkContext = $context;
-        $vars = $this->getCodeSnippetVariables();
+        try {
+            $wkContext = $context;
+            $vars = $this->getCodeSnippetVariables();
 
-        //default to NULL for missing vars
-        foreach($vars as $var)
-            if(!in_array($var->getName(), array_keys($context)))
-                $wkContext[ $var->getName() ] = null;
+            //default to NULL for missing vars
+            foreach ($vars as $var) {
+                if (!in_array($var->getName(), array_keys($context))) {
+                    $wkContext[ $var->getName() ] = null;
+                }
+            }
 
-        return evaluate_in_lambda($this->getSnippet(), $wkContext, $this->getType() == self::TYPE_EXPRESSION);
+            return evaluate_in_lambda($this->getSnippet(), $wkContext, $this->getType() == self::TYPE_EXPRESSION);
+        } catch(\Error $e) {
+            throw new \Exception('Snippet '.$this->getHumanDescription().' produced an ERROR: '.$e->getMessage());
+        } catch(\Throwable $e) {
+            throw new \Exception('Snippet '.$this->getHumanDescription().' threw an Exception : '.$e->getMessage(), 0, $e);
+        }
     }
 
 }
