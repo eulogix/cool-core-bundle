@@ -26,6 +26,7 @@ interface ListerInterface extends WidgetInterface {
     const ATTR_ROW_EDIT_FUNCTION = "row_edit_function";
     const ATTR_INITIAL_SORT = "initial_sort";
     const ATTR_DELETE_MULTIPLE = "delete_multiple";
+    const ATTR_FORBID_DELETE = "forbid_delete";
     const ATTR_EXPORT_XLSX = "export_xlsx";
     const ATTR_DELETED_ROWS = "deletedRows";
     const ATTR_SHOW_EDITOR_IN_PLACE = "show_editor_in_place";

@@ -218,7 +218,7 @@ define("cool/_listerModelMixin",
                                 var meta = rowData._meta || {};
 
                                 var buttons = [];
-                                if((meta.canDeleteRecord !== false) && !lister.isReadOnly())
+                                if((meta.canDeleteRecord !== false) && !lister.isReadOnly() && lister.canDelete())
                                     buttons.push('<A HREF="javascript:dijit.byId(\''+ lister.id +'\').deleteRow(\''+rowID+'\');"><img src=/bower_components/fugue/icons/minus-button.png></A>');
                                 if(meta.canEditRecord !== false)
                                     buttons.push('<A HREF="javascript:dijit.byId(\''+ lister.id +'\').openRowEditor(\''+rowID+'\');"><img src=/bower_components/fugue/icons/layer--pencil.png></A>');
@@ -334,7 +334,11 @@ define("cool/_listerModelMixin",
                 },
 
                 canDeleteMultiple: function() {
-                    return this.getDefinitionAttribute('delete_multiple') && !this.isReadOnly();
+                    return this.canDelete() && this.getDefinitionAttribute('delete_multiple') && !this.isReadOnly();
+                },
+
+                canDelete: function() {
+                    return !this.getDefinitionAttribute('forbid_delete') && !this.isReadOnly();
                 },
 
                 canMoveElementsInTree: function() {
