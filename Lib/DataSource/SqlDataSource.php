@@ -258,7 +258,7 @@ abstract class SqlDataSource extends BaseDataSource {
     protected function _f_contain($fieldName, $arg) {
         $sqlExpression = $this->_sqlExpression($fieldName);
         switch($this->getField($fieldName)->getMacroType()) {
-            case DSField::MACRO_TYPE_STRING  : return "($sqlExpression ILIKE '%$arg%')"; break;
+            case DSField::MACRO_TYPE_STRING  : return "(unaccent($sqlExpression) ILIKE unaccent('%$arg%'))"; break;
             case DSField::MACRO_TYPE_NUMERIC : return "($sqlExpression::text ILIKE '%$arg%')"; break;
             default: return "(FALSE)"; break;
         }
@@ -267,7 +267,7 @@ abstract class SqlDataSource extends BaseDataSource {
     protected function _f_startWith($fieldName, $arg) {
         $sqlExpression = $this->_sqlExpression($fieldName);
         switch($this->getField($fieldName)->getMacroType()) {
-            case DSField::MACRO_TYPE_STRING  : return "($sqlExpression ILIKE '$arg%')"; break;
+            case DSField::MACRO_TYPE_STRING  : return "(unaccent($sqlExpression) ILIKE unaccent('$arg%'))"; break;
             case DSField::MACRO_TYPE_NUMERIC : return "($sqlExpression::text ILIKE '$arg%')"; break;
             default: return "(FALSE)"; break;
         }
@@ -276,7 +276,7 @@ abstract class SqlDataSource extends BaseDataSource {
     protected function _f_endWith($fieldName, $arg) {
         $sqlExpression = $this->_sqlExpression($fieldName);
         switch($this->getField($fieldName)->getMacroType()) {
-            case DSField::MACRO_TYPE_STRING  : return "($sqlExpression ILIKE '%$arg')"; break;
+            case DSField::MACRO_TYPE_STRING  : return "(unaccent($sqlExpression) ILIKE unaccent('%$arg'))"; break;
             case DSField::MACRO_TYPE_NUMERIC : return "($sqlExpression::text ILIKE '%$arg')"; break;
             default: return "(FALSE)"; break;
         }

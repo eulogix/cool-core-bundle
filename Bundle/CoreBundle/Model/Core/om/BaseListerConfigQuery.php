@@ -23,12 +23,14 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method ListerConfigQuery orderByVariation($order = Criteria::ASC) Order by the variation column
  * @method ListerConfigQuery orderByFilterShowFlag($order = Criteria::ASC) Order by the filter_show_flag column
  * @method ListerConfigQuery orderByFilterServerId($order = Criteria::ASC) Order by the filter_server_id column
+ * @method ListerConfigQuery orderByMaxHeight($order = Criteria::ASC) Order by the max_height column
  *
  * @method ListerConfigQuery groupByListerConfigId() Group by the lister_config_id column
  * @method ListerConfigQuery groupByName() Group by the name column
  * @method ListerConfigQuery groupByVariation() Group by the variation column
  * @method ListerConfigQuery groupByFilterShowFlag() Group by the filter_show_flag column
  * @method ListerConfigQuery groupByFilterServerId() Group by the filter_server_id column
+ * @method ListerConfigQuery groupByMaxHeight() Group by the max_height column
  *
  * @method ListerConfigQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ListerConfigQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -45,12 +47,14 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method ListerConfig findOneByVariation(string $variation) Return the first ListerConfig filtered by the variation column
  * @method ListerConfig findOneByFilterShowFlag(boolean $filter_show_flag) Return the first ListerConfig filtered by the filter_show_flag column
  * @method ListerConfig findOneByFilterServerId(string $filter_server_id) Return the first ListerConfig filtered by the filter_server_id column
+ * @method ListerConfig findOneByMaxHeight(string $max_height) Return the first ListerConfig filtered by the max_height column
  *
  * @method array findByListerConfigId(int $lister_config_id) Return ListerConfig objects filtered by the lister_config_id column
  * @method array findByName(string $name) Return ListerConfig objects filtered by the name column
  * @method array findByVariation(string $variation) Return ListerConfig objects filtered by the variation column
  * @method array findByFilterShowFlag(boolean $filter_show_flag) Return ListerConfig objects filtered by the filter_show_flag column
  * @method array findByFilterServerId(string $filter_server_id) Return ListerConfig objects filtered by the filter_server_id column
+ * @method array findByMaxHeight(string $max_height) Return ListerConfig objects filtered by the max_height column
  */
 abstract class BaseListerConfigQuery extends ModelCriteria
 {
@@ -156,7 +160,7 @@ abstract class BaseListerConfigQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_id, name, variation, filter_show_flag, filter_server_id FROM core.lister_config WHERE lister_config_id = :p0';
+        $sql = 'SELECT lister_config_id, name, variation, filter_show_flag, filter_server_id, max_height FROM core.lister_config WHERE lister_config_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -422,6 +426,35 @@ abstract class BaseListerConfigQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigPeer::FILTER_SERVER_ID, $filterServerId, $comparison);
+    }
+
+    /**
+     * Filter the query on the max_height column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMaxHeight('fooValue');   // WHERE max_height = 'fooValue'
+     * $query->filterByMaxHeight('%fooValue%'); // WHERE max_height LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $maxHeight The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigQuery The current query, for fluid interface
+     */
+    public function filterByMaxHeight($maxHeight = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($maxHeight)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $maxHeight)) {
+                $maxHeight = str_replace('*', '%', $maxHeight);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigPeer::MAX_HEIGHT, $maxHeight, $comparison);
     }
 
     /**

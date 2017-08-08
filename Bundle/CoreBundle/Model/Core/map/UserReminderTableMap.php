@@ -52,6 +52,7 @@ class UserReminderTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         $this->addColumn('parent_tables', 'ParentTables', 'LONGVARCHAR', false, null, null);
         $this->addColumn('context_schema', 'ContextSchema', 'LONGVARCHAR', true, null, 'core');
         $this->addColumn('sql_query', 'SqlQuery', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('count_sql_query', 'CountSqlQuery', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

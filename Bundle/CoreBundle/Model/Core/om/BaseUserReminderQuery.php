@@ -25,6 +25,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
  * @method UserReminderQuery orderByParentTables($order = Criteria::ASC) Order by the parent_tables column
  * @method UserReminderQuery orderByContextSchema($order = Criteria::ASC) Order by the context_schema column
  * @method UserReminderQuery orderBySqlQuery($order = Criteria::ASC) Order by the sql_query column
+ * @method UserReminderQuery orderByCountSqlQuery($order = Criteria::ASC) Order by the count_sql_query column
  *
  * @method UserReminderQuery groupByUserReminderId() Group by the user_reminder_id column
  * @method UserReminderQuery groupByName() Group by the name column
@@ -36,6 +37,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
  * @method UserReminderQuery groupByParentTables() Group by the parent_tables column
  * @method UserReminderQuery groupByContextSchema() Group by the context_schema column
  * @method UserReminderQuery groupBySqlQuery() Group by the sql_query column
+ * @method UserReminderQuery groupByCountSqlQuery() Group by the count_sql_query column
  *
  * @method UserReminderQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserReminderQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,6 +55,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
  * @method UserReminder findOneByParentTables(string $parent_tables) Return the first UserReminder filtered by the parent_tables column
  * @method UserReminder findOneByContextSchema(string $context_schema) Return the first UserReminder filtered by the context_schema column
  * @method UserReminder findOneBySqlQuery(string $sql_query) Return the first UserReminder filtered by the sql_query column
+ * @method UserReminder findOneByCountSqlQuery(string $count_sql_query) Return the first UserReminder filtered by the count_sql_query column
  *
  * @method array findByUserReminderId(int $user_reminder_id) Return UserReminder objects filtered by the user_reminder_id column
  * @method array findByName(string $name) Return UserReminder objects filtered by the name column
@@ -64,6 +67,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
  * @method array findByParentTables(string $parent_tables) Return UserReminder objects filtered by the parent_tables column
  * @method array findByContextSchema(string $context_schema) Return UserReminder objects filtered by the context_schema column
  * @method array findBySqlQuery(string $sql_query) Return UserReminder objects filtered by the sql_query column
+ * @method array findByCountSqlQuery(string $count_sql_query) Return UserReminder objects filtered by the count_sql_query column
  */
 abstract class BaseUserReminderQuery extends ModelCriteria
 {
@@ -169,7 +173,7 @@ abstract class BaseUserReminderQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT user_reminder_id, name, type, category, sort_order, lister, lister_translation_domain, parent_tables, context_schema, sql_query FROM core.user_reminder WHERE user_reminder_id = :p0';
+        $sql = 'SELECT user_reminder_id, name, type, category, sort_order, lister, lister_translation_domain, parent_tables, context_schema, sql_query, count_sql_query FROM core.user_reminder WHERE user_reminder_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -595,6 +599,35 @@ abstract class BaseUserReminderQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserReminderPeer::SQL_QUERY, $sqlQuery, $comparison);
+    }
+
+    /**
+     * Filter the query on the count_sql_query column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCountSqlQuery('fooValue');   // WHERE count_sql_query = 'fooValue'
+     * $query->filterByCountSqlQuery('%fooValue%'); // WHERE count_sql_query LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $countSqlQuery The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return UserReminderQuery The current query, for fluid interface
+     */
+    public function filterByCountSqlQuery($countSqlQuery = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($countSqlQuery)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $countSqlQuery)) {
+                $countSqlQuery = str_replace('*', '%', $countSqlQuery);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserReminderPeer::COUNT_SQL_QUERY, $countSqlQuery, $comparison);
     }
 
     /**

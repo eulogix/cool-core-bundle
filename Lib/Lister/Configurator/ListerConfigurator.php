@@ -41,7 +41,10 @@ class ListerConfigurator extends WidgetConfigurator {
             
             /** @var ListerInterface $widget */
             $widget = $this->widget;
-            
+
+            if($maxHeight = $config->getMaxHeight())
+                $widget->getAttributes()->set(ListerInterface::ATTR_MAX_HEIGHT, $maxHeight);
+
             if($config->getFilterShowFlag()) {
                 $serverId = $config->getFilterServerId() ? $config->getFilterServerId() : $widget->getDefaultFilterWidget();
                 $params = $widget->getParameters()->all();

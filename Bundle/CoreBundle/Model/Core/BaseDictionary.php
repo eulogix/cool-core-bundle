@@ -620,6 +620,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'max_height' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
       ),
     ),
     'core.lister_config_column' => 
@@ -1554,6 +1560,16 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'sql_query' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'count_sql_query' => 
         array (
           'attributes' => 
           array (

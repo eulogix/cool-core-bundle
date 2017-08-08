@@ -275,6 +275,8 @@
         <column name="filter_show_flag" type="BOOLEAN"/>
         <column name="filter_server_id" type="LONGVARCHAR" />
 
+        <column name="max_height" type="LONGVARCHAR"/>
+
         <unique>
             <unique-column name="name"/>
             <unique-column name="variation"/>
@@ -642,7 +644,13 @@
         <column name="parent_tables" type="LONGVARCHAR" description="use a comma separated list of tables here. Their fields will be visible in the lister"></column>
 
         <column name="context_schema" type="LONGVARCHAR" required="true" default="core"></column>
+
         <column name="sql_query" type="LONGVARCHAR" required="true">
+            <_control type="textarea"></_control>
+        </column>
+
+        <column name="count_sql_query" type="LONGVARCHAR"
+                description="alternate query for counting, used as is instead of the rewritten query for complex cases">
             <_control type="textarea"></_control>
         </column>
 

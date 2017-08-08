@@ -374,6 +374,9 @@
                     },
                     "filter_server_id": {
                         "attributes": []
+                    },
+                    "max_height": {
+                        "attributes": []
                     }
                 }
             },
@@ -922,6 +925,12 @@
                         "attributes": []
                     },
                     "sql_query": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "count_sql_query": {
                         "attributes": [],
                         "control": {
                             "type": "textarea"

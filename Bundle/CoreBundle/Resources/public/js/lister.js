@@ -260,6 +260,10 @@ define("cool/lister",
                     var parentPromise = this.inherited(arguments).promise;
                     var selfD = new Deferred();
 
+                    //styling
+                    if(maxHeight = this.getDefinitionAttribute('max_height'))
+                        this.maxHeight = maxHeight;
+
                     //delete multiple?
                     if(this.canDeleteMultiple()) {
                         var deleteMultipleButton = new Button({

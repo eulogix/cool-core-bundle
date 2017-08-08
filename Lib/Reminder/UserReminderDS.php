@@ -94,13 +94,18 @@ class UserReminderDS extends BaseReminderDS
 
         $where = $this->getSqlWhere($parameters, $query);
 
-        $select = str_replace(self::USER_ID_PLACEHOLDER, $user->getId(), $this->userReminder->getSqlQuery()); ;
+        $query = $stripSelect && $this->userReminder->getCountSqlQuery()
+            ? $this->userReminder->getCountSqlQuery() : $this->userReminder->getSqlQuery();
+
+        $select = str_replace(self::USER_ID_PLACEHOLDER, $user->getId(), $query); ;
 
         /**
          * replaces the SELECT portion of the query with a simple fake field for counting. If _date is found, it is
          * kept as this drives the dated matrix
          */
-        if($stripSelect && preg_match('/select[ \t\r\n]*(.+?)(?!.*?[ \t\r\n]from )/sim', $select, $matches)) {
+        if($stripSelect && !$this->userReminder->getCountSqlQuery() &&
+            preg_match('/select[ \t\r\n]*(.+?)(?!.*?[ \t\r\n]from )/sim', $select, $matches)) {
+
             $selectFieldsPortion = $matches[1];
             if(preg_match('/(,|)([^,]+? as _date)[, \r\n]/sim', $selectFieldsPortion, $dateExpressionMatches))
                 $select = str_replace($selectFieldsPortion, $dateExpressionMatches[2].' ', $select);

@@ -99,6 +99,12 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     protected $sql_query;
 
     /**
+     * The value for the count_sql_query field.
+     * @var        string
+     */
+    protected $count_sql_query;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -248,6 +254,17 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     {
 
         return $this->sql_query;
+    }
+
+    /**
+     * Get the [count_sql_query] column value.
+     * alternate query for counting, used as is instead of the rewritten query for complex cases
+     * @return string
+     */
+    public function getCountSqlQuery()
+    {
+
+        return $this->count_sql_query;
     }
 
     /**
@@ -461,6 +478,27 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     } // setSqlQuery()
 
     /**
+     * Set the value of [count_sql_query] column.
+     * alternate query for counting, used as is instead of the rewritten query for complex cases
+     * @param  string $v new value
+     * @return UserReminder The current object (for fluent API support)
+     */
+    public function setCountSqlQuery($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->count_sql_query !== $v) {
+            $this->count_sql_query = $v;
+            $this->modifiedColumns[] = UserReminderPeer::COUNT_SQL_QUERY;
+        }
+
+
+        return $this;
+    } // setCountSqlQuery()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -510,6 +548,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
             $this->parent_tables = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->context_schema = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->sql_query = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->count_sql_query = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -519,7 +558,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 10; // 10 = UserReminderPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 11; // 11 = UserReminderPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating UserReminder object", $e);
@@ -771,6 +810,9 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(UserReminderPeer::SQL_QUERY)) {
             $modifiedColumns[':p' . $index++]  = 'sql_query';
         }
+        if ($this->isColumnModified(UserReminderPeer::COUNT_SQL_QUERY)) {
+            $modifiedColumns[':p' . $index++]  = 'count_sql_query';
+        }
 
         $sql = sprintf(
             'INSERT INTO core.user_reminder (%s) VALUES (%s)',
@@ -811,6 +853,9 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
                         break;
                     case 'sql_query':
                         $stmt->bindValue($identifier, $this->sql_query, PDO::PARAM_STR);
+                        break;
+                    case 'count_sql_query':
+                        $stmt->bindValue($identifier, $this->count_sql_query, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -969,6 +1014,9 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
             case 9:
                 return $this->getSqlQuery();
                 break;
+            case 10:
+                return $this->getCountSqlQuery();
+                break;
             default:
                 return null;
                 break;
@@ -1007,6 +1055,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
             $keys[7] => $this->getParentTables(),
             $keys[8] => $this->getContextSchema(),
             $keys[9] => $this->getSqlQuery(),
+            $keys[10] => $this->getCountSqlQuery(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1076,6 +1125,9 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
             case 9:
                 $this->setSqlQuery($value);
                 break;
+            case 10:
+                $this->setCountSqlQuery($value);
+                break;
         } // switch()
     }
 
@@ -1110,6 +1162,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[7], $arr)) $this->setParentTables($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setContextSchema($arr[$keys[8]]);
         if (array_key_exists($keys[9], $arr)) $this->setSqlQuery($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setCountSqlQuery($arr[$keys[10]]);
     }
 
     /**
@@ -1131,6 +1184,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(UserReminderPeer::PARENT_TABLES)) $criteria->add(UserReminderPeer::PARENT_TABLES, $this->parent_tables);
         if ($this->isColumnModified(UserReminderPeer::CONTEXT_SCHEMA)) $criteria->add(UserReminderPeer::CONTEXT_SCHEMA, $this->context_schema);
         if ($this->isColumnModified(UserReminderPeer::SQL_QUERY)) $criteria->add(UserReminderPeer::SQL_QUERY, $this->sql_query);
+        if ($this->isColumnModified(UserReminderPeer::COUNT_SQL_QUERY)) $criteria->add(UserReminderPeer::COUNT_SQL_QUERY, $this->count_sql_query);
 
         return $criteria;
     }
@@ -1203,6 +1257,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         $copyObj->setParentTables($this->getParentTables());
         $copyObj->setContextSchema($this->getContextSchema());
         $copyObj->setSqlQuery($this->getSqlQuery());
+        $copyObj->setCountSqlQuery($this->getCountSqlQuery());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setUserReminderId(NULL); // this is a auto-increment column, so set to default value
@@ -1264,6 +1319,7 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         $this->parent_tables = null;
         $this->context_schema = null;
         $this->sql_query = null;
+        $this->count_sql_query = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

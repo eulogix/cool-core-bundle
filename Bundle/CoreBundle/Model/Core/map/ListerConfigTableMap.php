@@ -47,6 +47,7 @@ class ListerConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         $this->addColumn('variation', 'Variation', 'LONGVARCHAR', false, null, null);
         $this->addColumn('filter_show_flag', 'FilterShowFlag', 'BOOLEAN', false, null, null);
         $this->addColumn('filter_server_id', 'FilterServerId', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('max_height', 'MaxHeight', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

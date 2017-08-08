@@ -34,6 +34,8 @@ interface ListerInterface extends WidgetInterface {
     const ATTR_PROPAGATED_FIELDS = "propagated_fields";
     const ATTR_INITIAL_SELECTION = "initial_selection";
 
+    const ATTR_MAX_HEIGHT = "max_height";
+
     const ATTR_TIMELINE_COLUMNS = "timeline_columns";
     const ATTR_TIMELINE_GROUP_COLUMNS = "timeline_group_columns";
 
