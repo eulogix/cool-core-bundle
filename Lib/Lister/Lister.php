@@ -253,8 +253,6 @@ abstract class Lister extends Widget implements ListerInterface {
         $css = [];
         switch($dsField->getMacroType()) {
             case DSField::MACRO_TYPE_STRING  : {
-                if(!$dsField->getValueMap())
-                    $c->setMaxChars(Column::MAX_CHARACTERS);
                 break;
             }
             case DSField::MACRO_TYPE_DATETIME : {
