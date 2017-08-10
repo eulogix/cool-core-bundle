@@ -48,11 +48,11 @@ class CoolExtension extends \Twig_Extension
         ];
     }
 
-    public function widgetTranslate($context, $token, $parameters=[])
+    public function widgetTranslate($context, $token, $parameters=[], TranslatorInterface $alternateTranslator = null)
     {
-        if($token !== null && isset($context['coolTranslator']) && ($t = $context['coolTranslator']) instanceOf TranslatorInterface) {
-            /**@var $t TranslatorInterface */
-            return $t->trans($token, $parameters);
+        $translator = $alternateTranslator ?? @$context['coolTranslator'];
+        if($token !== null && $translator instanceOf TranslatorInterface) {
+            return $translator->trans($token, $parameters);
         }
         return $token;
     }

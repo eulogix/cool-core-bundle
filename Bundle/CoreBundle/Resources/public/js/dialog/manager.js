@@ -7,13 +7,14 @@ define([
         "dojo/dom",
         "dojo/dom-construct",
         "dojo/dom-style",
+        "dojo/dom-geometry",
         "dojo/window",
         "dojo/request",
 
         "dijit/Tooltip",
         "dojox/widget/DialogSimple"
 
-    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, win, request, Tooltip, Dialog) {
+    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, domGeometry, win, request, Tooltip, Dialog) {
 
     return {
 
@@ -36,7 +37,11 @@ define([
                 width:  w + "px",
                 height: h + "px"
             });
-            d.domNode.style['overflow'] = config.overflow || "auto";
+            d.containerNode.style['overflow'] = config.overflow || "auto";
+
+            domStyle.set(d.containerNode, {
+                'height' : (h-25)+'px'
+            });
 
             COOL.widgetFactory(serverId, parameters, function(widget) {
 
@@ -46,6 +51,8 @@ define([
                 widget.onlyContent = true;
                 d.addChild( widget );
 
+                setTimeout(function() { widget.resize(); }, 3000);
+
                 widget.dialog = d;
 
                 d.show();
@@ -53,6 +60,7 @@ define([
             }, function(widget) {
                 if(lang.isFunction(onWidgetBindSuccess))
                     onWidgetBindSuccess(widget);
+
             });
 
             if(typeof(onClose)=='function')
@@ -85,8 +93,10 @@ define([
             d._forcedWidth = w;
             d._forcedHeight = h;
 
-            domStyle.set(d.containerNode, 'position', "relative");
-            domStyle.set(d.containerNode, 'padding', "0px");
+            domStyle.set(d.containerNode, {
+                'position' : "relative",
+                'padding'  : 0
+            });
 
             return d;
         },

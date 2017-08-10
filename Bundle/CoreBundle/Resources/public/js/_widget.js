@@ -62,6 +62,7 @@ define("cool/_widget",
                 translator : false,
                 commonTranslator : false,
                 closeable: false,
+                transparent: false,
 
                 messages: {},
 
@@ -374,6 +375,7 @@ define("cool/_widget",
                         if(newRoot) {
                             this.domNode.appendChild( newRoot );
                         }
+                    this.resize();
                 },
 
                 decorateDebug: function() {
@@ -400,7 +402,7 @@ define("cool/_widget",
                         ftc.addChild(fcp);
                         ftc.addChild(cpDbg);           
                                                  
-                        widget.moveContent(fcp.domNode, ftc.domNode)
+                        widget.moveContent(fcp.domNode, ftc.domNode);
 
                         ftc.startup();   
                         ftc.resize();  //weird things happen if this is done synchronously
@@ -413,20 +415,25 @@ define("cool/_widget",
                 decorateWindow: function() {
                     if(!this.onlyContent && !this.getDefinitionAttribute('onlyContent')) {
                         var widget = this;
-                        var content = dojo.doc.createElement('div');
+
                         var w = new coolWindow({
                             title:this.getDefinitionAttribute('title'),
-                            content: content,
-                            closeable: this.closeable
+                            closeable: this.closeable,
+                            transparent: this.transparent,
+                            fillContent: this.fillContent
                         });
+
                         w.onClose = function() {
                             widget.emit('close');
                             w.destroyRecursive();
                         };
 
-                        this.moveContent(content, w.domNode);
-                        w.startup();
+                        w.placeAt(this.domNode.parentNode);
+                        w.on('resize', function() { widget.resize() });
 
+                        this.moveContent(w.containerNode, w.domNode);
+
+                        w.startup();
                         w.resize();
 
                         this.containerWindow = w;
@@ -733,10 +740,13 @@ define("cool/_widget",
 
                 resize: function() {
                     this.inherited(arguments);
+
                     if(this.fillContent) {
                         var actionsBox = domGeometry.getContentBox(this.actionsNode);
                         var notificationsBox = domGeometry.getContentBox(this.notificationsNode);
-                        var nodeBox = domGeometry.getContentBox(this.domNode.parentNode);
+                        var nodeBox = domGeometry.getContentBox(
+                            this.containerWindow ? this.containerWindow.containerNode : this.domNode.parentNode
+                        );
 
                         domStyle.set(this.contentNode, {
                             "height": (nodeBox.h - actionsBox.h - notificationsBox.h)+"px"

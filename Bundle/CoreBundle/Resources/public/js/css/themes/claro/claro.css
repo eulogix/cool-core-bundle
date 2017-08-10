@@ -149,7 +149,7 @@
     font-weight: bold; color: #FFFFFF;
 }
 
-.claro .widgetBody {
+.claro .widgetBodySolid {
     /*position: absolute;*/
 
     border: 1px solid #bcbcbc;
