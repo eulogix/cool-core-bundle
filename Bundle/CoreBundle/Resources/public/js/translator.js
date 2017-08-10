@@ -22,7 +22,8 @@ define("cool/translator",
             locale = locale || this.locale;
             domain = domain || this.domain;
 
-            var hasMessage = Translator.trans(id, {}, domain, locale) != id;
+            var translatedMessage = Translator.trans(id, {}, domain, locale);
+            var hasMessage =  translatedMessage != id;
 
             if(hasMessage)
                 return Translator.trans(id, parameters, domain, locale);
@@ -40,6 +41,8 @@ define("cool/translator",
                 }).then(
                     function(data){
                         ret = data;
+                        if(ret == translatedMessage)
+                            console.warn('The translation for "'+domain+'/'+id+'" is the same string as the id : '+translatedMessage+' this causes unnecessary server request. Please translate it with something else.');
                     },
                     function(error){
                         console.log("An error occurred: " + error);
