@@ -8,7 +8,9 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
+use \PropelCollection;
 use \PropelException;
+use \PropelObjectCollection;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleQuery;
@@ -45,6 +47,12 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     protected $widget_rule_id;
 
     /**
+     * The value for the parent_widget_rule_id field.
+     * @var        int
+     */
+    protected $parent_widget_rule_id;
+
+    /**
      * The value for the widget_id field.
      * @var        string
      */
@@ -57,6 +65,13 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     protected $rule_id;
 
     /**
+     * The value for the enabled_flag field.
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $enabled_flag;
+
+    /**
      * The value for the evaluation field.
      * Note: this column has a database default value of: 'BEFORE_DEFINITION'
      * @var        string
@@ -67,6 +82,17 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
      * @var        Rule
      */
     protected $aRule;
+
+    /**
+     * @var        WidgetRule
+     */
+    protected $aWidgetRuleRelatedByParentWidgetRuleIdWidgetId;
+
+    /**
+     * @var        PropelObjectCollection|WidgetRule[] Collection to store aggregation of WidgetRule objects.
+     */
+    protected $collWidgetRulesRelatedByWidgetRuleIdWidgetId;
+    protected $collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -89,6 +115,12 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     protected $alreadyInClearAllReferencesDeep = false;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion = null;
+
+    /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
      * equivalent initialization method).
@@ -96,6 +128,7 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
      */
     public function applyDefaultValues()
     {
+        $this->enabled_flag = true;
         $this->evaluation = 'BEFORE_DEFINITION';
     }
 
@@ -121,6 +154,17 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     }
 
     /**
+     * Get the [parent_widget_rule_id] column value.
+     *
+     * @return int
+     */
+    public function getParentWidgetRuleId()
+    {
+
+        return $this->parent_widget_rule_id;
+    }
+
+    /**
      * Get the [widget_id] column value.
      *
      * @return string
@@ -140,6 +184,17 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     {
 
         return $this->rule_id;
+    }
+
+    /**
+     * Get the [enabled_flag] column value.
+     *
+     * @return boolean
+     */
+    public function getEnabledFlag()
+    {
+
+        return $this->enabled_flag;
     }
 
     /**
@@ -175,6 +230,31 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     } // setWidgetRuleId()
 
     /**
+     * Set the value of [parent_widget_rule_id] column.
+     *
+     * @param  int $v new value
+     * @return WidgetRule The current object (for fluent API support)
+     */
+    public function setParentWidgetRuleId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->parent_widget_rule_id !== $v) {
+            $this->parent_widget_rule_id = $v;
+            $this->modifiedColumns[] = WidgetRulePeer::PARENT_WIDGET_RULE_ID;
+        }
+
+        if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null && $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->getWidgetRuleId() !== $v) {
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
+        }
+
+
+        return $this;
+    } // setParentWidgetRuleId()
+
+    /**
      * Set the value of [widget_id] column.
      *
      * @param  string $v new value
@@ -189,6 +269,10 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         if ($this->widget_id !== $v) {
             $this->widget_id = $v;
             $this->modifiedColumns[] = WidgetRulePeer::WIDGET_ID;
+        }
+
+        if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null && $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->getWidgetId() !== $v) {
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
         }
 
 
@@ -221,6 +305,35 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     } // setRuleId()
 
     /**
+     * Sets the value of the [enabled_flag] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return WidgetRule The current object (for fluent API support)
+     */
+    public function setEnabledFlag($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->enabled_flag !== $v) {
+            $this->enabled_flag = $v;
+            $this->modifiedColumns[] = WidgetRulePeer::ENABLED_FLAG;
+        }
+
+
+        return $this;
+    } // setEnabledFlag()
+
+    /**
      * Set the value of [evaluation] column.
      *
      * @param  string $v new value
@@ -251,6 +364,10 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->enabled_flag !== true) {
+                return false;
+            }
+
             if ($this->evaluation !== 'BEFORE_DEFINITION') {
                 return false;
             }
@@ -278,9 +395,11 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         try {
 
             $this->widget_rule_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->widget_id = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->rule_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->evaluation = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->parent_widget_rule_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->widget_id = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->rule_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->enabled_flag = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
+            $this->evaluation = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -290,7 +409,7 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 4; // 4 = WidgetRulePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = WidgetRulePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating WidgetRule object", $e);
@@ -313,6 +432,12 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null && $this->parent_widget_rule_id !== $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->getWidgetRuleId()) {
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
+        }
+        if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null && $this->widget_id !== $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->getWidgetId()) {
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
+        }
         if ($this->aRule !== null && $this->rule_id !== $this->aRule->getRuleId()) {
             $this->aRule = null;
         }
@@ -356,6 +481,9 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aRule = null;
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
+            $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = null;
+
         } // if (deep)
     }
 
@@ -481,6 +609,13 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                 $this->setRule($this->aRule);
             }
 
+            if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null) {
+                if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->isModified() || $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->isNew()) {
+                    $affectedRows += $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->save($con);
+                }
+                $this->setWidgetRuleRelatedByParentWidgetRuleIdWidgetId($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -490,6 +625,24 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion !== null) {
+                if (!$this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion as $widgetRuleRelatedByWidgetRuleIdWidgetId) {
+                        // need to save related object because we set the relation to null
+                        $widgetRuleRelatedByWidgetRuleIdWidgetId->save($con);
+                    }
+                    $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId !== null) {
+                foreach ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -531,11 +684,17 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(WidgetRulePeer::WIDGET_RULE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'widget_rule_id';
         }
+        if ($this->isColumnModified(WidgetRulePeer::PARENT_WIDGET_RULE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'parent_widget_rule_id';
+        }
         if ($this->isColumnModified(WidgetRulePeer::WIDGET_ID)) {
             $modifiedColumns[':p' . $index++]  = 'widget_id';
         }
         if ($this->isColumnModified(WidgetRulePeer::RULE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'rule_id';
+        }
+        if ($this->isColumnModified(WidgetRulePeer::ENABLED_FLAG)) {
+            $modifiedColumns[':p' . $index++]  = 'enabled_flag';
         }
         if ($this->isColumnModified(WidgetRulePeer::EVALUATION)) {
             $modifiedColumns[':p' . $index++]  = 'evaluation';
@@ -554,11 +713,17 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                     case 'widget_rule_id':
                         $stmt->bindValue($identifier, $this->widget_rule_id, PDO::PARAM_INT);
                         break;
+                    case 'parent_widget_rule_id':
+                        $stmt->bindValue($identifier, $this->parent_widget_rule_id, PDO::PARAM_INT);
+                        break;
                     case 'widget_id':
                         $stmt->bindValue($identifier, $this->widget_id, PDO::PARAM_STR);
                         break;
                     case 'rule_id':
                         $stmt->bindValue($identifier, $this->rule_id, PDO::PARAM_INT);
+                        break;
+                    case 'enabled_flag':
+                        $stmt->bindValue($identifier, $this->enabled_flag, PDO::PARAM_BOOL);
                         break;
                     case 'evaluation':
                         $stmt->bindValue($identifier, $this->evaluation, PDO::PARAM_STR);
@@ -661,11 +826,25 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                 }
             }
 
+            if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId !== null) {
+                if (!$this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->getValidationFailures());
+                }
+            }
+
 
             if (($retval = WidgetRulePeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+                if ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId !== null) {
+                    foreach ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
 
 
             $this->alreadyInValidation = false;
@@ -706,12 +885,18 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                 return $this->getWidgetRuleId();
                 break;
             case 1:
-                return $this->getWidgetId();
+                return $this->getParentWidgetRuleId();
                 break;
             case 2:
-                return $this->getRuleId();
+                return $this->getWidgetId();
                 break;
             case 3:
+                return $this->getRuleId();
+                break;
+            case 4:
+                return $this->getEnabledFlag();
+                break;
+            case 5:
                 return $this->getEvaluation();
                 break;
             default:
@@ -744,9 +929,11 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         $keys = WidgetRulePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getWidgetRuleId(),
-            $keys[1] => $this->getWidgetId(),
-            $keys[2] => $this->getRuleId(),
-            $keys[3] => $this->getEvaluation(),
+            $keys[1] => $this->getParentWidgetRuleId(),
+            $keys[2] => $this->getWidgetId(),
+            $keys[3] => $this->getRuleId(),
+            $keys[4] => $this->getEnabledFlag(),
+            $keys[5] => $this->getEvaluation(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -756,6 +943,12 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aRule) {
                 $result['Rule'] = $this->aRule->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId) {
+                $result['WidgetRuleRelatedByParentWidgetRuleIdWidgetId'] = $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId) {
+                $result['WidgetRulesRelatedByWidgetRuleIdWidgetId'] = $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -795,12 +988,18 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
                 $this->setWidgetRuleId($value);
                 break;
             case 1:
-                $this->setWidgetId($value);
+                $this->setParentWidgetRuleId($value);
                 break;
             case 2:
-                $this->setRuleId($value);
+                $this->setWidgetId($value);
                 break;
             case 3:
+                $this->setRuleId($value);
+                break;
+            case 4:
+                $this->setEnabledFlag($value);
+                break;
+            case 5:
                 $this->setEvaluation($value);
                 break;
         } // switch()
@@ -828,9 +1027,11 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         $keys = WidgetRulePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setWidgetRuleId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setWidgetId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setRuleId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setEvaluation($arr[$keys[3]]);
+        if (array_key_exists($keys[1], $arr)) $this->setParentWidgetRuleId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setWidgetId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setRuleId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setEnabledFlag($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setEvaluation($arr[$keys[5]]);
     }
 
     /**
@@ -843,8 +1044,10 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
         $criteria = new Criteria(WidgetRulePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(WidgetRulePeer::WIDGET_RULE_ID)) $criteria->add(WidgetRulePeer::WIDGET_RULE_ID, $this->widget_rule_id);
+        if ($this->isColumnModified(WidgetRulePeer::PARENT_WIDGET_RULE_ID)) $criteria->add(WidgetRulePeer::PARENT_WIDGET_RULE_ID, $this->parent_widget_rule_id);
         if ($this->isColumnModified(WidgetRulePeer::WIDGET_ID)) $criteria->add(WidgetRulePeer::WIDGET_ID, $this->widget_id);
         if ($this->isColumnModified(WidgetRulePeer::RULE_ID)) $criteria->add(WidgetRulePeer::RULE_ID, $this->rule_id);
+        if ($this->isColumnModified(WidgetRulePeer::ENABLED_FLAG)) $criteria->add(WidgetRulePeer::ENABLED_FLAG, $this->enabled_flag);
         if ($this->isColumnModified(WidgetRulePeer::EVALUATION)) $criteria->add(WidgetRulePeer::EVALUATION, $this->evaluation);
 
         return $criteria;
@@ -909,8 +1112,10 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setParentWidgetRuleId($this->getParentWidgetRuleId());
         $copyObj->setWidgetId($this->getWidgetId());
         $copyObj->setRuleId($this->getRuleId());
+        $copyObj->setEnabledFlag($this->getEnabledFlag());
         $copyObj->setEvaluation($this->getEvaluation());
 
         if ($deepCopy && !$this->startCopy) {
@@ -919,6 +1124,12 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getWidgetRulesRelatedByWidgetRuleIdWidgetId() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addWidgetRuleRelatedByWidgetRuleIdWidgetId($relObj->copy($deepCopy));
+                }
+            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -1023,13 +1234,341 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     }
 
     /**
+     * Declares an association between this object and a WidgetRule object.
+     *
+     * @param                  WidgetRule $v
+     * @return WidgetRule The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setWidgetRuleRelatedByParentWidgetRuleIdWidgetId(WidgetRule $v = null)
+    {
+        if ($v === null) {
+            $this->setParentWidgetRuleId(NULL);
+        } else {
+            $this->setParentWidgetRuleId($v->getWidgetRuleId());
+        }
+
+        if ($v === null) {
+            $this->setWidgetId(NULL);
+        } else {
+            $this->setWidgetId($v->getWidgetId());
+        }
+
+        $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the WidgetRule object, it will not be re-added.
+        if ($v !== null) {
+            $v->addWidgetRuleRelatedByWidgetRuleIdWidgetId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated WidgetRule object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return WidgetRule The associated WidgetRule object.
+     * @throws PropelException
+     */
+    public function getWidgetRuleRelatedByParentWidgetRuleIdWidgetId(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId === null && ($this->parent_widget_rule_id !== null && ($this->widget_id !== "" && $this->widget_id !== null)) && $doQuery) {
+            $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = WidgetRuleQuery::create()
+                ->filterByWidgetRuleRelatedByWidgetRuleIdWidgetId($this) // here
+                ->findOne($con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->addWidgetRulesRelatedByWidgetRuleIdWidgetId($this);
+             */
+        }
+
+        return $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('WidgetRuleRelatedByWidgetRuleIdWidgetId' == $relationName) {
+            $this->initWidgetRulesRelatedByWidgetRuleIdWidgetId();
+        }
+    }
+
+    /**
+     * Clears out the collWidgetRulesRelatedByWidgetRuleIdWidgetId collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return WidgetRule The current object (for fluent API support)
+     * @see        addWidgetRulesRelatedByWidgetRuleIdWidgetId()
+     */
+    public function clearWidgetRulesRelatedByWidgetRuleIdWidgetId()
+    {
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = null; // important to set this to null since that means it is uninitialized
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collWidgetRulesRelatedByWidgetRuleIdWidgetId collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialWidgetRulesRelatedByWidgetRuleIdWidgetId($v = true)
+    {
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collWidgetRulesRelatedByWidgetRuleIdWidgetId collection.
+     *
+     * By default this just sets the collWidgetRulesRelatedByWidgetRuleIdWidgetId collection to an empty array (like clearcollWidgetRulesRelatedByWidgetRuleIdWidgetId());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initWidgetRulesRelatedByWidgetRuleIdWidgetId($overrideExisting = true)
+    {
+        if (null !== $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId && !$overrideExisting) {
+            return;
+        }
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = new PropelObjectCollection();
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->setModel('WidgetRule');
+    }
+
+    /**
+     * Gets an array of WidgetRule objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this WidgetRule is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|WidgetRule[] List of WidgetRule objects
+     * @throws PropelException
+     */
+    public function getWidgetRulesRelatedByWidgetRuleIdWidgetId($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial && !$this->isNew();
+        if (null === $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId) {
+                // return empty collection
+                $this->initWidgetRulesRelatedByWidgetRuleIdWidgetId();
+            } else {
+                $collWidgetRulesRelatedByWidgetRuleIdWidgetId = WidgetRuleQuery::create(null, $criteria)
+                    ->filterByWidgetRuleRelatedByParentWidgetRuleIdWidgetId($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial && count($collWidgetRulesRelatedByWidgetRuleIdWidgetId)) {
+                      $this->initWidgetRulesRelatedByWidgetRuleIdWidgetId(false);
+
+                      foreach ($collWidgetRulesRelatedByWidgetRuleIdWidgetId as $obj) {
+                        if (false == $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->contains($obj)) {
+                          $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->append($obj);
+                        }
+                      }
+
+                      $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = true;
+                    }
+
+                    $collWidgetRulesRelatedByWidgetRuleIdWidgetId->getInternalIterator()->rewind();
+
+                    return $collWidgetRulesRelatedByWidgetRuleIdWidgetId;
+                }
+
+                if ($partial && $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId) {
+                    foreach ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId as $obj) {
+                        if ($obj->isNew()) {
+                            $collWidgetRulesRelatedByWidgetRuleIdWidgetId[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = $collWidgetRulesRelatedByWidgetRuleIdWidgetId;
+                $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = false;
+            }
+        }
+
+        return $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId;
+    }
+
+    /**
+     * Sets a collection of WidgetRuleRelatedByWidgetRuleIdWidgetId objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $widgetRulesRelatedByWidgetRuleIdWidgetId A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return WidgetRule The current object (for fluent API support)
+     */
+    public function setWidgetRulesRelatedByWidgetRuleIdWidgetId(PropelCollection $widgetRulesRelatedByWidgetRuleIdWidgetId, PropelPDO $con = null)
+    {
+        $widgetRulesRelatedByWidgetRuleIdWidgetIdToDelete = $this->getWidgetRulesRelatedByWidgetRuleIdWidgetId(new Criteria(), $con)->diff($widgetRulesRelatedByWidgetRuleIdWidgetId);
+
+
+        $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion = $widgetRulesRelatedByWidgetRuleIdWidgetIdToDelete;
+
+        foreach ($widgetRulesRelatedByWidgetRuleIdWidgetIdToDelete as $widgetRuleRelatedByWidgetRuleIdWidgetIdRemoved) {
+            $widgetRuleRelatedByWidgetRuleIdWidgetIdRemoved->setWidgetRuleRelatedByParentWidgetRuleIdWidgetId(null);
+        }
+
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = null;
+        foreach ($widgetRulesRelatedByWidgetRuleIdWidgetId as $widgetRuleRelatedByWidgetRuleIdWidgetId) {
+            $this->addWidgetRuleRelatedByWidgetRuleIdWidgetId($widgetRuleRelatedByWidgetRuleIdWidgetId);
+        }
+
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = $widgetRulesRelatedByWidgetRuleIdWidgetId;
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related WidgetRule objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related WidgetRule objects.
+     * @throws PropelException
+     */
+    public function countWidgetRulesRelatedByWidgetRuleIdWidgetId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial && !$this->isNew();
+        if (null === $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getWidgetRulesRelatedByWidgetRuleIdWidgetId());
+            }
+            $query = WidgetRuleQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByWidgetRuleRelatedByParentWidgetRuleIdWidgetId($this)
+                ->count($con);
+        }
+
+        return count($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId);
+    }
+
+    /**
+     * Method called to associate a WidgetRule object to this object
+     * through the WidgetRule foreign key attribute.
+     *
+     * @param    WidgetRule $l WidgetRule
+     * @return WidgetRule The current object (for fluent API support)
+     */
+    public function addWidgetRuleRelatedByWidgetRuleIdWidgetId(WidgetRule $l)
+    {
+        if ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId === null) {
+            $this->initWidgetRulesRelatedByWidgetRuleIdWidgetId();
+            $this->collWidgetRulesRelatedByWidgetRuleIdWidgetIdPartial = true;
+        }
+
+        if (!in_array($l, $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddWidgetRuleRelatedByWidgetRuleIdWidgetId($l);
+
+            if ($this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion and $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion->contains($l)) {
+                $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion->remove($this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	WidgetRuleRelatedByWidgetRuleIdWidgetId $widgetRuleRelatedByWidgetRuleIdWidgetId The widgetRuleRelatedByWidgetRuleIdWidgetId object to add.
+     */
+    protected function doAddWidgetRuleRelatedByWidgetRuleIdWidgetId($widgetRuleRelatedByWidgetRuleIdWidgetId)
+    {
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId[]= $widgetRuleRelatedByWidgetRuleIdWidgetId;
+        $widgetRuleRelatedByWidgetRuleIdWidgetId->setWidgetRuleRelatedByParentWidgetRuleIdWidgetId($this);
+    }
+
+    /**
+     * @param	WidgetRuleRelatedByWidgetRuleIdWidgetId $widgetRuleRelatedByWidgetRuleIdWidgetId The widgetRuleRelatedByWidgetRuleIdWidgetId object to remove.
+     * @return WidgetRule The current object (for fluent API support)
+     */
+    public function removeWidgetRuleRelatedByWidgetRuleIdWidgetId($widgetRuleRelatedByWidgetRuleIdWidgetId)
+    {
+        if ($this->getWidgetRulesRelatedByWidgetRuleIdWidgetId()->contains($widgetRuleRelatedByWidgetRuleIdWidgetId)) {
+            $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->remove($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->search($widgetRuleRelatedByWidgetRuleIdWidgetId));
+            if (null === $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion) {
+                $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion = clone $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId;
+                $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion->clear();
+            }
+            $this->widgetRulesRelatedByWidgetRuleIdWidgetIdScheduledForDeletion[]= clone $widgetRuleRelatedByWidgetRuleIdWidgetId;
+            $widgetRuleRelatedByWidgetRuleIdWidgetId->setWidgetRuleRelatedByParentWidgetRuleIdWidgetId(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this WidgetRule is new, it will return
+     * an empty collection; or if this WidgetRule has previously
+     * been saved, it will retrieve related WidgetRulesRelatedByWidgetRuleIdWidgetId from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in WidgetRule.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|WidgetRule[] List of WidgetRule objects
+     */
+    public function getWidgetRulesRelatedByWidgetRuleIdWidgetIdJoinRule($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = WidgetRuleQuery::create(null, $criteria);
+        $query->joinWith('Rule', $join_behavior);
+
+        return $this->getWidgetRulesRelatedByWidgetRuleIdWidgetId($query, $con);
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
         $this->widget_rule_id = null;
+        $this->parent_widget_rule_id = null;
         $this->widget_id = null;
         $this->rule_id = null;
+        $this->enabled_flag = null;
         $this->evaluation = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
@@ -1054,14 +1593,27 @@ abstract class BaseWidgetRule extends CoolPropelObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId) {
+                foreach ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->aRule instanceof Persistent) {
               $this->aRule->clearAllReferences($deep);
+            }
+            if ($this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId instanceof Persistent) {
+              $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collWidgetRulesRelatedByWidgetRuleIdWidgetId instanceof PropelCollection) {
+            $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId->clearIterator();
+        }
+        $this->collWidgetRulesRelatedByWidgetRuleIdWidgetId = null;
         $this->aRule = null;
+        $this->aWidgetRuleRelatedByParentWidgetRuleIdWidgetId = null;
     }
 
     /**

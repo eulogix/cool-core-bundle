@@ -531,41 +531,87 @@ abstract class Widget implements WidgetInterface {
     }
 
     /**
+     * processes all the rules recursively and returns a complete hash of outcomes
+     *
      * @param string $evaluationType
      */
     public function processRules($evaluationType = null) {
-        $query = WidgetRuleQuery::create()->filterByWidgetId( $this->getId() );
+
+        $query = WidgetRuleQuery::create()->filterByWidgetId( $this->getId() )->filterByEnabledFlag(true)->filterByParentWidgetRuleId(null);
+
         if($evaluationType)
-            $query = $query->filterByEvaluation($evaluationType);
+            $query = $query->filterByEvaluation([$evaluationType, WidgetRule::EVALUATION_TYPE_ALWAYS]);
 
         $widgetRules = $query->find();
 
-        $hash = [];
-
         $ruleContext = $this->getRuleContext();
 
-        /** @var WidgetRule $widgetRule */
-        foreach($widgetRules as $widgetRule) {
-            $rule = $widgetRule->getRule();
-            try {
-                $ruleValid = $rule->assert( $ruleContext );
-                $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext);
+        $returnHash = [];
 
-                $hash[ $rule->getName() ] = [
-                    'valid' => $ruleValid,
-                    'report' => $rule->getLastExecutionReport()
-                ];
-            } catch(\Error $e) {
-                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
-            } catch(\Throwable $e) {
-                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
-            } catch(\Exception $e) {
-                $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
-            }
-        }
+        /** @var WidgetRule $widgetRule */
+        foreach($widgetRules as $widgetRule)
+            $this->processRuleRecursive($widgetRule, $ruleContext, $evaluationType, $returnHash);
 
         $rules = $this->getAttributes()->get('rules') ?? [];
-        $this->getAttributes()->set('rules', array_merge($rules, $hash));
+        $this->getAttributes()->set('rules', array_merge($rules, $returnHash));
+    }
+
+    /**
+     * processes one rule and descends into its sub rules
+     *
+     * @param WidgetRule $widgetRule
+     * @param array $ruleContext
+     * @param string $evaluationType
+     * @param array $returnHash
+     */
+    protected function processRuleRecursive(WidgetRule $widgetRule, array $ruleContext, $evaluationType = null, array &$returnHash = []) {
+
+        $mainRuleOutcome = $this->processRule($widgetRule, $ruleContext);
+        $returnHash[ $widgetRule->getRule()->getName() ] = $mainRuleOutcome;
+
+        if($mainRuleOutcome['valid']) {
+            $query = WidgetRuleQuery::create()
+                ->filterByParentWidgetRuleId( $widgetRule->getWidgetRuleId() )
+                ->filterByEnabledFlag(true);
+
+            if($evaluationType)
+                $query = $query->filterByEvaluation([$evaluationType, WidgetRule::EVALUATION_TYPE_ALWAYS]);
+
+            $subWidgetRules = $query->find();
+
+            /** @var WidgetRule $widgetRule */
+            foreach($subWidgetRules as $subWidgetRule)
+                $this->processRuleRecursive($subWidgetRule, $ruleContext, $evaluationType, $returnHash);
+        }
+    }
+
+    /**
+     * atomic function that processes a widget rule and returns the outcome
+     *
+     * @param WidgetRule $widgetRule
+     * @param array $ruleContext
+     * @return array
+     */
+    protected function processRule(WidgetRule $widgetRule, array $ruleContext) {
+
+        $rule = $widgetRule->getRule();
+        try {
+            $ruleValid = $rule->assert( $ruleContext );
+            $rule->execCodes( $ruleValid ? RuleCode::TYPE_EXEC_IF_TRUE : RuleCode::TYPE_EXEC_IF_FALSE, $ruleContext);
+
+            return [
+                'valid' => $ruleValid,
+                'report' => $rule->getLastExecutionReport()
+            ];
+        } catch(\Error $e) {
+            $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
+        } catch(\Throwable $e) {
+            $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
+        } catch(\Exception $e) {
+            $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
+        }
+
+        return [];
     }
 
     /**

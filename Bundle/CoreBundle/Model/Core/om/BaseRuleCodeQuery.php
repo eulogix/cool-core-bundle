@@ -21,6 +21,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCodeQuery;
 /**
  * @method RuleCodeQuery orderByRuleCodeId($order = Criteria::ASC) Order by the rule_code_id column
  * @method RuleCodeQuery orderByRuleId($order = Criteria::ASC) Order by the rule_id column
+ * @method RuleCodeQuery orderByEnabledFlag($order = Criteria::ASC) Order by the enabled_flag column
  * @method RuleCodeQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method RuleCodeQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method RuleCodeQuery orderByCodeSnippetId($order = Criteria::ASC) Order by the code_snippet_id column
@@ -29,6 +30,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCodeQuery;
  *
  * @method RuleCodeQuery groupByRuleCodeId() Group by the rule_code_id column
  * @method RuleCodeQuery groupByRuleId() Group by the rule_id column
+ * @method RuleCodeQuery groupByEnabledFlag() Group by the enabled_flag column
  * @method RuleCodeQuery groupByType() Group by the type column
  * @method RuleCodeQuery groupByName() Group by the name column
  * @method RuleCodeQuery groupByCodeSnippetId() Group by the code_snippet_id column
@@ -51,6 +53,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCodeQuery;
  * @method RuleCode findOneOrCreate(PropelPDO $con = null) Return the first RuleCode matching the query, or a new RuleCode object populated from the query conditions when no match is found
  *
  * @method RuleCode findOneByRuleId(int $rule_id) Return the first RuleCode filtered by the rule_id column
+ * @method RuleCode findOneByEnabledFlag(boolean $enabled_flag) Return the first RuleCode filtered by the enabled_flag column
  * @method RuleCode findOneByType(string $type) Return the first RuleCode filtered by the type column
  * @method RuleCode findOneByName(string $name) Return the first RuleCode filtered by the name column
  * @method RuleCode findOneByCodeSnippetId(int $code_snippet_id) Return the first RuleCode filtered by the code_snippet_id column
@@ -59,6 +62,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCodeQuery;
  *
  * @method array findByRuleCodeId(int $rule_code_id) Return RuleCode objects filtered by the rule_code_id column
  * @method array findByRuleId(int $rule_id) Return RuleCode objects filtered by the rule_id column
+ * @method array findByEnabledFlag(boolean $enabled_flag) Return RuleCode objects filtered by the enabled_flag column
  * @method array findByType(string $type) Return RuleCode objects filtered by the type column
  * @method array findByName(string $name) Return RuleCode objects filtered by the name column
  * @method array findByCodeSnippetId(int $code_snippet_id) Return RuleCode objects filtered by the code_snippet_id column
@@ -169,7 +173,7 @@ abstract class BaseRuleCodeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT rule_code_id, rule_id, type, name, code_snippet_id, code_snippet_variables, raw_code FROM core.rule_code WHERE rule_code_id = :p0';
+        $sql = 'SELECT rule_code_id, rule_id, enabled_flag, type, name, code_snippet_id, code_snippet_variables, raw_code FROM core.rule_code WHERE rule_code_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -365,6 +369,33 @@ abstract class BaseRuleCodeQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(RuleCodePeer::RULE_ID, $ruleId, $comparison);
+    }
+
+    /**
+     * Filter the query on the enabled_flag column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByEnabledFlag(true); // WHERE enabled_flag = true
+     * $query->filterByEnabledFlag('yes'); // WHERE enabled_flag = true
+     * </code>
+     *
+     * @param     boolean|string $enabledFlag The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return RuleCodeQuery The current query, for fluid interface
+     */
+    public function filterByEnabledFlag($enabledFlag = null, $comparison = null)
+    {
+        if (is_string($enabledFlag)) {
+            $enabledFlag = in_array(strtolower($enabledFlag), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(RuleCodePeer::ENABLED_FLAG, $enabledFlag, $comparison);
     }
 
     /**

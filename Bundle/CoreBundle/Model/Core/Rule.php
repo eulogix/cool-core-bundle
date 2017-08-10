@@ -106,8 +106,7 @@ class Rule extends BaseRule
      */
     private function getCodes( array $types )
     {
-        return RuleCodeQuery::create()->filterByRule($this)
-            ->filterByType( $types )->find();
+        return RuleCodeQuery::create()->filterByRule($this)->filterByEnabledFlag(true)->filterByType( $types )->find();
     }
 
     /**

@@ -1002,6 +1002,9 @@
                     "rule_id": {
                         "attributes": []
                     },
+                    "enabled_flag": {
+                        "attributes": []
+                    },
                     "type": {
                         "attributes": [],
                         "control": {
@@ -1136,10 +1139,16 @@
                     "widget_rule_id": {
                         "attributes": []
                     },
+                    "parent_widget_rule_id": {
+                        "attributes": []
+                    },
                     "widget_id": {
                         "attributes": []
                     },
                     "rule_id": {
+                        "attributes": []
+                    },
+                    "enabled_flag": {
                         "attributes": []
                     },
                     "evaluation": {
@@ -1149,7 +1158,7 @@
                         },
                         "lookup": {
                             "type": "enum",
-                            "validValues": "ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION"
+                            "validValues": "ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION,ALWAYS"
                         }
                     }
                 }

@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Rule;
 
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\Classes\Rules\WidgetRulesDataSource;
 use Eulogix\Cool\Lib\Lister\Lister;
@@ -42,6 +43,9 @@ class WidgetRuleLister extends Lister {
     public function build() {
         parent::build();
         $this->addAction('new Rule')->setOnClick("widget.openNewRecordEditor();");
+
+        $this->attributes->set('move_elements_in_tree', true);
+
         return $this;
     }
 
@@ -75,4 +79,44 @@ class WidgetRuleLister extends Lister {
         return $this;
     }
 
+    public function onMoveRows() {
+        $sourceIds = json_decode( $this->getRequest()->get('sourceRecordIds') );
+
+        $targetId  = $this->getDataSource()->extractPkOfRelation(
+            $this->getRequest()->get('targetRecordId'), 'core.widget_rule');
+
+        foreach($sourceIds as $sourceIdCompound) {
+
+            $sourceId  = $this->getDataSource()->extractPkOfRelation( $sourceIdCompound, 'core.widget_rule');
+
+            if( $widgetRule = WidgetRuleQuery::create()->findPk($sourceId) ) {
+                $widgetRule->setParentWidgetRuleId($targetId);
+                $widgetRule->save();
+            }
+        }
+        $this->addMessageInfo("DONE");
+        $this->addCommandJs("widget.reloadRows();");
+    }
+
+    public function onMoveRowsToRoot() {
+        $rowIds = explode(',', $this->getRequest()->get('ids') );
+        foreach($rowIds as $sourceIdCompound) {
+
+            $sourceId  = $this->getDataSource()->extractPkOfRelation( $sourceIdCompound, 'core.widget_rule');
+
+            if( $widgetRule = WidgetRuleQuery::create()->findPk($sourceId) ) {
+                $widgetRule->setParentWidgetRuleId(null);
+                $widgetRule->save();
+            }
+        }
+        $this->addMessageInfo("DONE");
+        $this->addCommandJs("widget.reloadRows();");
+    }
+
+    /**
+     * @return WidgetRulesDataSource
+     */
+    public function getDataSource() {
+        return parent::getDataSource();
+    }
 }

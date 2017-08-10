@@ -43,8 +43,10 @@ class WidgetRuleTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->setPrimaryKeyMethodInfo('core.widget_rule_widget_rule_id_seq');
         // columns
         $this->addPrimaryKey('widget_rule_id', 'WidgetRuleId', 'INTEGER', true, null, null);
-        $this->addColumn('widget_id', 'WidgetId', 'LONGVARCHAR', true, null, null);
+        $this->addForeignKey('parent_widget_rule_id', 'ParentWidgetRuleId', 'INTEGER', 'core.widget_rule', 'widget_rule_id', false, null, null);
+        $this->addForeignKey('widget_id', 'WidgetId', 'LONGVARCHAR', 'core.widget_rule', 'widget_id', true, null, null);
         $this->addForeignKey('rule_id', 'RuleId', 'INTEGER', 'core.rule', 'rule_id', true, null, null);
+        $this->addColumn('enabled_flag', 'EnabledFlag', 'BOOLEAN', false, null, true);
         $this->addColumn('evaluation', 'Evaluation', 'LONGVARCHAR', true, null, 'BEFORE_DEFINITION');
         // validators
     } // initialize()
@@ -55,6 +57,8 @@ class WidgetRuleTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
     public function buildRelations()
     {
         $this->addRelation('Rule', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Rule', RelationMap::MANY_TO_ONE, array('rule_id' => 'rule_id', ), 'RESTRICT', null);
+        $this->addRelation('WidgetRuleRelatedByParentWidgetRuleIdWidgetId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule', RelationMap::MANY_TO_ONE, array('parent_widget_rule_id' => 'widget_rule_id', 'widget_id' => 'widget_id', ), 'RESTRICT', null);
+        $this->addRelation('WidgetRuleRelatedByWidgetRuleIdWidgetId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule', RelationMap::ONE_TO_MANY, array('widget_rule_id' => 'parent_widget_rule_id', 'widget_id' => 'widget_id', ), 'RESTRICT', null, 'WidgetRulesRelatedByWidgetRuleIdWidgetId');
     } // buildRelations()
 
 } // WidgetRuleTableMap

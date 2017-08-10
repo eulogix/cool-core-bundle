@@ -591,6 +591,8 @@
         <column name="rule_code_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="rule_id" type="INTEGER" required="true"/>
 
+        <column name="enabled_flag" type="BOOLEAN" default="TRUE"/>
+
         <column name="type" type="LONGVARCHAR" required="true" default="VARIABLE">
             
             
@@ -667,8 +669,12 @@
 
     <table name="widget_rule">
         <column name="widget_rule_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+        <column name="parent_widget_rule_id" type="INTEGER"/>
+
         <column name="widget_id" type="LONGVARCHAR" required="true"/> 
         <column name="rule_id" type="INTEGER" required="true"/>
+
+        <column name="enabled_flag" type="BOOLEAN" default="TRUE"/>
 
         <column name="evaluation" type="LONGVARCHAR" required="true" default="BEFORE_DEFINITION">
             
@@ -678,6 +684,16 @@
         <foreign-key foreignTable="rule" onDelete="restrict">
             <reference local="rule_id" foreign="rule_id"/>
         </foreign-key>
+
+        <foreign-key foreignTable="widget_rule" onDelete="restrict">
+            <reference local="parent_widget_rule_id" foreign="widget_rule_id"/>
+            <reference local="widget_id" foreign="widget_id"/>
+        </foreign-key>
+
+        <unique>
+            <unique-column name="widget_rule_id"/>
+            <unique-column name="widget_id"/>
+        </unique>
     </table>
 
 </database>

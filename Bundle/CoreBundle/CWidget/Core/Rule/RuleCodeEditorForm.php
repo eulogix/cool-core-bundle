@@ -99,7 +99,7 @@ snippet_var_{$var->getName()}:100%:50px|nolabel@!
         }
 
         return "<FIELDS c1w='250px'>
-type:200,name:400
+enabled_flag,type:200,name:400
 raw_code:100%:200@!
 code_snippet_id:600@!
 </FIELDS>

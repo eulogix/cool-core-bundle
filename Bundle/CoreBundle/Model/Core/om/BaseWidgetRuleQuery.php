@@ -19,13 +19,17 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
 
 /**
  * @method WidgetRuleQuery orderByWidgetRuleId($order = Criteria::ASC) Order by the widget_rule_id column
+ * @method WidgetRuleQuery orderByParentWidgetRuleId($order = Criteria::ASC) Order by the parent_widget_rule_id column
  * @method WidgetRuleQuery orderByWidgetId($order = Criteria::ASC) Order by the widget_id column
  * @method WidgetRuleQuery orderByRuleId($order = Criteria::ASC) Order by the rule_id column
+ * @method WidgetRuleQuery orderByEnabledFlag($order = Criteria::ASC) Order by the enabled_flag column
  * @method WidgetRuleQuery orderByEvaluation($order = Criteria::ASC) Order by the evaluation column
  *
  * @method WidgetRuleQuery groupByWidgetRuleId() Group by the widget_rule_id column
+ * @method WidgetRuleQuery groupByParentWidgetRuleId() Group by the parent_widget_rule_id column
  * @method WidgetRuleQuery groupByWidgetId() Group by the widget_id column
  * @method WidgetRuleQuery groupByRuleId() Group by the rule_id column
+ * @method WidgetRuleQuery groupByEnabledFlag() Group by the enabled_flag column
  * @method WidgetRuleQuery groupByEvaluation() Group by the evaluation column
  *
  * @method WidgetRuleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -36,16 +40,28 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery;
  * @method WidgetRuleQuery rightJoinRule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Rule relation
  * @method WidgetRuleQuery innerJoinRule($relationAlias = null) Adds a INNER JOIN clause to the query using the Rule relation
  *
+ * @method WidgetRuleQuery leftJoinWidgetRuleRelatedByParentWidgetRuleIdWidgetId($relationAlias = null) Adds a LEFT JOIN clause to the query using the WidgetRuleRelatedByParentWidgetRuleIdWidgetId relation
+ * @method WidgetRuleQuery rightJoinWidgetRuleRelatedByParentWidgetRuleIdWidgetId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WidgetRuleRelatedByParentWidgetRuleIdWidgetId relation
+ * @method WidgetRuleQuery innerJoinWidgetRuleRelatedByParentWidgetRuleIdWidgetId($relationAlias = null) Adds a INNER JOIN clause to the query using the WidgetRuleRelatedByParentWidgetRuleIdWidgetId relation
+ *
+ * @method WidgetRuleQuery leftJoinWidgetRuleRelatedByWidgetRuleIdWidgetId($relationAlias = null) Adds a LEFT JOIN clause to the query using the WidgetRuleRelatedByWidgetRuleIdWidgetId relation
+ * @method WidgetRuleQuery rightJoinWidgetRuleRelatedByWidgetRuleIdWidgetId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WidgetRuleRelatedByWidgetRuleIdWidgetId relation
+ * @method WidgetRuleQuery innerJoinWidgetRuleRelatedByWidgetRuleIdWidgetId($relationAlias = null) Adds a INNER JOIN clause to the query using the WidgetRuleRelatedByWidgetRuleIdWidgetId relation
+ *
  * @method WidgetRule findOne(PropelPDO $con = null) Return the first WidgetRule matching the query
  * @method WidgetRule findOneOrCreate(PropelPDO $con = null) Return the first WidgetRule matching the query, or a new WidgetRule object populated from the query conditions when no match is found
  *
+ * @method WidgetRule findOneByParentWidgetRuleId(int $parent_widget_rule_id) Return the first WidgetRule filtered by the parent_widget_rule_id column
  * @method WidgetRule findOneByWidgetId(string $widget_id) Return the first WidgetRule filtered by the widget_id column
  * @method WidgetRule findOneByRuleId(int $rule_id) Return the first WidgetRule filtered by the rule_id column
+ * @method WidgetRule findOneByEnabledFlag(boolean $enabled_flag) Return the first WidgetRule filtered by the enabled_flag column
  * @method WidgetRule findOneByEvaluation(string $evaluation) Return the first WidgetRule filtered by the evaluation column
  *
  * @method array findByWidgetRuleId(int $widget_rule_id) Return WidgetRule objects filtered by the widget_rule_id column
+ * @method array findByParentWidgetRuleId(int $parent_widget_rule_id) Return WidgetRule objects filtered by the parent_widget_rule_id column
  * @method array findByWidgetId(string $widget_id) Return WidgetRule objects filtered by the widget_id column
  * @method array findByRuleId(int $rule_id) Return WidgetRule objects filtered by the rule_id column
+ * @method array findByEnabledFlag(boolean $enabled_flag) Return WidgetRule objects filtered by the enabled_flag column
  * @method array findByEvaluation(string $evaluation) Return WidgetRule objects filtered by the evaluation column
  */
 abstract class BaseWidgetRuleQuery extends ModelCriteria
@@ -152,7 +168,7 @@ abstract class BaseWidgetRuleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT widget_rule_id, widget_id, rule_id, evaluation FROM core.widget_rule WHERE widget_rule_id = :p0';
+        $sql = 'SELECT widget_rule_id, parent_widget_rule_id, widget_id, rule_id, enabled_flag, evaluation FROM core.widget_rule WHERE widget_rule_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -307,6 +323,50 @@ abstract class BaseWidgetRuleQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the parent_widget_rule_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByParentWidgetRuleId(1234); // WHERE parent_widget_rule_id = 1234
+     * $query->filterByParentWidgetRuleId(array(12, 34)); // WHERE parent_widget_rule_id IN (12, 34)
+     * $query->filterByParentWidgetRuleId(array('min' => 12)); // WHERE parent_widget_rule_id >= 12
+     * $query->filterByParentWidgetRuleId(array('max' => 12)); // WHERE parent_widget_rule_id <= 12
+     * </code>
+     *
+     * @see       filterByWidgetRuleRelatedByParentWidgetRuleIdWidgetId()
+     *
+     * @param     mixed $parentWidgetRuleId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return WidgetRuleQuery The current query, for fluid interface
+     */
+    public function filterByParentWidgetRuleId($parentWidgetRuleId = null, $comparison = null)
+    {
+        if (is_array($parentWidgetRuleId)) {
+            $useMinMax = false;
+            if (isset($parentWidgetRuleId['min'])) {
+                $this->addUsingAlias(WidgetRulePeer::PARENT_WIDGET_RULE_ID, $parentWidgetRuleId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($parentWidgetRuleId['max'])) {
+                $this->addUsingAlias(WidgetRulePeer::PARENT_WIDGET_RULE_ID, $parentWidgetRuleId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(WidgetRulePeer::PARENT_WIDGET_RULE_ID, $parentWidgetRuleId, $comparison);
+    }
+
+    /**
      * Filter the query on the widget_id column
      *
      * Example usage:
@@ -377,6 +437,33 @@ abstract class BaseWidgetRuleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(WidgetRulePeer::RULE_ID, $ruleId, $comparison);
+    }
+
+    /**
+     * Filter the query on the enabled_flag column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByEnabledFlag(true); // WHERE enabled_flag = true
+     * $query->filterByEnabledFlag('yes'); // WHERE enabled_flag = true
+     * </code>
+     *
+     * @param     boolean|string $enabledFlag The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return WidgetRuleQuery The current query, for fluid interface
+     */
+    public function filterByEnabledFlag($enabledFlag = null, $comparison = null)
+    {
+        if (is_string($enabledFlag)) {
+            $enabledFlag = in_array(strtolower($enabledFlag), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(WidgetRulePeer::ENABLED_FLAG, $enabledFlag, $comparison);
     }
 
     /**
@@ -482,6 +569,146 @@ abstract class BaseWidgetRuleQuery extends ModelCriteria
         return $this
             ->joinRule($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Rule', '\Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleQuery');
+    }
+
+    /**
+     * Filter the query by a related WidgetRule object
+     *
+     * @param   WidgetRule $widgetRule The related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 WidgetRuleQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByWidgetRuleRelatedByParentWidgetRuleIdWidgetId($widgetRule, $comparison = null)
+    {
+        if ($widgetRule instanceof WidgetRule) {
+            return $this
+                ->addUsingAlias(WidgetRulePeer::PARENT_WIDGET_RULE_ID, $widgetRule->getWidgetRuleId(), $comparison)
+                ->addUsingAlias(WidgetRulePeer::WIDGET_ID, $widgetRule->getWidgetId(), $comparison);
+        } else {
+            throw new PropelException('filterByWidgetRuleRelatedByParentWidgetRuleIdWidgetId() only accepts arguments of type WidgetRule');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the WidgetRuleRelatedByParentWidgetRuleIdWidgetId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return WidgetRuleQuery The current query, for fluid interface
+     */
+    public function joinWidgetRuleRelatedByParentWidgetRuleIdWidgetId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('WidgetRuleRelatedByParentWidgetRuleIdWidgetId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'WidgetRuleRelatedByParentWidgetRuleIdWidgetId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the WidgetRuleRelatedByParentWidgetRuleIdWidgetId relation WidgetRule object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery A secondary query class using the current class as primary query
+     */
+    public function useWidgetRuleRelatedByParentWidgetRuleIdWidgetIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinWidgetRuleRelatedByParentWidgetRuleIdWidgetId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'WidgetRuleRelatedByParentWidgetRuleIdWidgetId', '\Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery');
+    }
+
+    /**
+     * Filter the query by a related WidgetRule object
+     *
+     * @param   WidgetRule|PropelObjectCollection $widgetRule  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 WidgetRuleQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByWidgetRuleRelatedByWidgetRuleIdWidgetId($widgetRule, $comparison = null)
+    {
+        if ($widgetRule instanceof WidgetRule) {
+            return $this
+                ->addUsingAlias(WidgetRulePeer::WIDGET_RULE_ID, $widgetRule->getParentWidgetRuleId(), $comparison)
+                ->addUsingAlias(WidgetRulePeer::WIDGET_ID, $widgetRule->getWidgetId(), $comparison);
+        } else {
+            throw new PropelException('filterByWidgetRuleRelatedByWidgetRuleIdWidgetId() only accepts arguments of type WidgetRule');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the WidgetRuleRelatedByWidgetRuleIdWidgetId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return WidgetRuleQuery The current query, for fluid interface
+     */
+    public function joinWidgetRuleRelatedByWidgetRuleIdWidgetId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('WidgetRuleRelatedByWidgetRuleIdWidgetId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'WidgetRuleRelatedByWidgetRuleIdWidgetId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the WidgetRuleRelatedByWidgetRuleIdWidgetId relation WidgetRule object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery A secondary query class using the current class as primary query
+     */
+    public function useWidgetRuleRelatedByWidgetRuleIdWidgetIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinWidgetRuleRelatedByWidgetRuleIdWidgetId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'WidgetRuleRelatedByWidgetRuleIdWidgetId', '\Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRuleQuery');
     }
 
     /**

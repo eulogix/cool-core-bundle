@@ -32,19 +32,22 @@ abstract class BaseRuleCodePeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\RuleCodeTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the rule_code_id field */
     const RULE_CODE_ID = 'core.rule_code.rule_code_id';
 
     /** the column name for the rule_id field */
     const RULE_ID = 'core.rule_code.rule_id';
+
+    /** the column name for the enabled_flag field */
+    const ENABLED_FLAG = 'core.rule_code.enabled_flag';
 
     /** the column name for the type field */
     const TYPE = 'core.rule_code.type';
@@ -80,12 +83,12 @@ abstract class BaseRuleCodePeer
      * e.g. RuleCodePeer::$fieldNames[RuleCodePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('RuleCodeId', 'RuleId', 'Type', 'Name', 'CodeSnippetId', 'CodeSnippetVariables', 'RawCode', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('ruleCodeId', 'ruleId', 'type', 'name', 'codeSnippetId', 'codeSnippetVariables', 'rawCode', ),
-        BasePeer::TYPE_COLNAME => array (RuleCodePeer::RULE_CODE_ID, RuleCodePeer::RULE_ID, RuleCodePeer::TYPE, RuleCodePeer::NAME, RuleCodePeer::CODE_SNIPPET_ID, RuleCodePeer::CODE_SNIPPET_VARIABLES, RuleCodePeer::RAW_CODE, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('RULE_CODE_ID', 'RULE_ID', 'TYPE', 'NAME', 'CODE_SNIPPET_ID', 'CODE_SNIPPET_VARIABLES', 'RAW_CODE', ),
-        BasePeer::TYPE_FIELDNAME => array ('rule_code_id', 'rule_id', 'type', 'name', 'code_snippet_id', 'code_snippet_variables', 'raw_code', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('RuleCodeId', 'RuleId', 'EnabledFlag', 'Type', 'Name', 'CodeSnippetId', 'CodeSnippetVariables', 'RawCode', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('ruleCodeId', 'ruleId', 'enabledFlag', 'type', 'name', 'codeSnippetId', 'codeSnippetVariables', 'rawCode', ),
+        BasePeer::TYPE_COLNAME => array (RuleCodePeer::RULE_CODE_ID, RuleCodePeer::RULE_ID, RuleCodePeer::ENABLED_FLAG, RuleCodePeer::TYPE, RuleCodePeer::NAME, RuleCodePeer::CODE_SNIPPET_ID, RuleCodePeer::CODE_SNIPPET_VARIABLES, RuleCodePeer::RAW_CODE, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('RULE_CODE_ID', 'RULE_ID', 'ENABLED_FLAG', 'TYPE', 'NAME', 'CODE_SNIPPET_ID', 'CODE_SNIPPET_VARIABLES', 'RAW_CODE', ),
+        BasePeer::TYPE_FIELDNAME => array ('rule_code_id', 'rule_id', 'enabled_flag', 'type', 'name', 'code_snippet_id', 'code_snippet_variables', 'raw_code', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -95,12 +98,12 @@ abstract class BaseRuleCodePeer
      * e.g. RuleCodePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('RuleCodeId' => 0, 'RuleId' => 1, 'Type' => 2, 'Name' => 3, 'CodeSnippetId' => 4, 'CodeSnippetVariables' => 5, 'RawCode' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('ruleCodeId' => 0, 'ruleId' => 1, 'type' => 2, 'name' => 3, 'codeSnippetId' => 4, 'codeSnippetVariables' => 5, 'rawCode' => 6, ),
-        BasePeer::TYPE_COLNAME => array (RuleCodePeer::RULE_CODE_ID => 0, RuleCodePeer::RULE_ID => 1, RuleCodePeer::TYPE => 2, RuleCodePeer::NAME => 3, RuleCodePeer::CODE_SNIPPET_ID => 4, RuleCodePeer::CODE_SNIPPET_VARIABLES => 5, RuleCodePeer::RAW_CODE => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('RULE_CODE_ID' => 0, 'RULE_ID' => 1, 'TYPE' => 2, 'NAME' => 3, 'CODE_SNIPPET_ID' => 4, 'CODE_SNIPPET_VARIABLES' => 5, 'RAW_CODE' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('rule_code_id' => 0, 'rule_id' => 1, 'type' => 2, 'name' => 3, 'code_snippet_id' => 4, 'code_snippet_variables' => 5, 'raw_code' => 6, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('RuleCodeId' => 0, 'RuleId' => 1, 'EnabledFlag' => 2, 'Type' => 3, 'Name' => 4, 'CodeSnippetId' => 5, 'CodeSnippetVariables' => 6, 'RawCode' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('ruleCodeId' => 0, 'ruleId' => 1, 'enabledFlag' => 2, 'type' => 3, 'name' => 4, 'codeSnippetId' => 5, 'codeSnippetVariables' => 6, 'rawCode' => 7, ),
+        BasePeer::TYPE_COLNAME => array (RuleCodePeer::RULE_CODE_ID => 0, RuleCodePeer::RULE_ID => 1, RuleCodePeer::ENABLED_FLAG => 2, RuleCodePeer::TYPE => 3, RuleCodePeer::NAME => 4, RuleCodePeer::CODE_SNIPPET_ID => 5, RuleCodePeer::CODE_SNIPPET_VARIABLES => 6, RuleCodePeer::RAW_CODE => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('RULE_CODE_ID' => 0, 'RULE_ID' => 1, 'ENABLED_FLAG' => 2, 'TYPE' => 3, 'NAME' => 4, 'CODE_SNIPPET_ID' => 5, 'CODE_SNIPPET_VARIABLES' => 6, 'RAW_CODE' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('rule_code_id' => 0, 'rule_id' => 1, 'enabled_flag' => 2, 'type' => 3, 'name' => 4, 'code_snippet_id' => 5, 'code_snippet_variables' => 6, 'raw_code' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -176,6 +179,7 @@ abstract class BaseRuleCodePeer
         if (null === $alias) {
             $criteria->addSelectColumn(RuleCodePeer::RULE_CODE_ID);
             $criteria->addSelectColumn(RuleCodePeer::RULE_ID);
+            $criteria->addSelectColumn(RuleCodePeer::ENABLED_FLAG);
             $criteria->addSelectColumn(RuleCodePeer::TYPE);
             $criteria->addSelectColumn(RuleCodePeer::NAME);
             $criteria->addSelectColumn(RuleCodePeer::CODE_SNIPPET_ID);
@@ -184,6 +188,7 @@ abstract class BaseRuleCodePeer
         } else {
             $criteria->addSelectColumn($alias . '.rule_code_id');
             $criteria->addSelectColumn($alias . '.rule_id');
+            $criteria->addSelectColumn($alias . '.enabled_flag');
             $criteria->addSelectColumn($alias . '.type');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.code_snippet_id');

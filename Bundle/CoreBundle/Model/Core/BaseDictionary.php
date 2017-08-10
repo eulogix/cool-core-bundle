@@ -1680,6 +1680,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'enabled_flag' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'type' => 
         array (
           'attributes' => 
@@ -1890,6 +1896,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'parent_widget_rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'widget_id' => 
         array (
           'attributes' => 
@@ -1897,6 +1909,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'rule_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'enabled_flag' => 
         array (
           'attributes' => 
           array (
@@ -1914,7 +1932,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'lookup' => 
           array (
             'type' => 'enum',
-            'validValues' => 'ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION',
+            'validValues' => 'ON_LOAD,BEFORE_VALIDATION,BEFORE_DEFINITION,ALWAYS',
           ),
         ),
       ),

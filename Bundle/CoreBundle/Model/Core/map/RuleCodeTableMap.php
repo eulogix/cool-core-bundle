@@ -44,6 +44,7 @@ class RuleCodeTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         // columns
         $this->addPrimaryKey('rule_code_id', 'RuleCodeId', 'INTEGER', true, null, null);
         $this->addForeignKey('rule_id', 'RuleId', 'INTEGER', 'core.rule', 'rule_id', true, null, null);
+        $this->addColumn('enabled_flag', 'EnabledFlag', 'BOOLEAN', false, null, true);
         $this->addColumn('type', 'Type', 'LONGVARCHAR', true, null, 'VARIABLE');
         $this->addColumn('name', 'Name', 'LONGVARCHAR', true, null, null);
         $this->addForeignKey('code_snippet_id', 'CodeSnippetId', 'INTEGER', 'core.code_snippet', 'code_snippet_id', false, null, null);

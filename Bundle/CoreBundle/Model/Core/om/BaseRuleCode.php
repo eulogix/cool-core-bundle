@@ -53,6 +53,13 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
     protected $rule_id;
 
     /**
+     * The value for the enabled_flag field.
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $enabled_flag;
+
+    /**
      * The value for the type field.
      * Note: this column has a database default value of: 'VARIABLE'
      * @var        string
@@ -121,6 +128,7 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
      */
     public function applyDefaultValues()
     {
+        $this->enabled_flag = true;
         $this->type = 'VARIABLE';
     }
 
@@ -154,6 +162,17 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
     {
 
         return $this->rule_id;
+    }
+
+    /**
+     * Get the [enabled_flag] column value.
+     *
+     * @return boolean
+     */
+    public function getEnabledFlag()
+    {
+
+        return $this->enabled_flag;
     }
 
     /**
@@ -256,6 +275,35 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
 
         return $this;
     } // setRuleId()
+
+    /**
+     * Sets the value of the [enabled_flag] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return RuleCode The current object (for fluent API support)
+     */
+    public function setEnabledFlag($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->enabled_flag !== $v) {
+            $this->enabled_flag = $v;
+            $this->modifiedColumns[] = RuleCodePeer::ENABLED_FLAG;
+        }
+
+
+        return $this;
+    } // setEnabledFlag()
 
     /**
      * Set the value of [type] column.
@@ -376,6 +424,10 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->enabled_flag !== true) {
+                return false;
+            }
+
             if ($this->type !== 'VARIABLE') {
                 return false;
             }
@@ -404,11 +456,12 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
 
             $this->rule_code_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->rule_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-            $this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->code_snippet_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-            $this->code_snippet_variables = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->raw_code = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->enabled_flag = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
+            $this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->code_snippet_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->code_snippet_variables = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->raw_code = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -418,7 +471,7 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 7; // 7 = RuleCodePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = RuleCodePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating RuleCode object", $e);
@@ -673,6 +726,9 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(RuleCodePeer::RULE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'rule_id';
         }
+        if ($this->isColumnModified(RuleCodePeer::ENABLED_FLAG)) {
+            $modifiedColumns[':p' . $index++]  = 'enabled_flag';
+        }
         if ($this->isColumnModified(RuleCodePeer::TYPE)) {
             $modifiedColumns[':p' . $index++]  = 'type';
         }
@@ -704,6 +760,9 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
                         break;
                     case 'rule_id':
                         $stmt->bindValue($identifier, $this->rule_id, PDO::PARAM_INT);
+                        break;
+                    case 'enabled_flag':
+                        $stmt->bindValue($identifier, $this->enabled_flag, PDO::PARAM_BOOL);
                         break;
                     case 'type':
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
@@ -872,18 +931,21 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
                 return $this->getRuleId();
                 break;
             case 2:
-                return $this->getType();
+                return $this->getEnabledFlag();
                 break;
             case 3:
-                return $this->getName();
+                return $this->getType();
                 break;
             case 4:
-                return $this->getCodeSnippetId();
+                return $this->getName();
                 break;
             case 5:
-                return $this->getCodeSnippetVariables();
+                return $this->getCodeSnippetId();
                 break;
             case 6:
+                return $this->getCodeSnippetVariables();
+                break;
+            case 7:
                 return $this->getRawCode();
                 break;
             default:
@@ -917,11 +979,12 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
         $result = array(
             $keys[0] => $this->getRuleCodeId(),
             $keys[1] => $this->getRuleId(),
-            $keys[2] => $this->getType(),
-            $keys[3] => $this->getName(),
-            $keys[4] => $this->getCodeSnippetId(),
-            $keys[5] => $this->getCodeSnippetVariables(),
-            $keys[6] => $this->getRawCode(),
+            $keys[2] => $this->getEnabledFlag(),
+            $keys[3] => $this->getType(),
+            $keys[4] => $this->getName(),
+            $keys[5] => $this->getCodeSnippetId(),
+            $keys[6] => $this->getCodeSnippetVariables(),
+            $keys[7] => $this->getRawCode(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -976,18 +1039,21 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
                 $this->setRuleId($value);
                 break;
             case 2:
-                $this->setType($value);
+                $this->setEnabledFlag($value);
                 break;
             case 3:
-                $this->setName($value);
+                $this->setType($value);
                 break;
             case 4:
-                $this->setCodeSnippetId($value);
+                $this->setName($value);
                 break;
             case 5:
-                $this->setCodeSnippetVariables($value);
+                $this->setCodeSnippetId($value);
                 break;
             case 6:
+                $this->setCodeSnippetVariables($value);
+                break;
+            case 7:
                 $this->setRawCode($value);
                 break;
         } // switch()
@@ -1016,11 +1082,12 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setRuleCodeId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setRuleId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setType($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setName($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setCodeSnippetId($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setCodeSnippetVariables($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setRawCode($arr[$keys[6]]);
+        if (array_key_exists($keys[2], $arr)) $this->setEnabledFlag($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setType($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setName($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setCodeSnippetId($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setCodeSnippetVariables($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setRawCode($arr[$keys[7]]);
     }
 
     /**
@@ -1034,6 +1101,7 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
 
         if ($this->isColumnModified(RuleCodePeer::RULE_CODE_ID)) $criteria->add(RuleCodePeer::RULE_CODE_ID, $this->rule_code_id);
         if ($this->isColumnModified(RuleCodePeer::RULE_ID)) $criteria->add(RuleCodePeer::RULE_ID, $this->rule_id);
+        if ($this->isColumnModified(RuleCodePeer::ENABLED_FLAG)) $criteria->add(RuleCodePeer::ENABLED_FLAG, $this->enabled_flag);
         if ($this->isColumnModified(RuleCodePeer::TYPE)) $criteria->add(RuleCodePeer::TYPE, $this->type);
         if ($this->isColumnModified(RuleCodePeer::NAME)) $criteria->add(RuleCodePeer::NAME, $this->name);
         if ($this->isColumnModified(RuleCodePeer::CODE_SNIPPET_ID)) $criteria->add(RuleCodePeer::CODE_SNIPPET_ID, $this->code_snippet_id);
@@ -1103,6 +1171,7 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setRuleId($this->getRuleId());
+        $copyObj->setEnabledFlag($this->getEnabledFlag());
         $copyObj->setType($this->getType());
         $copyObj->setName($this->getName());
         $copyObj->setCodeSnippetId($this->getCodeSnippetId());
@@ -1277,6 +1346,7 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
     {
         $this->rule_code_id = null;
         $this->rule_id = null;
+        $this->enabled_flag = null;
         $this->type = null;
         $this->name = null;
         $this->code_snippet_id = null;

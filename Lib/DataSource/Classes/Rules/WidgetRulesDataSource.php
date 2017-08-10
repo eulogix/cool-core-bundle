@@ -15,6 +15,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Rule;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\WidgetRule;
 use Eulogix\Cool\Lib\DataSource\CoolCrudDataSource as CD;
 use Eulogix\Cool\Lib\DataSource\CoolCrudTableRelation as Rel;
+use Eulogix\Cool\Lib\DataSource\DSRequest;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -45,6 +46,37 @@ class WidgetRulesDataSource extends CD {
         $this->addField('valid')->setType(\PropelTypes::BOOLEAN);
         $this->addField(Rule::REPORT_EXECUTION_TIME)->setType(\PropelTypes::INTEGER);
         $this->addField(Rule::REPORT_MEMORY_USAGE)->setType(\PropelTypes::INTEGER);
+
+        return $ret;
+    }
+
+    /**
+     * we add the leaf column (bool) as the parameter which tells whether this record has or not children
+     * @inheritdoc
+     */
+    public function getSqlSelect($parameters = array())
+    {
+        $p = parent::getSqlSelect($parameters);
+        $s = ", true /*ac.children_count > 0*/ AS ".self::HAS_CHILDREN_IDENTIFIER;
+        return $p.$s;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSqlWhere($parameters = array(), $query=null) {
+
+        $ret = parent::getSqlWhere($parameters, $query);
+
+        if(@$parameters[self::RECORD_IDENTIFIER])
+            return $ret;
+
+        $parentId = @$parameters[DSRequest::PARAM_PARENT_ID];
+
+        if($parentId) {
+            $ret['statement'].=" AND (parent_widget_rule_id = :parent_id) ";
+            $ret['parameters'][':parent_id'] = (int) $parentId;
+        } else $ret['statement'].=" AND (parent_widget_rule_id IS NULL) ";
 
         return $ret;
     }
