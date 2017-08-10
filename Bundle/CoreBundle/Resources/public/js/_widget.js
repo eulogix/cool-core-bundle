@@ -428,9 +428,7 @@ define("cool/_widget",
                             w.destroyRecursive();
                         };
 
-                        w.placeAt(this.domNode.parentNode);
                         w.on('resize', function() { widget.resize() });
-
                         this.moveContent(w.containerNode, w.domNode);
 
                         w.startup();

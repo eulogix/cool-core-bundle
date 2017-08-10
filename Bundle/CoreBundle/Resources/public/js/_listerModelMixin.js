@@ -174,21 +174,21 @@ define("cool/_listerModelMixin",
 
                     if(columnDefinition.setValueJs) {
                         cLayout.setCellValue = function (gridData, storeData, cellWidget) {
-                            var rowIndex = cellWidget.cell.row.index();
-                            var rowData = lister.grid.row(rowIndex).rawData();
+
+                            var rowId = cellWidget.cell.row.id;
+                            var rowData = cellWidget.cell.row.rawData();
                             var decodedValue = lang.exists('_decodifications.' + columnName, rowData) ? rowData['_decodifications'][columnName] : null;
 
                             var staticTemplateOutput = decodedValue || rowData[columnName];
                             if(columnDefinition.cellTemplateJs) {
-                                //TODO: not sure if passing rowIndex is correct, maybe we have to pass rowData._recordid
-                                staticTemplateOutput = withoutWidgetsDecorator(gridData, rowIndex);
+                                staticTemplateOutput = withoutWidgetsDecorator(gridData, rowId);
                             }
                             var f = lister.createFunction(columnDefinition.setValueJs, false, {
                                 lister:lister,
                                 gridData:gridData,
                                 storeData:storeData,
                                 cellWidget:cellWidget,
-                                rowIndex: rowIndex,
+                                rowId: rowId,
                                 rowData: rowData,
                                 decodedValue: decodedValue,
                                 staticTemplateOutput: staticTemplateOutput

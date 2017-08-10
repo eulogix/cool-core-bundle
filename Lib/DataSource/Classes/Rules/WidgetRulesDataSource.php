@@ -37,7 +37,13 @@ class WidgetRulesDataSource extends CD {
                     ->setTable('core.rule')
                     ->setDeleteFlag(false)
                     ->setUpdateOrder(1)
-                    ->setJoinCondition('widget_rule.rule_id = rule.rule_id')
+                    ->setJoinCondition('widget_rule.rule_id = rule.rule_id'),
+
+                Rel::build()
+                    ->setView('core.widget_rule_calc')
+                    ->setIsRequired(false)
+                    ->setAlias('calc')
+                    ->setJoinCondition('calc.widget_rule_id = core.widget_rule.widget_rule_id')
             ]
         ];
 
@@ -57,7 +63,7 @@ class WidgetRulesDataSource extends CD {
     public function getSqlSelect($parameters = array())
     {
         $p = parent::getSqlSelect($parameters);
-        $s = ", true /*ac.children_count > 0*/ AS ".self::HAS_CHILDREN_IDENTIFIER;
+        $s = ", calc.children_nr > 0 AS ".self::HAS_CHILDREN_IDENTIFIER;
         return $p.$s;
     }
 
