@@ -12,6 +12,8 @@
 namespace Eulogix\Cool\Lib\Activiti;
 
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountGroup;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountGroupQuery;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountQuery;
 use Eulogix\Cool\Lib\Widget\WidgetInterface;
 use Eulogix\Lib\Activiti\ActivitiClient;
@@ -184,13 +186,41 @@ class WorkFlowEngine {
      *
      * @param ProcessInstance $processInstance
      * @param WidgetInterface $widget
+     * @param array $dojoParameters
      * @return bool
      */
-    public function popupTaskFormForCurrentUser($processInstance, WidgetInterface $widget) {
+    public function popupTaskFormForCurrentUser($processInstance, WidgetInterface $widget, array $dojoParameters=null) {
         if($task = $this->getFirstPendingTaskForUser($processInstance)) {
-            $widget->addCommandJs("var d = COOL.getDialogManager().openWidgetDialog('EulogixCoolCore/Workflows/TaskEditorForm', 'Complete Task', {_recordid: {$task->getId()}});");
+            $dojoParametersString = $dojoParameters ? ','.json_encode($dojoParameters) : '';
+            $widget->addCommandJs("var d = COOL.getDialogManager().openWidgetDialog('EulogixCoolCore/Workflows/TaskEditorForm', 'Complete Task', {_recordid: {$task->getId()}, hideCloseButton:true}, null, null, null{$dojoParametersString});");
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param Task $task
+     * @return Account
+     */
+    public function getAssigneeSystemUser(Task $task) {
+        return AccountQuery::create()->findOneByLoginName($task->getAssignee());
+    }
+
+    /**
+     * @param Task $task
+     * @return Account[]
+     */
+    public function getCandidateSystemUsers(Task $task) {
+        return array_map(function($accountLoginName) {
+            return AccountQuery::create()->findOneByLoginName($accountLoginName);
+        }, $task->getCandidateUsers());
+    }
+
+    /**
+     * @param Task $task
+     * @return AccountGroup[]
+     */
+    public function getCandidateSystemGroups(Task $task) {
+        return AccountGroupQuery::create()->findPks( $task->getCandidateGroups() );
     }
 } 
