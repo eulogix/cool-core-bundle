@@ -64,7 +64,7 @@ define("cool/workflow/explorer",
                     null,
                     null,
                     {
-                        editorFormDivId: self.getDefinitionParameter('baseId')+'editor',
+                        editorFormDivId: self.getDefinitionParameter('baseId')+'editorPane',
                         extFilterDivId: self.getDefinitionParameter('baseId')+'filter'
                     });
 

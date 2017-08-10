@@ -14,6 +14,8 @@ namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Workflows;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\Form\Form;
+use Eulogix\Cool\Lib\Translation\Translator;
+use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 use Eulogix\Cool\Lib\Widget\Message;
 use Eulogix\Lib\Activiti\om\ProcessInstance;
 use Eulogix\Lib\Activiti\om\Task;
@@ -24,7 +26,21 @@ use Eulogix\Lib\Activiti\om\Task;
 
 abstract class BaseTaskEditorForm extends Form {
 
+    const COMMON_TRANSLATOR_DOMAIN = "WORKFLOW_FORM_COMMON";
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $commonTranslator = null;
+
     protected $taskVariables = false;
+
+    public function build() {
+
+        $this->getServerAttributes()->set('commonTranslator', $this->getCommonTranslator());
+
+        return parent::build();
+    }
 
     public function onSubmit() {
         $parameters = $this->request->all();
@@ -48,17 +64,17 @@ abstract class BaseTaskEditorForm extends Form {
                         $this->addEvent("taskFlow", ['task_id' => $pendingTask->getId()] );
                     }
                 } catch(\Exception $e) {
-                    $this->addMessage(Message::TYPE_INFO, "WORKFLOW COMPLETED");
+                    $this->addMessage(Message::TYPE_INFO, $this->getCommonTranslator()->trans("WORKFLOW COMPLETED") );
                 }
 
                 $this->setReadOnly(true);
                 $this->addEvent("recordSaved");
-                $this->addMessage(Message::TYPE_INFO, "TASK COMPLETED");
+                $this->addMessage(Message::TYPE_INFO, $this->getCommonTranslator()->trans("TASK COMPLETED"));
             } catch(\Exception $e) {
                 $this->addMessage(Message::TYPE_ERROR, $e->getMessage());
             }
         } else {
-            $this->addMessage(Message::TYPE_ERROR, "NOT VALIDATED");
+            $this->addMessage(Message::TYPE_ERROR, $this->getCommonTranslator()->trans("NOT VALIDATED"));
         }
     }
 
@@ -137,5 +153,20 @@ abstract class BaseTaskEditorForm extends Form {
      */
     public function getTaskId() {
         return $this->parameters->get(DataSourceInterface::RECORD_IDENTIFIER);
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getCommonTranslator() {
+        if(!$this->commonTranslator) {
+            $this->commonTranslator = Translator::fromDomain( self::COMMON_TRANSLATOR_DOMAIN );
+        }
+        return $this->commonTranslator;
+    }
+
+    public function getLayout() {
+        $this->getServerAttributes()->set("formLayout", parent::getLayout());
+        return "{% include '@CoolWidgets/Workflows/templates/TaskForm.html.twig' %}";
     }
 }

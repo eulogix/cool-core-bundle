@@ -29,19 +29,31 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     private $embeddedFormsLayout;
 
     public function build() {
-        $this->setReadOnly(false);
+
+        $this->setFieldsReadOnly(false)->setReadOnly(false);
+        $this->getServerAttributes()->set('taskIsClaimable', false);
 
         $wfEngine = Cool::getInstance()->getFactory()->getWorkflowEngine();
         $user = Cool::getInstance()->getLoggedUser();
-        $this->buildActivitiForm();
         $task = $this->getTaskObject();
 
         $this->setId(implode('/', ['WORKFLOW_FORM', $task->getProcessDefinitionKey(), $task->getTaskDefinitionKey()]));
 
+        $this->buildActivitiForm();
+
         if(!$task->getAssignee()) {
-            $this->setReadOnly(true);
-            if($wfEngine->canTaskBeClaimedByUser($task))
-                $this->addCallActionAction('claim')->setReadOnly(false);
+            $this->setFieldsReadOnly(true);
+
+            if($wfEngine->canTaskBeClaimedByUser($task)) {
+
+                $this->getServerAttributes()->set('taskIsClaimable', true);
+                $this->addFieldButton('claim_button')
+                    ->setLabel( $this->getCommonTranslator()->trans("claim") )
+                    ->setConfirmMessage( $this->getCommonTranslator()->trans("confirm_claim") )
+                    ->setOnClick( "widget.callAction('claim');");
+
+            }
+
         } else if($task->getAssignee() != $user->getUsername()) {
             $this->setReadOnly(true);
         }
@@ -49,6 +61,11 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
         //for debugging
         $vars = $this->getTaskVariables();
         $this->getAttributes()->set('activiti_variables_dump', "<pre>".print_r($vars, true)."</pre>");
+
+        $this->getServerAttributes()->set('task', $task);
+        $this->getServerAttributes()->set('assigneeAccount', $wfEngine->getAssigneeSystemUser($task));
+        $this->getServerAttributes()->set('candidateAccounts', $wfEngine->getCandidateSystemUsers($task));
+        $this->getServerAttributes()->set('candidateGroups', $wfEngine->getCandidateSystemGroups($task));
 
         return parent::build();
     }
@@ -61,7 +78,7 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
         try {
             $activiti->claimTask($task->getId(), $user->getUsername());
             $this->reBuild();
-            $this->addMessageInfo("Task claimed.");
+            $this->addMessageInfo( $this->getCommonTranslator()->trans("TASK_CLAIMED") );
             $this->addEvent("recordSaved");
         } catch(\Exception $e) {
             $this->addMessageError($e->getMessage());
@@ -90,7 +107,7 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
         }
 
         if(!$this->getReadOnly())
-            $this->addFieldSubmit("proceed");
+            $this->addFieldSubmit("proceed")->setLabel( $this->getCommonTranslator()->trans("proceed") );
     }
 
     /**
@@ -142,7 +159,13 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     }
 
     protected function setUpActivitiField(FieldInterface $field, $formElement) {
-        $field->setLabel($formElement['name'])
+        $fieldName = $formElement['name'];
+
+        $label = preg_match('/^(.+?)\[T\]$/sim', $fieldName, $m)
+            ? $this->getTranslator()->trans($m[1])
+            : $fieldName;
+
+        $field->setLabel($label)
               ->setValue($formElement['value'])
               ->setReadOnly(!$formElement['writable']);
 
@@ -176,4 +199,5 @@ class PropertiesTaskEditorForm extends BaseTaskEditorForm {
     public function getDefaultLayout() {
         return parent::getDefaultLayout().$this->embeddedFormsLayout;
     }
+
 }

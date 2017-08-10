@@ -1,0 +1,102 @@
+<table style="width: 100%; height:100%; padding: 0; border-spacing: 0; border-collapse: collapse;">
+    <tr>
+        <td style="width: 250px; height: 20px;" valign="top">
+
+            <div class="sectionTitle">
+                <img src="/bower_components/fugue/icons/{% if serverAttributes.task.getAssignee() %}user.png{% else %}user-silhouette-question.png{% endif %}" style="vertical-align: middle">
+                <span  style="vertical-align: middle" >&nbsp;{{ "Assignee"|t([], serverAttributes.commonTranslator) }}</span>
+            </div>
+
+        </td>
+        <td valign="top">
+
+            <div class="sectionTitle">
+                <img src="/bower_components/fugue/icons/clipboard-task.png" style="vertical-align: middle">
+                <span  style="vertical-align: middle" >&nbsp;{{ "Task Form"|t([], serverAttributes.commonTranslator) }}</span>
+
+                <div style="float: right">
+                    <img src="/bower_components/fugue/icons/calendar-day.png"  style="vertical-align: middle"> <span  style="vertical-align: middle" >{{ serverAttributes.task.getDueDate()|default("-") }}</span>
+
+                    {% if serverAttributes.task.getPriority() >= 75 %}
+                        &nbsp;&nbsp;<img src="/bower_components/fugue/icons/traffic-light-red.png" style="vertical-align: middle"> <span  style="vertical-align: middle">{{ "PriorityHigh"|t([], serverAttributes.commonTranslator) }}</span>
+                    {% elseif serverAttributes.task.getPriority() >= 50 %}
+                        &nbsp;&nbsp;<img src="/bower_components/fugue/icons/traffic-light-yellow.png" style="vertical-align: middle"> <span  style="vertical-align: middle">{{ "PriorityNormal"|t([], serverAttributes.commonTranslator) }}</span>
+                    {% else %}
+                        &nbsp;&nbsp;<img src="/bower_components/fugue/icons/traffic-light-green.png" style="vertical-align: middle"> <span  style="vertical-align: middle">{{ "PriorityLow"|t([], serverAttributes.commonTranslator) }}</span>
+                    {% endif %}
+
+                    &nbsp;&nbsp;<img src="/bower_components/fugue/icons/clock.png" style="vertical-align: middle"> <span  style="vertical-align: middle" >{{ serverAttributes.task.getCreateTime()|format_date }}</span>
+                </div>
+
+            </div>
+
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+
+            <div style="padding: 5px">
+
+                <img style="border: 1px solid black; vertical-align: middle; margin-right:10px;"
+                        {% if serverAttributes.assigneeAccount and serverAttributes.assigneeAccount.getAvatar() %}
+                    src="{{ path('frepoGetPreviewImage', {'width': 50, 'repositoryId':'schema', 'filePath':serverAttributes.assigneeAccount.getAvatar().getId() }) }}"
+                {% else %}
+                    src="/hams/gfx/usercp/nouser.png" width="50"
+                        {% endif %}>
+
+                <b>{{ serverAttributes.task.getAssignee()|default( "Unassigned"|t([], serverAttributes.commonTranslator) ) }}</b>
+
+                {% if serverAttributes.taskIsClaimable %}
+                    <FIELDS>claim_button|align=center</FIELDS>
+                {% endif %}
+
+            </div>
+
+            <div class="sectionTitle">
+                <img src="/bower_components/fugue/icons/information-balloon.png" style="vertical-align: middle">
+                <span  style="vertical-align: middle" >&nbsp;{{ "Description"|t([], serverAttributes.commonTranslator) }}</span>
+            </div>
+
+            <div style="padding: 5px">
+                {{ serverAttributes.task.getDescription()|default( "No Description"|t([], serverAttributes.commonTranslator) ) }}
+            </div>
+
+            <div class="sectionTitle">
+                <img src="/bower_components/fugue/icons/users.png" style="vertical-align: middle">
+                <span  style="vertical-align: middle" >&nbsp;{{ "CandidateUsers"|t([], serverAttributes.commonTranslator) }}</span>
+            </div>
+
+            <div style="padding: 5px">
+                {% if serverAttributes.candidateAccounts %}
+                    {% for account in serverAttributes.candidateAccounts %}
+                        <li>{{ account.getHumanDescription() }}</li>
+                    {% endfor %}
+                {% else %}
+                    {{ "None"|t([], serverAttributes.commonTranslator) }}
+                {% endif %}
+            </div>
+
+            <div class="sectionTitle">
+                <img src="/bower_components/fugue/icons/users.png" style="vertical-align: middle">
+                <span  style="vertical-align: middle" >&nbsp;{{ "CandidateGroups"|t([], serverAttributes.commonTranslator) }}</span>
+            </div>
+
+            <div style="padding: 5px">
+                {% if serverAttributes.candidateGroups %}
+                    {% for group in serverAttributes.candidateGroups %}
+                        <li>{{ group.getHumanDescription() }}</li>
+                    {% endfor %}
+                {% else %}
+                    {{ "None"|t([], serverAttributes.commonTranslator) }}
+                {% endif %}
+            </div>
+
+        </td>
+        <td valign="top" style="border-left: 1px solid black; padding: 5px">
+
+                {{ serverAttributes.formLayout|raw }}
+
+        </td>
+    </tr>
+
+</table>
