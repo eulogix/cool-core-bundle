@@ -120,6 +120,14 @@ interface FormInterface extends WidgetInterface {
     public function getFieldNames($groupName=null);
 
     /**
+     * sets some fields to read only, or all the form fields if no parameter is provided
+     * @param bool $readOnlyState the new state to set
+     * @param string[]|FieldInterface[] $fields an array of fields or field names, null means all fields
+     * @return $this
+     */
+    public function setFieldsReadOnly($readOnlyState = false, array $fields = null);
+
+    /**
      * returns a new field
      *
      * @param string $fieldType
@@ -269,5 +277,4 @@ interface FormInterface extends WidgetInterface {
      * @return \Eulogix\Cool\Lib\Form\Field\FieldInterface|\Eulogix\Cool\Lib\Form\Field\File
      */
     public function addDataSourceField($fieldName, $dataSource=null);
-
 }

@@ -190,6 +190,19 @@ class Form extends Widget implements FormInterface {
     }
 
     /**
+     * @inheritdoc
+     */
+    public function setFieldsReadOnly($readOnlyState = false, array $fields = null) {
+        $wkFields = $fields ?? $this->getFields();
+        foreach($wkFields as $field) {
+            if($field instanceof FieldInterface)
+                $field->setReadOnly($readOnlyState);
+            else $this->getField($field)->setReadOnly($readOnlyState);
+        }
+        return $this;
+    }
+
+    /**
     * @inheritdoc
     */
     public function getValues($limitFields=false) 
@@ -793,4 +806,5 @@ class Form extends Widget implements FormInterface {
             'changedFields' => $this->getChangedFields()
         ]);
     }
+
 }
