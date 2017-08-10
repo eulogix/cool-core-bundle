@@ -71,6 +71,12 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
     protected $filter_server_id;
 
     /**
+     * The value for the min_height field.
+     * @var        string
+     */
+    protected $min_height;
+
+    /**
      * The value for the max_height field.
      * @var        string
      */
@@ -161,6 +167,17 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
     {
 
         return $this->filter_server_id;
+    }
+
+    /**
+     * Get the [min_height] column value.
+     *
+     * @return string
+     */
+    public function getMinHeight()
+    {
+
+        return $this->min_height;
     }
 
     /**
@@ -288,6 +305,27 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
     } // setFilterServerId()
 
     /**
+     * Set the value of [min_height] column.
+     *
+     * @param  string $v new value
+     * @return ListerConfig The current object (for fluent API support)
+     */
+    public function setMinHeight($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->min_height !== $v) {
+            $this->min_height = $v;
+            $this->modifiedColumns[] = ListerConfigPeer::MIN_HEIGHT;
+        }
+
+
+        return $this;
+    } // setMinHeight()
+
+    /**
      * Set the value of [max_height] column.
      *
      * @param  string $v new value
@@ -345,7 +383,8 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
             $this->variation = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->filter_show_flag = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
             $this->filter_server_id = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->max_height = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->min_height = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->max_height = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -355,7 +394,7 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 6; // 6 = ListerConfigPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = ListerConfigPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ListerConfig object", $e);
@@ -611,6 +650,9 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(ListerConfigPeer::FILTER_SERVER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'filter_server_id';
         }
+        if ($this->isColumnModified(ListerConfigPeer::MIN_HEIGHT)) {
+            $modifiedColumns[':p' . $index++]  = 'min_height';
+        }
         if ($this->isColumnModified(ListerConfigPeer::MAX_HEIGHT)) {
             $modifiedColumns[':p' . $index++]  = 'max_height';
         }
@@ -639,6 +681,9 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
                         break;
                     case 'filter_server_id':
                         $stmt->bindValue($identifier, $this->filter_server_id, PDO::PARAM_STR);
+                        break;
+                    case 'min_height':
+                        $stmt->bindValue($identifier, $this->min_height, PDO::PARAM_STR);
                         break;
                     case 'max_height':
                         $stmt->bindValue($identifier, $this->max_height, PDO::PARAM_STR);
@@ -794,6 +839,9 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
                 return $this->getFilterServerId();
                 break;
             case 5:
+                return $this->getMinHeight();
+                break;
+            case 6:
                 return $this->getMaxHeight();
                 break;
             default:
@@ -830,7 +878,8 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
             $keys[2] => $this->getVariation(),
             $keys[3] => $this->getFilterShowFlag(),
             $keys[4] => $this->getFilterServerId(),
-            $keys[5] => $this->getMaxHeight(),
+            $keys[5] => $this->getMinHeight(),
+            $keys[6] => $this->getMaxHeight(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -891,6 +940,9 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
                 $this->setFilterServerId($value);
                 break;
             case 5:
+                $this->setMinHeight($value);
+                break;
+            case 6:
                 $this->setMaxHeight($value);
                 break;
         } // switch()
@@ -922,7 +974,8 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setVariation($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setFilterShowFlag($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setFilterServerId($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setMaxHeight($arr[$keys[5]]);
+        if (array_key_exists($keys[5], $arr)) $this->setMinHeight($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setMaxHeight($arr[$keys[6]]);
     }
 
     /**
@@ -939,6 +992,7 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(ListerConfigPeer::VARIATION)) $criteria->add(ListerConfigPeer::VARIATION, $this->variation);
         if ($this->isColumnModified(ListerConfigPeer::FILTER_SHOW_FLAG)) $criteria->add(ListerConfigPeer::FILTER_SHOW_FLAG, $this->filter_show_flag);
         if ($this->isColumnModified(ListerConfigPeer::FILTER_SERVER_ID)) $criteria->add(ListerConfigPeer::FILTER_SERVER_ID, $this->filter_server_id);
+        if ($this->isColumnModified(ListerConfigPeer::MIN_HEIGHT)) $criteria->add(ListerConfigPeer::MIN_HEIGHT, $this->min_height);
         if ($this->isColumnModified(ListerConfigPeer::MAX_HEIGHT)) $criteria->add(ListerConfigPeer::MAX_HEIGHT, $this->max_height);
 
         return $criteria;
@@ -1007,6 +1061,7 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
         $copyObj->setVariation($this->getVariation());
         $copyObj->setFilterShowFlag($this->getFilterShowFlag());
         $copyObj->setFilterServerId($this->getFilterServerId());
+        $copyObj->setMinHeight($this->getMinHeight());
         $copyObj->setMaxHeight($this->getMaxHeight());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1323,6 +1378,7 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
         $this->variation = null;
         $this->filter_show_flag = null;
         $this->filter_server_id = null;
+        $this->min_height = null;
         $this->max_height = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;

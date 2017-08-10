@@ -227,6 +227,7 @@
         <column name="filter_show_flag" type="BOOLEAN"/>
         <column name="filter_server_id" type="LONGVARCHAR"/>
 
+        <column name="min_height" type="LONGVARCHAR"/>
         <column name="max_height" type="LONGVARCHAR"/>
 
         <unique>

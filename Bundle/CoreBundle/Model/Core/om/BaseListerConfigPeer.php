@@ -31,13 +31,13 @@ abstract class BaseListerConfigPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\ListerConfigTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 7;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /** the column name for the lister_config_id field */
     const LISTER_CONFIG_ID = 'core.lister_config.lister_config_id';
@@ -53,6 +53,9 @@ abstract class BaseListerConfigPeer
 
     /** the column name for the filter_server_id field */
     const FILTER_SERVER_ID = 'core.lister_config.filter_server_id';
+
+    /** the column name for the min_height field */
+    const MIN_HEIGHT = 'core.lister_config.min_height';
 
     /** the column name for the max_height field */
     const MAX_HEIGHT = 'core.lister_config.max_height';
@@ -76,12 +79,12 @@ abstract class BaseListerConfigPeer
      * e.g. ListerConfigPeer::$fieldNames[ListerConfigPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigId', 'Name', 'Variation', 'FilterShowFlag', 'FilterServerId', 'MaxHeight', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigId', 'name', 'variation', 'filterShowFlag', 'filterServerId', 'maxHeight', ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigPeer::LISTER_CONFIG_ID, ListerConfigPeer::NAME, ListerConfigPeer::VARIATION, ListerConfigPeer::FILTER_SHOW_FLAG, ListerConfigPeer::FILTER_SERVER_ID, ListerConfigPeer::MAX_HEIGHT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_ID', 'NAME', 'VARIATION', 'FILTER_SHOW_FLAG', 'FILTER_SERVER_ID', 'MAX_HEIGHT', ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_id', 'name', 'variation', 'filter_show_flag', 'filter_server_id', 'max_height', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigId', 'Name', 'Variation', 'FilterShowFlag', 'FilterServerId', 'MinHeight', 'MaxHeight', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigId', 'name', 'variation', 'filterShowFlag', 'filterServerId', 'minHeight', 'maxHeight', ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigPeer::LISTER_CONFIG_ID, ListerConfigPeer::NAME, ListerConfigPeer::VARIATION, ListerConfigPeer::FILTER_SHOW_FLAG, ListerConfigPeer::FILTER_SERVER_ID, ListerConfigPeer::MIN_HEIGHT, ListerConfigPeer::MAX_HEIGHT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_ID', 'NAME', 'VARIATION', 'FILTER_SHOW_FLAG', 'FILTER_SERVER_ID', 'MIN_HEIGHT', 'MAX_HEIGHT', ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_id', 'name', 'variation', 'filter_show_flag', 'filter_server_id', 'min_height', 'max_height', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -91,12 +94,12 @@ abstract class BaseListerConfigPeer
      * e.g. ListerConfigPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigId' => 0, 'Name' => 1, 'Variation' => 2, 'FilterShowFlag' => 3, 'FilterServerId' => 4, 'MaxHeight' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigId' => 0, 'name' => 1, 'variation' => 2, 'filterShowFlag' => 3, 'filterServerId' => 4, 'maxHeight' => 5, ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigPeer::LISTER_CONFIG_ID => 0, ListerConfigPeer::NAME => 1, ListerConfigPeer::VARIATION => 2, ListerConfigPeer::FILTER_SHOW_FLAG => 3, ListerConfigPeer::FILTER_SERVER_ID => 4, ListerConfigPeer::MAX_HEIGHT => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_ID' => 0, 'NAME' => 1, 'VARIATION' => 2, 'FILTER_SHOW_FLAG' => 3, 'FILTER_SERVER_ID' => 4, 'MAX_HEIGHT' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_id' => 0, 'name' => 1, 'variation' => 2, 'filter_show_flag' => 3, 'filter_server_id' => 4, 'max_height' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigId' => 0, 'Name' => 1, 'Variation' => 2, 'FilterShowFlag' => 3, 'FilterServerId' => 4, 'MinHeight' => 5, 'MaxHeight' => 6, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigId' => 0, 'name' => 1, 'variation' => 2, 'filterShowFlag' => 3, 'filterServerId' => 4, 'minHeight' => 5, 'maxHeight' => 6, ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigPeer::LISTER_CONFIG_ID => 0, ListerConfigPeer::NAME => 1, ListerConfigPeer::VARIATION => 2, ListerConfigPeer::FILTER_SHOW_FLAG => 3, ListerConfigPeer::FILTER_SERVER_ID => 4, ListerConfigPeer::MIN_HEIGHT => 5, ListerConfigPeer::MAX_HEIGHT => 6, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_ID' => 0, 'NAME' => 1, 'VARIATION' => 2, 'FILTER_SHOW_FLAG' => 3, 'FILTER_SERVER_ID' => 4, 'MIN_HEIGHT' => 5, 'MAX_HEIGHT' => 6, ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_id' => 0, 'name' => 1, 'variation' => 2, 'filter_show_flag' => 3, 'filter_server_id' => 4, 'min_height' => 5, 'max_height' => 6, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -175,6 +178,7 @@ abstract class BaseListerConfigPeer
             $criteria->addSelectColumn(ListerConfigPeer::VARIATION);
             $criteria->addSelectColumn(ListerConfigPeer::FILTER_SHOW_FLAG);
             $criteria->addSelectColumn(ListerConfigPeer::FILTER_SERVER_ID);
+            $criteria->addSelectColumn(ListerConfigPeer::MIN_HEIGHT);
             $criteria->addSelectColumn(ListerConfigPeer::MAX_HEIGHT);
         } else {
             $criteria->addSelectColumn($alias . '.lister_config_id');
@@ -182,6 +186,7 @@ abstract class BaseListerConfigPeer
             $criteria->addSelectColumn($alias . '.variation');
             $criteria->addSelectColumn($alias . '.filter_show_flag');
             $criteria->addSelectColumn($alias . '.filter_server_id');
+            $criteria->addSelectColumn($alias . '.min_height');
             $criteria->addSelectColumn($alias . '.max_height');
         }
     }

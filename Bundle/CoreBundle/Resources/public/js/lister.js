@@ -117,6 +117,7 @@ define("cool/lister",
 
                 store : {},
 
+                minHeight: 0,
                 maxHeight: 400,
 
                 exportButton: {},
@@ -263,6 +264,9 @@ define("cool/lister",
                     //styling
                     if(maxHeight = this.getDefinitionAttribute('max_height'))
                         this.maxHeight = maxHeight;
+
+                    if(minHeight = this.getDefinitionAttribute('min_height'))
+                        this.minHeight = minHeight;
 
                     //delete multiple?
                     if(this.canDeleteMultiple()) {

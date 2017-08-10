@@ -23,6 +23,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method ListerConfigQuery orderByVariation($order = Criteria::ASC) Order by the variation column
  * @method ListerConfigQuery orderByFilterShowFlag($order = Criteria::ASC) Order by the filter_show_flag column
  * @method ListerConfigQuery orderByFilterServerId($order = Criteria::ASC) Order by the filter_server_id column
+ * @method ListerConfigQuery orderByMinHeight($order = Criteria::ASC) Order by the min_height column
  * @method ListerConfigQuery orderByMaxHeight($order = Criteria::ASC) Order by the max_height column
  *
  * @method ListerConfigQuery groupByListerConfigId() Group by the lister_config_id column
@@ -30,6 +31,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method ListerConfigQuery groupByVariation() Group by the variation column
  * @method ListerConfigQuery groupByFilterShowFlag() Group by the filter_show_flag column
  * @method ListerConfigQuery groupByFilterServerId() Group by the filter_server_id column
+ * @method ListerConfigQuery groupByMinHeight() Group by the min_height column
  * @method ListerConfigQuery groupByMaxHeight() Group by the max_height column
  *
  * @method ListerConfigQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -47,6 +49,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method ListerConfig findOneByVariation(string $variation) Return the first ListerConfig filtered by the variation column
  * @method ListerConfig findOneByFilterShowFlag(boolean $filter_show_flag) Return the first ListerConfig filtered by the filter_show_flag column
  * @method ListerConfig findOneByFilterServerId(string $filter_server_id) Return the first ListerConfig filtered by the filter_server_id column
+ * @method ListerConfig findOneByMinHeight(string $min_height) Return the first ListerConfig filtered by the min_height column
  * @method ListerConfig findOneByMaxHeight(string $max_height) Return the first ListerConfig filtered by the max_height column
  *
  * @method array findByListerConfigId(int $lister_config_id) Return ListerConfig objects filtered by the lister_config_id column
@@ -54,6 +57,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
  * @method array findByVariation(string $variation) Return ListerConfig objects filtered by the variation column
  * @method array findByFilterShowFlag(boolean $filter_show_flag) Return ListerConfig objects filtered by the filter_show_flag column
  * @method array findByFilterServerId(string $filter_server_id) Return ListerConfig objects filtered by the filter_server_id column
+ * @method array findByMinHeight(string $min_height) Return ListerConfig objects filtered by the min_height column
  * @method array findByMaxHeight(string $max_height) Return ListerConfig objects filtered by the max_height column
  */
 abstract class BaseListerConfigQuery extends ModelCriteria
@@ -160,7 +164,7 @@ abstract class BaseListerConfigQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_id, name, variation, filter_show_flag, filter_server_id, max_height FROM core.lister_config WHERE lister_config_id = :p0';
+        $sql = 'SELECT lister_config_id, name, variation, filter_show_flag, filter_server_id, min_height, max_height FROM core.lister_config WHERE lister_config_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -426,6 +430,35 @@ abstract class BaseListerConfigQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigPeer::FILTER_SERVER_ID, $filterServerId, $comparison);
+    }
+
+    /**
+     * Filter the query on the min_height column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMinHeight('fooValue');   // WHERE min_height = 'fooValue'
+     * $query->filterByMinHeight('%fooValue%'); // WHERE min_height LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $minHeight The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigQuery The current query, for fluid interface
+     */
+    public function filterByMinHeight($minHeight = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($minHeight)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $minHeight)) {
+                $minHeight = str_replace('*', '%', $minHeight);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigPeer::MIN_HEIGHT, $minHeight, $comparison);
     }
 
     /**

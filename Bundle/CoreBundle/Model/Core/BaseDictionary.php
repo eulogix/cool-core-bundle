@@ -620,6 +620,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'min_height' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'max_height' => 
         array (
           'attributes' => 

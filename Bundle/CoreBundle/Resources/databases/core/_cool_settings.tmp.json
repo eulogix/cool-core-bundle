@@ -375,6 +375,9 @@
                     "filter_server_id": {
                         "attributes": []
                     },
+                    "min_height": {
+                        "attributes": []
+                    },
                     "max_height": {
                         "attributes": []
                     }

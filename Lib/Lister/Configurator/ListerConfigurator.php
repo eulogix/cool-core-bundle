@@ -42,6 +42,9 @@ class ListerConfigurator extends WidgetConfigurator {
             /** @var ListerInterface $widget */
             $widget = $this->widget;
 
+            if($minHeight = $config->getMinHeight())
+                $widget->getAttributes()->set(ListerInterface::ATTR_MIN_HEIGHT, $minHeight);
+
             if($maxHeight = $config->getMaxHeight())
                 $widget->getAttributes()->set(ListerInterface::ATTR_MAX_HEIGHT, $maxHeight);
 

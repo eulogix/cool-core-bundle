@@ -133,7 +133,9 @@ define("cool/_listerLayoutMixin",
 
                                 finalSize = { h:Math.min(
                                     lister.maxHeight,
-                                    freeHeight + totalCalcRowHeight
+                                    lister.minHeight > 0
+                                        ? Math.max(lister.minHeight, freeHeight + totalCalcRowHeight)
+                                        : freeHeight + totalCalcRowHeight
                                 )};
 
                                 rowsAvailableHeight = finalSize.h - freeHeight;
