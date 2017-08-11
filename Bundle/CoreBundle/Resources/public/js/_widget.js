@@ -428,7 +428,7 @@ define("cool/_widget",
                             w.destroyRecursive();
                         };
 
-                        w.on('resize', function() { widget.resize() });
+                        w.on('resize', function() { widget._doResize() });
                         this.moveContent(w.containerNode, w.domNode);
 
                         w.startup();
@@ -739,6 +739,12 @@ define("cool/_widget",
                 resize: function() {
                     this.inherited(arguments);
 
+                    if(this.containerWindow) {
+                        this.containerWindow.resize();
+                    } else this._doResize();
+                },
+
+                _doResize: function() {
                     if(this.fillContent) {
                         var actionsBox = domGeometry.getContentBox(this.actionsNode);
                         var notificationsBox = domGeometry.getContentBox(this.notificationsNode);

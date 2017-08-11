@@ -75,7 +75,8 @@ define("cool/window",
                     "height": "100%"
                 });
                 domStyle.set(this.containerNode, {
-                    "height": (nodeBox.h - titleBox.h -1)+"px"
+                    "height": (nodeBox.h - titleBox.h -1)+"px",
+                    "overflow": "auto"
                 });
             }
             this.emit('resize');

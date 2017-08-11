@@ -22,7 +22,8 @@ define("cool/controls/HTMLEditor",
             var field = new Editor({
                 html:'',
                 height:this.getParameter('height'),
-                extraPlugins: [AlwaysShowToolbar, ViewSource]
+                extraPlugins: [AlwaysShowToolbar, ViewSource],
+                styleSheets: '/bundles/eulogixcoolcore/js/css/htmleditor/editorarea.css'
             }, dojo.doc.createElement('div'));
 
             field.startup();

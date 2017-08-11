@@ -305,10 +305,10 @@ define("cool/_listerModelMixin",
                     var grid = this.grid;
                     var store = this.grid.store;
                     rowId+="";
-                    //reload a row from the store and notify the cache (this does not trigger server side operations)
+
+                    //reload a row from the store and notify the observer (this does not trigger further server side operations)
                     store.get(rowId).then(function( updatedRowObject ) {
                         store.notify(updatedRowObject, rowId);
-                        grid.model.clearCache();
                         grid.body.refresh();
                     });
                 },
