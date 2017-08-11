@@ -878,17 +878,18 @@ class CoolCrudDataSource extends CoolDataSource {
             $recordPks = $this->extractRelationPks($recordId);
             $pkCursor = $this->isUnioned() ? 1 : 0; //skip the first PK which is always the schema
 
-            foreach($this->tableRelations as $relation) {
-                $relationPk = @$recordPks[ $pkCursor++ ];
-                if($relationPk !== null && $relationPk !== '' && $relationPk != self::NULL_PK_SYMBOL) {
-                    $qualifier = $relation->getQualifier();
-                    $pkField = $relation->getPKfields()[ 0 ];
-                    $variableName = ":a" . md5('record_pk' . $qualifier);
+            foreach($this->tableRelations as $relation)
+                if($relation->getSQLPKExpression()) {
+                    $relationPk = @$recordPks[ $pkCursor++ ];
+                    if($relationPk !== null && $relationPk !== '' && $relationPk != self::NULL_PK_SYMBOL) {
+                        $qualifier = $relation->getQualifier();
+                        $pkField = $relation->getPKfields()[ 0 ];
+                        $variableName = ":a" . md5('record_pk' . $qualifier);
 
-                    @$ret[ 'statement' ] .= " AND ({$qualifier}.{$pkField} = {$variableName}) ";
-                    @$ret[ 'parameters' ][ $variableName ] = $relationPk;
+                        @$ret[ 'statement' ] .= " AND ({$qualifier}.{$pkField} = {$variableName}) ";
+                        @$ret[ 'parameters' ][ $variableName ] = $relationPk;
+                    }
                 }
-            }
          }
 
          return $ret;

@@ -573,11 +573,10 @@ class CoolCrudTableRelation {
         if(!$this->isView()) {
             $db = $this->getCoolSchema();
             $dict = $db->getDictionary();
-            $tablePk = $dict->getPropelTableMap($this->getTable())->getPkFields();
+            return $dict->getPropelTableMap($this->getTable())->getPkFields();
         } else {
             return $this->pkFields;
         }
-        return $tablePk;
     }
 
 }
