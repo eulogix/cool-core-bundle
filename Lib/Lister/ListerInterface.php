@@ -40,6 +40,8 @@ interface ListerInterface extends WidgetInterface {
     const ATTR_TIMELINE_COLUMNS = "timeline_columns";
     const ATTR_TIMELINE_GROUP_COLUMNS = "timeline_group_columns";
 
+    const ATTR_MOVE_ELEMENTS_IN_TREE = "move_elements_in_tree";
+
     const SORT_ASC = 'asc';
     const SORT_DESC = 'desc';
 

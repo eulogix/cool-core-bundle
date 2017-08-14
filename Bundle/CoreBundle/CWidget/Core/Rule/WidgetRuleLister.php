@@ -44,7 +44,7 @@ class WidgetRuleLister extends Lister {
         parent::build();
         $this->addAction('new Rule')->setOnClick("widget.openNewRecordEditor();");
 
-        $this->attributes->set('move_elements_in_tree', true);
+        $this->attributes->set(self::ATTR_MOVE_ELEMENTS_IN_TREE, true);
 
         return $this;
     }
