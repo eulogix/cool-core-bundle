@@ -32,15 +32,15 @@ define("cool/renderers/truncator",
         _setValueAttr: function(value) {
             this.value = value + '';
             this.strippedContent = this.extractContent(this.value);
+
+            dialogManager.unbindTooltip(this.domNode);
+
             if(this.strippedContent.length > this.maxChars) {
                 var template = Handlebars.compile('{{truncate value '+this.maxChars+'}}');
                 this.aNode.innerHTML = template({value: this.strippedContent});
-
                 dialogManager.bindTooltip(this.domNode, this.isHTML(this.value) ? this.value : this.nl2br(this.value), this.maxTooltipWidth);
-
             } else {
                 this.aNode.innerHTML = this.value;
-                dialogManager.unbindTooltip(this.domNode);
             }
         },
 

@@ -78,9 +78,11 @@ class RunJobCommand extends CoolCommand
 
         $jobParams = $jobParamsJSON ? json_decode($jobParamsJSON, true) : [];
 
-        $commandOutput = $pdi->runJob($job, $jobPath ?? PDIConnector::DEFAULT_JOB_PATH, $jobParams);
+        $exitCode = 0;
+        $commandOutput = $pdi->runJob($job, $jobPath ?? PDIConnector::DEFAULT_JOB_PATH, $jobParams, $exitCode);
 
         $output->write($commandOutput);
+        return $exitCode;
     }
 
 }
