@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    <!-- 'dojo_themes/dark/gridx/gridx.css'
+        'dojo_themes/dark/dgrid/dgrid.css' -->
+
     <!-- for some reason this file misbehaves when included using assetic -->
     <link rel="stylesheet" href="/dojo/dojox/calendar/themes/claro/Calendar.css"/>
 
@@ -88,7 +91,7 @@
     <script type="text/javascript" src="/bundles/eulogixcoolcore/jsnonamd/cool-init.js"></script>
 {% endblock %}
 </head>
-<body class='{% block dojo_skin %}claro{% endblock %} cool'>
+<body class='cool {% block dojo_skin %}claro{% endblock %}'>
 {% block _content %}{% endblock %}
 </body>
 </html>
