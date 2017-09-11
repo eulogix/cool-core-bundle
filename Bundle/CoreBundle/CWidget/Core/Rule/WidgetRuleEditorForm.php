@@ -32,6 +32,9 @@ class WidgetRuleEditorForm extends DSCRUDForm {
 
         parent::build();
 
+        //since the fk has two values, this avoids an error. to arrange rules, use the d&d
+        $this->removeField('parent_widget_rule_id');
+
         if(!$this->getDSRecord()->isNew()) {
 
             $filter = json_encode(['rule_id'=> $this->getDSRecord()->get('rule_id')]);
