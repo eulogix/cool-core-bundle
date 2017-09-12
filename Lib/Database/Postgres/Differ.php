@@ -101,7 +101,7 @@ class Differ {
         $this->auditSchema = $auditSchema;
         $this->isMultiTenant = $isMultiTenant;
         if($complementarySchemas)
-            $this->complementarySchemas = array_merge( $complementarySchemas, [$auditSchema]);
+            $this->complementarySchemas = array_unique ( array_merge( $complementarySchemas, [$auditSchema]) );
 
         $this->setSqlFiles('pre_sync', $preSyncSqlFiles);
         $this->setSqlFiles('post_sync', $postSyncSqlFiles);
