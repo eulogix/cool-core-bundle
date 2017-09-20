@@ -319,6 +319,16 @@ class Differ {
     }
 
     /**
+     * gets rid of useless noise that disturbs pgdiff
+     * @param string $dump
+     * @return string
+     */
+    protected function stripDumpFromUnneededStatemets($dump) {
+        $wkdump = preg_replace('/ALTER TABLE(.+?)REPLICA IDENTITY.+?;/im', '', $dump);
+        return $wkdump;
+    }
+
+    /**
      * dumps the stripped schema of a current (live) database
      *
      * @param $targetFile
@@ -338,6 +348,8 @@ class Differ {
         $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s ".$this->getPgDumpSchemasDefinition($schemasToDump)." --username=$user $database >\"$targetFile\"",
             "dump of the old schema, as is");
 
+        file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
+
         // convert MT schema to public
         if($this->isMultiTenant) {
             file_put_contents($targetFile, $this->ChangeSchema(file_get_contents($targetFile), $schema, self::TEMP_SCHEMA_NAME));
@@ -349,7 +361,6 @@ class Differ {
             "restore the dumped schema to the temp db, where it can be manipulated")) {
             $ret = false;
         } else {
-
             //pre sync scripts should contain statements that drop or alter any element not managed by APGDIFF so that
             //the subsequent diff creation does not fail
             if($ret = $this->applySqlFiles($this->sqlFiles['pre_sync'], $temp_db, $user)) {
@@ -358,6 +369,8 @@ class Differ {
                 $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s --schema=\"$schemaName\" --username=$user $temp_db >\"$targetFile\"",
                     "final dump of the stripped schema to our target file");
             }
+
+            file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
         }
 
         $this->shellExec("dropdb --host=\"{$this->host}\" --port=\"{$this->port}\" --username=$user $temp_db",
@@ -394,6 +407,8 @@ class Differ {
 
         $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s --schema=\"$schemaName\" --username=$user $temp_db >\"$targetFile\"",
             "dump of the updated schema");
+
+        file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
 
         $this->shellExec("dropdb --host=\"{$this->host}\" --port=\"{$this->port}\" --username=$user $temp_db",
             "drop of the temporary db $temp_db");
