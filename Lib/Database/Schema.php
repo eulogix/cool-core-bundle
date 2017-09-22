@@ -84,7 +84,9 @@ class Schema implements Shimmable
      * @return string
      */
     public function getShimUID() {
-        $UID = get_class($this) . ($this->isMultiTenant() ? $this->getCurrentSchema() : "");
+        $UID = get_class($this) .
+               ($this->isMultiTenant() ? $this->getCurrentSchema() : "") .
+               (Cool::getInstance()->getFactory()->getSession()->getDebugLookups() ? "_DL_" : "_NODL_");
         return md5($UID);
     }
 
