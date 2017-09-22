@@ -114,7 +114,9 @@ define("cool/controls/_control",
             }
 
             if(this.getParameter('att_audit')) {
-                this.addAuditTrailButton();
+                var form = this.getContainerWidget();
+                if(form && !form.getDefinitionAttribute('no_audit_trails'))
+                    this.addAuditTrailButton();
             }
 
             if( this.getContainerWidget() ) // the control may have no container, when used to inline edit a grid

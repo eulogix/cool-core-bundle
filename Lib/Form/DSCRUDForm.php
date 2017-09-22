@@ -63,8 +63,12 @@ class DSCRUDForm extends Form  {
         $this->addDataSourceFields();
         
         $record = $this->getDSRecord();
+
+        $this->getAttributes()->set(self::ATTRIBUTE_NO_AUDIT_TRAILS, true);
+
         if($record && !$record->isNew()) {
             $this->fill( $record->getValues() );
+            $this->getAttributes()->set(self::ATTRIBUTE_NO_AUDIT_TRAILS, false);
         }
 
         if(!$this->getReadOnly())

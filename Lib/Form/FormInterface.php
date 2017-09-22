@@ -22,6 +22,8 @@ use Eulogix\Lib\Validation\BeanValidatorInterface;
 
 interface FormInterface extends WidgetInterface {
 
+    const ATTRIBUTE_NO_AUDIT_TRAILS     =    'no_audit_trails';
+
     public function rawFill($data, $skipEmptyValues=false);
 
     public function fill($data, $skipEmptyValues=false);
