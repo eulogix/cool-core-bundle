@@ -68,6 +68,12 @@ class UserEditorForm extends CoolForm {
                 'tableName' => 'core.account_setting',
                 '_filter'=>$filter]), "Settings");
 
+        $this->setSlot('profiles', new WidgetSlot('Eulogix\Cool\Lib\Lister\CoolLister', [
+                'databaseName' => 'core',
+                'tableName' => 'core.account_profile_ref',
+                'caller' => 'ACCOUNT_FORM',
+                '_filter'=>$filter]), "Profiles");
+
         return $this;
     }
 

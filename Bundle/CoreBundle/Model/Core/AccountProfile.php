@@ -15,4 +15,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\om\BaseAccountProfile;
 
 class AccountProfile extends BaseAccountProfile
 {
+    /**
+     * @return string
+     */
+    public function getHumanDescription() {
+        return $this->getName();
+    }
 }
