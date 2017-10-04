@@ -58,4 +58,22 @@ class TableExtensionTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
         $this->addRelation('TableExtensionField', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionField', RelationMap::ONE_TO_MANY, array('table_extension_id' => 'table_extension_id', ), 'CASCADE', null, 'TableExtensionFields');
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // TableExtensionTableMap

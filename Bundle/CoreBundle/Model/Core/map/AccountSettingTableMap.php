@@ -57,4 +57,22 @@ class AccountSettingTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
         $this->addRelation('Account', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Account', RelationMap::MANY_TO_ONE, array('account_id' => 'account_id', ), 'CASCADE', null);
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // AccountSettingTableMap

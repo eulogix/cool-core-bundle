@@ -316,4 +316,13 @@ class CoolTableMap extends \TableMap {
                 return true;
         return false;
     }
+
+    /**
+     * @param string $behaviorName
+     * @return bool
+     */
+    public function hasBehavior($behaviorName) {
+        return isset( $this->getBehaviors()[ $behaviorName ] );
+    }
+
 } 

@@ -1943,6 +1943,85 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         ),
       ),
     ),
+    'core.pg_listener_hook' => 
+    array (
+      'attributes' => 
+      array (
+        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHook',
+        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookPeer',
+        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookQuery',
+        'schema' => 'core',
+        'rawname' => 'pg_listener_hook',
+        'editable' => true,
+      ),
+      'columns' => 
+      array (
+        'pg_listener_hook_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'channels_regex' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'exec_sql_statements' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'exec_sf_command' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'exec_shell_command' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'exec_php_code' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+      ),
+    ),
   ),
   'views' => 
   array (

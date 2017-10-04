@@ -1165,6 +1165,54 @@
                         }
                     }
                 }
+            },
+            "core.pg_listener_hook": {
+                "attributes": {
+                    "propelModelNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHook",
+                    "propelPeerNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookPeer",
+                    "propelQueryNamespace": "Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookQuery",
+                    "schema": "core",
+                    "rawname": "pg_listener_hook",
+                    "editable": true
+                },
+                "columns": {
+                    "pg_listener_hook_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "channels_regex": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    },
+                    "exec_sql_statements": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "exec_sf_command": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "exec_shell_command": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    },
+                    "exec_php_code": {
+                        "attributes": [],
+                        "control": {
+                            "type": "textarea"
+                        }
+                    }
+                }
             }
         },
         "views": []

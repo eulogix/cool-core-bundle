@@ -60,4 +60,22 @@ class RuleTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addRelation('WidgetRule', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule', RelationMap::ONE_TO_MANY, array('rule_id' => 'rule_id', ), 'RESTRICT', null, 'WidgetRules');
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // RuleTableMap

@@ -60,4 +60,22 @@ class FilePropertyTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         $this->addRelation('FieldDefinition', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinition', RelationMap::MANY_TO_ONE, array('field_definition_id' => 'field_definition_id', ), 'RESTRICT', null);
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // FilePropertyTableMap

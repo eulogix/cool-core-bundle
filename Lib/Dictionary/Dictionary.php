@@ -105,7 +105,7 @@ abstract class Dictionary {
 
     /**
      * returns an array of table maps
-     * @return CoolTableMap []
+     * @return CoolTableMap[]
      */
     public function getPropelTableMaps() {
         $tmaps = [];

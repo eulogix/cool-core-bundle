@@ -89,6 +89,12 @@ class AsyncJobTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
   'version_column' => 'record_version',
   'target' => 'EulogixCoolCoreBundle/core',
 ),
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
         );
     } // getBehaviors()
 

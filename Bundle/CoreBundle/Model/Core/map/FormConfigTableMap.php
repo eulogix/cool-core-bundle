@@ -57,4 +57,22 @@ class FormConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addRelation('FormConfigField', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigField', RelationMap::ONE_TO_MANY, array('form_config_id' => 'form_config_id', ), 'CASCADE', null, 'FormConfigFields');
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // FormConfigTableMap

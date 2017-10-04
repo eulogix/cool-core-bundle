@@ -57,6 +57,11 @@
             <unique-column name="login_name"/>
         </unique>
 
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
+
         <_files>
             <category name="AVATAR" maxCount="1" extensions="jpg"></category>
             <category name="UNCATEGORIZED" maxSizeMb="1" default="true"/>
@@ -95,6 +100,10 @@
         <index>
             <index-column name="space"/>
         </index>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="account_setting" >
@@ -116,11 +125,19 @@
         <index>
             <index-column name="name"/>
         </index>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="account_profile" _editable="true">
         <column name="account_profile_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="LONGVARCHAR" required="true"/>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="account_profile_setting" >
@@ -141,7 +158,11 @@
         </unique>
         <index>
             <index-column name="name"/>
-        </index>       
+        </index>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="account_profile_ref" >
@@ -171,6 +192,10 @@
             <unique-column name="account_id"/>
             <unique-column name="account_profile_id"/>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
 
@@ -191,6 +216,10 @@
         <unique>
             <unique-column name="name"/>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="account_group_ref">
@@ -222,6 +251,10 @@
             <unique-column name="account_id"/>
             <unique-column name="account_group_id"/>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
 
@@ -239,7 +272,10 @@
             <unique-column name="name"/>
             <unique-column name="variation"/>
         </unique>
-        
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>    
     
     <table name="form_config_field" >
@@ -264,7 +300,10 @@
             <unique-column name="name"/>
             <unique-column name="form_config_id"/>
         </unique>
-        
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="lister_config" >
@@ -282,7 +321,10 @@
             <unique-column name="name"/>
             <unique-column name="variation"/>
         </unique>
-        
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>    
     
     <table name="lister_config_column" >
@@ -329,7 +371,10 @@
             <unique-column name="name"/>
             <unique-column name="lister_config_id"/>
         </unique>
-        
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="lookup"
@@ -354,6 +399,10 @@
         </unique>
 
         <behavior name="extendable"/>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="table_extension" 
@@ -367,6 +416,10 @@
         <column name="description" type="LONGVARCHAR">
             <_control type="textarea"></_control>
         </column>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>    
     
     <table name="table_extension_field"
@@ -398,7 +451,10 @@
             DELETE FROM field_definition WHERE field_definition_id = OLD.field_definition_id;
             RETURN NULL; -- ignored, this is an AFTER trigger
         </_trigger>
-
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="field_definition" description="generic table that contains definition of fields, which can be linked to table extensions or file properties">
@@ -429,7 +485,10 @@
         <column name="description" type="LONGVARCHAR">
             <_control type="textarea"></_control>
         </column>
-
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="app_lock" >
@@ -441,8 +500,11 @@
         <column name="to_date" type="TIMESTAMP"/>
         <column name="active_flag" type="BOOLEAN"/>
         
-        <column name="meta" type="LONGVARCHAR" sqlType="json"/>        
-        
+        <column name="meta" type="LONGVARCHAR" sqlType="json"/>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
     
     <table name="translation"
@@ -484,7 +546,10 @@
                 RETURN NEW;
             ]]>
         </_trigger>
-
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="pending_call"
@@ -513,6 +578,10 @@
         <unique>
             <unique-column name="sid"></unique-column>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="async_job" _editable="false"
@@ -552,7 +621,10 @@
         <behavior name="auditable">
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
         </behavior>
-
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="user_notification" _editable="false"
@@ -578,7 +650,10 @@
         <behavior name="auditable">
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
         </behavior>
-
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="file_property" _editable="true"
@@ -615,6 +690,11 @@
         <index>
             <index-column name="context_category"/>
         </index>
+
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
 
         <_trigger name="DELETE_FIELDS" when="AFTER DELETE" language="plpgsql" >
             DELETE FROM field_definition WHERE field_definition_id = OLD.field_definition_id;
@@ -658,6 +738,10 @@
         <unique>
             <unique-column name="name"></unique-column>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="rule" _editable="true">
@@ -683,6 +767,10 @@
         <unique>
             <unique-column name="name"></unique-column>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="rule_code" _editable="true"
@@ -722,6 +810,10 @@
             <unique-column name="name"></unique-column>
             <unique-column name="rule_id"></unique-column>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="code_snippet" _editable="true"
@@ -755,6 +847,10 @@
         <column name="snippet" type="LONGVARCHAR" required="true">
             <_control type="textarea"></_control>
         </column>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="code_snippet_variable" _editable="true">
@@ -767,6 +863,10 @@
         <foreign-key foreignTable="code_snippet" onDelete="restrict">
             <reference local="code_snippet_id" foreign="code_snippet_id"/>
         </foreign-key>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
     <table name="widget_rule">
@@ -796,6 +896,40 @@
             <unique-column name="widget_rule_id"></unique-column>
             <unique-column name="widget_id"></unique-column>
         </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
+    </table>
+
+    <table name="pg_listener_hook" description="used to store listener hooks for PG NOTIFY messages" _editable="true">
+        <column name="pg_listener_hook_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR" required="true"/>
+        <column name="channels_regex" type="LONGVARCHAR" required="true"/>
+        <column name="description" type="LONGVARCHAR"/>
+
+        <!-- what to do when the notification meets the requirements -->
+        <column name="exec_sql_statements" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+        <column name="exec_sf_command" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+        <column name="exec_shell_command" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+        <column name="exec_php_code" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+
+        <unique>
+            <unique-column name="name"></unique-column>
+        </unique>
+        <behavior name="notifier">
+			<parameter name="schema" value="core"></parameter>
+            <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
+        </behavior>
     </table>
 
 </database>

@@ -25,6 +25,7 @@ propel:
 
         propel.behavior.extendable.class: Eulogix\Cool\Lib\Database\Propel\Behaviors\ExtendableBehavior
         propel.behavior.auditable.class: Eulogix\Cool\Lib\Database\Propel\Behaviors\AuditableBehavior
+        propel.behavior.notifier.class: Eulogix\Cool\Lib\Database\Propel\Behaviors\NotifierBehavior
 
     dbal:
         default_connection:         cool_db

@@ -29,3 +29,4 @@ SELECT setval('core.rule_code_rule_code_id_seq', COALESCE((SELECT MAX(rule_code_
 SELECT setval('core.code_snippet_code_snippet_id_seq', COALESCE((SELECT MAX(code_snippet_id)+1 FROM core.code_snippet), 1), false);
 SELECT setval('core.code_snippet_variable_code_snippet_variable_id_seq', COALESCE((SELECT MAX(code_snippet_variable_id)+1 FROM core.code_snippet_variable), 1), false);
 SELECT setval('core.widget_rule_widget_rule_id_seq', COALESCE((SELECT MAX(widget_rule_id)+1 FROM core.widget_rule), 1), false);
+SELECT setval('core.pg_listener_hook_pg_listener_hook_id_seq', COALESCE((SELECT MAX(pg_listener_hook_id)+1 FROM core.pg_listener_hook), 1), false);

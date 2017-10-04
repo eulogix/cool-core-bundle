@@ -75,6 +75,12 @@ class LookupTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
             'extendable' =>  array (
   'container_column' => 'ext',
 ),
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
         );
     } // getBehaviors()
 

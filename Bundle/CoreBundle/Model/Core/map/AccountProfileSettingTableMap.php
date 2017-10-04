@@ -57,4 +57,22 @@ class AccountProfileSettingTableMap extends \Eulogix\Cool\Lib\Database\Propel\Co
         $this->addRelation('AccountProfile', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfile', RelationMap::MANY_TO_ONE, array('account_profile_id' => 'account_profile_id', ), 'CASCADE', null);
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // AccountProfileSettingTableMap

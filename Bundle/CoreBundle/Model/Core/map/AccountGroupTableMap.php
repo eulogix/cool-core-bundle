@@ -57,4 +57,22 @@ class AccountGroupTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         $this->addRelation('AccountGroupRef', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRef', RelationMap::ONE_TO_MANY, array('account_group_id' => 'account_group_id', ), 'CASCADE', null, 'AccountGroupRefs');
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // AccountGroupTableMap

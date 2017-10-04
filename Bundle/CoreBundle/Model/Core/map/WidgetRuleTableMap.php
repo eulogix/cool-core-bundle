@@ -61,4 +61,22 @@ class WidgetRuleTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addRelation('WidgetRuleRelatedByWidgetRuleIdWidgetId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule', RelationMap::ONE_TO_MANY, array('widget_rule_id' => 'parent_widget_rule_id', 'widget_id' => 'widget_id', ), 'RESTRICT', null, 'WidgetRulesRelatedByWidgetRuleIdWidgetId');
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // WidgetRuleTableMap

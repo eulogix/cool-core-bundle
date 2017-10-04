@@ -375,3 +375,6 @@ SELECT {{ auditSchema }}._set_audit_strategy_settings('core.code_snippet_variabl
 -- set default audit strategy to none
 SELECT {{ auditSchema }}._set_audit_strategy_settings('core.widget_rule', 'none', 0, FALSE);
             
+-- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('core.pg_listener_hook', 'none', 0, FALSE);
+            

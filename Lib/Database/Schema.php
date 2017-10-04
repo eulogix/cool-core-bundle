@@ -25,6 +25,7 @@ use Eulogix\Lib\Database\Postgres\PgUtils;
 use Eulogix\Cool\Lib\Database\Propel\CoolPropelObject;
 use Eulogix\Cool\Lib\DataSource\CoolCrudDataSource;
 use Eulogix\Cool\Lib\Dictionary\Dictionary;
+use \DateTime;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -69,6 +70,12 @@ class Schema implements Shimmable
      * @var DataSourceInterface[]
      */
     private $dataSourcePool = [];
+
+
+    /**
+     * @var DateTime[]
+     */
+    private $matViewsRefreshLog = [];
 
     /**
      * @param string $name
@@ -818,6 +825,11 @@ class Schema implements Shimmable
      * @returns DSField[]
      */
     public function getDSFieldsForView($viewName, $prefix='', $lambdaFilter=null) {
+
+        if($lambdaFilter == null) {
+            if( $r = $this->getShim()->callMethod(__METHOD__, func_get_args())) return array_copy($r);
+        }
+
         $viewFields = $this->fetchArray("SELECT * FROM core.get_view_fields_origin('".$this->getCurrentSchema()."', '".$viewName."')");
         /** @var DSField[] $ret */
         $ret = [];
@@ -848,6 +860,7 @@ class Schema implements Shimmable
             $field->setIsPkInSource(false);
 
         return $ret;
+
     }
 
     /**
@@ -903,4 +916,60 @@ class Schema implements Shimmable
         $DSField->setControlType(Field::getDefaultControlType($name, $DSField->getType()));
         return $DSField;
     }
+
+    /**
+     * @return string[]
+     */
+    public function getNotificationChannels() {
+        $ret = [];
+        $tmaps = $this->getDictionary()->getPropelTableMaps();
+        foreach($tmaps as $tmap) {
+            if($tmap->hasBehavior('notifier')) {
+                $settings = $tmap->getBehaviors()['notifier'];
+                $baseChannel = $settings['channel'] ? $settings['channel'] : 'datachange_'.$tmap->getCoolRawName();
+                $ret[ $baseChannel ] = 1;
+                foreach($this->getSiblingSchemas() as $sibling)
+                    $ret[ $sibling.';'.$baseChannel ] = 1;
+            }
+        }
+        return array_keys($ret);
+    }
+
+    /**
+     * @param string $viewName
+     * @param int $maxIntervalSeconds if defined, limits the rate of refresh
+     * @param bool $concurrently
+     */
+    public function refreshMaterializedViewInAllSchemas($viewName, $maxIntervalSeconds = 0, $concurrently = true) {
+        $schemas = $this->getSiblingSchemas();
+        foreach($schemas as $schema) {
+            $this->refreshMaterializedView($viewName, $schema, $maxIntervalSeconds, $concurrently);
+        }
+    }
+
+    /**
+     * @param string $viewName
+     * @param null $schema one of the siblings schemas
+     * @param int $maxIntervalSeconds if defined, limits the rate of refresh
+     * @param bool $concurrently
+     */
+    public function refreshMaterializedView($viewName, $schema = null, $maxIntervalSeconds = 0, $concurrently = true) {
+        $schema = $schema ?? $this->getCurrentSchema();
+        if($this->isSchemaNameValid($schema)) {
+            $token = $schema.$viewName;
+            $now = new DateTime();
+            if( !$maxIntervalSeconds
+                || !isset($this->matViewsRefreshLog[$token])
+                || ($now->getTimestamp() - $this->matViewsRefreshLog[$token]->getTimestamp() >= $maxIntervalSeconds) ) {
+
+                $this->matViewsRefreshLog[ $token ] = $now;
+                try {
+                    $this->query("REFRESH MATERIALIZED VIEW ".($concurrently ? "CONCURRENTLY" : '')." $schema.$viewName");
+                } catch(\Throwable $e) {
+                    //do nothing for now
+                }
+            }
+        }
+    }
+
 }

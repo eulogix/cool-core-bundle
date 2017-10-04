@@ -446,7 +446,7 @@ class CoolCrudTableRelation {
             $DSFields = [];
         else {
             if($this->isView()) {
-                $DSFields = $coolSchema->getDSFieldsForView($this->getView(), $prefix, $this->getLambdaFilter());
+                $DSFields = $coolSchema->getDSFieldsForView($this->getPhysicalViewName(), $prefix, $this->getLambdaFilter());
                 foreach($DSFields as $fieldName => $DSField) {
                     if(in_array($fieldName, $this->getPKfields()))
                         $DSField->setIsPkInSource(true);
@@ -500,7 +500,9 @@ class CoolCrudTableRelation {
 
         if($this->isView()) {
 
-            $viewFields = $db->fetchArray("SELECT column_name, data_type FROM information_schema.columns where table_schema = :schema and table_name=:table", [':schema'=>$db->getCurrentSchema(), ':table'=>$this->getView()]);
+            $physicalViewName = $this->getPhysicalViewName();
+            $viewFields = $db->fetchArray("SELECT column_name, data_type FROM information_schema.columns where table_schema = :schema and table_name=:table", [':schema'=>$db->getCurrentSchema(), ':table'=>$physicalViewName]);
+
             foreach($viewFields as $vfRecord) {
                 $fieldName = $vfRecord['column_name'];
                 $expressions[ $prefix.$fieldName ] = $qualifier.".".$fieldName;
@@ -579,4 +581,19 @@ class CoolCrudTableRelation {
         }
     }
 
+    public function isMaterialized() {
+        return $this->isView() && ($this->getView() != $this->getPhysicalViewName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhysicalViewName() {
+        /* the mat_ prefix by convention indicates a materialized version of a regular view, so we query the original
+           view instead of the matview as PG information_schema does not support introspection of matviews. */
+
+        $viewName = $this->getView();
+        $physicalView = preg_match('/^mat_(.+?)$/sim', $viewName, $m) ? $m[1] : $viewName;
+        return $physicalView;
+    }
 }

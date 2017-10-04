@@ -57,4 +57,22 @@ class CodeSnippetVariableTableMap extends \Eulogix\Cool\Lib\Database\Propel\Cool
         $this->addRelation('CodeSnippet', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet', RelationMap::MANY_TO_ONE, array('code_snippet_id' => 'code_snippet_id', ), 'RESTRICT', null);
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'notifier' =>  array (
+  'channel' => NULL,
+  'per_row' => false,
+  'schema' => 'core',
+  'target' => 'EulogixCoolCoreBundle/core',
+),
+        );
+    } // getBehaviors()
+
 } // CodeSnippetVariableTableMap
