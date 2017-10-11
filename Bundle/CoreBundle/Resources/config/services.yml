@@ -142,3 +142,10 @@ services:
             - "core"
             - "core.account_setting"
             - "account_id"
+
+    cool.widget.helpProviderFactory:
+        class: Eulogix\Cool\Lib\Widget\Help\HelpProviderFactory
+
+    cool.wiki.appHelp:
+        class: Eulogix\Cool\Lib\Wiki\WikiMediaConnector
+        arguments: ["%app_help_wiki_api%", "%app_help_wiki_article_base%", "%app_help_wiki_username%", "%app_help_wiki_password%"]

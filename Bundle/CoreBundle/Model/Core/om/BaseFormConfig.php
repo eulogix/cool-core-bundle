@@ -65,6 +65,12 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
     protected $layout;
 
     /**
+     * The value for the wiki_help_page field.
+     * @var        string
+     */
+    protected $wiki_help_page;
+
+    /**
      * @var        PropelObjectCollection|FormConfigField[] Collection to store aggregation of FormConfigField objects.
      */
     protected $collFormConfigFields;
@@ -138,6 +144,17 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
     {
 
         return $this->layout;
+    }
+
+    /**
+     * Get the [wiki_help_page] column value.
+     * used to fetch field context help when using an external wiki. Can use variables: [$locale]
+     * @return string
+     */
+    public function getWikiHelpPage()
+    {
+
+        return $this->wiki_help_page;
     }
 
     /**
@@ -225,6 +242,27 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
     } // setLayout()
 
     /**
+     * Set the value of [wiki_help_page] column.
+     * used to fetch field context help when using an external wiki. Can use variables: [$locale]
+     * @param  string $v new value
+     * @return FormConfig The current object (for fluent API support)
+     */
+    public function setWikiHelpPage($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->wiki_help_page !== $v) {
+            $this->wiki_help_page = $v;
+            $this->modifiedColumns[] = FormConfigPeer::WIKI_HELP_PAGE;
+        }
+
+
+        return $this;
+    } // setWikiHelpPage()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -260,6 +298,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->variation = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->layout = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->wiki_help_page = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -269,7 +308,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 4; // 4 = FormConfigPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = FormConfigPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating FormConfig object", $e);
@@ -522,6 +561,9 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(FormConfigPeer::LAYOUT)) {
             $modifiedColumns[':p' . $index++]  = 'layout';
         }
+        if ($this->isColumnModified(FormConfigPeer::WIKI_HELP_PAGE)) {
+            $modifiedColumns[':p' . $index++]  = 'wiki_help_page';
+        }
 
         $sql = sprintf(
             'INSERT INTO core.form_config (%s) VALUES (%s)',
@@ -544,6 +586,9 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
                         break;
                     case 'layout':
                         $stmt->bindValue($identifier, $this->layout, PDO::PARAM_STR);
+                        break;
+                    case 'wiki_help_page':
+                        $stmt->bindValue($identifier, $this->wiki_help_page, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -692,6 +737,9 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             case 3:
                 return $this->getLayout();
                 break;
+            case 4:
+                return $this->getWikiHelpPage();
+                break;
             default:
                 return null;
                 break;
@@ -725,6 +773,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             $keys[1] => $this->getName(),
             $keys[2] => $this->getVariation(),
             $keys[3] => $this->getLayout(),
+            $keys[4] => $this->getWikiHelpPage(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -781,6 +830,9 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             case 3:
                 $this->setLayout($value);
                 break;
+            case 4:
+                $this->setWikiHelpPage($value);
+                break;
         } // switch()
     }
 
@@ -809,6 +861,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setVariation($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setLayout($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setWikiHelpPage($arr[$keys[4]]);
     }
 
     /**
@@ -824,6 +877,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(FormConfigPeer::NAME)) $criteria->add(FormConfigPeer::NAME, $this->name);
         if ($this->isColumnModified(FormConfigPeer::VARIATION)) $criteria->add(FormConfigPeer::VARIATION, $this->variation);
         if ($this->isColumnModified(FormConfigPeer::LAYOUT)) $criteria->add(FormConfigPeer::LAYOUT, $this->layout);
+        if ($this->isColumnModified(FormConfigPeer::WIKI_HELP_PAGE)) $criteria->add(FormConfigPeer::WIKI_HELP_PAGE, $this->wiki_help_page);
 
         return $criteria;
     }
@@ -890,6 +944,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
         $copyObj->setName($this->getName());
         $copyObj->setVariation($this->getVariation());
         $copyObj->setLayout($this->getLayout());
+        $copyObj->setWikiHelpPage($this->getWikiHelpPage());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1204,6 +1259,7 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
         $this->name = null;
         $this->variation = null;
         $this->layout = null;
+        $this->wiki_help_page = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

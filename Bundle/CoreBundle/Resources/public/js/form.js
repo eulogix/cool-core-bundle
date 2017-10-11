@@ -32,6 +32,8 @@ define("cool/form",
                  */
                 autoScrollToMe: false,
 
+                _fields : null,
+
                 constructor: function() {
                     this._fields = {};
                 },
@@ -105,8 +107,9 @@ define("cool/form",
                         field = new controlWidget(props);
                         field.coolInit();
 
+                        t.addField(fieldName, field);
+
                         if(field.holdsValue) {
-                            t.addField(fieldName, field);
                             field.on('change', function(){ t.emit('change', field); });
                         }
 
@@ -333,8 +336,10 @@ define("cool/form",
                     var fields = this.getFields();
                     var fv;
                     for (var fieldName in fields) {
-                        fv = fields[ fieldName ].get('value');
-                        values[ wkPrefix + fieldName ] = fv;
+                        if(fields[ fieldName].holdsValue) {
+                            fv = fields[ fieldName ].get('value');
+                            values[ wkPrefix + fieldName ] = fv;
+                        }
                     }
                     return values;
                 },
@@ -377,6 +382,21 @@ define("cool/form",
                     } else {
                         deferred.resolve( this.getValues() );
                     }
+                },
+
+                toggleHelpers: function(onOrOff) {
+                    this.inherited(arguments);
+                    var fields = this.getFields();
+                    for(var fieldName in fields)
+                        fields[ fieldName ].toggleHelper(this.helpersState);
+                },
+
+                hasHelpers: function() {
+                    var fields = this.getFields();
+                    for(var fieldName in fields)
+                        if(fields[ fieldName ].hasHelp())
+                            return true;
+                    return false;
                 }
                         
         });

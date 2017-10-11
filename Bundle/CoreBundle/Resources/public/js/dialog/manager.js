@@ -72,14 +72,14 @@ define([
 
         },
 
-        _getModalDialog: function(title, href, sizeRatio) {
+        _getModalDialog: function(title, href, sizeRatio, dialogMixin) {
             sizeRatio = sizeRatio || 80;
             var vs = win.getBox();
 
             var w = Math.floor((vs.w/100)*sizeRatio);
             var h = Math.floor((vs.h/100)*sizeRatio);
 
-            var d = new Dialog({
+            var d = new Dialog(lang.mixin({
                 title: title,
                 content: "",
                 draggable: true,
@@ -88,7 +88,7 @@ define([
                 maxRatio: sizeRatio,
                 scriptHasHooks: true,
                 style: "background-color: #FFFFFF;"
-            });
+            }, dialogMixin || {}));
 
             d._forcedWidth = w;
             d._forcedHeight = h;
@@ -125,8 +125,31 @@ define([
 
         bindTooltip: function(node, content, maxWidth, url) {
 
+            /*
+             innerHTML, aroundNode, position, rtl, textDir, onMouseEnter, onMouseLeave
+
+            Tooltip.on('show', function(){
+                console.log('ass');
+            });*/
+
             var renderFunc = function(rawContent) {
-                return maxWidth ? "<div style='max-width:"+maxWidth+"px'>" + rawContent + "</div>" : rawContent;
+                return maxWidth ? "<div style='max-width:"+maxWidth+"px; max-height:600px; overflow-y: scroll;'>" + rawContent + "</div>" : rawContent;
+            };
+
+            var hideFunc = function() {
+                setTimeout( function() {
+                    if(!node._mouseOverTip)
+                        Tooltip.hide(node);
+                }, 500 );
+            };
+
+            var showFunc = function() {
+                Tooltip.show(node._tooltip_content, node, null, null, null, function() {
+                    node._mouseOverTip = true;
+                }, function() {
+                    node._mouseOverTip = false;
+                    hideFunc();
+                });
             };
 
             node._tooltip_content = renderFunc(content);
@@ -138,15 +161,13 @@ define([
                         request(node._tooltip_url).then(function(fetchedContent){
                             node._last_tooltip_url = node._tooltip_url;
                             node._tooltip_content = renderFunc(fetchedContent);
-                            Tooltip.show(node._tooltip_content, node);
+                            showFunc();
                         });
-                    } else Tooltip.show(node._tooltip_content, node);
-                } else Tooltip.show(node._tooltip_content, node);
+                    } else showFunc();
+                } else showFunc();
             });
 
-            node._toolTipLeaveSignal = on(node, mouse.leave, function(){
-                Tooltip.hide(node);
-            });
+            node._toolTipLeaveSignal = on(node, mouse.leave, hideFunc);
 
             if(this.trackMouseOver(node)) {
                 if(node._mouseOver)

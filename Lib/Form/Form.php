@@ -392,8 +392,6 @@ class Form extends Widget implements FormInterface {
     public function getProcessedLayout() {
         if( $this->twig ) {
             try {
-                //$this->twig->setLoader(new \Twig_Loader_String());
-                $l = get_class($this->twig->getLoader());
 
                 $layout = $this->getLayout();
                 if(!$layout)
@@ -798,7 +796,7 @@ class Form extends Widget implements FormInterface {
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getRuleContext() {
         return array_merge(parent::getRuleContext(), [
@@ -807,4 +805,11 @@ class Form extends Widget implements FormInterface {
         ]);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultWikiHelpPage()
+    {
+       return implode(':', [ '{{ locale }}', '{{"FORMS_WIKI_HELP_NS"|t}}', '{{ title }}' ]);
+    }
 }

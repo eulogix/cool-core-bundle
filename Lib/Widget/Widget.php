@@ -18,25 +18,23 @@ use Eulogix\Cool\Lib\Audit\AuditSchema;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\Classes\Audit\DSFieldAuditTrailDataSource;
 use Eulogix\Cool\Lib\DataSource\CoolCrudDataSource;
+use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\DSRequest;
 use Eulogix\Cool\Lib\Enums\UserSettings;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
-use Eulogix\Lib\Error\ErrorReport;
 use Eulogix\Cool\Lib\Security\CoolUser;
 use Eulogix\Cool\Lib\Traits\DataSourceHolder;
-use Eulogix\Cool\Lib\Widget\Event\WidgetEvent;
 use Eulogix\Cool\Lib\Traits\EventHolder;
-
+use Eulogix\Cool\Lib\Translation\Translator;
+use Eulogix\Cool\Lib\Translation\TranslatorInterface;
+use Eulogix\Cool\Lib\Widget\Event\WidgetEvent;
+use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
+use Eulogix\Cool\Lib\Widget\Help\HelpItem;
+use Eulogix\Cool\Lib\Widget\Help\WidgetHelpProviderInterface;
+use Eulogix\Lib\Error\ErrorReport;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-
-use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
-
-use Eulogix\Cool\Lib\Translation\Translator;
-use Eulogix\Cool\Lib\Translation\TranslatorInterface;
-
-use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -71,6 +69,11 @@ abstract class Widget implements WidgetInterface {
     protected $actions = [];
     
     protected $slots = [];
+
+    /**
+     * @var HelpItem[]
+     */
+    protected $helpItems = [];
 
     /**
      * @var EventDispatcherInterface
@@ -134,6 +137,11 @@ abstract class Widget implements WidgetInterface {
     protected $commands = [];
 
     /**
+     * @var WidgetHelpProviderInterface
+     */
+    protected $helper;
+
+    /**
      * initialize the widget with an initial set of parameters.
      * and optionally, a request
      *
@@ -151,7 +159,6 @@ abstract class Widget implements WidgetInterface {
         //avoids a new client id on every callAction
         if($cid = @$parameters['_client_id'])
             $this->clientId = $cid;
-
     }
 
     /**
@@ -305,6 +312,12 @@ abstract class Widget implements WidgetInterface {
         $this->getAttributes()->set(self::ATTRIBUTE_ID, $this->getId());
 
         $d->setBlock('attributes', $this->attributes->all());
+
+        $helpItems = [];
+        foreach ($this->getHelpItems() as $helpItem) {
+            $helpItems[] = $helpItem->getDefinition();
+        }
+        $d->setBlock('helpItems', $helpItems);
 
         if(!$this->isDisabled()) {
             $msgs = [];
@@ -528,6 +541,7 @@ abstract class Widget implements WidgetInterface {
         if(($c = $this->getConfigurator()) && $c->configurationExists()) {
             $c->applyConfiguration();
         }
+        $this->setHelpProvider( Cool::getInstance()->getFactory()->getWidgetHelpProviderFactory()->getHelperFor($this) );
     }
 
     /**
@@ -770,4 +784,74 @@ abstract class Widget implements WidgetInterface {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function setHelpProvider(WidgetHelpProviderInterface $helper) {
+        $this->helper = $helper;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getHelpProvider() {
+        return $this->helper;
+    }
+
+    public function onGetContextualHelpFor() {
+        $helpContent = '';
+
+        if($helper = $this->getHelpProvider()) {
+            $helpContent = $helper->getHelp($this->request->all());
+        }
+
+        return [
+            'helpContent' => $helpContent
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultWikiHelpPage()
+    {
+        return implode(':', [ '{{ locale }}', '{{"WIDGETS"|t}}', '{{ title }}' ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getWikiHelpPage() {
+        return $this->getAttributes()->get(self::ATTRIBUTE_WIKI_HELP_PAGE);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setWikiHelpPage($page) {
+        $this->getAttributes()->set(self::ATTRIBUTE_WIKI_HELP_PAGE, $page);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDispatcher() {
+        return $this->dispatcher;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addHelpItem(HelpItem $help) {
+        $help->setWidget($this);
+        $this->helpItems[] = $help;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getHelpItems() {
+        return $this->helpItems;
+    }
 }

@@ -47,7 +47,9 @@ define([
                 new Tooltip({
                     connectId: element,
                     label: tooltip,
-                    showDelay: 1000
+                    showDelay: 150,
+                    hideDelay: 0,
+                    position: ["below","before","after","above"]
                 });
             }
         }

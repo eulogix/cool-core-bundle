@@ -90,6 +90,7 @@ function(declare, lang,
          *
          */
         renderActions: function() {
+            var widget = this;
             var actions = this.definition.actions;
 
             if(actions!=undefined) {
@@ -130,6 +131,7 @@ function(declare, lang,
                     icon: '/bower_components/fugue/icons/bug.png'
                 });
             }
+
             return p;
         }
 

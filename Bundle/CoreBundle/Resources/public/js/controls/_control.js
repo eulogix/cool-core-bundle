@@ -2,6 +2,7 @@ define("cool/controls/_control",
 	[
     "dojo/_base/declare",
     "dojo/_base/lang",
+    "dojo/Deferred",
     "dojo/Evented",
     "dojo/dom-construct",
     "dojo/dom-style",
@@ -15,12 +16,13 @@ define("cool/controls/_control",
     'dijit/_TemplatedMixin',
 
     "cool/dijit/iconButton",
+    "cool/dijit/ContextHelper",
     "cool/dialog/manager",
 
     "dojo/text!./templates/_control.html"
-], function(declare, lang, Evented, domConstruct, domStyle, domGeom,
+], function(declare, lang, Deferred, Evented, domConstruct, domStyle, domGeom,
             fx, coreFx, Toggler,
-            _WidgetBase, _TemplatedMixin, iconButton, dialogManager,
+            _WidgetBase, _TemplatedMixin, iconButton, ContextHelper, dialogManager,
             baseTemplate) {
  
     return declare("cool.controls._control", [_WidgetBase, Evented, _TemplatedMixin], {
@@ -39,6 +41,9 @@ define("cool/controls/_control",
         cssClasses : [],
 
         eventHandles : [],
+
+        labelContainer : null,
+        contextHelper : null,
 
         constructor: function(params) {
   			this.parameters = params;
@@ -250,7 +255,7 @@ define("cool/controls/_control",
             errorClass = this.definition.errors ? ' error' : '';
             var e = [];
             if(this.needsLabel) {
-                e.push('<div class="controlLabelStacked'+errorClass+'">',this.definition.label,'</div>');
+                e.push('<div class="controlLabelStacked'+errorClass+'" label_container="', this.getPlaceHolderName(), '">',this.definition.label,'</div>');
             }
             e.push('<div class="controlCellStacked'+errorClass+'" control_container="', this.getPlaceHolderName(), '"></div>');
             
@@ -347,6 +352,36 @@ define("cool/controls/_control",
             for(var i = 0; i<this.eventHandles.length; i++) {
                 this.eventHandles[i].remove();
             }
+        },
+
+        toggleHelper: function(onOrOff) {
+            var t = this;
+            if(this.hasHelp()) {
+                if(this.labelContainer) {
+                    if(!this.contextHelper) {
+                        this.contextHelper = new ContextHelper({
+                            iconSrc: '/bower_components/fugue/icons/question.png',
+                            retrieveTipFunction: function() {
+                                var d = new Deferred;
+                                t.getContainerWidget().callAction('getContextualHelpFor', function(data){
+                                    d.resolve(data['helpContent']);
+                                },{ fieldName: t.getDefinitionElement('name') }, {dontLock:true});
+                                return d;
+                            }
+                        });
+                        this.contextHelper.placeAt(this.labelContainer, 'first');
+                    }
+                    domStyle.set(this.contextHelper.domNode, 'display', onOrOff ? 'inline-block' : 'none');
+                }
+            }
+        },
+
+        hasHelp: function() {
+            return this.getParameter('has_help');
+        },
+
+        setLabelContainer: function(element) {
+            this.labelContainer = element;
         }
 
     });

@@ -73,9 +73,16 @@ define("cool/widget/_SlotsMixin",
                                     var tabElem = new ContentPane({
                                         title: this.getTranslator().trans( groupName ),
 
+                                        doLayout: false,
+
                                         onShow: (function(gpName){
                                                     return function() {
                                                         domStyle.set(this.domNode, 'width', 'inherit');
+                                                        domStyle.set(this.domNode, 'overflow', 'hidden');
+
+                                                        //needed only when this property gets screwed by scrollToMe
+                                                        this.domNode.scrollTop = 0;
+
                                                         self._putSlots(this.domNode, definition.slots[gpName]);
                                                     }
                                                 }(groupName)),

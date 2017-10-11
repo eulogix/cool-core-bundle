@@ -520,6 +520,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
             'type' => 'textbox',
           ),
         ),
+        'wiki_help_page' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
       ),
     ),
     'core.form_config_field' => 

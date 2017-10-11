@@ -221,6 +221,11 @@ define([
                                     node.appendChild( controlElement._control.domNode );
                                 });
 
+                                var ql = "[label_container=\""+controlElement._control.getPlaceHolderName()+"\"]";
+                                dojo.query(ql, div).forEach(function(node) {
+                                    controlElement._control.setLabelContainer(node);
+                                });
+
                             }
                         });
                     });

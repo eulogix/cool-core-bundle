@@ -329,7 +329,7 @@ class CoolPropelObject extends \BaseObject {
             return;
         }
 
-        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+        return parent::__call($method, $args);
     }
 
     /**

@@ -99,11 +99,13 @@ define("cool/_listerEditorMixin",
 
                             newEditorForm.on('close', function () {
                                 lister.setInEditRowID(null);
+                                domStyle.set(lister.editorDiv, 'display', 'none');
                             });
 
                             if(oldEditorForm && oldEditorForm.clear!=undefined) {
                                 oldEditorForm.destroyRecursive();
                                 lister.editorDiv.innerHTML='';
+                                domStyle.set(lister.editorDiv, 'display', 'none');
                             }
 
                             if(lister.getDefinitionAttribute('show_editor_in_place')) {
@@ -141,14 +143,20 @@ define("cool/_listerEditorMixin",
                                     lister.editorDiv = dojo.byId(lister.editorFormDivId);
                                     newEditorForm.fillContent = true;
                                 } else {
-                                    lister.editorDiv = dojo.doc.createElement('div');
-                                    lister.editorDiv.style.cssText = "margin-left:32px; margin-top:15px;";
-                                    lister.domNode.appendChild( lister.editorDiv );
+                                    if(!lister.editorDiv) {
+                                        lister.editorDiv = dojo.doc.createElement('div');
+                                        domStyle.set(lister.editorDiv, {
+                                         'margin-left' : '32px',
+                                         'margin-top' : '15px'
+                                        });
+                                        lister.domNode.appendChild( lister.editorDiv );
+                                    }
                                 }
 
                             }
 
                             lister.editorForm = newEditorForm;
+                            domStyle.set(lister.editorDiv, 'display', 'block');
                             newEditorForm.placeAt(lister.editorDiv);
                             newEditorForm.startup();
                         },

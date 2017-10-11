@@ -22,11 +22,13 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\FormConfigQuery;
  * @method FormConfigQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method FormConfigQuery orderByVariation($order = Criteria::ASC) Order by the variation column
  * @method FormConfigQuery orderByLayout($order = Criteria::ASC) Order by the layout column
+ * @method FormConfigQuery orderByWikiHelpPage($order = Criteria::ASC) Order by the wiki_help_page column
  *
  * @method FormConfigQuery groupByFormConfigId() Group by the form_config_id column
  * @method FormConfigQuery groupByName() Group by the name column
  * @method FormConfigQuery groupByVariation() Group by the variation column
  * @method FormConfigQuery groupByLayout() Group by the layout column
+ * @method FormConfigQuery groupByWikiHelpPage() Group by the wiki_help_page column
  *
  * @method FormConfigQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method FormConfigQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -42,11 +44,13 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\FormConfigQuery;
  * @method FormConfig findOneByName(string $name) Return the first FormConfig filtered by the name column
  * @method FormConfig findOneByVariation(string $variation) Return the first FormConfig filtered by the variation column
  * @method FormConfig findOneByLayout(string $layout) Return the first FormConfig filtered by the layout column
+ * @method FormConfig findOneByWikiHelpPage(string $wiki_help_page) Return the first FormConfig filtered by the wiki_help_page column
  *
  * @method array findByFormConfigId(int $form_config_id) Return FormConfig objects filtered by the form_config_id column
  * @method array findByName(string $name) Return FormConfig objects filtered by the name column
  * @method array findByVariation(string $variation) Return FormConfig objects filtered by the variation column
  * @method array findByLayout(string $layout) Return FormConfig objects filtered by the layout column
+ * @method array findByWikiHelpPage(string $wiki_help_page) Return FormConfig objects filtered by the wiki_help_page column
  */
 abstract class BaseFormConfigQuery extends ModelCriteria
 {
@@ -152,7 +156,7 @@ abstract class BaseFormConfigQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT form_config_id, name, variation, layout FROM core.form_config WHERE form_config_id = :p0';
+        $sql = 'SELECT form_config_id, name, variation, layout, wiki_help_page FROM core.form_config WHERE form_config_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -391,6 +395,35 @@ abstract class BaseFormConfigQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FormConfigPeer::LAYOUT, $layout, $comparison);
+    }
+
+    /**
+     * Filter the query on the wiki_help_page column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWikiHelpPage('fooValue');   // WHERE wiki_help_page = 'fooValue'
+     * $query->filterByWikiHelpPage('%fooValue%'); // WHERE wiki_help_page LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $wikiHelpPage The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return FormConfigQuery The current query, for fluid interface
+     */
+    public function filterByWikiHelpPage($wikiHelpPage = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($wikiHelpPage)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $wikiHelpPage)) {
+                $wikiHelpPage = str_replace('*', '%', $wikiHelpPage);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(FormConfigPeer::WIKI_HELP_PAGE, $wikiHelpPage, $comparison);
     }
 
     /**

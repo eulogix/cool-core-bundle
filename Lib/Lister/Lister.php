@@ -705,4 +705,12 @@ abstract class Lister extends Widget implements ListerInterface {
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultWikiHelpPage()
+    {
+        return implode(':', [ '{{ locale }}', '{{"LISTERS_WIKI_HELP_NS"|t}}', '{{ title }}' ]);
+    }
+
 }

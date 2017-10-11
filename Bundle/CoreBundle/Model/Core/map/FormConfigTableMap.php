@@ -46,6 +46,7 @@ class FormConfigTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('name', 'Name', 'LONGVARCHAR', true, null, null);
         $this->addColumn('variation', 'Variation', 'LONGVARCHAR', false, null, null);
         $this->addColumn('layout', 'Layout', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('wiki_help_page', 'WikiHelpPage', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

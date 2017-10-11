@@ -5,6 +5,7 @@ define("cool/_widget",
             "cool/widget/_LayoutMixin",
             "cool/widget/_ActionsMixin",
             "cool/widget/_SlotsMixin",
+            "cool/widget/_HelpMixin",
             "cool/widget/message",
             "cool/translator",
             "cool/dialog/manager",
@@ -46,12 +47,12 @@ define("cool/_widget",
 
             "dojox/widget/Standby"
         ], 
-        function(cool, coolWindow, _LayoutMixin, _ActionsMixin, _SlotsMixin, widgetMessage, ctr, dialogManager,
+        function(cool, coolWindow, _LayoutMixin, _ActionsMixin, _SlotsMixin, _HelpMixin, widgetMessage, ctr, dialogManager,
                  lang, array, declare, xhr, util, dom, domConstruct, domStyle, domGeometry, coreFx, easing, baseFx, Deferred, Evented,
                  Fx, FxCore, Scroll, Shadow,
                  _WidgetBase, ContentPane, TabContainer, TitlePane, Button, ToggleButton, ComboButton, Menu, MenuItem, PopupMenuItem, DropDownButton, TooltipDialog, Toolbar, Dialog, Standby){
   
-            return declare("cool._widget", [_WidgetBase, _LayoutMixin, _ActionsMixin, _SlotsMixin, Evented], {
+            return declare("cool._widget", [_WidgetBase, _LayoutMixin, _ActionsMixin, _SlotsMixin, _HelpMixin, Evented], {
 
                 serverId : "",      //the token used to uniquely identify the server resource linked to the widget (eg. EulogixCoolCore/Test)
                 hashes   : "",      //the token used to tell the server which version of the definition components we have already loaded
@@ -189,6 +190,10 @@ define("cool/_widget",
 
                                 if(data._definition.hasOwnProperty('events')) {
                                     self.processEvents();
+                                }
+
+                                if(data._definition.hasOwnProperty('helpItems')) {
+                                    self.processHelpItems();
                                 }
                             };
 
@@ -819,46 +824,14 @@ define("cool/_widget",
                 },
 
                 scrollToMe: function(durationMs, node) {
-
                     durationMs = durationMs || 500;
-                    //hack that initiates an animations on all the parent nodes of the widget.
-                    //works, but a better solution should be found TODO: fix that
-                    var self = this;
-                    var parent = this.domNode;
-                    if(!node)
-                        node = this.domNode;
-                    var done = false;
-                    do {
-                        parent = parent.parentNode;
-                        if(!parent) {
-                            done = true;
-                        } else {
-                            if( parent.tagName=='HTML') {
-                                parent = window;
-                                done = true;
-                            }
+                    wkNode = node || this.domNode;
 
-                            (function(winw) {
-
-                                //avoid scrolling elements that have no scrollbars!
-                                if(!done &&
-                                    domStyle.get(winw, 'overflow') != 'hidden' &&
-                                    domStyle.get(winw, 'overflow-x') != 'hidden' &&
-                                    domStyle.get(winw, 'overflow-y') != 'hidden')
-
-                                        new Fx.smoothScroll({
-                                            node: node,
-                                            win: winw,
-                                            duration: durationMs
-                                        }).play();
-
-                            })(parent);
-                        }
-                    } while(!done);
-                },
-
-                openSimpleAuditTrail: function() {
-
+                    /* setting block to start or center sometimes causes the scrolltop of parent, unscrollable
+                     elements (such as contentpanes) to become > 0
+                     TODO: find a fix
+                      */
+                    wkNode.scrollIntoView({behavior: "smooth", block: "end"});
                 }
 
         });

@@ -11,13 +11,15 @@
 
 namespace Eulogix\Cool\Lib\Widget;
 
-use Eulogix\Cool\Lib\File\FileProxyInterface;
-use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
-use Eulogix\Lib\Error\ErrorReport;
-use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
-use Eulogix\Cool\Lib\Translation\TranslatorInterface;
-
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
+use Eulogix\Cool\Lib\File\FileProxyInterface;
+use Eulogix\Cool\Lib\Translation\TranslatorInterface;
+use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
+use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
+use Eulogix\Cool\Lib\Widget\Help\HelpItem;
+use Eulogix\Cool\Lib\Widget\Help\WidgetHelpProviderInterface;
+use Eulogix\Lib\Error\ErrorReport;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -42,6 +44,9 @@ interface WidgetInterface {
     const ATTRIBUTE_ID = 'widgetId';
 
     const ATTRIBUTE_CURRENT_VARIATION = 'currentVariation';
+
+    //stores the id of the page that contains the help for this widget
+    const ATTRIBUTE_WIKI_HELP_PAGE = 'wikiHelpPage';
 
     //fired just before the definition is returned. allows you to make some last final adjustments
     const EVENT_DEFINITION_REQUESTED = "event_definition_requested";
@@ -340,4 +345,50 @@ interface WidgetInterface {
      * @return array
      */
     public function getRuleContext();
+
+    /**
+     * @param WidgetHelpProviderInterface $helper
+     * @return $this
+     */
+    public function setHelpProvider(WidgetHelpProviderInterface $helper);
+
+    /**
+     * @return WidgetHelpProviderInterface
+     */
+    public function getHelpProvider();
+
+    /**
+     * when using a wiki based helper, this returns the default page
+     * @return string
+     */
+    public function getDefaultWikiHelpPage();
+
+    /**
+     * when using a wiki based helper, this returns the actual page
+     * @return string
+     */
+    public function getWikiHelpPage();
+
+    /**
+     * when using a wiki based helper, this sets the actual page
+     * @param string $page
+     * @return $this
+     */
+    public function setWikiHelpPage($page);
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher();
+
+    /**
+     * @param HelpItem $help
+     * @return mixed
+     */
+    public function addHelpItem(HelpItem $help);
+
+    /**
+     * @return HelpItem[]
+     */
+    public function getHelpItems();
 }

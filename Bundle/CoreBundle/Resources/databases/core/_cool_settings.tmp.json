@@ -316,6 +316,9 @@
                         "lister_control": {
                             "type": "textbox"
                         }
+                    },
+                    "wiki_help_page": {
+                        "attributes": []
                     }
                 }
             },

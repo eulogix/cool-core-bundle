@@ -17,10 +17,13 @@ use Eulogix\Cool\Lib\DataSource\DataSourceManager;
 use Eulogix\Cool\Lib\Email\MessageFactory;
 use Eulogix\Cool\Lib\Email\MessageRenderer;
 use Eulogix\Cool\Lib\File\TempManagerInterface;
+use Eulogix\Cool\Lib\Help\HelpProviderInterface;
 use Eulogix\Cool\Lib\Reminder\RemindersManager;
 use Eulogix\Cool\Lib\Security\GroupManager;
 use Eulogix\Cool\Lib\Security\UserManager;
 use Eulogix\Cool\Lib\Session\CoolSession;
+use Eulogix\Cool\Lib\Widget\Help\HelpProviderFactoryInterface;
+use Eulogix\Cool\Lib\Wiki\WikiMediaConnector;
 use Eulogix\Lib\Activiti\ActivitiClient;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Schema;
@@ -271,5 +274,19 @@ class Factory {
      */
     public function getWidgetFactory() {
         return Cool::getInstance()->getContainer()->get('cool.widget.factory');
+    }
+
+    /**
+     * @return HelpProviderFactoryInterface
+     */
+    public function getWidgetHelpProviderFactory() {
+        return Cool::getInstance()->getContainer()->get('cool.widget.helpProviderFactory');
+    }
+
+    /**
+     * @return WikiMediaConnector
+     */
+    public function getAppHelpWiki() {
+        return Cool::getInstance()->getContainer()->get('cool.wiki.appHelp');
     }
 }

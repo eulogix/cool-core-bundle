@@ -192,7 +192,17 @@ class WorkFlowEngine {
     public function popupTaskFormForCurrentUser($processInstance, WidgetInterface $widget, array $dojoParameters=null) {
         if($task = $this->getFirstPendingTaskForUser($processInstance)) {
             $dojoParametersString = $dojoParameters ? ','.json_encode($dojoParameters) : '';
-            $widget->addCommandJs("var d = COOL.getDialogManager().openWidgetDialog('EulogixCoolCore/Workflows/TaskEditorForm', 'Complete Task', {_recordid: {$task->getId()}, hideCloseButton:true}, null, null, null{$dojoParametersString});");
+
+            $widget->addCommandJs("var d = COOL.getDialogManager().openWidgetDialog(
+                'EulogixCoolCore/Workflows/TaskEditorForm',
+                'Complete Task',
+                {_recordid: {$task->getId()}, hideCloseButton:true},
+                function(){ widget.reBind(); },
+                null,
+                null
+                {$dojoParametersString}
+            );");
+
             return true;
         }
         return false;

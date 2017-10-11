@@ -21,7 +21,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Tests\Cases\baseTestCase;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class NotificationsControllerTest extends baseTestCase
+class RuleTest extends baseTestCase
 {
     public function testExpressionSnippet()
     {

@@ -46,6 +46,7 @@ interface FieldInterface {
     const EVT_ONLOAD        =    'evt_onload';
 
     const PROP_READONLY     =    'readonly';
+    const PROP_HAS_HELP     =    'has_help';
 
     /**
      * @return string

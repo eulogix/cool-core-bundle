@@ -222,6 +222,8 @@
             
         </column>
 
+        <column name="wiki_help_page" type="LONGVARCHAR" description="used to fetch field context help when using an external wiki. Can use variables: [$locale]"/>
+
         <unique>
             <unique-column name="name"/>
             <unique-column name="variation"/>

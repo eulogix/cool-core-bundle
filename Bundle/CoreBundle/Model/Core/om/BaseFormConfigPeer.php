@@ -31,13 +31,13 @@ abstract class BaseFormConfigPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\FormConfigTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /** the column name for the form_config_id field */
     const FORM_CONFIG_ID = 'core.form_config.form_config_id';
@@ -50,6 +50,9 @@ abstract class BaseFormConfigPeer
 
     /** the column name for the layout field */
     const LAYOUT = 'core.form_config.layout';
+
+    /** the column name for the wiki_help_page field */
+    const WIKI_HELP_PAGE = 'core.form_config.wiki_help_page';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -70,12 +73,12 @@ abstract class BaseFormConfigPeer
      * e.g. FormConfigPeer::$fieldNames[FormConfigPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('FormConfigId', 'Name', 'Variation', 'Layout', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('formConfigId', 'name', 'variation', 'layout', ),
-        BasePeer::TYPE_COLNAME => array (FormConfigPeer::FORM_CONFIG_ID, FormConfigPeer::NAME, FormConfigPeer::VARIATION, FormConfigPeer::LAYOUT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('FORM_CONFIG_ID', 'NAME', 'VARIATION', 'LAYOUT', ),
-        BasePeer::TYPE_FIELDNAME => array ('form_config_id', 'name', 'variation', 'layout', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('FormConfigId', 'Name', 'Variation', 'Layout', 'WikiHelpPage', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('formConfigId', 'name', 'variation', 'layout', 'wikiHelpPage', ),
+        BasePeer::TYPE_COLNAME => array (FormConfigPeer::FORM_CONFIG_ID, FormConfigPeer::NAME, FormConfigPeer::VARIATION, FormConfigPeer::LAYOUT, FormConfigPeer::WIKI_HELP_PAGE, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('FORM_CONFIG_ID', 'NAME', 'VARIATION', 'LAYOUT', 'WIKI_HELP_PAGE', ),
+        BasePeer::TYPE_FIELDNAME => array ('form_config_id', 'name', 'variation', 'layout', 'wiki_help_page', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -85,12 +88,12 @@ abstract class BaseFormConfigPeer
      * e.g. FormConfigPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('FormConfigId' => 0, 'Name' => 1, 'Variation' => 2, 'Layout' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('formConfigId' => 0, 'name' => 1, 'variation' => 2, 'layout' => 3, ),
-        BasePeer::TYPE_COLNAME => array (FormConfigPeer::FORM_CONFIG_ID => 0, FormConfigPeer::NAME => 1, FormConfigPeer::VARIATION => 2, FormConfigPeer::LAYOUT => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('FORM_CONFIG_ID' => 0, 'NAME' => 1, 'VARIATION' => 2, 'LAYOUT' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('form_config_id' => 0, 'name' => 1, 'variation' => 2, 'layout' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('FormConfigId' => 0, 'Name' => 1, 'Variation' => 2, 'Layout' => 3, 'WikiHelpPage' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('formConfigId' => 0, 'name' => 1, 'variation' => 2, 'layout' => 3, 'wikiHelpPage' => 4, ),
+        BasePeer::TYPE_COLNAME => array (FormConfigPeer::FORM_CONFIG_ID => 0, FormConfigPeer::NAME => 1, FormConfigPeer::VARIATION => 2, FormConfigPeer::LAYOUT => 3, FormConfigPeer::WIKI_HELP_PAGE => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('FORM_CONFIG_ID' => 0, 'NAME' => 1, 'VARIATION' => 2, 'LAYOUT' => 3, 'WIKI_HELP_PAGE' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('form_config_id' => 0, 'name' => 1, 'variation' => 2, 'layout' => 3, 'wiki_help_page' => 4, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -168,11 +171,13 @@ abstract class BaseFormConfigPeer
             $criteria->addSelectColumn(FormConfigPeer::NAME);
             $criteria->addSelectColumn(FormConfigPeer::VARIATION);
             $criteria->addSelectColumn(FormConfigPeer::LAYOUT);
+            $criteria->addSelectColumn(FormConfigPeer::WIKI_HELP_PAGE);
         } else {
             $criteria->addSelectColumn($alias . '.form_config_id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.variation');
             $criteria->addSelectColumn($alias . '.layout');
+            $criteria->addSelectColumn($alias . '.wiki_help_page');
         }
     }
 

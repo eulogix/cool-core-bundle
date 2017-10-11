@@ -36,6 +36,7 @@ class FormConfigurator extends WidgetConfigurator {
         if($this->configurationExists()) {
             $config = $this->getConfigQuery()->findOne();
             $this->widget->setLayout( $config->getLayout() );
+            $this->widget->setWikiHelpPage( $config->getWikiHelpPage() );
         }
         return $this;
     }

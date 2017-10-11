@@ -168,12 +168,8 @@
     vertical-align: middle;
 }
 
-.claro .widgetTitle .dijitArrowButtonInner {
-    display: none !important;
-}
-
 .claro .widgetTitle .dijitButtonNode {
-    background:none;
+    background: rgba(255,255,255,0.25);
     border:none;
     box-shadow: none;
 }
@@ -183,8 +179,13 @@
     font-weight: normal;
 }
 
+.claro .widgetTitle .dijitHover .dijitButtonText {
+    color:black;
+    text-shadow: none;
+}
+
 .claro .widgetTitle .dijitHover {
-    background-color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.55);
     border-radius: 3px;
 }
 
@@ -228,4 +229,8 @@
 
 .claro .coolTabControl .dijitTabContainerTop-tabs {
     padding:0 !important;
+}
+
+.claro .dijitTooltipContainer {
+    user-select: text;
 }
