@@ -47,10 +47,14 @@ services:
         class: Eulogix\Lib\Validation\BeanValidator
         arguments: [ "@validator" ]
         shared: false
+#
+#    cool.cacher:
+#        class: Eulogix\Lib\Cache\APCCacher
+#        arguments: ["%cool.cacher.prefix%"]
 
     cool.cacher:
-        class: Eulogix\Lib\Cache\APCCacher
-        arguments: ["%cool.cacher.prefix%"]
+        class: Eulogix\Lib\Cache\MemcachedCacher
+        arguments: ["%cool.cacher_memcached.server%", "%cool.cacher_memcached.port%", "%cool.cacher.prefix%"]
 
     cool.dbcacher:
         class: Eulogix\Cool\Lib\Cache\DBCacher
