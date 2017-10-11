@@ -232,9 +232,12 @@ class Translator implements TranslatorInterface
             return array('value'=>$id.'[!!]', 'active_flag'=>1);
         }
 
-        $ret = (!empty($item) ? $item : false);
-        $cacher->store($cacheToken, $ret);
-        return $ret;
+        if(!empty($item)) {
+            $cacher->store($cacheToken, $item);
+            return $item;
+        }
+
+        return false;
     }
 
 }   
