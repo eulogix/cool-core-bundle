@@ -38,7 +38,7 @@ abstract class BaseConfigEditorForm extends DSCRUDForm {
         $p = json_decode($this->parameters->get('edit_parameters'), true);
         $p[self::WIDGET_EDITOR_TOKEN] = '1';
         $widget = $this->getWidgetFactory()->getWidget($this->parameters->get('edit_serverid'), $p);
-        $widget->build();
+        $widget->build()->configure();
         return $this->editedWidget = $widget;
     }
 }
