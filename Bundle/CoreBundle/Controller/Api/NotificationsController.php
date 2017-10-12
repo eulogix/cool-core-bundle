@@ -17,7 +17,6 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Symfony\Controller\BaseRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
