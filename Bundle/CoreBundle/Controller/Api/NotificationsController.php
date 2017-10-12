@@ -31,14 +31,6 @@ class NotificationsController extends BaseRestController
      * @Route("sendUserNotification")
      * @Method({"POST"})
      *
-     * @ApiDoc(
-     *   description = "Publishes a new notification",
-     *   statusCodes = {
-     *     200 = "OK",
-     *     400 = "Errors"
-     *   }
-     * )
-     *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
      * @RequestParam(name="userId", nullable=false, strict=true, description="The id of the target user")

@@ -28,17 +28,14 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 class RestFilesController extends BaseRestController
 {
     /**
+     * Uploads a new file to the specified record
+     *
+     * statusCodes
+     *      200 = "Returned when successful",
+     *      400 = "Returned when the form has errors"
+     *
      * @Route("upload")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "Uploads a new file to the specified record",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -98,17 +95,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * sets properties for a given file
+     *
      * @Route("setProperties")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "sets properties for a given file",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -153,17 +143,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * deletes a file
+     *
      * @Route("delete")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "deletes a file",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -203,17 +186,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * retrieves all the files in a given folder
+     *
      * @Route("getRecordFiles")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "retrieves all the files in a given folder",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -262,17 +238,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * performs a search and returns files or handles
+     *
      * @Route("search")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "retrieves all the files in a given folder",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -330,17 +299,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * gets properties for a given file
+     *
      * @Route("getProperties")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "gets properties for a given file",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
@@ -378,17 +340,10 @@ class RestFilesController extends BaseRestController
     }
 
     /**
+     * gets available properties for a given table/category
+     *
      * @Route("getAvailableProperties")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   description = "gets available properties for a given table/category",
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     400 = "Returned when the form has errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *

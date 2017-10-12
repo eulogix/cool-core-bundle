@@ -28,16 +28,10 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 class PentahoController extends BaseRestController
 {
     /**
+     * Runs a PDI Job through the scheduler
+     *
      * @Route("runPDIJob")
      * @Method({"POST"})
-     *
-     * @ApiDoc(
-     *   description = "Runs a PDI Job through the scheduler",
-     *   statusCodes = {
-     *     200 = "OK",
-     *     400 = "Errors"
-     *   }
-     * )
      *
      * @param ParamFetcher $paramFetcher Paramfetcher
      *
