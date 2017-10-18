@@ -60,6 +60,11 @@ class CoolTableFileRepository extends BaseFileRepository {
     private $translator;
 
     /**
+     * @var CoolTableFileRepositoryPermissions
+     */
+    private $permissions;
+
+    /**
      * returns a unique identifier for the repository, used to differentiate caches..
      * @return string $string
      */
@@ -137,6 +142,7 @@ class CoolTableFileRepository extends BaseFileRepository {
             $this->pkField = $propelObj->getCoolTableMap()->getPkFields()[0];
             $this->setWorkingDir( $this->buildPath($tableName, $this->pk) );
         }
+        $this->permissions = new CoolTableFileRepositoryPermissions($this);
     }
 
     /**
@@ -264,11 +270,11 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @return FileRepositoryACLInterface
+     * @return BaseFileRepositoryPermissions
      */
-    public function getACL()
+    public function getPermissions()
     {
-        // TODO: Implement getACL() method.
+        return $this->permissions;
     }
 
     /**
@@ -470,7 +476,7 @@ class CoolTableFileRepository extends BaseFileRepository {
      * @return array|bool
      */
     private static function parseFQPathId($p) {
-        if(preg_match('%^/(\w*)/*([^/]*)/*(\w*)/*(cat_(\w*)|)/*([0-9]*)%im', $p, $m))
+        if(preg_match('%^/(\w*)/*([^/]*)/*(\w*)/*(cat_(\w*)|)/*([0-9]*)$%im', $p, $m))
             return [
                 'schema' => $m[1],
                 'table' => $m[2],

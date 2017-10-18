@@ -194,8 +194,8 @@ define([
 					on.once(grid, "dgrid-refresh-complete", function() {
 						dfd.resolve(object);
 						self._refreshGridColumns();
+						self._refreshVisuals();
 					});
-
 					var sort = grid.get('sort');
 					grid.set('query', {parId: object.id}, {sort: sort});
 				});
@@ -214,7 +214,6 @@ define([
 		 * @return {dojo/Deferred}
 		 */
 		display: function(object) {
-
 			var path, dfd = new Deferred();
 			var dfd2 = new Deferred();
 			var self = this;
@@ -304,6 +303,8 @@ define([
 			this.store.query({_search:'1', searchDir:this.currentPath, extended_query:query}).then(function(data){
 				t.store.childrenCache = [];
 				t.store.storeMemory.setData(data);
+
+				self._refreshVisuals();
 
 				on.once(grid, "dgrid-refresh-complete", function() {
 					t._refreshGridColumns(t.currentPath, true);
@@ -430,6 +431,7 @@ define([
 						// master store => use storeMemory.
 						grid.set('store', store.storeMemory, { parId: id });
 						self._refreshGridColumns();
+						self._refreshVisuals();
 						if (file) {
 							row = grid.row(file.id);
 							cell = grid.cell(file, 'name');

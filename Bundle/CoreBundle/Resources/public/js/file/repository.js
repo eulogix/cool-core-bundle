@@ -68,10 +68,20 @@ define("cool/file/repository",
             return d;
         },
 
+        getPermissions: function(filePath) {
+            var d = new Deferred();
+
+            COOL.callCommand('frepoGetPermissions',
+                function(data) { d.resolve(data); },
+                this._buildParameters({filePath: filePath})
+            );
+
+            return d;
+        },
+
         _buildParameters: function(parameters) {
             return lang.mixin({}, this.allArgs, parameters);
         }
-
     });
  
 });

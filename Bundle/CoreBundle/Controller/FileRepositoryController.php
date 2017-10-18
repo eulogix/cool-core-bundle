@@ -139,6 +139,21 @@ class FileRepositoryController extends Controller
     }
 
     /**
+     * @Route("{repositoryId}/getPermissions", name="frepoGetPermissions", options={"expose"=true})
+     */
+    public function getPermissionsAction($repositoryId)
+    {
+        $repo = FileRepositoryFactory::fromId($repositoryId);
+        $repo->setParameters($this->get('request')->query->all());
+        $filePath = $this->get('request')->query->get('filePath');
+
+        $permissions = $repo->getPermissions()->getAllFor($filePath);
+
+        $response = new JsonResponse($permissions, 200);
+        return $response;
+    }
+
+    /**
      * Helper, called by RFE to suggest file search string based on what the user types
      * @Route("{repositoryId}/queryStringSuggestion", name="frepoQueryStringSuggestion", options={"expose"=true})
      */

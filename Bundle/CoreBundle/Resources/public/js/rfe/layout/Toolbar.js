@@ -40,6 +40,8 @@ define([
 
 		rfe: null,
 
+		uploadButton: null,
+
 		constructor: function(props) {
 			lang.mixin(this, props || {});
 		},
@@ -134,21 +136,23 @@ define([
 
             this.addChild(new ToolbarSeparator({ /*id: 'rfeTbSeparatorSearch2' */}));
 
-            this.addChild(new Button({
-                label: rfe.translator.trans("upload"),
-                showLabel: true,
-                iconSrc: '/bower_components/fugue/icons/upload.png',
-                disabled: false,
-                onClick: function() {
-                    var d = dialogManager.openWidgetDialog('EulogixCoolCore/Core/Files/FileRepositoryUploaderForm', 'UPLOAD', lang.mixin({
-                        folder: rfe.currentTreeObject.id
-                    },rfe.commonParameters), null, null, null, {
+			this.uploadButton = new Button({
+				label: rfe.translator.trans("upload"),
+				showLabel: true,
+				iconSrc: '/bower_components/fugue/icons/upload.png',
+				disabled: false,
+				onClick: function() {
+					var d = dialogManager.openWidgetDialog('EulogixCoolCore/Core/Files/FileRepositoryUploaderForm', 'UPLOAD', lang.mixin({
+						folder: rfe.currentTreeObject.id
+					},rfe.commonParameters), null, null, null, {
 						w: 800,
 						h: 500
 					});
-                    d.rfe = rfe;
-                }
-            }));
+					d.rfe = rfe;
+				}
+			});
+
+            this.addChild(this.uploadButton);
 
 			this.addChild(new ToolbarSeparator({ /*id: 'rfeTbSeparatorSearch2' */}));
 

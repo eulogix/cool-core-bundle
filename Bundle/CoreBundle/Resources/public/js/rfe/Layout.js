@@ -142,6 +142,7 @@ define([
 		},
 
 		_refreshGridColumns: function(path, isSearch) {
+
 			var self = this;
 			path = path || this.currentPath;
 			isSearch = isSearch || false;
@@ -275,6 +276,17 @@ define([
 
 		showDialogSettings: function() {
             this.settingsDialog.show();
+		},
+
+		/**
+		 * retrieves permissions and settings for the current folder/view state
+		 * and updates visual elements accordingly
+		 */
+		_refreshVisuals: function() {
+			var t = this;
+			this.coolFileRepo.getPermissions(this.currentPath).then(function(permissions){
+				t.toolbar.uploadButton.set("disabled", !permissions.canCreateFileIn);
+			});
 		}
 
 	});

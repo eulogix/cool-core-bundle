@@ -38,9 +38,9 @@ interface FileRepositoryInterface {
     public function setParameters(array $parameters = []);
 
     /**
-     * @return FileRepositoryACLInterface
+     * @return BaseFileRepositoryPermissions
      */
-    public function getACL();
+    public function getPermissions();
 
     /**
      * returns a unique identifier for the repository, used to differentiate caches..
