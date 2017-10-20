@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Bundle\CoreBundle\Controller;
 
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\DataSource\FileRepositoryDataSource;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
@@ -129,7 +130,9 @@ class FileRepositoryController extends Controller
         $repo->setParameters($this->get('request')->query->all());
 
         $filePath = $this->get('request')->query->get('filePath');
-        $properties = $repo->getAvailableFileProperties($filePath == "_root" ? null : $filePath);
+        $filePath = $filePath == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $filePath;
+
+        $properties = $repo->getAvailableFileProperties($filePath);
         $data = [];
         foreach($properties as $property) {
             $data[] = $property->toArray();
@@ -146,6 +149,7 @@ class FileRepositoryController extends Controller
         $repo = FileRepositoryFactory::fromId($repositoryId);
         $repo->setParameters($this->get('request')->query->all());
         $filePath = $this->get('request')->query->get('filePath');
+        $filePath = $filePath == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $filePath;
 
         $permissions = $repo->getPermissions()->getAllFor($filePath);
 
@@ -186,7 +190,7 @@ class FileRepositoryController extends Controller
         $fullQueryBegin = $queryBegin.implode(" ", $variableExpressions);
 
         if($hasLastExpression && preg_match('/^([^=]*)=*(.*)$/im', $lastExpression, $m)) {
-            $properties = $repo->getAvailableFileProperties($filePath == "_root" ? null : $filePath, true);
+            $properties = $repo->getAvailableFileProperties($filePath == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $filePath, true);
             $variableName = $m[1];
             $variableValue = $m[2];
             $hasEqual = strpos($lastExpression, '=');

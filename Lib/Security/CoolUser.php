@@ -35,12 +35,16 @@ class CoolUser implements UserInterface {
 
     public function __construct(Account $Account) {
         $this->Account = $Account;
+        $this->setSessionVars();
+    }
+
+    public function setSessionVars() {
         //TODO: this could be moved to a listener or something like that
         //retrieve these values with SELECT current_setting('cool.user.loginName');
-        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.id\" = '" .$Account->getAccountId()."';");
-        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.loginName\" = '" .$Account->getLoginName()."';");
-        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.firstName\" = '" .$Account->getFirstName()."';");
-        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.lastName\" = '" .$Account->getLastName()."';");
+        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.id\" = '" .$this->Account->getAccountId()."';");
+        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.loginName\" = '" .$this->Account->getLoginName()."';");
+        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.firstName\" = '" .$this->Account->getFirstName()."';");
+        Cool::getInstance()->getCoreSchema()->query("set session \"cool.user.lastName\" = '" .$this->Account->getLastName()."';");
     }
 
     /**

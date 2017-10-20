@@ -24,6 +24,8 @@ use Eulogix\Cool\Lib\File\SimpleFileProxy;
 
 class FileRepositoryDataSource extends BaseDataSource {
 
+    const ROOT_PLACEHOLDER = '_root';
+
     /**
      * @var FileRepositoryInterface
      */
@@ -84,8 +86,8 @@ class FileRepositoryDataSource extends BaseDataSource {
         $data = [];
 
         if($getOneById = @$req->getParameters()['id']) {
-            $f = $this->repo->get($getOneById === '_root' ? null : $getOneById);
-            if($getOneById === '_root') {
+            $f = $this->repo->get($this->cleanPath( $getOneById ));
+            if($getOneById === self::ROOT_PLACEHOLDER) {
                 $f->setId($getOneById);
                 $f->setParentId(null);
             }
@@ -94,21 +96,21 @@ class FileRepositoryDataSource extends BaseDataSource {
         } else {
             if($parentId = @$req->getParameters()['_parent_id']) {
 
-                $parentId = $parentId =='_root' ? null : $parentId;
+                $parentId = $this->cleanPath($parentId);
                 $files = $this->repo->getChildrenOf($parentId, false)->fetch();
 
                 foreach($files as $f) {
                     /**
                      * @var SimpleFileProxy $f
                      */
-                    $f->setParentId($parentId === null ? '_root' : $parentId);
+                    $f->setParentId($parentId === null ? self::ROOT_PLACEHOLDER : $parentId);
                     $data[] = $this->fromFileProxy($f, $this->repo->getFileProperties($f->getId(), 'dec_'));
                 }
 
             } else if($search = @$req->getParameters()['_search']) {
 
                 $searchDir = @$req->getParameters()['searchDir'];
-                $searchDir = $searchDir == '_root' ? null : $searchDir;
+                $searchDir = $this->cleanPath($searchDir);
 
                 $files = $this->repo->search($searchDir, [
                     FileRepositoryInterface::QUERY_NAME => @$req->getParameters()[ FileRepositoryInterface::QUERY_NAME ],
@@ -247,18 +249,15 @@ class FileRepositoryDataSource extends BaseDataSource {
         $data = [];
 
         try {
-            //file MOVE
-            if ($req->getOldValues()[ 'parId' ] != $req->getValues()[ 'parId' ]) {
-                $newPath = $this->repo->move($filePath, $req->getValues()[ 'parId' ]);
-                $data = $this->fromFileProxy( $this->repo->get($newPath) );
-            }
-
-            //file RENAME
             if ($req->getOldValues()[ 'name' ] != $req->getValues()[ 'name' ]) {
+                //file RENAME
                 $this->repo->rename($req->getValues()[ 'id' ], $req->getValues()[ 'name' ]);
                 $data = $this->fromFileProxy( $this->repo->get($filePath) );
+            } elseif ($this->cleanPath( $req->getOldValues()[ 'parId' ] ) != $this->cleanPath( $req->getValues()[ 'parId' ] ) ) {
+                //file MOVE
+                $newPath = $this->repo->move($filePath, $this->cleanPath( $req->getValues()[ 'parId' ]));
+                $data = $this->fromFileProxy( $this->repo->get($newPath) );
             }
-
         } catch(\Exception $e) {
             $dsresponse->addGeneralError($e->getMessage());
             $success = false;
@@ -278,5 +277,14 @@ class FileRepositoryDataSource extends BaseDataSource {
     public function getFileRepository($recordid = null)
     {
         // TODO: Implement getFileRepository() method.
+    }
+
+    /**
+     * Takes care of translating the paths as supplied by RFE
+     * @param string $path
+     * @return string
+     */
+    private function cleanPath($path) {
+        return $path == self::ROOT_PLACEHOLDER ? null : $path;
     }
 }

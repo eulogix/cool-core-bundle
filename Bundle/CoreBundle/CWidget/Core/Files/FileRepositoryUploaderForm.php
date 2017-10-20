@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Files;
 
+use Eulogix\Cool\Lib\DataSource\FileRepositoryDataSource;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\Form\Form;
@@ -43,13 +44,13 @@ class FileRepositoryUploaderForm extends Form {
 
         $parameters = $this->request->all();
         $this->fill( $parameters );
+        $targetFolder = $this->parameters->get('folder');
+        $targetFolder = $targetFolder == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $targetFolder;
 
         if($f = $this->getField('files')->getUploadedFiles()) {
             foreach($f as $file) {
-
                 //$file->setProperty(CoolTableFileRepository::PROP_CATEGORY, $categoryName);
-                $this->repo->storeFileAt($file, $this->parameters->get('folder'));
-
+                $this->repo->storeFileAt($file, $targetFolder);
             }
             $this->addCommandJs(" widget.dialog.hide(); widget.dialog.rfe.reload(); ");
             $this->getField('files')->clearUploadedFiles();
