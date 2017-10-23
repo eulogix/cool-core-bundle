@@ -55,7 +55,14 @@ class WidgetController extends Controller
            $WidgetInstance->reBuild();
            //then call the action
            $ret = $WidgetInstance->callAction($actionName);
-           return new JsonResponse( $ret !== null ? $ret : $WidgetInstance->getDefinition()->getResponse() );
+
+           if($ret === null)
+               return new JsonResponse($WidgetInstance->getDefinition()->getResponse());
+
+           if(is_string($ret) || is_scalar($ret))
+               return new Response($ret);
+
+           return new JsonResponse( $ret );
        }
        
        return $this->getErrorResponse("Widget not found: $serverId");
