@@ -2,8 +2,8 @@
 <database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           name="cool_db"
           xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd"
-          namespace="Eulogix\Cool\Bundle\CoreBundle\Model\Core"
           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
+          namespace=""
           defaultIdMethod="native">
 
             <!-- This file is needed to influence the way in which propel and its bundle assign schemas to data models -->

@@ -10,14 +10,13 @@
 <database name="cool_db"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd"
-
+    baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
     namespace="Eulogix\Cool\Bundle\CoreBundle\Model\Core"
     schema="core"
     defaultIdMethod="native"
     >
 
     <table name="account"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
         _editable="true"
         _defaultLister="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\User\UserLister"
         _defaultEditor="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\User\UserEditorForm"
@@ -78,7 +77,6 @@
     </table>
     
     <table name="app_setting"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true">
         <column name="app_setting_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="LONGVARCHAR" required="true">
@@ -135,7 +133,6 @@
     </table>
     
     <table name="account_profile"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true">
         <column name="account_profile_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="LONGVARCHAR" required="true"/>
@@ -207,7 +204,6 @@
 
 
     <table name="account_group"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true"
            _valueMapDecodingSQL="account_group_id::text || ' - ' || name"
     >
@@ -394,7 +390,6 @@
     </table>
     
     <table name="lookup"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
         _editable="true"
         _defaultLister="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Lookup\LookupLister"
     >
@@ -423,7 +418,6 @@
     </table>
     
     <table name="table_extension"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
         _editable="true"
         _defaultEditor="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\TableExtension\TableExtensionEditorForm"
     >
@@ -441,7 +435,6 @@
     </table>    
     
     <table name="table_extension_field"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _defaultLister="Eulogix/Cool/Bundle/CoreBundle/CWidget/Core/TableExtension/TableExtensionFieldLister">
     
         <column name="table_extension_field_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
@@ -477,7 +470,6 @@
     </table>
 
     <table name="field_definition"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            description="generic table that contains definition of fields, which can be linked to table extensions or file properties">
 
         <column name="field_definition_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
@@ -530,7 +522,6 @@
     </table>
     
     <table name="translation"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
             _editable="true"
            >
         <column name="translation_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -576,7 +567,6 @@
     </table>
 
     <table name="pending_call"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="false"
             >
         <column name="pending_call_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -609,7 +599,6 @@
     </table>
 
     <table name="async_job" _editable="false"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            description="this table stores and tracks the execution of asynchronous jobs"
             >
         <column name="async_job_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -653,7 +642,6 @@
     </table>
 
     <table name="user_notification" _editable="false"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            description="this table stores temporary notifications for users"
             >
         <column name="user_notification_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -683,7 +671,6 @@
     </table>
 
     <table name="file_property" _editable="true"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _defaultLister="Eulogix/Cool/Bundle/CoreBundle/CWidget/Core/FileProperty/FilePropertiesLister"
            description="this table stores the available file properties according to schema,table and category">
         <column name="file_property_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -731,7 +718,6 @@
     </table>
 
     <table name="user_reminder"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true"
            description="this table stores the settings for the reminder component">
 
@@ -774,7 +760,6 @@
     </table>
 
     <table name="rule"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true">
         <column name="rule_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
@@ -805,7 +790,6 @@
     </table>
 
     <table name="rule_code"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true"
            _defaultEditor="Eulogix\Cool\Bundle\CoreBundle\CWidget\Core\Rule\RuleCodeEditorForm"
             >
@@ -850,7 +834,6 @@
     </table>
 
     <table name="code_snippet"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true"
            _valueMapDecodingSQL="name"
            description="holds code snippets useful to encapsulate implementation details for rules variables">
@@ -889,7 +872,6 @@
     </table>
 
     <table name="code_snippet_variable"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            _editable="true">
         <column name="code_snippet_variable_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="code_snippet_id" type="INTEGER" required="true"/>
@@ -941,7 +923,6 @@
     </table>
 
     <table name="pg_listener_hook"
-           baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
            description="used to store listener hooks for PG NOTIFY messages" _editable="true">
         <column name="pg_listener_hook_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
 

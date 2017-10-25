@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" namespace="Eulogix\Cool\Bundle\CoreBundle\Model\Core" schema="core" defaultIdMethod="native">
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" namespace="Eulogix\Cool\Bundle\CoreBundle\Model\Core" schema="core" defaultIdMethod="native">
 
-    <table name="account" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="account">
         
         <column name="account_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="login_name" type="LONGVARCHAR" required="true"/>
@@ -46,7 +46,7 @@
 
     </table>
     
-    <table name="app_setting" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="app_setting">
         <column name="app_setting_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="LONGVARCHAR" required="true">
             
@@ -98,7 +98,7 @@
         </behavior>
     </table>
     
-    <table name="account_profile" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="account_profile">
         <column name="account_profile_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="LONGVARCHAR" required="true"/>
         <behavior name="notifier">
@@ -160,7 +160,7 @@
     </table>
 
 
-    <table name="account_group" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="account_group">
         <column name="account_group_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
         <column name="type" type="LONGVARCHAR">
@@ -329,7 +329,7 @@
         </behavior>
     </table>
     
-    <table name="lookup" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="lookup">
         <column name="lookup_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="domain_name" type="VARCHAR" size="50"/>
         <column name="value" type="VARCHAR" size="50"/>
@@ -354,7 +354,7 @@
         </behavior>
     </table>
     
-    <table name="table_extension" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="table_extension">
         <column name="table_extension_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
         <column name="db_schema" type="LONGVARCHAR" description="usually blank, refers to the physical schema in which the table resides"/>
         <column name="db_table" type="LONGVARCHAR" description="FQN of the table, may be [table] for multitenant tables, or [schema].[table] for the others"/>
@@ -368,7 +368,7 @@
         </behavior>
     </table>    
     
-    <table name="table_extension_field" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="table_extension_field">
     
         <column name="table_extension_field_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
         <column name="table_extension_id" type="INTEGER"/>
@@ -395,7 +395,7 @@
         </behavior>
     </table>
 
-    <table name="field_definition" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="generic table that contains definition of fields, which can be linked to table extensions or file properties">
+    <table name="field_definition" description="generic table that contains definition of fields, which can be linked to table extensions or file properties">
 
         <column name="field_definition_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
 
@@ -445,7 +445,7 @@
         </behavior>
     </table>
     
-    <table name="translation" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="translation">
         <column name="translation_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
          
 
@@ -478,7 +478,7 @@
         </behavior>
     </table>
 
-    <table name="pending_call" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="pending_call">
         <column name="pending_call_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="sid" type="LONGVARCHAR" description="twilio call SID"/>
         <column name="recording_url" type="LONGVARCHAR" description="twilio recording URL"/>
@@ -506,7 +506,7 @@
         </behavior>
     </table>
 
-    <table name="async_job" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="this table stores and tracks the execution of asynchronous jobs">
+    <table name="async_job" description="this table stores and tracks the execution of asynchronous jobs">
         <column name="async_job_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
         <column name="issuer_user_id" type="INTEGER" description="the user who started the job, requesting the operation"/>
@@ -545,7 +545,7 @@
         </behavior>
     </table>
 
-    <table name="user_notification" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="this table stores temporary notifications for users">
+    <table name="user_notification" description="this table stores temporary notifications for users">
         <column name="user_notification_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
         <column name="user_id" type="INTEGER"/>
@@ -570,7 +570,7 @@
         </behavior>
     </table>
 
-    <table name="file_property" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="this table stores the available file properties according to schema,table and category">
+    <table name="file_property" description="this table stores the available file properties according to schema,table and category">
         <column name="file_property_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="field_definition_id" type="INTEGER"/>
 
@@ -610,7 +610,7 @@
 
     </table>
 
-    <table name="user_reminder" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="this table stores the settings for the reminder component">
+    <table name="user_reminder" description="this table stores the settings for the reminder component">
 
         <column name="user_reminder_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
@@ -649,7 +649,7 @@
         </behavior>
     </table>
 
-    <table name="rule" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="rule">
         <column name="rule_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
         <column name="name" type="LONGVARCHAR" required="true"/>
@@ -678,7 +678,7 @@
         </behavior>
     </table>
 
-    <table name="rule_code" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="rule_code">
         <column name="rule_code_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="rule_id" type="INTEGER" required="true"/>
 
@@ -719,7 +719,7 @@
         </behavior>
     </table>
 
-    <table name="code_snippet" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="holds code snippets useful to encapsulate implementation details for rules variables">
+    <table name="code_snippet" description="holds code snippets useful to encapsulate implementation details for rules variables">
         <column name="code_snippet_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 
         <column name="category" type="LONGVARCHAR" required="true">
@@ -754,7 +754,7 @@
         </behavior>
     </table>
 
-    <table name="code_snippet_variable" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject">
+    <table name="code_snippet_variable">
         <column name="code_snippet_variable_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="code_snippet_id" type="INTEGER" required="true"/>
 
@@ -803,7 +803,7 @@
         </behavior>
     </table>
 
-    <table name="pg_listener_hook" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" description="used to store listener hooks for PG NOTIFY messages">
+    <table name="pg_listener_hook" description="used to store listener hooks for PG NOTIFY messages">
         <column name="pg_listener_hook_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
 
         <column name="name" type="LONGVARCHAR" required="true"/>
