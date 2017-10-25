@@ -25,7 +25,7 @@ class NotifierBehavior extends \Behavior
 {
 
     protected $parameters = array(
-        'channel' => null, // defaults to the datachange_<table name>
+        'channel' => null, // defaults to the c_<table name>
         'per_row' => false, // if set, the trigger will execute per row with a more detailed payload
     );
 
@@ -91,7 +91,7 @@ DROP FUNCTION if EXISTS $functionName() CASCADE;\n\n
         $functionName = $tableName.'_notf';
         $triggerName = $functionName.'_notf_trg';
 
-        $channel = $this->getParameter('channel') ?? 'datachange_'.$tableName;
+        $channel = $this->cleanChannelName( $this->getParameter('channel') ?? 'c_'.$tableName );
 
         return "
 --
@@ -123,7 +123,7 @@ CREATE TRIGGER $triggerName AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON $tab
         $triggerName = $functionName.'_notf_trg';
 
         $schema = $this->getParameter('schema');
-        $channel = $this->getParameter('channel') ?? 'datachange_'.$tableName;
+        $channel = $this->cleanChannelName( $this->getParameter('channel') ?? 'c_'.$tableName );
         $pk = $this->getTable()->getFirstPrimaryKeyColumn()->getName();
 
         return "
@@ -161,4 +161,13 @@ CREATE TRIGGER $triggerName AFTER INSERT OR UPDATE OR DELETE ON $tableName
         return $loc;
     }
 
+    /**
+     * @param string $channelName
+     * @return string
+     */
+    private function cleanChannelName($channelName) {
+        if(strlen($channelName)>64)
+            return substr($channelName, 0, 64);
+        return $channelName;
+    }
 }
