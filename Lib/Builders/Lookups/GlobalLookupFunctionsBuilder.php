@@ -32,38 +32,41 @@ class GlobalLookupFunctionsBuilder {
 
         $schemas = Cool::getInstance()->getAvailableSchemas();
         foreach($schemas as $schemaName => $schemaNs) {
-
-            $get_lookup_domain.= "\t\tcase '{$schemaName}' : {\n";
-
             $schema = Cool::getInstance()->getSchema($schemaName);
-            $dict = $schema->getDictionary();
-            $tables = $dict->getTableNames();
 
-            $get_lookup_domain.= "\t\t\tswitch(table_name) {\n";
+            if(!$schema->getAttachedToSchemaName()) {
 
-            foreach($tables as $tableName) {
-                $tableMap = $dict->getPropelTableMap($tableName);
+                $get_lookup_domain.= "\t\tcase '{$schemaName}' : {\n";
 
-                $get_lookup_domain.= "\t\t\t\tcase '{$tableMap->getCoolRawName()}' : {\n";
-                $get_lookup_domain.= "\t\t\t\t\tswitch(column_name) {\n";
+                $dict = $schema->getDictionary();
+                $tables = $dict->getTableNames();
 
-                $columns = $tableMap->getColumns();
-                foreach($columns as $col) {
-                    $coolField = $tableMap->getCoolField($col->getName());
+                $get_lookup_domain.= "\t\t\tswitch(table_name) {\n";
 
-                    if (($lookup = $coolField->getLookup()) && $lookup->getDomainName()) {
-                        $get_lookup_domain.= "\t\t\t\t\t\tcase '{$coolField->getName()}' : return '{$lookup->getDomainName()}';\n";
+                foreach($tables as $tableName) {
+                    $tableMap = $dict->getPropelTableMap($tableName);
+
+                    $get_lookup_domain.= "\t\t\t\tcase '{$tableMap->getCoolRawName()}' : {\n";
+                    $get_lookup_domain.= "\t\t\t\t\tswitch(column_name) {\n";
+
+                    $columns = $tableMap->getColumns();
+                    foreach($columns as $col) {
+                        $coolField = $tableMap->getCoolField($col->getName());
+
+                        if (($lookup = $coolField->getLookup()) && $lookup->getDomainName()) {
+                            $get_lookup_domain.= "\t\t\t\t\t\tcase '{$coolField->getName()}' : return '{$lookup->getDomainName()}';\n";
+                        }
                     }
+                    $get_lookup_domain.= "\t\t\t\t\t}\n";
+
+                    $get_lookup_domain.= "\t\t\t\tbreak; }\n";
+
                 }
-                $get_lookup_domain.= "\t\t\t\t\t}\n";
 
-                $get_lookup_domain.= "\t\t\t\tbreak; }\n";
+                $get_lookup_domain.= "\t\t\tbreak; }\n";
 
+                $get_lookup_domain.= "\t\tbreak; }\n";
             }
-
-            $get_lookup_domain.= "\t\t\tbreak; }\n";
-
-            $get_lookup_domain.= "\t\tbreak; }\n";
         }
 
         $get_lookup_domain.= "\tbreak; }\n\n$$ LANGUAGE plv8;";

@@ -533,8 +533,9 @@ class CoolCrudTableRelation {
                 }
 
             if(!$this->isView() && $this->getCountFiles()) {
+                $filesTable = $this->getCoolSchema()->getFilesIndexTableName();
                 $tablePk = $this->getPKfields()[0];
-                $expressions[ $this->getFileCountFieldName() ] = "(SELECT COUNT(*) FROM {$this->getSchema()}_files WHERE source_table='{$this->getRawTableName()}' AND source_table_id={$qualifier}.{$tablePk})";
+                $expressions[ $this->getFileCountFieldName() ] = "(SELECT COUNT(*) FROM {$filesTable} WHERE source_table='{$this->getRawTableName()}' AND source_table_id={$qualifier}.{$tablePk})";
             }
 
             //and file fields

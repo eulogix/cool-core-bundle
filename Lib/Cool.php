@@ -77,8 +77,8 @@ class Cool {
                 $class = $db_namespace."\\Schema";
                 if(class_exists($class)) { 
                     $this->schemas[$schemaName] = new $class($schemaName,$db_namespace);
-                } else throw new \Exception("class $class is not available!");
-            } else throw new \Exception("namespace not found for $schemaName is not available!");
+                } else throw new \Exception("class $class is not available! Build the dictionary before including it in the app config");
+            } else throw new \Exception("namespace not found for $schemaName!");
         }
 
         return $this->schemas[$schemaName];
@@ -244,4 +244,25 @@ class Cool {
         $this->getFactory()->getSession()->save();
     }
 
+    /**
+     * @param string $schemaName
+     * @return \string[]
+     */
+    public function getSchemaNamesAttachedTo($schemaName) {
+        $schemas = $this->getAvailableSchemas();
+        $ret = [];
+        foreach($schemas as $configSchemaName => $schemaConfig)
+            if(@$schemaConfig['attach_to'] == $schemaName)
+                $ret[] = $configSchemaName;
+        return $ret;
+    }
+
+    /**
+     * @param string $schemaName
+     * @return \string[]
+     */
+    public function getAttachedToSchemaName($schemaName) {
+        $schemas = $this->getAvailableSchemas();
+        return @$schemas[ $schemaName ]['attach_to'] ?? false;
+    }
 }

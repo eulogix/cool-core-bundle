@@ -11,19 +11,19 @@
 
 namespace Eulogix\Cool\Lib\Builders;
 
-use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Builders\Lookups\LookupsBuilder;
 use Eulogix\Cool\Lib\Builders\sql\AuditSchemaBuilder;
 use Eulogix\Cool\Lib\Builders\sql\FileRepositoriesSchemaBuilder;
 use Eulogix\Cool\Lib\Builders\sql\FixSequencesBuilder;
 use Eulogix\Cool\Lib\Builders\sql\FTSBuilder;
 use Eulogix\Cool\Lib\Builders\sql\SqlSnippetsBuilder;
-use Eulogix\Cool\Lib\Dictionary\Dictionary;
 use Eulogix\Cool\Lib\Builders\sql\ViewsBuilder;
+use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\Dictionary\Dictionary;
+use Eulogix\Cool\Lib\Symfony\Bundle\BundleUtils;
 use Eulogix\Lib\XML\XSDParser;
-
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -34,19 +34,25 @@ class DictionaryBuilder {
     /**
      * @var string
      */
-    var $projectDir, $locatablePjDir;
+    var $schemaName, $projectDir, $locatablePjDir;
 
     /**
-     * put your comment there...
-     *
-     * @param $projectDir
-     * @return DictionaryBuilder
+     * @var BundleInterface
      */
-    function __construct($projectDir, $locatablePjDir) {
+    var $bundle;
+
+    /**
+     * @param BundleInterface $bundle
+     * @param $schemaName
+     * @param $projectDir
+     */
+    function __construct(BundleInterface $bundle, $schemaName, $projectDir) {
+        $this->bundle = $bundle;
+        $this->schemaName = $schemaName;
         $this->projectDir = $projectDir;
-        $this->locatablePjDir = $locatablePjDir;
+        $this->locatablePjDir = BundleUtils::toLocatableBundlePath($projectDir, $this->bundle);
     }
-    
+
     protected function getTemplate($templateName, $type='php.twig') {
         return "EulogixCoolCoreBundle:DictionaryBuilderClasses:$templateName.$type";
     }
@@ -80,19 +86,24 @@ class DictionaryBuilder {
     /**
      * Builds the dictionary classes
      *
-     * @param $databaseName
-     * @param mixed $settings
-     * @param mixed $target_folder
      * @param EngineInterface $tplEngine
      */
-    function build($databaseName, $settings, $target_folder, EngineInterface $tplEngine) {
+    function build(EngineInterface $tplEngine) {
 
+        $isSchemaAttachedToAnother = Cool::getInstance()->getAttachedToSchemaName($this->schemaName);
+
+        $settings = $this->retrieveSettings();
         $namespace = $settings['namespace'];
+
+        preg_match('/.+?(Model\b.*?)$/im', $namespace, $m);
+        $modelTargetRelativeToBundle = $m[1];
+        $target_folder = $this->bundle->getPath().DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $modelTargetRelativeToBundle);
 
         $dict = $settings['settings'];
 
         @mkdir($target_folder);
-                                                                                        
+
+
         //write the base dictionary with the static settings
         file_put_contents( $target_folder."/BaseDictionary.php", $tplEngine->renderResponse(
             $this->getTemplate('BaseDictionary'),
@@ -100,7 +111,7 @@ class DictionaryBuilder {
                 'nameSpace'             =>  $namespace,
                 'className'             =>  'BaseDictionary',
                 'locatableProjectDir'   =>  $this->locatablePjDir,
-                'databaseName'          =>  $databaseName,
+                'databaseName'          =>  $this->schemaName,
                 'settingsArray'         =>  var_export($dict,1)
             )
         )->getContent());
@@ -127,67 +138,72 @@ class DictionaryBuilder {
                 )
             )->getContent());
 
-        //write the custom sql generated set of triggers and data validators
-        $tg = $this->projectDir."/sql/000_auto_cool_lookups_OTLT.sql";
-        file_put_contents($tg , $tplEngine->renderResponse(
-            $this->getTemplate('sql/lookupTriggers', 'sql.php'),
-            array(
-                'databaseName'      =>  $databaseName,
-            )
-        )->getContent()); 
-        
-        
-        $tg = $this->projectDir."/sql/001_auto_cool_constraints.sql";
-        file_put_contents($tg , $tplEngine->renderResponse(
-            $this->getTemplate('sql/constraintsTriggers', 'sql.php'),
-            array(
-                'databaseName'      =>  $databaseName,
-            )
-        )->getContent());
-        
-        //triggers defined in the schema
-        $tg = $this->projectDir."/sql/002_auto_cool_schema_triggers.sql";
-        file_put_contents($tg , $tplEngine->renderResponse(
-            $this->getTemplate('sql/schemaTriggers', 'sql.php'),
-            array(
-                'databaseName'      =>  $databaseName,
-            )
-        )->getContent());
+        if(!$isSchemaAttachedToAnother) {
 
-        //views
-        $viewsBuilder = new ViewsBuilder($databaseName);
-        $viewsBuilder->output($this->projectDir."/sql/post_sync/000_auto_cool_views.sql");
-        $viewsBuilder->outputDropScript($this->projectDir."/sql/pre_sync/000_auto_cool_views.sql");
+            //write the custom sql generated set of triggers and data validators
+            $tg = $this->projectDir."/sql/000_auto_cool_lookups_OTLT.sql";
+            file_put_contents($tg , $tplEngine->renderResponse(
+                $this->getTemplate('sql/lookupTriggers', 'sql.php'),
+                array(
+                    'databaseName'      =>  $this->schemaName,
+                )
+            )->getContent());
 
-        //lookups
-        $lookupsBuilder = new LookupsBuilder($databaseName);
-        $lookupsBuilder->outputTableScript($this->projectDir."/sql/post_sync/003_auto_cool_lookups.sql");
-        $lookupsBuilder->outputEnumScript($this->projectDir."/sql/post_sync/004_auto_cool_lookups_enum.sql");
-        $lookupsBuilder->outputLookupFunctions($this->projectDir."/sql/post_sync/004_auto_cool_lookup_functions.sql");
-        //the fixture sql has to be executed last as it always triggers errors of duplicate keys, executing it earlier
-        //would stop execution of custom scripts
-        $lookupsBuilder->outputFixtures($this->projectDir, $this->projectDir."/sql/post_sync/999_auto_cool_lookups_fixtures.sql");
 
-        //snippets
-        $snipBuilder = new SqlSnippetsBuilder($databaseName);
-        $snipBuilder->output($this->projectDir."/sql/003_auto_cool_custom_snippets.sql");
+            $tg = $this->projectDir."/sql/001_auto_cool_constraints.sql";
+            file_put_contents($tg , $tplEngine->renderResponse(
+                $this->getTemplate('sql/constraintsTriggers', 'sql.php'),
+                array(
+                    'databaseName'      =>  $this->schemaName,
+                )
+            )->getContent());
 
-        //file repos
-        $repoBuilder = new FileRepositoriesSchemaBuilder($databaseName);
-        $repoBuilder->outputScript($repoBuilder->getScript(), $this->projectDir."/sql/004_auto_cool_filerepos.sql");
+            //triggers defined in the schema
+            $tg = $this->projectDir."/sql/002_auto_cool_schema_triggers.sql";
+            file_put_contents($tg , $tplEngine->renderResponse(
+                $this->getTemplate('sql/schemaTriggers', 'sql.php'),
+                array(
+                    'databaseName'      =>  $this->schemaName,
+                )
+            )->getContent());
 
-        //auditing
-        $auditBuilder = new AuditSchemaBuilder($databaseName);
-        $auditBuilder->outputScript($auditBuilder->getScript(), $this->projectDir."/sql/post_sync/004_auto_cool_audit.sql");
+            //views
+            $viewsBuilder = new ViewsBuilder($this->schemaName);
+            $viewsBuilder->output($this->projectDir."/sql/post_sync/000_auto_cool_views.sql");
+            $viewsBuilder->outputDropScript($this->projectDir."/sql/pre_sync/000_auto_cool_views.sql");
 
-        //fix sequences
-        $fsB = new FixSequencesBuilder($databaseName);
-        $fsB->outputScript($fsB->getScript(), $this->projectDir."/sql/post_sync/005_auto_fix_sequences.sql");
-        
-        //FTS
-        $fts = new FTSBuilder($databaseName);
-        $fts->outputScript($fts->getPreScript(), $this->projectDir."/sql/pre_sync/006_auto_fts.sql");
-        $fts->outputScript($fts->getPostScript(), $this->projectDir."/sql/post_sync/006_auto_fts.sql");
+            //lookups
+            $lookupsBuilder = new LookupsBuilder($this->schemaName);
+            $lookupsBuilder->outputTableScript($this->projectDir."/sql/post_sync/003_auto_cool_lookups.sql");
+            $lookupsBuilder->outputEnumScript($this->projectDir."/sql/post_sync/004_auto_cool_lookups_enum.sql");
+            $lookupsBuilder->outputLookupFunctions($this->projectDir."/sql/post_sync/004_auto_cool_lookup_functions.sql");
+            //the fixture sql has to be executed last as it always triggers errors of duplicate keys, executing it earlier
+            //would stop execution of custom scripts
+            $lookupsBuilder->outputFixtures($this->projectDir, $this->projectDir."/sql/post_sync/999_auto_cool_lookups_fixtures.sql");
+
+            //snippets
+            $snipBuilder = new SqlSnippetsBuilder($this->schemaName);
+            $snipBuilder->output($this->projectDir."/sql/003_auto_cool_custom_snippets.sql");
+
+            //file repos
+            $repoBuilder = new FileRepositoriesSchemaBuilder($this->schemaName);
+            $repoBuilder->outputScript($repoBuilder->getScript(), $this->projectDir."/sql/004_auto_cool_filerepos.sql");
+
+            //auditing
+            $auditBuilder = new AuditSchemaBuilder($this->schemaName);
+            $auditBuilder->outputScript($auditBuilder->getScript(), $this->projectDir."/sql/post_sync/004_auto_cool_audit.sql");
+
+            //fix sequences
+            $fsB = new FixSequencesBuilder($this->schemaName);
+            $fsB->outputScript($fsB->getScript(), $this->projectDir."/sql/post_sync/005_auto_fix_sequences.sql");
+
+            //FTS
+            $fts = new FTSBuilder($this->schemaName);
+            $fts->outputScript($fts->getPreScript(), $this->projectDir."/sql/pre_sync/006_auto_fts.sql");
+            $fts->outputScript($fts->getPostScript(), $this->projectDir."/sql/post_sync/006_auto_fts.sql");
+
+        }
+
     }
 
     /**
@@ -261,7 +277,7 @@ class DictionaryBuilder {
      * @param array $allCoolElements
      * @return array
      */
-    function extractCoolElements(&$xmlElement, $allowedElements, $allCoolElements=null) {
+    protected function extractCoolElements(&$xmlElement, $allowedElements, $allCoolElements=null) {
         $arr = ['attributes'=>[], 'choices'=>[]];
         //attributes
         if (isset($allowedElements['attributes'])) {
@@ -323,19 +339,38 @@ class DictionaryBuilder {
         return $arr;
     }
 
-    /**
-     * @param string $targetCleanSchema
-     */
-    function extractSettingsFromSchema($targetCleanSchema) {
+    public function extractSettingsAndSaveCleanPropelSchema() {
 
-        $xmlSchemaFilename = $this->projectDir.'/schema.xml';
+        $multipleSettings = [];
+
+        $this->parseAttachedSchemas($multipleSettings);
+
+        $targetCleanFolder = $this->bundle->getPath().'/Resources/config/';
+
+        $settings = [];
+        $xml = $this->extractSettingsFromXMLSchema($settings);
+
+        $multipleSettings[] = ['cleanXml' => $xml, 'settings' => $settings];
+
+        $settings = $this->mergeSettings($multipleSettings);
+
+        file_put_contents($this->projectDir.'/_cool_settings.tmp.json', json_encode($settings, JSON_PRETTY_PRINT));
+
+        $xml->asXML($targetCleanFolder.DIRECTORY_SEPARATOR.$this->schemaName.'_schema.xml');
+    }
+
+    /**
+     * @param array $settings
+     * @return \SimpleXMLElement
+     */
+    public function extractSettingsFromXMLSchema(&$settings) {
+
+        $coolXMLSchema = $this->projectDir.'/schema.xml';
 
         $xsd = new XSDParser();
         $coolElements = $xsd->extractCoolElements( Cool::getInstance()->getFactory()->getFileLocator()->locate("@EulogixCoolCoreBundle/Resources/xsd/cool_database.xsd"));
 
-        $settings = array();
-
-        $xmlContent = file_get_contents($xmlSchemaFilename);
+        $xmlContent = file_get_contents($coolXMLSchema);
         //strip comments
         $xmlContent = preg_replace('/<!--.+?-->/sim','',$xmlContent);
 
@@ -343,6 +378,8 @@ class DictionaryBuilder {
 
         $dbNameSpace = $this->getAttributeFrom($xml, 'namespace');
         $dbSchema = $this->getAttributeFrom($xml, 'schema');
+
+        $tableSettings = $viewsSettings = [];
 
         foreach($xml->table as $tbl) {
 
@@ -361,7 +398,7 @@ class DictionaryBuilder {
             $ce = $this->extractCoolElements($tbl, $coolElements['table'], $coolElements);
             $this->discardTempElements($tbl);
 
-            $settings[$tableName]['attributes'] = array_merge(
+            $tableSettings[$tableName]['attributes'] = array_merge(
                 [
                     Dictionary::TBL_ATT_PROPEL_MODEL_NAMESPACE  =>  $tableNamespace.'\\'.$tablePhpName,
                     Dictionary::TBL_ATT_PROPEL_PEER_NAMESPACE   =>  $tableNamespace.'\\'.$tablePhpName.'Peer',
@@ -373,19 +410,18 @@ class DictionaryBuilder {
                 $ce['attributes']
             );
 
-            $settings[$tableName] = array_merge_recursive($settings[$tableName], $ce['choices']);
+            $tableSettings[$tableName] = array_merge_recursive($tableSettings[$tableName], $ce['choices']);
 
             foreach($tbl->column as $col) {
                 $columnName = $col->attributes()['name']->__toString();
                 $ce = $this->extractCoolElements($col, $coolElements['column'], $coolElements);
                 $this->discardTempElements($col);
-                $settings[$tableName]['columns'][$columnName]['attributes'] = $ce['attributes'];
-                $settings[$tableName]['columns'][$columnName] = array_merge_recursive($settings[$tableName]['columns'][$columnName], $ce['choices']);
+                $tableSettings[$tableName]['columns'][$columnName]['attributes'] = $ce['attributes'];
+                $tableSettings[$tableName]['columns'][$columnName] = array_merge_recursive($tableSettings[$tableName]['columns'][$columnName], $ce['choices']);
             }
 
         }
 
-        $viewsSettings =[];
         foreach($xml->_view as $view) {
 
             $viewName = $view->attributes()['_name']->__toString();
@@ -397,13 +433,13 @@ class DictionaryBuilder {
         }
         $this->removeXmlElementNodeByXpath($xml, "_view");
 
-        $settings = array('settings'         =>  ['tables'=>$settings,'views'=>$viewsSettings],
+        $settings = [
+            'settings'         =>  ['tables' => $tableSettings, 'views' => $viewsSettings],
             'database_name'    =>  $xml->attributes()['name']->__toString(),
-            'namespace'        =>  $dbNameSpace);
+            'namespace'        =>  $dbNameSpace
+        ];
 
-        file_put_contents($this->projectDir.'/_cool_settings.tmp.json', json_encode($settings, JSON_PRETTY_PRINT));
-
-        $xml->asXML($targetCleanSchema);
+        return $xml;
     }
 
     /**
@@ -412,5 +448,52 @@ class DictionaryBuilder {
     public function retrieveSettings() {
         return json_decode(file_get_contents($this->projectDir.'/_cool_settings.tmp.json'), true);
     }
-    
+
+    /**
+     * @param array $multipleSettings
+     */
+    protected function parseAttachedSchemas(array &$multipleSettings) {
+        /**
+         * scan all the bundles, finding all the cool schemas defined therein
+         * for each of them, check if they are attached to the schema currently processed
+         * if yes, merge the settings with priority <attached schemas>, <current schema>
+         * so that current schema can override or extend the entities defined in the attached schemas
+         */
+        $attachedSchemas = Cool::getInstance()->getSchemaNamesAttachedTo($this->schemaName);
+        if(!empty($attachedSchemas)) {
+            $bundles = Cool::getInstance()->getContainer()->getParameter('kernel.bundles');
+            foreach($bundles as $bundleName => $bundleClass) {
+                if ($bundle = BundleUtils::getBundle($bundleName)) {
+                    if ($dirs = BundleUtils::getCoolProjectDirs($bundle)) {
+                        foreach ($dirs as $projectDir) {
+                            /**
+                             * @var \SplFileInfo $projectDir
+                             */
+                            $schemaName = $projectDir->getFilename();
+                            if (in_array($schemaName, $attachedSchemas)) {
+                                $builder = new DictionaryBuilder($bundle, $schemaName, $projectDir->getRealPath());
+                                $settings = [];
+                                $xml = $builder->extractSettingsFromXMLSchema($settings);
+                                $multipleSettings[] = ['cleanXml' => $xml, 'settings' => $settings];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $multipleSettings
+     * @return array
+     */
+    protected function mergeSettings(array $multipleSettings)
+    {
+        $settings = [];
+        foreach($multipleSettings as $arr)
+            $settings = array_merge_recursive_distinct($settings, $arr['settings']);
+        return $settings;
+    }
+
+
 }

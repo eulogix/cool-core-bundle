@@ -11,7 +11,7 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\Command;
 
-use Eulogix\Cool\Lib\Util\BundleUtils;
+use Eulogix\Cool\Lib\Symfony\Bundle\BundleUtils;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Postgres\Differ;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * - computes and applies calculated differences between the master schema and the current one(s)
@@ -61,8 +62,24 @@ EOF
         /*$output->writeln("\n* RAW OUTPUT:\n");
         $output->writeln(@$lastErrors['rawOutput']);*/
     }
-    
-    
+
+
+    protected function getSqlFilesFromBundle($bundleName, $schemaName) {
+        $bundleAdditionalFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql', '*.sql' );
+        $bundleAdditionalPreSyncFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql/pre_sync', '*.sql' );
+        $bundleAdditionalPostSyncFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql/post_sync', '*.sql' );
+        sort($bundleAdditionalFiles, SORT_STRING);
+        sort($bundleAdditionalPreSyncFiles, SORT_STRING);
+        sort($bundleAdditionalPostSyncFiles, SORT_STRING);
+
+        return [
+            'sqlFiles' => $bundleAdditionalFiles,
+            'preSyncSql' => $bundleAdditionalPreSyncFiles,
+            'postSyncSql' => $bundleAdditionalPostSyncFiles,
+            'count' => count($bundleAdditionalFiles) + count($bundleAdditionalPreSyncFiles) + count($bundleAdditionalPostSyncFiles)
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -73,9 +90,9 @@ EOF
         $schemaName = $input->getOption('schema');
         $actualSchemaName = $input->getOption('actual_schema');
 
-        $db = Cool::getInstance()->getSchema($schemaName);
+        $schema = Cool::getInstance()->getSchema($schemaName);
 
-        $p = $db->getConnectionParameters();
+        $p = $schema->getConnectionParameters();
         $host = $p['dsn_info']['host'];
         $port = $p['dsn_info']['port'];
         $database = $p['dsn_info']['dbname'];
@@ -96,20 +113,28 @@ EOF
          */
         $bundles = $this->getContainer()->getParameter('kernel.bundles');
         foreach($bundles as $bundleName => $bundleClass) {
-            $bundleAdditionalFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql', '*.sql' );
-            $bundleAdditionalPreSyncFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql/pre_sync', '*.sql' );
-            $bundleAdditionalPostSyncFiles = BundleUtils::getFiles( $bundleName, 'Resources/databases/' . $schemaName . '/sql/post_sync', '*.sql' );
-            sort($bundleAdditionalFiles, SORT_STRING);
-            sort($bundleAdditionalPreSyncFiles, SORT_STRING);
-            sort($bundleAdditionalPostSyncFiles, SORT_STRING);
 
-            $sqlFiles = array_merge($sqlFiles, $bundleAdditionalFiles);
-            $preSyncSql = array_merge($preSyncSql, $bundleAdditionalPreSyncFiles);
-            $postSyncSql = array_merge($postSyncSql, $bundleAdditionalPostSyncFiles);
+            $bundleFiles = $this->getSqlFilesFromBundle($bundleName, $schemaName);
 
-            $bundleFiles = count($bundleAdditionalFiles) + count($bundleAdditionalPreSyncFiles) + count($bundleAdditionalPostSyncFiles);
-            if($bundleFiles > 0)
-                $output->writeln("$bundleFiles files found in bundle $bundleName");
+            if($bundleFiles['count'] > 0) {
+                $sqlFiles = array_merge($sqlFiles, $bundleFiles['sqlFiles']);
+                $preSyncSql = array_merge($preSyncSql, $bundleFiles['preSyncSql']);
+                $postSyncSql = array_merge($postSyncSql, $bundleFiles['postSyncSql']);
+                $output->writeln("{$bundleFiles['count']} files found in bundle $bundleName");
+            }
+
+            if($attachedSchemas = $schema->getAttachedSchemas()) {
+                foreach($attachedSchemas as $attachedSchema) {
+                    $bundleFiles = $this->getSqlFilesFromBundle($bundleName, $attachedSchema);
+
+                    if($bundleFiles['count'] > 0) {
+                        $sqlFiles = array_merge($sqlFiles, $bundleFiles['sqlFiles']);
+                        $preSyncSql = array_merge($preSyncSql, $bundleFiles['preSyncSql']);
+                        $postSyncSql = array_merge($postSyncSql, $bundleFiles['postSyncSql']);
+                        $output->writeln("{$bundleFiles['count']} files found in bundle $bundleName for attached schema $attachedSchema");
+                    }
+                }
+            }
         }
 
         //then we add the main propel database definition on top of the list
@@ -125,17 +150,17 @@ EOF
             }
         }
 
-        $schemas = $db->getSiblingSchemas();
-        foreach($schemas as $schema)
-            if(!$actualSchemaName || $schema == $actualSchemaName) {
-                $output->writeln("Processing schema $schema...");
+        $schemas = $schema->getSiblingSchemas();
+        foreach($schemas as $siblingSchema)
+            if(!$actualSchemaName || $siblingSchema == $actualSchemaName) {
+                $output->writeln("Processing schema $siblingSchema...");
 
                 if(true) {
                     $d = new Differ(
-                        $host, $port, $database, $user, $appUser, $schema,
-                        $db->getAuditSchemaNameForSibling($schema),
+                        $host, $port, $database, $user, $appUser, $siblingSchema,
+                        $schema->getAuditSchemaNameForSibling($siblingSchema),
                         $complementarySchemas,
-                        $db->isMultiTenant(),
+                        $schema->isMultiTenant(),
                         $sqlFiles,
                         $preSyncSql,
                         $postSyncSql,

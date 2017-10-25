@@ -36,15 +36,40 @@ class PropelBuilderTableProxy
 
     /**
      * filters out all the referrers which point to a core schema entity if they belong to another schema
+     * and referrers that point to a cool bundle schema if they are not themselves in a cool bundle
      */
     public function getReferrers()
     {
         $ret = [];
         $referrers = $this->propelTable->getReferrers();
         foreach($referrers as $referrer) {
-            if(!($this->propelTable->getSchema() == 'core' && $referrer->getTable()->getSchema() != 'core'))
+
+            $tableNs = $this->propelTable->getNamespace();
+            $refTableNs = $referrer->getTable()->getNamespace();
+
+            if(
+                !($this->nsBelongsToCoreBundle($tableNs) && !$this->nsBelongsToCoreBundle($refTableNs)) &&
+                !($this->nsBelongsToCoolBundle($tableNs) && !$this->nsBelongsToCoolBundle($refTableNs))
+            )
                 $ret[] = $referrer;
+
         }
         return $ret;
+    }
+
+    /**
+     * @param string $ns
+     * @return int
+     */
+    private function nsBelongsToCoolBundle($ns) {
+        return preg_match('/^Eulogix\\\\Cool\\\\.+?/sim', $ns) && !$this->nsBelongsToCoreBundle($ns);
+    }
+
+    /**
+     * @param string $ns
+     * @return int
+     */
+    private function nsBelongsToCoreBundle($ns) {
+        return preg_match('/^Eulogix\\\\Cool\\\\Bundle\\\\CoreBundle\\\\.+?/sim', $ns);
     }
 }

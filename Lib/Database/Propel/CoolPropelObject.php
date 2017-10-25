@@ -313,6 +313,15 @@ class CoolPropelObject extends \BaseObject {
         return Money::fromDecimal($value, new Currency($currency), $precision);
     }
 
+    /**
+     * @param string $fieldName
+     * @return \DateTime
+     */
+    public function getCalculatedFieldAsDateTime($fieldName) {
+        $value = $this->getCalculatedField($fieldName);
+        return $value ? new \DateTime($value) : null;
+    }
+
     /*
      * methods that emulate the setters which may have been skipped by the custom builder
      * that strips excessive references to the core schema

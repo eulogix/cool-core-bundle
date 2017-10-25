@@ -28,15 +28,18 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('eulogix_cool_core');
 
-        $rootNode->children()
+        $rootNode
+            ->children()
                 ->arrayNode('schemas')
                     ->requiresAtLeastOneElement()
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                     ->children()
-                       ->scalarNode('namespace')
+                        ->scalarNode('namespace')->end()
+                        ->scalarNode('attach_to')->end()
                     ->end()
                 ->end()
+            ->end()
         ;
         
         return $treeBuilder;

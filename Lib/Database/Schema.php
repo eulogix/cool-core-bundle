@@ -120,6 +120,9 @@ class Schema implements Shimmable
      */
     public function setCurrentSchema($schemaName)
     {
+        if($attachedTo = $this->getAttachedToSchema())
+            return $attachedTo->setCurrentSchema($schemaName);
+
         if (!$this->isSchemaNameValid($schemaName)) {
             throw new \Exception("$schemaName is not a valid schema name for " . $this->name);
         }
@@ -845,7 +848,7 @@ class Schema implements Shimmable
 
                 $DSField = @$TableDSFields[$viewField['source_table']][$prefix.$viewField['source_column']];
                 if(!$DSField) {
-                    $DSField = $this->getDSFieldForPGDataType($viewField['view_column'], $viewField['data_type']);
+                    $DSField = $this->getDSFieldForPGDataType($prefix.$viewField['view_column'], $viewField['data_type']);
                 }
 
                 $DSField->setIsRequired(false)
@@ -892,6 +895,8 @@ class Schema implements Shimmable
      * @return string
      */
     public function getFilesIndexTableName() {
+        if($attachedTo = $this->getAttachedToSchema())
+            return $attachedTo->getFilesIndexTableName();
         return $this->getName().'_files';
     }
 
@@ -972,4 +977,27 @@ class Schema implements Shimmable
         }
     }
 
+    /**
+     * @return string|bool
+     */
+    public function getAttachedToSchemaName() {
+        return Cool::getInstance()->getAttachedToSchemaName($this->getName());
+    }
+
+    /**
+     * @return bool|Schema
+     * @throws \Exception
+     */
+    public function getAttachedToSchema() {
+        if($schemaName = $this->getAttachedToSchemaName())
+            return Cool::getInstance()->getSchema($schemaName);
+        return false;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getAttachedSchemas() {
+        return Cool::getInstance()->getSchemaNamesAttachedTo($this->getName());
+    }
 }
