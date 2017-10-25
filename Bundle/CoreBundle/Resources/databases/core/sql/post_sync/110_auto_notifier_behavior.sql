@@ -1,4 +1,4 @@
-/* file generation UUID: 59d4fee2d874d */
+/* file generation UUID: 59f0c343049cf */
 
 --
 -- Notifier triggers for account
@@ -7,8 +7,8 @@
 CREATE OR REPLACE FUNCTION account_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -26,8 +26,8 @@ CREATE TRIGGER account_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNCAT
 CREATE OR REPLACE FUNCTION app_setting_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_app_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_app_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_app_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_app_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -45,8 +45,8 @@ CREATE TRIGGER app_setting_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRU
 CREATE OR REPLACE FUNCTION account_setting_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -64,8 +64,8 @@ CREATE TRIGGER account_setting_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR
 CREATE OR REPLACE FUNCTION account_profile_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_profile', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_profile',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_profile', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_profile',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -83,8 +83,8 @@ CREATE TRIGGER account_profile_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR
 CREATE OR REPLACE FUNCTION account_profile_setting_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_profile_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_profile_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_profile_setting', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_profile_setting',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -102,8 +102,8 @@ CREATE TRIGGER account_profile_setting_notf_notf_trg AFTER INSERT OR UPDATE OR D
 CREATE OR REPLACE FUNCTION account_profile_ref_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_profile_ref', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_profile_ref',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_profile_ref', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_profile_ref',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -121,8 +121,8 @@ CREATE TRIGGER account_profile_ref_notf_notf_trg AFTER INSERT OR UPDATE OR DELET
 CREATE OR REPLACE FUNCTION account_group_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_group', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_group',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_group', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_group',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -140,8 +140,8 @@ CREATE TRIGGER account_group_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR T
 CREATE OR REPLACE FUNCTION account_group_ref_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_account_group_ref', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_account_group_ref',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_account_group_ref', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_account_group_ref',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -159,8 +159,8 @@ CREATE TRIGGER account_group_ref_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE 
 CREATE OR REPLACE FUNCTION form_config_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_form_config', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_form_config',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_form_config', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_form_config',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -178,8 +178,8 @@ CREATE TRIGGER form_config_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRU
 CREATE OR REPLACE FUNCTION form_config_field_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_form_config_field', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_form_config_field',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_form_config_field', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_form_config_field',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -197,8 +197,8 @@ CREATE TRIGGER form_config_field_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE 
 CREATE OR REPLACE FUNCTION lister_config_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_lister_config', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_lister_config',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_lister_config', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_lister_config',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -216,8 +216,8 @@ CREATE TRIGGER lister_config_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR T
 CREATE OR REPLACE FUNCTION lister_config_column_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_lister_config_column', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_lister_config_column',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_lister_config_column', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_lister_config_column',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -235,8 +235,8 @@ CREATE TRIGGER lister_config_column_notf_notf_trg AFTER INSERT OR UPDATE OR DELE
 CREATE OR REPLACE FUNCTION lookup_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_lookup', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_lookup',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_lookup', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_lookup',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -254,8 +254,8 @@ CREATE TRIGGER lookup_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE
 CREATE OR REPLACE FUNCTION table_extension_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_table_extension', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_table_extension',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_table_extension', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_table_extension',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -273,8 +273,8 @@ CREATE TRIGGER table_extension_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR
 CREATE OR REPLACE FUNCTION table_extension_field_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_table_extension_field', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_table_extension_field',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_table_extension_field', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_table_extension_field',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -292,8 +292,8 @@ CREATE TRIGGER table_extension_field_notf_notf_trg AFTER INSERT OR UPDATE OR DEL
 CREATE OR REPLACE FUNCTION field_definition_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_field_definition', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_field_definition',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_field_definition', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_field_definition',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -311,8 +311,8 @@ CREATE TRIGGER field_definition_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE O
 CREATE OR REPLACE FUNCTION app_lock_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_app_lock', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_app_lock',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_app_lock', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_app_lock',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -330,8 +330,8 @@ CREATE TRIGGER app_lock_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNCA
 CREATE OR REPLACE FUNCTION translation_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_translation', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_translation',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_translation', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_translation',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -349,8 +349,8 @@ CREATE TRIGGER translation_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRU
 CREATE OR REPLACE FUNCTION pending_call_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_pending_call', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_pending_call',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_pending_call', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_pending_call',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -368,8 +368,8 @@ CREATE TRIGGER pending_call_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TR
 CREATE OR REPLACE FUNCTION async_job_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_async_job', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_async_job',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_async_job', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_async_job',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -387,8 +387,8 @@ CREATE TRIGGER async_job_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNC
 CREATE OR REPLACE FUNCTION user_notification_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_user_notification', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_user_notification',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_user_notification', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_user_notification',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -406,8 +406,8 @@ CREATE TRIGGER user_notification_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE 
 CREATE OR REPLACE FUNCTION file_property_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_file_property', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_file_property',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_file_property', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_file_property',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -425,8 +425,8 @@ CREATE TRIGGER file_property_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR T
 CREATE OR REPLACE FUNCTION user_reminder_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_user_reminder', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_user_reminder',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_user_reminder', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_user_reminder',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -444,8 +444,8 @@ CREATE TRIGGER user_reminder_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR T
 CREATE OR REPLACE FUNCTION rule_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_rule', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_rule',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_rule', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_rule',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -463,8 +463,8 @@ CREATE TRIGGER rule_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE O
 CREATE OR REPLACE FUNCTION rule_code_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_rule_code', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_rule_code',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_rule_code', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_rule_code',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -482,8 +482,8 @@ CREATE TRIGGER rule_code_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRUNC
 CREATE OR REPLACE FUNCTION code_snippet_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_code_snippet', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_code_snippet',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_code_snippet', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_code_snippet',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -501,8 +501,8 @@ CREATE TRIGGER code_snippet_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TR
 CREATE OR REPLACE FUNCTION code_snippet_variable_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_code_snippet_variable', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_code_snippet_variable',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_code_snippet_variable', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_code_snippet_variable',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -520,8 +520,8 @@ CREATE TRIGGER code_snippet_variable_notf_notf_trg AFTER INSERT OR UPDATE OR DEL
 CREATE OR REPLACE FUNCTION widget_rule_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_widget_rule', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_widget_rule',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_widget_rule', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_widget_rule',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
@@ -539,8 +539,8 @@ CREATE TRIGGER widget_rule_notf_notf_trg AFTER INSERT OR UPDATE OR DELETE OR TRU
 CREATE OR REPLACE FUNCTION pg_listener_hook_notf() RETURNS TRIGGER AS
 $functionBlock$
     BEGIN
-        PERFORM pg_notify('datachange_pg_listener_hook', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
-        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'datachange_pg_listener_hook',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
+        PERFORM pg_notify('c_pg_listener_hook', '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }' );
+        PERFORM pg_notify(TG_TABLE_SCHEMA || ';' || 'c_pg_listener_hook',  '{ "schema": "core", "actual_schema": "' || TG_TABLE_SCHEMA || '", "operation": "' || TG_OP || '" }');
         RETURN NULL;
     END;
 $functionBlock$
