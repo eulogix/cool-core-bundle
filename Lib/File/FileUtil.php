@@ -105,6 +105,10 @@ class FileUtil {
 
         $ret = false;
 
+        /**
+         * TODO: reimplement these file copies with an approach that does not consume memory
+         * as file->getContent() keeps it all in RAM
+         */
         $tempFile = tempnam(sys_get_temp_dir(),'TMP');
         file_put_contents($tempFile, $file->getContent());
 

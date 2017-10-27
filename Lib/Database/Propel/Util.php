@@ -33,4 +33,31 @@ class Util {
         return new SimpleValueMap($hash);
     }
 
+    /**
+     * Converts a database schema name to php object name by Camelization.
+     * Removes <code>STD_SEPARATOR_CHAR</code>, capitilizes first letter
+     * of name and each letter after the <code>STD_SEPERATOR</code>,
+     * converts the rest of the letters to lowercase.
+     *
+     * This method should be named camelizeMethod() for clarity
+     *
+     * my_CLASS_name -> MyClassName
+     *
+     * @param string $databseObjectName name to be converted.
+     *
+     * @return string Converted name.
+     */
+    public static function camelize($databseObjectName)
+    {
+        $name = "";
+        $tok = strtok($databseObjectName, "_");
+        while ($tok !== false) {
+            $name .= ucfirst(strtolower($tok));
+            $tok = strtok("_");
+        }
+
+        return $name;
+    }
+
+
 } 

@@ -60,7 +60,7 @@ class CoolTableMap extends \TableMap {
      * @return string|null
      */
     public function getCoolRawName() {
-        return @$this->getDictionary()->getTableAttribute($this->getName(), Dictionary::TBL_ATT_RAWNAME);
+        return @$this->getDictionary()->getTableRawName($this->getName());
     }
 
     /**

@@ -356,6 +356,13 @@
         <column name="cell_template_js" type="LONGVARCHAR">
             <_control type="textarea"></_control>
         </column>
+        <column name="dijit_widget_template" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+        <column name="dijit_widget_set_value_js" type="LONGVARCHAR">
+            <_control type="textarea"></_control>
+        </column>
+
         <column name="column_style_css" type="LONGVARCHAR"/>
 
         <column name="sort_order" type="INTEGER"/>

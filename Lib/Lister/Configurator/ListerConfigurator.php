@@ -74,6 +74,8 @@ class ListerConfigurator extends WidgetConfigurator {
                     ->setCellTemplate( $configColumn->getCellTemplate() )
                     ->setCellTemplateJs( $configColumn->getCellTemplateJs() )
                     ->setColumnStyleCss( $configColumn->getColumnStyleCss() )
+                    ->setDijitWidgetTemplate( $configColumn->getDijitWidgetTemplate() )
+                    ->setSetValueJs( $configColumn->getDijitWidgetSetValueJs() )
                     ->setHasSummary( $configColumn->getShowSummaryFlag() )
                     ->setTooltipMaxWidth( $configColumn->getTooltipMaxWidth() )
                     ->setTooltipJsExpression( $configColumn->getTooltipJsExpression() )

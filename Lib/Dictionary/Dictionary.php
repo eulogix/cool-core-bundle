@@ -30,9 +30,9 @@ abstract class Dictionary {
     const TBL_ATT_EDITABLE   = 'editable';      
     const TBL_ATT_SCHEMA = 'schema';
     const TBL_ATT_RAWNAME = 'rawname';
-    const TBL_ATT_PROPEL_MODEL_NAMESPACE = 'propelModelNamespace';
-    const TBL_ATT_PROPEL_PEER_NAMESPACE = 'propelPeerNamespace';
-    const TBL_ATT_PROPEL_QUERY_NAMESPACE = 'propelQueryNamespace';
+    const TBL_ATT_NAMESPACE = 'namespace';
+    const TBL_ATT_PHP_NAME = 'phpName';
+
     const TBL_ATT_DEFAULT_LISTER = 'defaultLister';
     const TBL_ATT_DEFAULT_EDITOR = 'defaultEditor';
     const TBL_ATT_VALUE_MAP_CLASS = 'valueMapClass';
@@ -72,18 +72,52 @@ abstract class Dictionary {
     public function __construct( $schemaName = null ) {
         $this->schemaName = $schemaName;    
     }
-    
+
+    public function getTableNamespace($tableName) {
+        return $this->getTableAttribute($tableName, self::TBL_ATT_NAMESPACE) ??
+               $this->getNamespace();
+    }
+
     /**
-    * returns the Propel Peer name defined for the given table name
+    * returns the Propel Model class namespace defined for the given table name
     * 
     * @param mixed $tableName
     * @returns string
     */
-    protected function getPropelPeer($tableName) {
-        if( $peerNamespace = $this->getTableAttribute($tableName,self::TBL_ATT_PROPEL_PEER_NAMESPACE)) {
-            return $peerNamespace;
-        }
-        return false;        
+    public function getPropelModelClassNamespace($tableName) {
+        $namespace = $this->getTableNamespace($tableName);
+        return "$namespace\\".$this->getPhpName($tableName);
+    }
+
+    /**
+    * returns the Propel Peer namespace defined for the given table name
+    *
+    * @param mixed $tableName
+    * @returns string
+    */
+    public function getPropelPeerNamespace($tableName) {
+        $namespace = $this->getTableNamespace($tableName);
+        return "$namespace\\".$this->getPhpName($tableName).'Peer';
+    }
+
+    /**
+    * returns the Propel Query namespace defined for the given table name
+    *
+    * @param mixed $tableName
+    * @returns string
+    */
+    public function getPropelQueryNamespace($tableName) {
+        $namespace = $this->getTableNamespace($tableName);
+        return "$namespace\\".$this->getPhpName($tableName).'Query';
+    }
+
+    /**
+    * @param mixed $tableName
+    * @returns string
+    */
+    public function getPhpName($tableName) {
+        return $this->getTableAttribute($tableName, self::TBL_ATT_PHP_NAME) ??
+               \Eulogix\Cool\Lib\Database\Propel\Util::camelize( $this->getTableRawName( $tableName ) );
     }
     
     /**
@@ -93,13 +127,13 @@ abstract class Dictionary {
     * @return CoolTableMap
     */
     public function getPropelTableMap($tableName) {
-        if( $peer_ns = $this->getPropelPeer($tableName)) {
-            return $peer_ns::getTableMap();
-        }
+        if($this->hasTable($tableName) && ($peerNs = $this->getPropelPeerNamespace($tableName)))
+            return $peerNs::getTableMap();
+
         //make this work for non multitenant schemas when only the tablename is provided without the schema specifier
-        if( $peer_ns = $this->getPropelPeer($this->schemaName.'.'.$tableName)) {
-            return $peer_ns::getTableMap();
-        }
+        if( $ret = $this->getPropelTableMap($this->schemaName.'.'.$tableName))
+            return $ret;
+
         return false;
     }
 
@@ -175,10 +209,18 @@ abstract class Dictionary {
     public function hasColumn($tableName, $columnName) {
         return isset( $this->getTableColumns($tableName)[$columnName] );
     }
-    
+
+    /**
+     * @param string $tableName
+     * @return string
+     */
+    public function getTableRawName($tableName) {
+        return $this->getTableAttribute($tableName, self::TBL_ATT_RAWNAME);
+    }
+
     /**
     * returns an associative array of attributes for a given table
-    * 
+    *
     * @param mixed $tableName
     * @return []
     */
@@ -325,7 +367,13 @@ abstract class Dictionary {
     * must be implemented by the generated baseDictionary that extends this class
     * @return []
     */
-    abstract public function getProjectDir(); 
+    abstract public function getProjectDir();
+
+    /**
+    * must be implemented by the generated baseDictionary that extends this class
+    * @return []
+    */
+    abstract public function getNamespace();
     
     /**
     * returns the schema which the related Database Object is bound to
@@ -334,5 +382,4 @@ abstract class Dictionary {
     public function getSchemaName() {
         return $this->schemaName;
     }
-
 }  

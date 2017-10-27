@@ -93,6 +93,18 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     protected $cell_template_js;
 
     /**
+     * The value for the dijit_widget_template field.
+     * @var        string
+     */
+    protected $dijit_widget_template;
+
+    /**
+     * The value for the dijit_widget_set_value_js field.
+     * @var        string
+     */
+    protected $dijit_widget_set_value_js;
+
+    /**
      * The value for the column_style_css field.
      * @var        string
      */
@@ -268,6 +280,28 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     {
 
         return $this->cell_template_js;
+    }
+
+    /**
+     * Get the [dijit_widget_template] column value.
+     *
+     * @return string
+     */
+    public function getDijitWidgetTemplate()
+    {
+
+        return $this->dijit_widget_template;
+    }
+
+    /**
+     * Get the [dijit_widget_set_value_js] column value.
+     *
+     * @return string
+     */
+    public function getDijitWidgetSetValueJs()
+    {
+
+        return $this->dijit_widget_set_value_js;
     }
 
     /**
@@ -587,6 +621,48 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     } // setCellTemplateJs()
 
     /**
+     * Set the value of [dijit_widget_template] column.
+     *
+     * @param  string $v new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setDijitWidgetTemplate($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->dijit_widget_template !== $v) {
+            $this->dijit_widget_template = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE;
+        }
+
+
+        return $this;
+    } // setDijitWidgetTemplate()
+
+    /**
+     * Set the value of [dijit_widget_set_value_js] column.
+     *
+     * @param  string $v new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setDijitWidgetSetValueJs($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->dijit_widget_set_value_js !== $v) {
+            $this->dijit_widget_set_value_js = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS;
+        }
+
+
+        return $this;
+    } // setDijitWidgetSetValueJs()
+
+    /**
      * Set the value of [column_style_css] column.
      *
      * @param  string $v new value
@@ -816,15 +892,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $this->width = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->cell_template = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->cell_template_js = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->column_style_css = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->sort_order = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
-            $this->sortby_order = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
-            $this->sortby_direction = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->truncate_chars = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->tooltip_js_expression = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->tooltip_url_js_expression = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
-            $this->tooltip_max_width = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
-            $this->tooltip_delay_msec = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
+            $this->dijit_widget_template = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->dijit_widget_set_value_js = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->column_style_css = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->sort_order = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+            $this->sortby_order = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
+            $this->sortby_direction = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->truncate_chars = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
+            $this->tooltip_js_expression = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
+            $this->tooltip_url_js_expression = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
+            $this->tooltip_max_width = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
+            $this->tooltip_delay_msec = ($row[$startcol + 19] !== null) ? (int) $row[$startcol + 19] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -834,7 +912,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 18; // 18 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 20; // 20 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ListerConfigColumn object", $e);
@@ -1099,6 +1177,12 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::CELL_TEMPLATE_JS)) {
             $modifiedColumns[':p' . $index++]  = 'cell_template_js';
         }
+        if ($this->isColumnModified(ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE)) {
+            $modifiedColumns[':p' . $index++]  = 'dijit_widget_template';
+        }
+        if ($this->isColumnModified(ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS)) {
+            $modifiedColumns[':p' . $index++]  = 'dijit_widget_set_value_js';
+        }
         if ($this->isColumnModified(ListerConfigColumnPeer::COLUMN_STYLE_CSS)) {
             $modifiedColumns[':p' . $index++]  = 'column_style_css';
         }
@@ -1163,6 +1247,12 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                         break;
                     case 'cell_template_js':
                         $stmt->bindValue($identifier, $this->cell_template_js, PDO::PARAM_STR);
+                        break;
+                    case 'dijit_widget_template':
+                        $stmt->bindValue($identifier, $this->dijit_widget_template, PDO::PARAM_STR);
+                        break;
+                    case 'dijit_widget_set_value_js':
+                        $stmt->bindValue($identifier, $this->dijit_widget_set_value_js, PDO::PARAM_STR);
                         break;
                     case 'column_style_css':
                         $stmt->bindValue($identifier, $this->column_style_css, PDO::PARAM_STR);
@@ -1358,30 +1448,36 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 return $this->getCellTemplateJs();
                 break;
             case 9:
-                return $this->getColumnStyleCss();
+                return $this->getDijitWidgetTemplate();
                 break;
             case 10:
-                return $this->getSortOrder();
+                return $this->getDijitWidgetSetValueJs();
                 break;
             case 11:
-                return $this->getSortbyOrder();
+                return $this->getColumnStyleCss();
                 break;
             case 12:
-                return $this->getSortbyDirection();
+                return $this->getSortOrder();
                 break;
             case 13:
-                return $this->getTruncateChars();
+                return $this->getSortbyOrder();
                 break;
             case 14:
-                return $this->getTooltipJsExpression();
+                return $this->getSortbyDirection();
                 break;
             case 15:
-                return $this->getTooltipUrlJsExpression();
+                return $this->getTruncateChars();
                 break;
             case 16:
-                return $this->getTooltipMaxWidth();
+                return $this->getTooltipJsExpression();
                 break;
             case 17:
+                return $this->getTooltipUrlJsExpression();
+                break;
+            case 18:
+                return $this->getTooltipMaxWidth();
+                break;
+            case 19:
                 return $this->getTooltipDelayMsec();
                 break;
             default:
@@ -1422,15 +1518,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $keys[6] => $this->getWidth(),
             $keys[7] => $this->getCellTemplate(),
             $keys[8] => $this->getCellTemplateJs(),
-            $keys[9] => $this->getColumnStyleCss(),
-            $keys[10] => $this->getSortOrder(),
-            $keys[11] => $this->getSortbyOrder(),
-            $keys[12] => $this->getSortbyDirection(),
-            $keys[13] => $this->getTruncateChars(),
-            $keys[14] => $this->getTooltipJsExpression(),
-            $keys[15] => $this->getTooltipUrlJsExpression(),
-            $keys[16] => $this->getTooltipMaxWidth(),
-            $keys[17] => $this->getTooltipDelayMsec(),
+            $keys[9] => $this->getDijitWidgetTemplate(),
+            $keys[10] => $this->getDijitWidgetSetValueJs(),
+            $keys[11] => $this->getColumnStyleCss(),
+            $keys[12] => $this->getSortOrder(),
+            $keys[13] => $this->getSortbyOrder(),
+            $keys[14] => $this->getSortbyDirection(),
+            $keys[15] => $this->getTruncateChars(),
+            $keys[16] => $this->getTooltipJsExpression(),
+            $keys[17] => $this->getTooltipUrlJsExpression(),
+            $keys[18] => $this->getTooltipMaxWidth(),
+            $keys[19] => $this->getTooltipDelayMsec(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1503,30 +1601,36 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 $this->setCellTemplateJs($value);
                 break;
             case 9:
-                $this->setColumnStyleCss($value);
+                $this->setDijitWidgetTemplate($value);
                 break;
             case 10:
-                $this->setSortOrder($value);
+                $this->setDijitWidgetSetValueJs($value);
                 break;
             case 11:
-                $this->setSortbyOrder($value);
+                $this->setColumnStyleCss($value);
                 break;
             case 12:
-                $this->setSortbyDirection($value);
+                $this->setSortOrder($value);
                 break;
             case 13:
-                $this->setTruncateChars($value);
+                $this->setSortbyOrder($value);
                 break;
             case 14:
-                $this->setTooltipJsExpression($value);
+                $this->setSortbyDirection($value);
                 break;
             case 15:
-                $this->setTooltipUrlJsExpression($value);
+                $this->setTruncateChars($value);
                 break;
             case 16:
-                $this->setTooltipMaxWidth($value);
+                $this->setTooltipJsExpression($value);
                 break;
             case 17:
+                $this->setTooltipUrlJsExpression($value);
+                break;
+            case 18:
+                $this->setTooltipMaxWidth($value);
+                break;
+            case 19:
                 $this->setTooltipDelayMsec($value);
                 break;
         } // switch()
@@ -1562,15 +1666,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if (array_key_exists($keys[6], $arr)) $this->setWidth($arr[$keys[6]]);
         if (array_key_exists($keys[7], $arr)) $this->setCellTemplate($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setCellTemplateJs($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setColumnStyleCss($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setSortOrder($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setSortbyOrder($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setSortbyDirection($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setTruncateChars($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setTooltipJsExpression($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setTooltipUrlJsExpression($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setTooltipMaxWidth($arr[$keys[16]]);
-        if (array_key_exists($keys[17], $arr)) $this->setTooltipDelayMsec($arr[$keys[17]]);
+        if (array_key_exists($keys[9], $arr)) $this->setDijitWidgetTemplate($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDijitWidgetSetValueJs($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setColumnStyleCss($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setSortOrder($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setSortbyOrder($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setSortbyDirection($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setTruncateChars($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setTooltipJsExpression($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setTooltipUrlJsExpression($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setTooltipMaxWidth($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setTooltipDelayMsec($arr[$keys[19]]);
     }
 
     /**
@@ -1591,6 +1697,8 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::WIDTH)) $criteria->add(ListerConfigColumnPeer::WIDTH, $this->width);
         if ($this->isColumnModified(ListerConfigColumnPeer::CELL_TEMPLATE)) $criteria->add(ListerConfigColumnPeer::CELL_TEMPLATE, $this->cell_template);
         if ($this->isColumnModified(ListerConfigColumnPeer::CELL_TEMPLATE_JS)) $criteria->add(ListerConfigColumnPeer::CELL_TEMPLATE_JS, $this->cell_template_js);
+        if ($this->isColumnModified(ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE)) $criteria->add(ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE, $this->dijit_widget_template);
+        if ($this->isColumnModified(ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS)) $criteria->add(ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS, $this->dijit_widget_set_value_js);
         if ($this->isColumnModified(ListerConfigColumnPeer::COLUMN_STYLE_CSS)) $criteria->add(ListerConfigColumnPeer::COLUMN_STYLE_CSS, $this->column_style_css);
         if ($this->isColumnModified(ListerConfigColumnPeer::SORT_ORDER)) $criteria->add(ListerConfigColumnPeer::SORT_ORDER, $this->sort_order);
         if ($this->isColumnModified(ListerConfigColumnPeer::SORTBY_ORDER)) $criteria->add(ListerConfigColumnPeer::SORTBY_ORDER, $this->sortby_order);
@@ -1671,6 +1779,8 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $copyObj->setWidth($this->getWidth());
         $copyObj->setCellTemplate($this->getCellTemplate());
         $copyObj->setCellTemplateJs($this->getCellTemplateJs());
+        $copyObj->setDijitWidgetTemplate($this->getDijitWidgetTemplate());
+        $copyObj->setDijitWidgetSetValueJs($this->getDijitWidgetSetValueJs());
         $copyObj->setColumnStyleCss($this->getColumnStyleCss());
         $copyObj->setSortOrder($this->getSortOrder());
         $copyObj->setSortbyOrder($this->getSortbyOrder());
@@ -1804,6 +1914,8 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $this->width = null;
         $this->cell_template = null;
         $this->cell_template_js = null;
+        $this->dijit_widget_template = null;
+        $this->dijit_widget_set_value_js = null;
         $this->column_style_css = null;
         $this->sort_order = null;
         $this->sortby_order = null;

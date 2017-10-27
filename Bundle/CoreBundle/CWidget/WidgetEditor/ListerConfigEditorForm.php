@@ -93,6 +93,8 @@ class ListerConfigEditorForm extends BaseConfigEditorForm {
                         ->setEditableFlag( $listerCol->getEditable() )
                         ->setCellTemplate( $listerCol->getCellTemplate() )
                         ->setCellTemplateJs( $listerCol->getCellTemplateJs() )
+                        ->setDijitWidgetTemplate( $listerCol->getDijitWidgetTemplate() )
+                        ->setDijitWidgetSetValueJs( $listerCol->getSetValueJs() )
                         ->setColumnStyleCss( $listerCol->getColumnStyleCss() )
                         ->setShowSummaryFlag( $listerCol->getHasSummary() )
                         ->setTruncateChars( $listerCol->getMaxChars() );

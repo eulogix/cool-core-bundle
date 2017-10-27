@@ -51,6 +51,8 @@ class ListerConfigColumnTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolT
         $this->addColumn('width', 'Width', 'LONGVARCHAR', false, null, null);
         $this->addColumn('cell_template', 'CellTemplate', 'LONGVARCHAR', false, null, null);
         $this->addColumn('cell_template_js', 'CellTemplateJs', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('dijit_widget_template', 'DijitWidgetTemplate', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('dijit_widget_set_value_js', 'DijitWidgetSetValueJs', 'LONGVARCHAR', false, null, null);
         $this->addColumn('column_style_css', 'ColumnStyleCss', 'LONGVARCHAR', false, null, null);
         $this->addColumn('sort_order', 'SortOrder', 'INTEGER', false, null, null);
         $this->addColumn('sortby_order', 'SortbyOrder', 'INTEGER', false, null, null);

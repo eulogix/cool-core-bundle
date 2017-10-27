@@ -16,9 +16,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Account',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountQuery',
         'schema' => 'core',
         'rawname' => 'account',
         'editable' => true,
@@ -179,9 +176,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSetting',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSettingPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppSettingQuery',
         'schema' => 'core',
         'rawname' => 'app_setting',
         'editable' => true,
@@ -236,9 +230,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSetting',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSettingPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountSettingQuery',
         'schema' => 'core',
         'rawname' => 'account_setting',
       ),
@@ -274,9 +265,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfile',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfilePeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileQuery',
         'schema' => 'core',
         'rawname' => 'account_profile',
         'editable' => true,
@@ -301,9 +289,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSetting',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSettingPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileSettingQuery',
         'schema' => 'core',
         'rawname' => 'account_profile_setting',
       ),
@@ -339,9 +324,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRef',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRefPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountProfileRefQuery',
         'schema' => 'core',
         'rawname' => 'account_profile_ref',
       ),
@@ -385,9 +367,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroup',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupQuery',
         'schema' => 'core',
         'rawname' => 'account_group',
         'editable' => true,
@@ -434,9 +413,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRef',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRefPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AccountGroupRefQuery',
         'schema' => 'core',
         'rawname' => 'account_group_ref',
       ),
@@ -480,9 +456,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfig',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigQuery',
         'schema' => 'core',
         'rawname' => 'form_config',
       ),
@@ -532,9 +505,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigField',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigFieldPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FormConfigFieldQuery',
         'schema' => 'core',
         'rawname' => 'form_config_field',
       ),
@@ -588,9 +558,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfig',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigQuery',
         'schema' => 'core',
         'rawname' => 'lister_config',
       ),
@@ -644,9 +611,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumn',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumnPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\ListerConfigColumnQuery',
         'schema' => 'core',
         'rawname' => 'lister_config_column',
       ),
@@ -705,6 +669,26 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'cell_template_js' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'dijit_widget_template' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'textarea',
+          ),
+        ),
+        'dijit_widget_set_value_js' => 
         array (
           'attributes' => 
           array (
@@ -783,9 +767,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Lookup',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\LookupPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\LookupQuery',
         'schema' => 'core',
         'rawname' => 'lookup',
         'editable' => true,
@@ -859,9 +840,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtension',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionQuery',
         'schema' => 'core',
         'rawname' => 'table_extension',
         'editable' => true,
@@ -909,9 +887,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionField',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionFieldPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TableExtensionFieldQuery',
         'schema' => 'core',
         'rawname' => 'table_extension_field',
         'defaultLister' => 'Eulogix/Cool/Bundle/CoreBundle/CWidget/Core/TableExtension/TableExtensionFieldLister',
@@ -971,9 +946,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinition',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinitionPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FieldDefinitionQuery',
         'schema' => 'core',
         'rawname' => 'field_definition',
       ),
@@ -1068,9 +1040,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLock',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLockPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AppLockQuery',
         'schema' => 'core',
         'rawname' => 'app_lock',
       ),
@@ -1124,9 +1093,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Translation',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TranslationPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\TranslationQuery',
         'schema' => 'core',
         'rawname' => 'translation',
         'editable' => true,
@@ -1211,9 +1177,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCall',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCallPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PendingCallQuery',
         'schema' => 'core',
         'rawname' => 'pending_call',
         'editable' => false,
@@ -1280,9 +1243,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJob',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJobPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\AsyncJobQuery',
         'schema' => 'core',
         'rawname' => 'async_job',
         'editable' => false,
@@ -1377,9 +1337,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotification',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotificationPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserNotificationQuery',
         'schema' => 'core',
         'rawname' => 'user_notification',
         'editable' => false,
@@ -1428,9 +1385,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FileProperty',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FilePropertyPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\FilePropertyQuery',
         'schema' => 'core',
         'rawname' => 'file_property',
         'editable' => true,
@@ -1499,9 +1453,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminder',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminderPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\UserReminderQuery',
         'schema' => 'core',
         'rawname' => 'user_reminder',
         'editable' => true,
@@ -1597,9 +1548,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Rule',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RulePeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleQuery',
         'schema' => 'core',
         'rawname' => 'rule',
         'editable' => true,
@@ -1670,9 +1618,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCode',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodePeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\RuleCodeQuery',
         'schema' => 'core',
         'rawname' => 'rule_code',
         'editable' => true,
@@ -1751,9 +1696,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetQuery',
         'schema' => 'core',
         'rawname' => 'code_snippet',
         'editable' => true,
@@ -1855,9 +1797,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariable',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariablePeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippetVariableQuery',
         'schema' => 'core',
         'rawname' => 'code_snippet_variable',
         'editable' => true,
@@ -1894,9 +1833,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRule',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRulePeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\WidgetRuleQuery',
         'schema' => 'core',
         'rawname' => 'widget_rule',
       ),
@@ -1953,9 +1889,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     array (
       'attributes' => 
       array (
-        'propelModelNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHook',
-        'propelPeerNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookPeer',
-        'propelQueryNamespace' => 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\PgListenerHookQuery',
         'schema' => 'core',
         'rawname' => 'pg_listener_hook',
         'editable' => true,
@@ -2040,6 +1973,10 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         return  'core';
     }
     
+    public function getNamespace() {
+        return  'Eulogix\Cool\Bundle\CoreBundle\Model\Core';
+    }
+
     public function getProjectDir() {
         return  '@EulogixCoolCoreBundle/Resources/databases/core';
     }

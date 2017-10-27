@@ -73,7 +73,9 @@ class Cool {
         }
             
         if (!isset($this->schemas[$schemaName])) {
-            if( $db_namespace=$this->getSchemaNamespace($schemaName) ) {
+            if($attachedTo = $this->getAttachedToSchemaName($schemaName)) {
+                return $this->getSchema($attachedTo);
+            } else if( $db_namespace = $this->getSchemaNamespace($schemaName) ) {
                 $class = $db_namespace."\\Schema";
                 if(class_exists($class)) { 
                     $this->schemas[$schemaName] = new $class($schemaName,$db_namespace);

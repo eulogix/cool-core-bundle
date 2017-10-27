@@ -33,7 +33,13 @@ class Column {
     /**
      * @var string
      */
-    private $name, $label, $width, $cellTemplate, $columnStyleCss, $setValueJs;
+    private $name, $label, $width, $columnStyleCss;
+
+    /**
+     * server side template, currently unused
+     * @var string
+     */
+    private $cellTemplate;
 
     /**
      * contains the handlebars template used to render the content of the cell
@@ -47,6 +53,12 @@ class Column {
      * @var string
      */
     private $dijitWidgetTemplate;
+
+    /**
+     * js function to populate the dijit template
+     * @var string
+     */
+    private $setValueJs;
 
     /**
      * @var Field

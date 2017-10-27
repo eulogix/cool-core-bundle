@@ -27,6 +27,8 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery orderByWidth($order = Criteria::ASC) Order by the width column
  * @method ListerConfigColumnQuery orderByCellTemplate($order = Criteria::ASC) Order by the cell_template column
  * @method ListerConfigColumnQuery orderByCellTemplateJs($order = Criteria::ASC) Order by the cell_template_js column
+ * @method ListerConfigColumnQuery orderByDijitWidgetTemplate($order = Criteria::ASC) Order by the dijit_widget_template column
+ * @method ListerConfigColumnQuery orderByDijitWidgetSetValueJs($order = Criteria::ASC) Order by the dijit_widget_set_value_js column
  * @method ListerConfigColumnQuery orderByColumnStyleCss($order = Criteria::ASC) Order by the column_style_css column
  * @method ListerConfigColumnQuery orderBySortOrder($order = Criteria::ASC) Order by the sort_order column
  * @method ListerConfigColumnQuery orderBySortbyOrder($order = Criteria::ASC) Order by the sortby_order column
@@ -46,6 +48,8 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery groupByWidth() Group by the width column
  * @method ListerConfigColumnQuery groupByCellTemplate() Group by the cell_template column
  * @method ListerConfigColumnQuery groupByCellTemplateJs() Group by the cell_template_js column
+ * @method ListerConfigColumnQuery groupByDijitWidgetTemplate() Group by the dijit_widget_template column
+ * @method ListerConfigColumnQuery groupByDijitWidgetSetValueJs() Group by the dijit_widget_set_value_js column
  * @method ListerConfigColumnQuery groupByColumnStyleCss() Group by the column_style_css column
  * @method ListerConfigColumnQuery groupBySortOrder() Group by the sort_order column
  * @method ListerConfigColumnQuery groupBySortbyOrder() Group by the sortby_order column
@@ -75,6 +79,8 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumn findOneByWidth(string $width) Return the first ListerConfigColumn filtered by the width column
  * @method ListerConfigColumn findOneByCellTemplate(string $cell_template) Return the first ListerConfigColumn filtered by the cell_template column
  * @method ListerConfigColumn findOneByCellTemplateJs(string $cell_template_js) Return the first ListerConfigColumn filtered by the cell_template_js column
+ * @method ListerConfigColumn findOneByDijitWidgetTemplate(string $dijit_widget_template) Return the first ListerConfigColumn filtered by the dijit_widget_template column
+ * @method ListerConfigColumn findOneByDijitWidgetSetValueJs(string $dijit_widget_set_value_js) Return the first ListerConfigColumn filtered by the dijit_widget_set_value_js column
  * @method ListerConfigColumn findOneByColumnStyleCss(string $column_style_css) Return the first ListerConfigColumn filtered by the column_style_css column
  * @method ListerConfigColumn findOneBySortOrder(int $sort_order) Return the first ListerConfigColumn filtered by the sort_order column
  * @method ListerConfigColumn findOneBySortbyOrder(int $sortby_order) Return the first ListerConfigColumn filtered by the sortby_order column
@@ -94,6 +100,8 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method array findByWidth(string $width) Return ListerConfigColumn objects filtered by the width column
  * @method array findByCellTemplate(string $cell_template) Return ListerConfigColumn objects filtered by the cell_template column
  * @method array findByCellTemplateJs(string $cell_template_js) Return ListerConfigColumn objects filtered by the cell_template_js column
+ * @method array findByDijitWidgetTemplate(string $dijit_widget_template) Return ListerConfigColumn objects filtered by the dijit_widget_template column
+ * @method array findByDijitWidgetSetValueJs(string $dijit_widget_set_value_js) Return ListerConfigColumn objects filtered by the dijit_widget_set_value_js column
  * @method array findByColumnStyleCss(string $column_style_css) Return ListerConfigColumn objects filtered by the column_style_css column
  * @method array findBySortOrder(int $sort_order) Return ListerConfigColumn objects filtered by the sort_order column
  * @method array findBySortbyOrder(int $sortby_order) Return ListerConfigColumn objects filtered by the sortby_order column
@@ -208,7 +216,7 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_js_expression, tooltip_url_js_expression, tooltip_max_width, tooltip_delay_msec FROM core.lister_config_column WHERE lister_config_column_id = :p0';
+        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, dijit_widget_template, dijit_widget_set_value_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_js_expression, tooltip_url_js_expression, tooltip_max_width, tooltip_delay_msec FROM core.lister_config_column WHERE lister_config_column_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -601,6 +609,64 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigColumnPeer::CELL_TEMPLATE_JS, $cellTemplateJs, $comparison);
+    }
+
+    /**
+     * Filter the query on the dijit_widget_template column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDijitWidgetTemplate('fooValue');   // WHERE dijit_widget_template = 'fooValue'
+     * $query->filterByDijitWidgetTemplate('%fooValue%'); // WHERE dijit_widget_template LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dijitWidgetTemplate The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByDijitWidgetTemplate($dijitWidgetTemplate = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dijitWidgetTemplate)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dijitWidgetTemplate)) {
+                $dijitWidgetTemplate = str_replace('*', '%', $dijitWidgetTemplate);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE, $dijitWidgetTemplate, $comparison);
+    }
+
+    /**
+     * Filter the query on the dijit_widget_set_value_js column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDijitWidgetSetValueJs('fooValue');   // WHERE dijit_widget_set_value_js = 'fooValue'
+     * $query->filterByDijitWidgetSetValueJs('%fooValue%'); // WHERE dijit_widget_set_value_js LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dijitWidgetSetValueJs The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByDijitWidgetSetValueJs($dijitWidgetSetValueJs = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dijitWidgetSetValueJs)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dijitWidgetSetValueJs)) {
+                $dijitWidgetSetValueJs = str_replace('*', '%', $dijitWidgetSetValueJs);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS, $dijitWidgetSetValueJs, $comparison);
     }
 
     /**

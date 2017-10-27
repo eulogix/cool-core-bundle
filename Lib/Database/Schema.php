@@ -421,34 +421,16 @@ class Schema implements Shimmable
     public function getPropelObject($tableName, $pk = null)
     {
         if ($pk) {
-            $queryClass = $this->getDictionary()->getTableAttribute(
-                $tableName,
-                Dictionary::TBL_ATT_PROPEL_QUERY_NAMESPACE
-            );
-            if (!$queryClass) {
-                $queryClass = $this->getDictionary()->getTableAttribute(
-                    $this->getName() . '.' . $tableName,
-                    Dictionary::TBL_ATT_PROPEL_QUERY_NAMESPACE
+            $queryClass = $this->getDictionary()->getPropelQueryNamespace($tableName);
+            if (class_exists($queryClass)) {
+                return $queryClass::create()->findPk(
+                    is_array($pk) && count($pk) == 1 ? $pk[ 0 ] : $pk,
+                    $this->getConnection()
                 );
             }
-            $ret = $queryClass::create()->findPk(
-                is_array($pk) && count($pk) == 1 ? $pk[ 0 ] : $pk,
-                $this->getConnection()
-            );
-
-            return $ret;
         } else {
-            $modelClass = $this->getDictionary()->getTableAttribute(
-                $tableName,
-                Dictionary::TBL_ATT_PROPEL_MODEL_NAMESPACE
-            );
-            if (!$modelClass) {
-                $modelClass = $this->getDictionary()->getTableAttribute(
-                    $tableName,
-                    Dictionary::TBL_ATT_PROPEL_MODEL_NAMESPACE
-                );
-            }
-            if ($modelClass) {
+            $modelClass = $this->getDictionary()->getPropelModelClassNamespace($tableName);
+            if (class_exists($modelClass)) {
                 return new $modelClass();
             }
         }
@@ -840,8 +822,9 @@ class Schema implements Shimmable
         $availableSchemaNames = Cool::getInstance()->getAvailableSchemaNames();
         foreach($viewFields as $viewField) {
             if($viewField['source_table'] && !isset($TableDSFields[$viewField['source_table']])) {
-                $schema = in_array($viewField['source_schema'], $availableSchemaNames) ? $viewField['source_schema'] : null;
-                $TableDSFields[$viewField['source_table']] = $this->getDSFieldsFor(($schema?$schema.'.':'').$viewField['source_table'], $schema, $prefix, $lambdaFilter);
+                $sourceSchemaName = in_array($viewField['source_schema'], $availableSchemaNames) ? $viewField['source_schema'] : null;
+                $sourceSchema = $sourceSchemaName ? Cool::getInstance()->getSchema($sourceSchemaName) : $this;
+                $TableDSFields[$viewField['source_table']] = $sourceSchema->getDSFieldsFor($viewField['source_table'], $prefix, $lambdaFilter);
             }
             /** @var DSField $DSField */
             if(!is_callable($lambdaFilter) || call_user_func($lambdaFilter, $viewField['view_column'])) {
