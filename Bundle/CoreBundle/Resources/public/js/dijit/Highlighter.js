@@ -81,7 +81,7 @@ define("cool/dijit/Highlighter",
 
             domStyle.set(this.overlayNode, {
                 'width' : contentBox.w+'px',
-                'height' : contentBox.h+'px',
+                'height' : contentBox.h+'px'
             });
         }
 
