@@ -32,10 +32,16 @@ class RundeckExecutor extends BaseExecutor
         $this->rdClient = Cool::getInstance()->getFactory()->getRundeck();
     }
 
-    public function execute() {
+    /**
+     * @inheritdoc
+     */
+    public function execute($updateJob = true) {
         if($executions = $this->rdClient->runJob( $this->getJobId(), $this->getRDJobParameters() )) {
             $execution = array_pop($executions);
-            $this->getJob()->setExecutionId($execution[ 'id' ])->save();
+            $this->getJob()->setExecutionId($execution[ 'id' ]);
+
+            if($updateJob)
+                $this->getJob()->save();
         }
     }
 

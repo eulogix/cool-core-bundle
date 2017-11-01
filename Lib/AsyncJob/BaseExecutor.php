@@ -36,6 +36,9 @@ abstract class BaseExecutor
         return $this->job;
     }
 
-    public abstract function execute();
+    /**
+     * @param bool $updateJob if set, will update and save the async job record
+     */
+    public abstract function execute($updateJob = true);
 
 }

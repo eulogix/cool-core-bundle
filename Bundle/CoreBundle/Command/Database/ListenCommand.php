@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -38,6 +39,7 @@ class ListenCommand extends CoolCommand
         $this
             ->setName('cool:database:listen')
             ->setDescription('listens to notifications channels and calls appropriate hooks')
+            ->addOption('minutes', null, InputOption::VALUE_OPTIONAL, "If set, will die after <minutes> minutes", 0)
             ->setHelp("");
     }
 
@@ -47,6 +49,7 @@ class ListenCommand extends CoolCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $channels = $this->getNotifierChannels();
+        $minutes = $input->getOption('minutes');
 
         $output->writeln( "Initializing ".count($channels)." channels...");
 
@@ -75,7 +78,14 @@ class ListenCommand extends CoolCommand
             }
         );
 
-        $listener->listen();
+        $listener->startListening();
+
+        $sw = new Stopwatch();
+        $sw->start('loop');
+
+        while(!$minutes || ($sw->getEvent('loop')->getDuration()/1000/60 < $minutes)) {
+            $listener->doOneLoop();
+        }
     }
 
     /**

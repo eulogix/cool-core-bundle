@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+dir=$(d=${0%[/\\]*}; cd "$d"; cd ../../../../app && pwd)
+
+echo "starting database notification listener. Respawning every hour"
+
+while true; do
+	php app/console cool:database:listen --minutes=60
+	echo "Respawning..."
+done

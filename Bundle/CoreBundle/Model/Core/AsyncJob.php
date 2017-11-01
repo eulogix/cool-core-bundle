@@ -22,9 +22,12 @@ class AsyncJob extends BaseAsyncJob
     const OUTCOME_SUCCESS = 'success';
     const OUTCOME_FAIL = 'fail';
 
-    public function execute() {
+    /**
+     * @param bool $updateRecord
+     */
+    public function execute($updateRecord = true) {
         $executor = $this->getExecutor();
-        $executor->execute();
+        $executor->execute($updateRecord);
     }
 
     /**

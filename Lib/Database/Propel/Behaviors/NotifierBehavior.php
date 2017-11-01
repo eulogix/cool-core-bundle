@@ -165,7 +165,7 @@ CREATE TRIGGER $triggerName AFTER INSERT OR UPDATE OR DELETE ON $tableName
      * @param string $channelName
      * @return string
      */
-    private function cleanChannelName($channelName) {
+    public static function cleanChannelName($channelName) {
         if(strlen($channelName)>64)
             return substr($channelName, 0, 64);
         return $channelName;

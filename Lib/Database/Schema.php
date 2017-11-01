@@ -11,6 +11,8 @@
 
 namespace Eulogix\Cool\Lib\Database;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AsyncJob;
+use Eulogix\Cool\Lib\Database\Propel\Behaviors\NotifierBehavior;
 use Eulogix\Cool\Lib\DataSource\CoolValueMap;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\DSField;
@@ -914,7 +916,7 @@ class Schema implements Shimmable
         foreach($tmaps as $tmap) {
             if($tmap->hasBehavior('notifier')) {
                 $settings = $tmap->getBehaviors()['notifier'];
-                $baseChannel = $settings['channel'] ? $settings['channel'] : 'datachange_'.$tmap->getCoolRawName();
+                $baseChannel = NotifierBehavior::cleanChannelName( $settings['channel'] ? $settings['channel'] : 'c_'.$tmap->getCoolRawName() );
                 $ret[ $baseChannel ] = 1;
                 foreach($this->getSiblingSchemas() as $sibling)
                     $ret[ $sibling.';'.$baseChannel ] = 1;
@@ -927,11 +929,12 @@ class Schema implements Shimmable
      * @param string $viewName
      * @param int $maxIntervalSeconds if defined, limits the rate of refresh
      * @param bool $concurrently
+     * @param bool $asyncJob
      */
-    public function refreshMaterializedViewInAllSchemas($viewName, $maxIntervalSeconds = 0, $concurrently = true) {
+    public function refreshMaterializedViewInAllSchemas($viewName, $maxIntervalSeconds = 0, $concurrently = true, $asyncJob = false) {
         $schemas = $this->getSiblingSchemas();
         foreach($schemas as $schema) {
-            $this->refreshMaterializedView($viewName, $schema, $maxIntervalSeconds, $concurrently);
+            $this->refreshMaterializedView($viewName, $schema, $maxIntervalSeconds, $concurrently, $asyncJob);
         }
     }
 
@@ -940,8 +943,9 @@ class Schema implements Shimmable
      * @param null $schema one of the siblings schemas
      * @param int $maxIntervalSeconds if defined, limits the rate of refresh
      * @param bool $concurrently
+     * @param bool $asyncJob
      */
-    public function refreshMaterializedView($viewName, $schema = null, $maxIntervalSeconds = 0, $concurrently = true) {
+    public function refreshMaterializedView($viewName, $schema = null, $maxIntervalSeconds = 0, $concurrently = true, $asyncJob = false) {
         $schema = $schema ?? $this->getCurrentSchema();
         if($this->isSchemaNameValid($schema)) {
             $token = $schema.$viewName;
@@ -951,10 +955,22 @@ class Schema implements Shimmable
                 || ($now->getTimestamp() - $this->matViewsRefreshLog[$token]->getTimestamp() >= $maxIntervalSeconds) ) {
 
                 $this->matViewsRefreshLog[ $token ] = $now;
-                try {
-                    $this->query("REFRESH MATERIALIZED VIEW ".($concurrently ? "CONCURRENTLY" : '')." $schema.$viewName");
-                } catch(\Throwable $e) {
-                    //do nothing for now
+                if(!$asyncJob) {
+                    try {
+                        $this->query("REFRESH MATERIALIZED VIEW ".($concurrently ? "CONCURRENTLY" : '')." $schema.$viewName");
+                    } catch(\Throwable $e) {
+                        //do nothing for now
+                    }
+                } else {
+                    $job = new AsyncJob();
+
+                    $job->setExecutorType(AsyncJob::EXECUTOR_RUNDECK)
+                        ->setJobPath("cool:database:refreshMaterializedView")
+                        ->setParametersArray([
+                            'schema_name'           => $this->getName(),
+                            'actual_schema_name'    => $schema,
+                            'view_name'             => $viewName
+                        ])->execute(false);
                 }
             }
         }
