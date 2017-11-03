@@ -131,8 +131,8 @@ abstract class Dictionary {
             return $peerNs::getTableMap();
 
         //make this work for non multitenant schemas when only the tablename is provided without the schema specifier
-        if( $ret = $this->getPropelTableMap($this->schemaName.'.'.$tableName))
-            return $ret;
+        if($this->hasTable($this->schemaName.'.'.$tableName))
+            return $this->getPropelTableMap($this->schemaName.'.'.$tableName);
 
         return false;
     }
