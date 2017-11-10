@@ -304,7 +304,7 @@ define([
 				t.store.childrenCache = [];
 				t.store.storeMemory.setData(data);
 
-				self._refreshVisuals();
+				t._refreshVisuals();
 
 				on.once(grid, "dgrid-refresh-complete", function() {
 					t._refreshGridColumns(t.currentPath, true);
