@@ -104,6 +104,7 @@ class FileRepositoryController extends Controller
         $fileProxy->toFile($tempFile);
         $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+        $response->headers->set('Content-Disposition', "filename=\"".$fileProxy->getName()."\"");
         $response->deleteFileAfterSend(true);
         return $response;
     }
@@ -123,6 +124,7 @@ class FileRepositoryController extends Controller
         $fileProxy->toFile($tempFile);
         $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+        $response->headers->set('Content-Disposition', "filename=\"".$fileProxy->getName()."\"");
         $response->deleteFileAfterSend(true);
         return $response;
     }
