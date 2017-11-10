@@ -15,10 +15,10 @@ interface TempManagerInterface
 {
     /**
      * @param string $uploadedName
-     * @param string $content
+     * @param string $temporaryUploadedFile
      * @return string
      */
-    public function storeFile($uploadedName, $content);
+    public function storeFile($uploadedName, $temporaryUploadedFile);
 
     /**
      * @param string $id
@@ -30,7 +30,7 @@ interface TempManagerInterface
      * @param string $id
      * @return string
      */
-    public function getFileContent($id);
+    public function getLocalFile($id);
 
     /**
      * generates a temporary, one-time key that is used to later retrieve the file with a simple URL

@@ -32,9 +32,9 @@ class CacherTempManager implements TempManagerInterface
     /**
      * @inheritdoc
      */
-    public function storeFile($uploadedName, $content) {
-        $t = tempnam(sys_get_temp_dir(),'UPLOAD');
-        file_put_contents($t, $content);
+    public function storeFile($uploadedName, $temporaryUploadedFile) {
+        $t = tempnam(sys_get_temp_dir(),'TMPUPMGR');
+        copy($temporaryUploadedFile, $t);
         $id = md5($t);
         $this->cacher->store('TEMP_FILE'.$id, ['tempName'=>$t, 'uploadedName'=>$uploadedName]);
         return $id;
@@ -43,10 +43,10 @@ class CacherTempManager implements TempManagerInterface
     /**
      * @inheritdoc
      */
-    public function getFileContent($id) {
+    public function getLocalFile($id) {
         $t = $this->cacher->fetch('TEMP_FILE'.$id);
         if (isset($t['tempName']) && file_exists($t['tempName'])) {
-            return file_get_contents($t['tempName']);
+            return $t['tempName'];
         }
         return false;
     }
@@ -67,7 +67,7 @@ class CacherTempManager implements TempManagerInterface
      */
     public function getTempKeyFromFileProxy(FileProxyInterface $fp) {
         $t = tempnam(sys_get_temp_dir(),'DOWNLOAD');
-        file_put_contents($t, $fp->getContent());
+        $fp->toFile($t);
         $id = md5($t);
         $this->cacher->store('TEMP_DL_KEY'.$id, ['tempName'=>$t, 'fileName'=>$fp->getName()]);
         return $id;
@@ -80,7 +80,7 @@ class CacherTempManager implements TempManagerInterface
         if($ft = $this->cacher->fetch('TEMP_DL_KEY'.$key)) {
             $f = new SimpleFileProxy();
             $f->setName($ft['fileName'])
-                ->setContent(file_get_contents($ft['tempName']));
+              ->setContentFile($ft['tempName']);
             @unlink($ft['tempName']);
             return $f;
         }

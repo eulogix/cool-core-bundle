@@ -14,8 +14,10 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Controller;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\CoolValueMap;
 use Eulogix\Cool\Lib\Dictionary\Lookup;
+use Eulogix\Cool\Lib\File\FileUtil;
 use Eulogix\Cool\Lib\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +47,7 @@ class AjaxController extends Controller
         if(isset($_FILES['uploadedfile'])) {
             //single HTML5 upload, may come from a form field
             $uploadedFileName = $_FILES['uploadedfile']['name'];
-            $fileId = $tempManager->storeFile($uploadedFileName, file_get_contents($_FILES['uploadedfile']['tmp_name']) );
+            $fileId = $tempManager->storeFile($uploadedFileName, $_FILES['uploadedfile']['tmp_name']);
             //housekeeping
             @unlink($_FILES['uploadedfile']['tmp_name']);
             $ret[$uploadedFileName] = $fileId;
@@ -54,7 +56,7 @@ class AjaxController extends Controller
             $fileCount = count($_FILES['uploadedfiles']['name']);
             for($i=0; $i<$fileCount; $i++) {
                 $uploadedFileName = $_FILES['uploadedfiles']['name'][$i];
-                $fileId = $tempManager->storeFile($uploadedFileName, file_get_contents($_FILES['uploadedfiles']['tmp_name'][$i]) );
+                $fileId = $tempManager->storeFile($uploadedFileName, $_FILES['uploadedfiles']['tmp_name'][$i]);
                 //housekeeping
                 @unlink($_FILES['uploadedfiles']['tmp_name'][$i]);
                 $ret[$uploadedFileName] = $fileId;
@@ -70,8 +72,9 @@ class AjaxController extends Controller
     public function downloadTempFile($key)
     {
         $fileProxy = Cool::getInstance()->getFactory()->getFileTempManager()->getFileProxyFromTempKey($key);
-
-        $response = new Response($fileProxy->getContent());
+        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
 
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
@@ -79,7 +82,8 @@ class AjaxController extends Controller
         );
 
         $response->headers->set('Content-Disposition', $disposition);
-
+        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+        $response->deleteFileAfterSend(true);
         return $response;
     }
 

@@ -20,7 +20,7 @@ abstract class BaseFileProxy implements FileProxyInterface {
     /**
      * @var string
      */
-    public $name, $content, $basename, $extension, $id, $parentId, $hash;
+    public $name, $basename, $extension, $id, $parentId, $hash;
 
     /**
      * @var boolean
@@ -84,6 +84,16 @@ abstract class BaseFileProxy implements FileProxyInterface {
     }
 
     /**
+     * @param string $hash
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getSize() {
@@ -91,11 +101,11 @@ abstract class BaseFileProxy implements FileProxyInterface {
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
-    public function getContent()
+    public function isEmpty()
     {
-        return $this->content;
+        return $this->getSize() == 0;
     }
 
     /**
@@ -240,16 +250,6 @@ abstract class BaseFileProxy implements FileProxyInterface {
         }
         $this->basename = @$pi[ 'basename' ];
 
-        return $this;
-    }
-
-    /**
-     * @param mixed $content
-     * @return $this
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
         return $this;
     }
 

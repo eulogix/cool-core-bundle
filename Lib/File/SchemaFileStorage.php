@@ -183,7 +183,7 @@ class SchemaFileStorage {
     {
         $db = $this->schema;
 
-        $hash = sha1($file->getContent());
+        $hash = $file->getHash();
         $schemaName = $this->schema->getName();
 
         $id = false;
@@ -267,7 +267,7 @@ class SchemaFileStorage {
     private function storeContent($sha1, FileProxyInterface $file) {
         $path = $this->storagePath.'/'.substr($sha1,0,2).'/'.substr($sha1,2,2).'/';
         @mkdir($path, 0777, true);
-        file_put_contents($path.$sha1, $file->getContent());
+        $file->toFile($path.$sha1);
         return true;
     }
 
@@ -278,9 +278,7 @@ class SchemaFileStorage {
     private function setStoredContentToFileProxy($sha1, SimpleFileProxy $file) {
         $storedFile = $this->getFileContent($sha1);
         if(file_exists($storedFile))
-            $file->setContent( @file_get_contents($storedFile) );
-        // $storedFile may not exist if the filesystem structure is not synchronized with the db index.
-        // TODO: throw Exception ?
+            $file->setContentFile($storedFile, $sha1);
     }
 
     /**

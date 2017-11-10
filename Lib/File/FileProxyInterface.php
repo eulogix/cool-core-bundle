@@ -18,6 +18,7 @@ namespace Eulogix\Cool\Lib\File;
 interface FileProxyInterface
 {
     /**
+     * gets the whole content as a string
      * @return mixed
      */
     public function getContent();
@@ -118,4 +119,11 @@ interface FileProxyInterface
      * @return boolean
      */
     public function isEmpty();
+
+    /**
+     * saves the file in the filesystem
+     * @param string $fileName
+     * @return $this
+     */
+    public function toFile($fileName);
 }

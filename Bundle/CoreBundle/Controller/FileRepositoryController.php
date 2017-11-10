@@ -17,6 +17,7 @@ use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -60,10 +61,12 @@ class FileRepositoryController extends Controller
         $filePath = $this->get('request')->query->get('filePath');
         $fileProxy = $repo->get($filePath);
 
-        $response = new Response($fileProxy->getContent(), 200);
+        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
         $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
-
+        $response->deleteFileAfterSend(true);
         return $response;
     }
 
@@ -78,11 +81,12 @@ class FileRepositoryController extends Controller
         $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
 
         $fileProxy = $storage->getById($fileId);
-
-        $response = new Response($fileProxy->getContent(), 200);
+        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
         $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
-
+        $response->deleteFileAfterSend(true);
         return $response;
     }
 
@@ -96,10 +100,11 @@ class FileRepositoryController extends Controller
 
         $filePath = $this->get('request')->query->get('filePath');
         $fileProxy = $repo->get($filePath);
-
-        $response = new Response($fileProxy->getContent(), 200);
+        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
-
+        $response->deleteFileAfterSend(true);
         return $response;
     }
 
@@ -114,10 +119,11 @@ class FileRepositoryController extends Controller
         $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
 
         $fileProxy = $storage->getById($fileId);
-
-        $response = new Response($fileProxy->getContent(), 200);
+        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
-
+        $response->deleteFileAfterSend(true);
         return $response;
     }
 

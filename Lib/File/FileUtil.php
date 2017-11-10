@@ -105,12 +105,8 @@ class FileUtil {
 
         $ret = false;
 
-        /**
-         * TODO: reimplement these file copies with an approach that does not consume memory
-         * as file->getContent() keeps it all in RAM
-         */
         $tempFile = tempnam(sys_get_temp_dir(),'TMP');
-        file_put_contents($tempFile, $file->getContent());
+        $file->toFile($tempFile);
 
         $tempTarget = tempnam(sys_get_temp_dir(),'PIC');
 
@@ -123,7 +119,7 @@ class FileUtil {
 
         }elseif($file->getExtension()=='pdf') {
 
-            file_put_contents($tempFile, $file->getContent());
+            $file->toFile($tempFile);
             shell_exec($cm = "convert '{$tempFile}[0]' -resize \"{$imgWidth}x{$imgWidth}>\" -flatten -colorspace 'rgb' 'jpg:$tempTarget' 2>/dev/null");
 
             if(filesize($tempTarget)>0)

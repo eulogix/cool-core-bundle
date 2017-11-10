@@ -87,6 +87,27 @@ abstract class BaseFileRepository implements FileRepositoryInterface
     }
 
     /**
+     * clears the content of a folder, deleting all the files it contains
+     * @param string $path
+     * @param callable $callBack
+     * @throws \Exception
+     */
+    public function wipeFolder($path, callable $callBack = null) {
+        $files = $this->getChildrenOf($path);
+
+        foreach($files->getIterator() as $file) {
+            /**
+             * @var FileProxyInterface $file
+             */
+            if(!$file->isDirectory()) {
+                $this->delete($file->getId());
+                if($callBack)
+                    call_user_func($callBack, $file);
+            }
+        }
+    }
+
+    /**
      * @param $startPath
      * @param array $query
      * @param FileProxyCollectionInterface $results

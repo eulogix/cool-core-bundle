@@ -71,11 +71,12 @@ class RestFilesController extends BaseRestController
 
             $fp = new SimpleFileProxy();
             $fp->setName( $paramFetcher->get('fileName') );
-            $fp->setContent( base64_decode($paramFetcher->get('fileContent')) );
-
+            $t = tempnam(sys_get_temp_dir(),'RESTUPLOAD');
+            file_put_contents($t, base64_decode($paramFetcher->get('fileContent')));
+            $fp->setContentFile($t);
             $cat = $paramFetcher->get('category');
             $proxy = $obj->getFileRepository()->storeFileAt($fp, $cat ? 'cat_'.$cat : null, $collisionStrategy);
-
+            @unlink($t);
         } catch(\Exception $e) {
             switch($e->getCode()) {
                 case -1 : {

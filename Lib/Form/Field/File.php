@@ -69,8 +69,7 @@ class File extends Field {
             foreach($f as $fileName => $fileArray) {
                 $FF = new SimpleFileProxy();
                 $FF->setName($fileName)
-                   ->setContent( $tempManager->getFileContent($fileArray['tempId']) )
-                   ->setLastModificationDate( new \DateTime() );
+                   ->setContentFile($tempManager->getLocalFile($fileArray['tempId']));
                 $ret[$fileName] = $FF;
             }
         }

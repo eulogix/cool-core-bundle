@@ -416,13 +416,15 @@ abstract class Lister extends Widget implements ListerInterface {
 
         $data = $this->getExportData();
         if(count($data) > 0 && ($renderer = $this->getRenderer($format)) ) {
-            $f->setContent( $renderer->renderData($data, $raw, $this->getColumnsSorted()) );
+            $t = tempnam(sys_get_temp_dir(),'LISTEREXPORT');
+            file_put_contents($t, $renderer->renderData($data, $raw, $this->getColumnsSorted()));
+            $f->setContentFile($t);
+            $this->downloadFile($f);
+            @unlink($t);
         } else {
             $this->addMessageError("NOTHING TO EXPORT");
             return;
         }
-
-        $this->downloadFile($f);
     }
 
     /**

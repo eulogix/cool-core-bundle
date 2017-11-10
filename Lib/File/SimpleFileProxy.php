@@ -17,6 +17,9 @@ namespace Eulogix\Cool\Lib\File;
 
 class SimpleFileProxy extends BaseFileProxy
 {
+
+    protected $contentFile;
+
     /**
      * @param string $filePath
      * @return SimpleFileProxy
@@ -28,29 +31,17 @@ class SimpleFileProxy extends BaseFileProxy
         $pi = mb_pathinfo($filePath);
         $f = new self();
         $f->setName($pi['basename']);
-        $f->setContent( file_get_contents($filePath) );
-        $f->setCreationDate( new \DateTime(filectime($filePath)) );
-        $f->setLastModificationDate( new \DateTime(filemtime($filePath)) );
-        $f->setIsDirectory(is_dir($filePath));
+        $f->setContentFile($filePath);
         return $f;
     }
 
     /**
-     * @param string $httpUrl
+     * @param string $name
+     * @param string $id
+     * @param string $parentId
+     * @param bool $isDir
      * @return SimpleFileProxy
      */
-    public static function fromHTTPRemoteFile($httpUrl) {
-        $path = parse_url($httpUrl, PHP_URL_PATH);
-        $arr = explode("/", $path);
-        $pi = mb_pathinfo(array_pop($arr));
-
-        $f = new self();
-        $f->setName($pi['basename']);
-        $f->setContent( file_get_contents($httpUrl) );
-        $f->setIsDirectory(false);
-        return $f;
-    }
-
     public static function fromValues($name, $id, $parentId, $isDir = false) {
         $f = new self();
         $f  ->setIsDirectory($isDir)
@@ -78,10 +69,39 @@ class SimpleFileProxy extends BaseFileProxy
     }
 
     /**
-     * @inheritdoc
+     * saves the file in the filesystem
+     * @param string $fileName
+     * @return $this
      */
-    public function isEmpty()
+    public function toFile($fileName)
     {
-        return sizeof($this->getContent()) == 0;
+        if($this->contentFile)
+            copy($this->contentFile, $fileName);
+        else file_put_contents($fileName, null);
+    }
+
+    /**
+     * @param mixed $contentFile
+     * @param null $sha1Hash if provided, avoids recomputation
+     * @return $this
+     */
+    public function setContentFile($contentFile, $sha1Hash = null)
+    {
+        $this->contentFile = $contentFile;
+        $this->setSize( filesize($contentFile) );
+        $this->setHash( $sha1Hash ?? sha1_file($contentFile) );
+        $this->setCreationDate( \DateTime::createFromFormat('U', filectime($contentFile)) );
+        $this->setLastModificationDate( \DateTime::createFromFormat('U', filemtime($contentFile)) );
+        $this->setIsDirectory(is_dir($contentFile));
+        return $this;
+    }
+
+    /**
+     * gets the whole content as a string
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->contentFile ? file_get_contents($this->contentFile) : null;
     }
 }
