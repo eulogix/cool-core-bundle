@@ -81,7 +81,6 @@ class CacherTempManager implements TempManagerInterface
             $f = new SimpleFileProxy();
             $f->setName($ft['fileName'])
               ->setContentFile($ft['tempName']);
-            @unlink($ft['tempName']);
             return $f;
         }
         return null;
