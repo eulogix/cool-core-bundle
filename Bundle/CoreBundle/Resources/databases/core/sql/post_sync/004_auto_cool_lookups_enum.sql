@@ -38,7 +38,7 @@ SET lc_messages TO 'en_US.UTF-8';
                         ALTER TABLE code_snippet ADD CONSTRAINT code_snippet_enum_type CHECK (type IN('EXPRESSION','FUNCTION_BODY'));
                  
                         ALTER TABLE code_snippet DROP CONSTRAINT IF EXISTS code_snippet_enum_return_type;
-                        ALTER TABLE code_snippet ADD CONSTRAINT code_snippet_enum_return_type CHECK (return_type IN('STRING','NUMBER','ARRAY','OBJECT','NONE'));
+                        ALTER TABLE code_snippet ADD CONSTRAINT code_snippet_enum_return_type CHECK (return_type IN('BOOLEAN','STRING','NUMBER','ARRAY','OBJECT','NONE'));
                  
                         ALTER TABLE widget_rule DROP CONSTRAINT IF EXISTS widget_rule_enum_evaluation;
                         ALTER TABLE widget_rule ADD CONSTRAINT widget_rule_enum_evaluation CHECK (evaluation IN('ON_LOAD','BEFORE_VALIDATION','BEFORE_DEFINITION','ALWAYS'));

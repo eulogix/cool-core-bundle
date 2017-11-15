@@ -11,6 +11,13 @@ class CodeSnippet extends BaseCodeSnippet
     const TYPE_EXPRESSION = 'EXPRESSION';
     const TYPE_FUNCTION_BODY = 'FUNCTION_BODY';
 
+    const RETURN_TYPE_BOOLEAN = 'BOOLEAN';
+    const RETURN_TYPE_STRING = 'STRING';
+    const RETURN_TYPE_NUMBER = 'NUMBER';
+    const RETURN_TYPE_ARRAY = 'ARRAY';
+    const RETURN_TYPE_OBJECT = 'OBJECT';
+    const RETURN_TYPE_NONE = 'NONE';
+
     /**
      * @inheritdoc
      */

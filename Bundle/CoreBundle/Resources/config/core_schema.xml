@@ -749,12 +749,22 @@
             
         </column>
 
+        <column name="nspace" type="LONGVARCHAR"/>
         <column name="name" type="LONGVARCHAR" required="true"/>
         <column name="description" type="LONGVARCHAR" required="true"/>
+        <column name="long_description" type="LONGVARCHAR"/>
+
+        <column name="lock_updates_flag" type="BOOLEAN" default="FALSE" description="if set, importing new snippets will not overwrite this snippet with newer versions"/>
 
         <column name="snippet" type="LONGVARCHAR" required="true">
             
         </column>
+
+        <unique>
+            <unique-column name="nspace"/>
+            <unique-column name="name"/>
+        </unique>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"/>
             <parameter name="target" value="EulogixCoolCoreBundle/core"/>

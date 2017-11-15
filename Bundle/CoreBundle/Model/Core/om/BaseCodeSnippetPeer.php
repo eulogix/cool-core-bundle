@@ -30,13 +30,13 @@ abstract class BaseCodeSnippetPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\CodeSnippetTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 11;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 11;
 
     /** the column name for the code_snippet_id field */
     const CODE_SNIPPET_ID = 'core.code_snippet.code_snippet_id';
@@ -53,11 +53,20 @@ abstract class BaseCodeSnippetPeer
     /** the column name for the return_type field */
     const RETURN_TYPE = 'core.code_snippet.return_type';
 
+    /** the column name for the nspace field */
+    const NSPACE = 'core.code_snippet.nspace';
+
     /** the column name for the name field */
     const NAME = 'core.code_snippet.name';
 
     /** the column name for the description field */
     const DESCRIPTION = 'core.code_snippet.description';
+
+    /** the column name for the long_description field */
+    const LONG_DESCRIPTION = 'core.code_snippet.long_description';
+
+    /** the column name for the lock_updates_flag field */
+    const LOCK_UPDATES_FLAG = 'core.code_snippet.lock_updates_flag';
 
     /** the column name for the snippet field */
     const SNIPPET = 'core.code_snippet.snippet';
@@ -81,12 +90,12 @@ abstract class BaseCodeSnippetPeer
      * e.g. CodeSnippetPeer::$fieldNames[CodeSnippetPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId', 'Category', 'Language', 'Type', 'ReturnType', 'Name', 'Description', 'Snippet', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId', 'category', 'language', 'type', 'returnType', 'name', 'description', 'snippet', ),
-        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID, CodeSnippetPeer::CATEGORY, CodeSnippetPeer::LANGUAGE, CodeSnippetPeer::TYPE, CodeSnippetPeer::RETURN_TYPE, CodeSnippetPeer::NAME, CodeSnippetPeer::DESCRIPTION, CodeSnippetPeer::SNIPPET, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID', 'CATEGORY', 'LANGUAGE', 'TYPE', 'RETURN_TYPE', 'NAME', 'DESCRIPTION', 'SNIPPET', ),
-        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id', 'category', 'language', 'type', 'return_type', 'name', 'description', 'snippet', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId', 'Category', 'Language', 'Type', 'ReturnType', 'Nspace', 'Name', 'Description', 'LongDescription', 'LockUpdatesFlag', 'Snippet', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId', 'category', 'language', 'type', 'returnType', 'nspace', 'name', 'description', 'longDescription', 'lockUpdatesFlag', 'snippet', ),
+        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID, CodeSnippetPeer::CATEGORY, CodeSnippetPeer::LANGUAGE, CodeSnippetPeer::TYPE, CodeSnippetPeer::RETURN_TYPE, CodeSnippetPeer::NSPACE, CodeSnippetPeer::NAME, CodeSnippetPeer::DESCRIPTION, CodeSnippetPeer::LONG_DESCRIPTION, CodeSnippetPeer::LOCK_UPDATES_FLAG, CodeSnippetPeer::SNIPPET, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID', 'CATEGORY', 'LANGUAGE', 'TYPE', 'RETURN_TYPE', 'NSPACE', 'NAME', 'DESCRIPTION', 'LONG_DESCRIPTION', 'LOCK_UPDATES_FLAG', 'SNIPPET', ),
+        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id', 'category', 'language', 'type', 'return_type', 'nspace', 'name', 'description', 'long_description', 'lock_updates_flag', 'snippet', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -96,12 +105,12 @@ abstract class BaseCodeSnippetPeer
      * e.g. CodeSnippetPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId' => 0, 'Category' => 1, 'Language' => 2, 'Type' => 3, 'ReturnType' => 4, 'Name' => 5, 'Description' => 6, 'Snippet' => 7, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'returnType' => 4, 'name' => 5, 'description' => 6, 'snippet' => 7, ),
-        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID => 0, CodeSnippetPeer::CATEGORY => 1, CodeSnippetPeer::LANGUAGE => 2, CodeSnippetPeer::TYPE => 3, CodeSnippetPeer::RETURN_TYPE => 4, CodeSnippetPeer::NAME => 5, CodeSnippetPeer::DESCRIPTION => 6, CodeSnippetPeer::SNIPPET => 7, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID' => 0, 'CATEGORY' => 1, 'LANGUAGE' => 2, 'TYPE' => 3, 'RETURN_TYPE' => 4, 'NAME' => 5, 'DESCRIPTION' => 6, 'SNIPPET' => 7, ),
-        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'return_type' => 4, 'name' => 5, 'description' => 6, 'snippet' => 7, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+        BasePeer::TYPE_PHPNAME => array ('CodeSnippetId' => 0, 'Category' => 1, 'Language' => 2, 'Type' => 3, 'ReturnType' => 4, 'Nspace' => 5, 'Name' => 6, 'Description' => 7, 'LongDescription' => 8, 'LockUpdatesFlag' => 9, 'Snippet' => 10, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('codeSnippetId' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'returnType' => 4, 'nspace' => 5, 'name' => 6, 'description' => 7, 'longDescription' => 8, 'lockUpdatesFlag' => 9, 'snippet' => 10, ),
+        BasePeer::TYPE_COLNAME => array (CodeSnippetPeer::CODE_SNIPPET_ID => 0, CodeSnippetPeer::CATEGORY => 1, CodeSnippetPeer::LANGUAGE => 2, CodeSnippetPeer::TYPE => 3, CodeSnippetPeer::RETURN_TYPE => 4, CodeSnippetPeer::NSPACE => 5, CodeSnippetPeer::NAME => 6, CodeSnippetPeer::DESCRIPTION => 7, CodeSnippetPeer::LONG_DESCRIPTION => 8, CodeSnippetPeer::LOCK_UPDATES_FLAG => 9, CodeSnippetPeer::SNIPPET => 10, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CODE_SNIPPET_ID' => 0, 'CATEGORY' => 1, 'LANGUAGE' => 2, 'TYPE' => 3, 'RETURN_TYPE' => 4, 'NSPACE' => 5, 'NAME' => 6, 'DESCRIPTION' => 7, 'LONG_DESCRIPTION' => 8, 'LOCK_UPDATES_FLAG' => 9, 'SNIPPET' => 10, ),
+        BasePeer::TYPE_FIELDNAME => array ('code_snippet_id' => 0, 'category' => 1, 'language' => 2, 'type' => 3, 'return_type' => 4, 'nspace' => 5, 'name' => 6, 'description' => 7, 'long_description' => 8, 'lock_updates_flag' => 9, 'snippet' => 10, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -180,8 +189,11 @@ abstract class BaseCodeSnippetPeer
             $criteria->addSelectColumn(CodeSnippetPeer::LANGUAGE);
             $criteria->addSelectColumn(CodeSnippetPeer::TYPE);
             $criteria->addSelectColumn(CodeSnippetPeer::RETURN_TYPE);
+            $criteria->addSelectColumn(CodeSnippetPeer::NSPACE);
             $criteria->addSelectColumn(CodeSnippetPeer::NAME);
             $criteria->addSelectColumn(CodeSnippetPeer::DESCRIPTION);
+            $criteria->addSelectColumn(CodeSnippetPeer::LONG_DESCRIPTION);
+            $criteria->addSelectColumn(CodeSnippetPeer::LOCK_UPDATES_FLAG);
             $criteria->addSelectColumn(CodeSnippetPeer::SNIPPET);
         } else {
             $criteria->addSelectColumn($alias . '.code_snippet_id');
@@ -189,8 +201,11 @@ abstract class BaseCodeSnippetPeer
             $criteria->addSelectColumn($alias . '.language');
             $criteria->addSelectColumn($alias . '.type');
             $criteria->addSelectColumn($alias . '.return_type');
+            $criteria->addSelectColumn($alias . '.nspace');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.long_description');
+            $criteria->addSelectColumn($alias . '.lock_updates_flag');
             $criteria->addSelectColumn($alias . '.snippet');
         }
     }

@@ -862,16 +862,27 @@
         </column>
 
         <column name="return_type" type="LONGVARCHAR" required="true" default="NONE">
-            <_lookup type="enum" validValues="STRING,NUMBER,ARRAY,OBJECT,NONE"></_lookup>
+            <_lookup type="enum" validValues="BOOLEAN,STRING,NUMBER,ARRAY,OBJECT,NONE"></_lookup>
             <_control type="select"></_control>
         </column>
 
+        <column name="nspace" type="LONGVARCHAR"></column>
         <column name="name" type="LONGVARCHAR" required="true"></column>
         <column name="description" type="LONGVARCHAR" required="true"></column>
+        <column name="long_description" type="LONGVARCHAR"></column>
+
+        <column name="lock_updates_flag" type="BOOLEAN" default="FALSE"
+                description="if set, importing new snippets will not overwrite this snippet with newer versions"/>
 
         <column name="snippet" type="LONGVARCHAR" required="true">
             <_control type="textarea"></_control>
         </column>
+
+        <unique>
+            <unique-column name="nspace"></unique-column>
+            <unique-column name="name"></unique-column>
+        </unique>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>

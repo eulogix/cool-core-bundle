@@ -1,7 +1,14 @@
 domain;value;dec_en;dec_es;dec_pt;dec_it;sort_order;mandatory_flag
 APP_SETTING_NAME;;;;;;;
 APP_SETTING_SPACE;;;;;;;
-CODE_SNIPPET_CATEGORY;;;;;;;
+CODE_SNIPPET_CATEGORY;form_action;"Form Action";"Form Action";"Form Action";"Form Action";;
+CODE_SNIPPET_CATEGORY;form_variable;"Form Variable";"Form Action";"Form Action";"Form Action";;
+CODE_SNIPPET_CATEGORY;global_action;"Global Action";"Global Action";"Global Action";"Global Action";;
+CODE_SNIPPET_CATEGORY;global_variable;"Global Variable";"Global Action";"Global Action";"Global Action";;
+CODE_SNIPPET_CATEGORY;lister_action;"Lister Action";"Lister Action";"Lister Action";"Lister Action";;
+CODE_SNIPPET_CATEGORY;lister_variable;"Lister Variable";"Lister Action";"Lister Action";"Lister Action";;
+CODE_SNIPPET_CATEGORY;widget_action;"Widget Action";"Widget Action";"Widget Action";"Widget Action";;
+CODE_SNIPPET_CATEGORY;widget_variable;"Widget Variable";"Widget Action";"Widget Action";"Widget Action";;
 CORE_GROUP_TYPE;;;;;;;
 CORE_USER_TYPE;;;;;;;
 EXT_FIELD_TYPE;;;;;;;

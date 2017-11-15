@@ -1766,7 +1766,13 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'lookup' => 
           array (
             'type' => 'enum',
-            'validValues' => 'STRING,NUMBER,ARRAY,OBJECT,NONE',
+            'validValues' => 'BOOLEAN,STRING,NUMBER,ARRAY,OBJECT,NONE',
+          ),
+        ),
+        'nspace' => 
+        array (
+          'attributes' => 
+          array (
           ),
         ),
         'name' => 
@@ -1776,6 +1782,18 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'long_description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'lock_updates_flag' => 
         array (
           'attributes' => 
           array (

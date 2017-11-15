@@ -1026,13 +1026,22 @@
                         },
                         "lookup": {
                             "type": "enum",
-                            "validValues": "STRING,NUMBER,ARRAY,OBJECT,NONE"
+                            "validValues": "BOOLEAN,STRING,NUMBER,ARRAY,OBJECT,NONE"
                         }
+                    },
+                    "nspace": {
+                        "attributes": []
                     },
                     "name": {
                         "attributes": []
                     },
                     "description": {
+                        "attributes": []
+                    },
+                    "long_description": {
+                        "attributes": []
+                    },
+                    "lock_updates_flag": {
                         "attributes": []
                     },
                     "snippet": {

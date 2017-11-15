@@ -24,8 +24,11 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippetQuery orderByLanguage($order = Criteria::ASC) Order by the language column
  * @method CodeSnippetQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method CodeSnippetQuery orderByReturnType($order = Criteria::ASC) Order by the return_type column
+ * @method CodeSnippetQuery orderByNspace($order = Criteria::ASC) Order by the nspace column
  * @method CodeSnippetQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method CodeSnippetQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method CodeSnippetQuery orderByLongDescription($order = Criteria::ASC) Order by the long_description column
+ * @method CodeSnippetQuery orderByLockUpdatesFlag($order = Criteria::ASC) Order by the lock_updates_flag column
  * @method CodeSnippetQuery orderBySnippet($order = Criteria::ASC) Order by the snippet column
  *
  * @method CodeSnippetQuery groupByCodeSnippetId() Group by the code_snippet_id column
@@ -33,8 +36,11 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippetQuery groupByLanguage() Group by the language column
  * @method CodeSnippetQuery groupByType() Group by the type column
  * @method CodeSnippetQuery groupByReturnType() Group by the return_type column
+ * @method CodeSnippetQuery groupByNspace() Group by the nspace column
  * @method CodeSnippetQuery groupByName() Group by the name column
  * @method CodeSnippetQuery groupByDescription() Group by the description column
+ * @method CodeSnippetQuery groupByLongDescription() Group by the long_description column
+ * @method CodeSnippetQuery groupByLockUpdatesFlag() Group by the lock_updates_flag column
  * @method CodeSnippetQuery groupBySnippet() Group by the snippet column
  *
  * @method CodeSnippetQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -56,8 +62,11 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method CodeSnippet findOneByLanguage(string $language) Return the first CodeSnippet filtered by the language column
  * @method CodeSnippet findOneByType(string $type) Return the first CodeSnippet filtered by the type column
  * @method CodeSnippet findOneByReturnType(string $return_type) Return the first CodeSnippet filtered by the return_type column
+ * @method CodeSnippet findOneByNspace(string $nspace) Return the first CodeSnippet filtered by the nspace column
  * @method CodeSnippet findOneByName(string $name) Return the first CodeSnippet filtered by the name column
  * @method CodeSnippet findOneByDescription(string $description) Return the first CodeSnippet filtered by the description column
+ * @method CodeSnippet findOneByLongDescription(string $long_description) Return the first CodeSnippet filtered by the long_description column
+ * @method CodeSnippet findOneByLockUpdatesFlag(boolean $lock_updates_flag) Return the first CodeSnippet filtered by the lock_updates_flag column
  * @method CodeSnippet findOneBySnippet(string $snippet) Return the first CodeSnippet filtered by the snippet column
  *
  * @method array findByCodeSnippetId(int $code_snippet_id) Return CodeSnippet objects filtered by the code_snippet_id column
@@ -65,8 +74,11 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\RuleCode;
  * @method array findByLanguage(string $language) Return CodeSnippet objects filtered by the language column
  * @method array findByType(string $type) Return CodeSnippet objects filtered by the type column
  * @method array findByReturnType(string $return_type) Return CodeSnippet objects filtered by the return_type column
+ * @method array findByNspace(string $nspace) Return CodeSnippet objects filtered by the nspace column
  * @method array findByName(string $name) Return CodeSnippet objects filtered by the name column
  * @method array findByDescription(string $description) Return CodeSnippet objects filtered by the description column
+ * @method array findByLongDescription(string $long_description) Return CodeSnippet objects filtered by the long_description column
+ * @method array findByLockUpdatesFlag(boolean $lock_updates_flag) Return CodeSnippet objects filtered by the lock_updates_flag column
  * @method array findBySnippet(string $snippet) Return CodeSnippet objects filtered by the snippet column
  */
 abstract class BaseCodeSnippetQuery extends ModelCriteria
@@ -173,7 +185,7 @@ abstract class BaseCodeSnippetQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT code_snippet_id, category, language, type, return_type, name, description, snippet FROM core.code_snippet WHERE code_snippet_id = :p0';
+        $sql = 'SELECT code_snippet_id, category, language, type, return_type, nspace, name, description, long_description, lock_updates_flag, snippet FROM core.code_snippet WHERE code_snippet_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -444,6 +456,35 @@ abstract class BaseCodeSnippetQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the nspace column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByNspace('fooValue');   // WHERE nspace = 'fooValue'
+     * $query->filterByNspace('%fooValue%'); // WHERE nspace LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $nspace The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CodeSnippetQuery The current query, for fluid interface
+     */
+    public function filterByNspace($nspace = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($nspace)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $nspace)) {
+                $nspace = str_replace('*', '%', $nspace);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CodeSnippetPeer::NSPACE, $nspace, $comparison);
+    }
+
+    /**
      * Filter the query on the name column
      *
      * Example usage:
@@ -499,6 +540,62 @@ abstract class BaseCodeSnippetQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CodeSnippetPeer::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the long_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLongDescription('fooValue');   // WHERE long_description = 'fooValue'
+     * $query->filterByLongDescription('%fooValue%'); // WHERE long_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $longDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CodeSnippetQuery The current query, for fluid interface
+     */
+    public function filterByLongDescription($longDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($longDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $longDescription)) {
+                $longDescription = str_replace('*', '%', $longDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CodeSnippetPeer::LONG_DESCRIPTION, $longDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the lock_updates_flag column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLockUpdatesFlag(true); // WHERE lock_updates_flag = true
+     * $query->filterByLockUpdatesFlag('yes'); // WHERE lock_updates_flag = true
+     * </code>
+     *
+     * @param     boolean|string $lockUpdatesFlag The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CodeSnippetQuery The current query, for fluid interface
+     */
+    public function filterByLockUpdatesFlag($lockUpdatesFlag = null, $comparison = null)
+    {
+        if (is_string($lockUpdatesFlag)) {
+            $lockUpdatesFlag = in_array(strtolower($lockUpdatesFlag), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CodeSnippetPeer::LOCK_UPDATES_FLAG, $lockUpdatesFlag, $comparison);
     }
 
     /**
