@@ -1699,7 +1699,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         'schema' => 'core',
         'rawname' => 'code_snippet',
         'editable' => true,
-        'valueMapDecodingSQL' => 'name',
+        'valueMapDecodingSQL' => 'category || \' - \' || COALESCE(description, name)',
       ),
       'columns' => 
       array (

@@ -983,7 +983,7 @@
                     "schema": "core",
                     "rawname": "code_snippet",
                     "editable": true,
-                    "valueMapDecodingSQL": "name"
+                    "valueMapDecodingSQL": "category || ' - ' || COALESCE(description, name)"
                 },
                 "columns": {
                     "code_snippet_id": {

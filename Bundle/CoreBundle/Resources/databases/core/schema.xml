@@ -842,7 +842,7 @@
 
     <table name="code_snippet"
            _editable="true"
-           _valueMapDecodingSQL="name"
+           _valueMapDecodingSQL="category || ' - ' || COALESCE(description, name)"
            description="holds code snippets useful to encapsulate implementation details for rules variables">
         <column name="code_snippet_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
 

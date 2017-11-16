@@ -22,7 +22,7 @@ class CodeSnippet extends BaseCodeSnippet
      * @inheritdoc
      */
     public function getHumanDescription() {
-        return implode(" - ", [ $this->getCategory(), $this->getName() ]);
+        return implode(" - ", [ $this->getDecodedField('category'), $this->getDescription() ]);
     }
 
     /**
