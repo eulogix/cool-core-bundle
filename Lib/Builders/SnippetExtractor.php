@@ -42,7 +42,7 @@ class SnippetExtractor
                  */
                 $snippet = new CodeSnippet();
                 $snippet->setName($rMethod->getName())
-                        ->setNspace($rClass->getNamespaceName())
+                        ->setNspace($rClass->getName())
                         ->setCategory( $snippetMetaAnnotation->category )
                         ->setDescription( $snippetMetaAnnotation->description )
                         ->setLongDescription( $snippetMetaAnnotation->longDescription )
@@ -64,18 +64,21 @@ class SnippetExtractor
                 $parametersString = implode(', ',$rParameterNames);
                 $directInvocationStatement = "\\$FQNClassName::{$rMethod->getName()}({$parametersString})";
 
+                $methodBody = ReflectionUtils::getMethodBody($rMethod);
+
                 if($snippetMetaAnnotation->directInvocation) {
-                    $methodBody = $directInvocationStatement;
+                    $snippetBody = $directInvocationStatement;
                     $snippet->setType( CodeSnippet::TYPE_EXPRESSION );
                 } else {
-                    $methodBody = ReflectionUtils::getMethodBody($rMethod);
-                    if(preg_match('/\s*return\s+(.+?);\s*$/sim', $methodBody, $m)) {
+                    $snippetBody = $methodBody;
+                    if(preg_match('/\s*return\s+(.+?);\s*$/sim', $snippetBody, $m)) {
                         $snippet->setType( CodeSnippet::TYPE_EXPRESSION);
-                        $methodBody = $m[1];
+                        $snippetBody = $m[1];
                     } else $snippet->setType( CodeSnippet::TYPE_FUNCTION_BODY);
                 }
 
-                $snippet->setSnippet("/* automatically generated from\n$directInvocationStatement\n*/\n\n$methodBody");
+                $commentedBody = preg_replace('/^(.+?)$/sim', '// $1', $methodBody);
+                $snippet->setSnippet("$snippetBody\n\n\n// automatically generated from\n\n//\t$directInvocationStatement\n\n// Original code:\n\n$commentedBody");
 
                 $ret[] = $snippet;
             }

@@ -90,7 +90,7 @@ EOT;
             $contextIgnoreString = implode(',', $contextIgnore);
             $content.=<<<EOT
     /**
-     * @SnippetMeta(category="{$snippet->getCategory()}", contextIgnore={{$contextIgnoreString}}, directInvocation="true", description="{$snippet->getName()}, longDescription="{$snippet->getDescription()}")
+     * @SnippetMeta(category="{$snippet->getCategory()}", contextIgnore={{$contextIgnoreString}}, directInvocation="true", description="{$snippet->getName()}", longDescription="{$snippet->getDescription()}")
      *
 
 EOT;

@@ -11,6 +11,8 @@
 
 namespace Eulogix\Cool\Bundle\CoreBundle\Command;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetQuery;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetVariableQuery;
 use Eulogix\Cool\Lib\Builders\SnippetExtractor;
 use Eulogix\Cool\Lib\Symfony\Console\CoolCommand;
 use Eulogix\Cool\Lib\Util\ReflectionUtils;
@@ -20,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -34,8 +37,7 @@ class ImportSnippetsCommand extends CoolCommand
     {
         $this
             ->setName('cool:import-snippets')
-            ->addArgument('folder', InputArgument::REQUIRED, 'The folder which contains the snippet classes to import')
-            ->setDescription('Imports code snippets')
+            ->setDescription('Imports code snippets from registered bundles')
             ->setHelp("");
     }
 
@@ -44,19 +46,64 @@ class ImportSnippetsCommand extends CoolCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $folder = $input->getArgument('folder');
+        $kernel = $this->getContainer()->get('kernel');
+        $bundles = $kernel->getBundles();
 
-        if(!file_exists($folder)) {
-            throw new \Exception("Folder $folder does not exist.");
+        foreach($bundles as $bundle) {
+            /**
+             * @var BundleInterface $bundle
+             */
+            $snippetsFolder = $bundle->getPath().'/Resources/snippets';
+            if(file_exists($snippetsFolder)) {
+                $output->writeln("\nProcessing Bundle <info>{$bundle->getName()}</info>...\n");
+                $this->importFromFolder($snippetsFolder, $output);
+            }
         }
+    }
 
-        $classes = ReflectionUtils::getClassesInFolder($folder);
+    private function importFromFolder($snippetsFolder, OutputInterface $output)
+    {
+        $classes = ReflectionUtils::getClassesInFolder($snippetsFolder);
 
         foreach($classes as $FQNClassName) {
             $snippets = SnippetExtractor::getFromClass( $FQNClassName );
+
+            foreach($snippets as $snippet) {
+
+                $snippetLogString = "<info>{$snippet->getNspace()}</info>::<comment>{$snippet->getName()}</comment>";
+                if($existingSnippet = CodeSnippetQuery::create()->filterByNspace($snippet->getNspace())->filterByName($snippet->getName())->findOne()) {
+                    if(!$existingSnippet->getLockUpdatesFlag()) {
+                        $output->writeln("<info>*</info> Snippet {$snippetLogString} Already exists, will be updated</info>");
+
+                        $existingSnippet->setReturnType( $snippet->getReturnType() )
+                            ->setDescription( $snippet->getDescription() )
+                            ->setLongDescription( $snippet->getLongDescription() )
+                            ->setLanguage( $snippet->getLanguage() )
+                            ->setCategory( $snippet->getCategory() )
+                            ->setType( $snippet->getType() )
+                            ->setSnippet( $snippet->getSnippet() );
+
+                        foreach($snippet->getCodeSnippetVariables() as $variable) {
+                            if($existingVariable = CodeSnippetVariableQuery::create()->filterByCodeSnippetId($existingSnippet->getCodeSnippetId())->filterByName($variable->getName())->findOne()) {
+                                $output->writeln("    <comment>*</comment> Updating existing Variable <comment>{$existingVariable->getName()}</comment>");
+                                $existingVariable->setDescription( $variable->getDescription() );
+                                $existingVariable->save();
+                            } else {
+                                $output->writeln("    <info>+</info> Inserting new variable <info>{$variable->getName()}</info>");
+                                $variable->setCodeSnippet($existingSnippet);
+                            }
+                        }
+
+                        $existingSnippet->save();
+                    } else {
+                        $output->writeln("<error>!</error> Snippet {$snippetLogString} Already exists, but is marked as <error>LOCKED</error>. Skipping");
+                    }
+                } else {
+                    $output->writeln("<info>+</info> Inserting new snippet {$snippetLogString}");
+                    $snippet->save();
+                }
+            }
         }
-
     }
-
 
 }
