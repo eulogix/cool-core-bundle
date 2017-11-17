@@ -77,7 +77,7 @@ class SnippetExtractor
                     } else $snippet->setType( CodeSnippet::TYPE_FUNCTION_BODY);
                 }
 
-                $commentedBody = preg_replace('/^(.+?)$/sim', '// $1', $methodBody);
+                $commentedBody = preg_replace('/^(.*?)$/im', '// $1', $methodBody);
                 $snippet->setSnippet("$snippetBody\n\n\n// automatically generated from\n\n//\t$directInvocationStatement\n\n// Original code:\n\n$commentedBody");
 
                 $ret[] = $snippet;
