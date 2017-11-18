@@ -23,10 +23,9 @@ class FormSnippets
      * @SnippetMeta(category="form_action", contextIgnore={"widget"}, directInvocation="true", description="Set fields read only")
      *
      * @param FormInterface $widget
-     * @param string $fieldNames comma separated list of field names in the ass
-     * @param string $luigi kicks ass
+     * @param string $fieldNames comma separated list of field names
      */
-    public static function setFieldsReadOnly(FormInterface $widget, $fieldNames, $luigi)
+    public static function setFieldsReadOnly(FormInterface $widget, $fieldNames)
     {
         $fields = explode(',', $fieldNames);
         foreach ($fields as $field) {

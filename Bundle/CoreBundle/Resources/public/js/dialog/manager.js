@@ -127,10 +127,7 @@ define([
 
             /*
              innerHTML, aroundNode, position, rtl, textDir, onMouseEnter, onMouseLeave
-
-            Tooltip.on('show', function(){
-                console.log('ass');
-            });*/
+            */
 
             var renderFunc = function(rawContent) {
                 return maxWidth ? "<div style='max-width:"+maxWidth+"px; max-height:600px; overflow-y: scroll;'>" + rawContent + "</div>" : rawContent;
@@ -187,10 +184,11 @@ define([
             }
         },
 
-        showXhrError: function (title, url, text) {
+        showXhrError: function (error) {
+            console.log(error);
             errDialog = new Dialog({
-                title: title,
-                content: '<div style="padding:5px; border:1px solid black; margin-bottom:10px;">'+url+'</div>'+text,
+                title: "XHR error "+error.status,
+                content: '<div style="padding:5px; border:1px solid black; margin-bottom:10px;">'+error.response.url+'</div>'+error.responseText,
                 style: "width: 1000px; height:600px; overflow:auto;"
             });
             errDialog.show();

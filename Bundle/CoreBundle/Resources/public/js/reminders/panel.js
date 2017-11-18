@@ -334,7 +334,7 @@ define("cool/reminders/panel",
                     d.resolve(grid);
 
                 }, function(err){
-                    dialogManager.showXhrError("XHR error in remindersPanel", url, err.response.text);
+                    dialogManager.showXhrError(err);
                 }, function(evt){
                 });
 
@@ -446,7 +446,7 @@ define("cool/reminders/panel",
                     d.resolve(grid);
 
                 }, function(err){
-                    dialogManager.showXhrError("XHR error in remindersPanel", url, err.response.text);
+                    dialogManager.showXhrError(err);
                 }, function(evt){
                 });
 

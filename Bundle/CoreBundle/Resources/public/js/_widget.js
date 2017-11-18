@@ -119,7 +119,7 @@ define("cool/_widget",
                                 }
                             });
                         }, function(err){
-                            dialogManager.showXhrError("XHR error in _cwidget.bindToUrl", url, err.response.text);
+                            dialogManager.showXhrError(err);
                         }, function(evt){
                         });
                     } else {
@@ -622,7 +622,7 @@ define("cool/_widget",
 
                                         function(err){
                                             if(!dontLock) widget._unlockFromServerCall();
-                                            dialogManager.showXhrError("XHR error in _cwidget.callAction", url, err.response.text);
+                                            dialogManager.showXhrError(err);
                                             d.resolve();
                                         },
 

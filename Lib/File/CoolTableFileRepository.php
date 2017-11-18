@@ -14,6 +14,7 @@ namespace Eulogix\Cool\Lib\File;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Propel\CoolPropelObject;
 use Eulogix\Cool\Lib\Database\Schema;
+use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
 use Eulogix\Cool\Lib\Translation\Translator;
 use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -60,13 +61,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     private $translator;
 
     /**
-     * @var CoolTableFileRepositoryPermissions
-     */
-    private $permissions;
-
-    /**
-     * returns a unique identifier for the repository, used to differentiate caches..
-     * @return string $string
+     * @inheritdoc
      */
     public function getUid() {
         return $this->schema->getCurrentSchema();
@@ -133,6 +128,11 @@ class CoolTableFileRepository extends BaseFileRepository {
         throw new \Exception("Bad request parameters");
     }
 
+    /**
+     * @param Schema $schema
+     * @param string $tableName
+     * @param CoolPropelObject $propelObj
+     */
     private function __construct(Schema $schema=null, $tableName=null, CoolPropelObject $propelObj=null) {
         if($schema)
             $this->setSchemaAndTable($schema->getName(), $tableName);
@@ -142,7 +142,11 @@ class CoolTableFileRepository extends BaseFileRepository {
             $this->pkField = $propelObj->getCoolTableMap()->getPkFields()[0];
             $this->setWorkingDir( $this->buildPath($tableName, $this->pk) );
         }
-        $this->permissions = new CoolTableFileRepositoryPermissions($this);
+        $this->setPermissions( new CoolTableFileRepositoryPermissions($this) );
+        $set = new FileRepositoryPermissionsSet($this);
+        $set->addPermissions($this->getPermissions());
+        $set->addPermissions(new CoolTableFileRepositoryUserPermissions($this));
+        $this->setUserPermissions( $set );
     }
 
     /**
@@ -161,62 +165,58 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param $folderId
-     * @return $this
+     * @inheritdoc
      */
     public function setWorkingDir($folderId) {
         $this->workingDir = $folderId;
         return $this;
     }
 
-    /**x
-     * @return string
+    /**
+     * @inheritdoc
      */
     public function getWorkingDir() {
         return $this->workingDir;
     }
 
     /**
-     * @param FileProxyInterface $file
-     * @param null $path
-     * @param string $collisionStrategy overwrite|skip|append
-     * @return FileProxyInterface a fileProxy representing the inserted file
-     * @throws \Exception
+     * @inheritdoc
      */
     public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy='overwrite') {
-        $p = $this->parsePathId($path);
+        if($this->getPermissions()->canCreateFileIn($path)) {
 
-        if($p['category'] || $p['pk']) {
-            $newFileName = $file->getName();
-            $baseName = $file->getBaseName();
-            $ext = $file->getExtension();
+            $p = $this->parsePathId($path);
 
-            if($collisionStrategy != 'overwrite') {
-                $i = 1;
-                do {
-                    $existingFilesCount = $this->storage->query($p['table'], $p['pk'], $p['category'], $newFileName)->count();
+            if($p['category'] || $p['pk']) {
+                $newFileName = $file->getName();
+                $baseName = $file->getBaseName();
+                $ext = $file->getExtension();
 
-                    if($existingFilesCount > 0) {
-                        if($collisionStrategy == 'skip')
-                            throw new \Exception("File already exists", -1);
-                        $newFileName = $baseName.'_('.$i++.')'.($ext ? ".$ext" : "");
-                        $file->setName($newFileName);
-                    }
+                if($collisionStrategy != 'overwrite') {
+                    $i = 1;
+                    do {
+                        $existingFilesCount = $this->storage->query($p['table'], $p['pk'], $p['category'], $newFileName)->count();
 
-                } while($existingFilesCount > 0);
+                        if($existingFilesCount > 0) {
+                            if($collisionStrategy == 'skip')
+                                throw new \Exception("File already exists", -1);
+                            $newFileName = $baseName.'_('.$i++.')'.($ext ? ".$ext" : "");
+                            $file->setName($newFileName);
+                        }
+
+                    } while($existingFilesCount > 0);
+                }
+
+                $storageId = $this->storage->store($file, $p['table'], $p['pk'], $p['category']);
+
+                return $this->get( $this->buildPath($p['table'], $p['pk'], $p['category'], $storageId) );
             }
 
-            $storageId = $this->storage->store($file, $p['table'], $p['pk'], $p['category']);
-
-            return $this->get( $this->buildPath($p['table'], $p['pk'], $p['category'], $storageId) );
-        }
+        } else throw new ForbiddenException();
     }
 
     /**
-     * @param $path
-     * @param bool $recursive
-     * @param bool $includeHidden
-     * @return FileProxyCollectionInterface
+     * @inheritdoc
      */
     public function getChildrenOf($path, $recursive = false, $includeHidden = false) {
         $p = $this->parsePathId($path);
@@ -270,17 +270,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @return BaseFileRepositoryPermissions
-     */
-    public function getPermissions()
-    {
-        return $this->permissions;
-    }
-
-    /**
-     * this function must always return a fully qualified path.
-     * @param $path
-     * @return $this
+     * @inheritdoc
      */
     public function getFQPath($path)
     {
@@ -293,8 +283,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param $path
-     * @return boolean
+     * @inheritdoc
      */
     public function exists($path)
     {
@@ -308,9 +297,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param $path
-     * @return FileProxyInterface
-     * @throws \Exception
+     * @inheritdoc
      */
     public function get($path)
     {
@@ -345,26 +332,23 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param $path
-     * @return $this
-     * @throws \Exception
+     * @inheritdoc
      */
     public function delete($path)
     {
-        $p = $this->parsePathId($path);
+        if($this->getPermissions()->canDelete($path)) {
+            $p = $this->parsePathId($path);
 
-        if($p['file_id']) {
-            $this->storage->removeById($p['file_id']);
-            return;
-        }
+            if ($p[ 'file_id' ]) {
+                $this->storage->removeById($p[ 'file_id' ]);
 
-        throw new \Exception("implement other deletions");
+                return;
+            }
+        } else throw new ForbiddenException();
     }
 
     /**
-     * @param string $path
-     * @param string $decodingsPrefix
-     * @return array
+     * @inheritdoc
      */
     public function getFileProperties($path, $decodingsPrefix=null)
     {
@@ -393,56 +377,52 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param array $properties
-     * @param bool $merge
-     * @return $this
-     * @throws \Exception
+     * @inheritdoc
      */
     public function setFileProperties($path, array $properties, $merge=false) {
-        $p = $this->parsePathId($path);
+        if($this->getPermissions()->canSetProperties($path)) {
 
-        if($p['file_id']) {
-            //$path like /bookstore/book/3/cat_TEMPORARY/1 OR /bookstore/book/3/2
-            $this->storage->setProperties($p['file_id'], $properties, $merge);
-        }
-        return $this;
+            $p = $this->parsePathId($path);
+
+            if($p['file_id']) {
+                //$path like /bookstore/book/3/cat_TEMPORARY/1 OR /bookstore/book/3/2
+                $this->storage->setProperties($p['file_id'], $properties, $merge);
+            }
+            return $this;
+
+        } else throw new ForbiddenException();
     }
 
     /**
-     * @param string $path
-     * @param string $target
-     * @return string
+     * @inheritdoc
      */
     public function move($path, $target)
     {
-        $p = $this->parsePathId($path);
-        $tp = $this->parsePathId($target);
-        $this->storage->move($p['file_id'], $tp['table'], $tp['pk'], @$tp['category']);
-        return $this->buildPath($tp['table'], $tp['pk'], @$tp['category'], $p['file_id']);
+        if($this->getPermissions()->canMove($path, $target)) {
+            $p = $this->parsePathId($path);
+            $tp = $this->parsePathId($target);
+            $this->storage->move($p['file_id'], $tp['table'], $tp['pk'], @$tp['category']);
+            return $this->buildPath($tp['table'], $tp['pk'], @$tp['category'], $p['file_id']);
+        } else throw new ForbiddenException();
     }
 
     /**
-     * @param $path
-     * @param $newName
-     * @return $this
-     * @throws \Exception
+     * @inheritdoc
      */
     public function rename($path, $newName)
     {
-        $p = $this->parsePathId($path);
-        $this->storage->rename($p['file_id'], $newName);
-        return $this;
+        if($this->getPermissions()->canRename($path, $newName)) {
+            $p = $this->parsePathId($path);
+            $this->storage->rename($p[ 'file_id' ], $newName);
+            return $this;
+        } else throw new ForbiddenException();
     }
 
     /**
-     * @param $path
-     * @param $folderName
-     * @return $this
-     * @throws \Exception
+     * @inheritdoc
      */
     public function createFolder($path, $folderName) {
-
+        throw new ForbiddenException();
     }
 
     /**
@@ -498,10 +478,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param String $path
-     * @param bool $recursive
-     * @return FileProperty[]
-     * @throws \Exception
+     * @inheritdoc
      */
     public function getAvailableFileProperties($path, $recursive=false)
     {
@@ -512,6 +489,14 @@ class CoolTableFileRepository extends BaseFileRepository {
             $p['table'],
             $p['category'],
             $recursive);
+    }
+
+    /**
+     * @return Schema
+     */
+    public function getSchema()
+    {
+        return $this->schema;
     }
 
 }

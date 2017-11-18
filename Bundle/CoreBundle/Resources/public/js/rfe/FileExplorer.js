@@ -168,10 +168,11 @@ define([
 						var obj = evt.cell.row.data;
 
 						obj[store.labelAttr] = evt.value;
+
 						store.put(obj).then(function() {
 							grid.save();
-						}, function() {
-							grid.revert();
+						}, function(error){
+							self.reload();
 						});
 					});
 				});

@@ -147,11 +147,11 @@ class StoreResponse {
      * @return $this
      */
     public function setStatus($value) {
-        switch($value) {
-            case false : $this->status = self::STATUS_TRANSACTION_FAILED; break;
-            case true : $this->status = self::STATUS_TRANSACTION_SUCCESS; break;
-            default : $this->status = $value; break;
-        }
+        if($value === false)
+            $this->status = self::STATUS_TRANSACTION_FAILED;
+        elseif($value === true)
+            $this->status = self::STATUS_TRANSACTION_SUCCESS;
+        else $this->status = $value;
         return $this;
     }
 
@@ -198,10 +198,12 @@ class StoreResponse {
             $responseData['_summary'] = $this->getSummary();
 
         if($this->errors->hasErrors())
-            $responseData['_errors'] = $this->errors->getErrors();
+            $responseData['_errors'] = $this->errors->getGeneralErrors();
 
-        if($this->getStatus()!==null)
-            $responseData['_success'] = $this->getStatus() == self::STATUS_TRANSACTION_SUCCESS;
+        if($this->getStatus() != self::STATUS_TRANSACTION_SUCCESS) {
+            $responseData['_success'] = false;
+            $responseData['_status'] = $this->getStatus();
+        }
 
         $responseData = array_merge($this->getData(), $responseData);
 

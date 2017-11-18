@@ -6,11 +6,12 @@ define("cool/store/xhrstore",
 		"dojo/_base/declare",
 		"dojo/store/util/QueryResults",
 		"cool/cool",
-		"cool/dialog/manager"
+
+		"cool/store/errors/DsError"
 	/*=====, "./api/Store" =====*/
 	], 
 
-function(xhr, lang, Deferred, JSON, declare, QueryResults, cool, dialogManager /*=====, Store =====*/){
+function(xhr, lang, Deferred, JSON, declare, QueryResults, cool, DsError /*=====, Store =====*/){
 
 // No base class, but for purposes of documentation, the base class is dojo/store/api/Store
 var base = null;
@@ -39,6 +40,17 @@ return declare("cool.store.xhrstore", base, {
 		this.headers = {};
 		this.postVars = {};
         this.lastRequest = {};
+
+		lang.mixin(xhr.contentHandlers, {
+
+			DsJsonHandler: function(response){
+				var ret = dojo.contentHandlers.json(response);
+				if(ret.hasOwnProperty('_success') && ret._success === false)
+					throw new DsError('Ds transaction failed', ret);
+				return ret;
+			}
+
+		});
 
 		declare.safeMixin(this, options);
 	},
@@ -79,7 +91,7 @@ return declare("cool.store.xhrstore", base, {
     lastErrors : {},
 
     lastStatus : true,
-	 
+
     getLastRequest: function() {
         return this.lastRequest;
     },
@@ -139,7 +151,7 @@ return declare("cool.store.xhrstore", base, {
  		var results = xhr("POST",
  						{
                             url: url,
-                            handleAs: "json",
+                            handleAs: "DsJsonHandler",
                             content: lang.mixin({_postedObject:JSON.stringify(object)}, this.postVars),
                             headers: headers
                           });
@@ -147,12 +159,9 @@ return declare("cool.store.xhrstore", base, {
 
  		var store = this;
 
-		results.total = results.then(function(data){
-                store._onPutSuccess(data);
-			},
-			function(err){
-	            dialogManager.showXhrError("XHR error in xhrStore.store", url, err.response.text);
-			});
+		results.then(function(data){
+			store._onPutSuccess(data);
+		});
 
 		return results;
 	},
@@ -205,7 +214,7 @@ return declare("cool.store.xhrstore", base, {
         var results = xhr("POST",
             {
                 url: url,
-                handleAs: "json",
+                handleAs: "DsJsonHandler",
                 content: lang.mixin(query, this.postVars),
                 headers: headers
             });
@@ -213,12 +222,9 @@ return declare("cool.store.xhrstore", base, {
 
         var store = this;
 
-        results.total = results.then(function(data){
-                store._onRemoveSuccess(data);
-            },
-            function(err){
-				dialogManager.showXhrError("XHR error in xhrStore.remove", url, err.response.text);
-            });
+        results.then(function(data){
+			store._onRemoveSuccess(data);
+		});
 
         return results;
 	},
@@ -263,7 +269,7 @@ return declare("cool.store.xhrstore", base, {
 
  		var results = xhr("POST", {
             url: url,
-            handleAs: "json",
+            handleAs: "DsJsonHandler",
             content: postData,
             headers: headers
         });
@@ -276,19 +282,15 @@ return declare("cool.store.xhrstore", base, {
         var store = this;
 
 		results.total = results.then(function(data){
-                store._onQuerySuccess(data);
+			store._onQuerySuccess(data);
 
-                //return range as number
-				var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
-                if(range != null) {
-                    range = range.match(/\/(.*)/);
-				    return range == null ? 0 : range[1];
-                } else return 0;
-			},
-			function(err){
-	            if(err.message != "Request canceled")
-					dialogManager.showXhrError("XHR error in xhrStore.query", url, err.response.text);
-			});
+			//return range as number
+			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+			if(range != null) {
+				range = range.match(/\/(.*)/);
+				return range == null ? 0 : range[1];
+			} else return 0;
+		});
 
 		return QueryResults(results);
 	},
@@ -317,7 +319,6 @@ return declare("cool.store.xhrstore", base, {
         var id = this.getIdentity(item);
         return this.query({_parent_id:id},{start:0, count:Infinity});
     }
-
 
 });
 

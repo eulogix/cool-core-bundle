@@ -66,6 +66,12 @@ abstract class BaseFileRepositoryPermissions {
      * @param $path
      * @return bool
      */
+    public abstract function canSetProperties($path);
+
+    /**
+     * @param $path
+     * @return bool
+     */
     public abstract function canDelete($path);
 
     /**

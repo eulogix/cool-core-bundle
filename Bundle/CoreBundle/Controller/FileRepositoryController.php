@@ -59,15 +59,18 @@ class FileRepositoryController extends Controller
         $repo->setParameters($this->get('request')->query->all());
 
         $filePath = $this->get('request')->query->get('filePath');
-        $fileProxy = $repo->get($filePath);
 
-        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
-        $fileProxy->toFile($tempFile);
-        $response = new BinaryFileResponse($tempFile, 200);
-        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
-        $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
-        $response->deleteFileAfterSend(true);
-        return $response;
+        if($repo->getUserPermissions()->canDownloadFile($filePath)) {
+            $fileProxy = $repo->get($filePath);
+
+            $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+            $fileProxy->toFile($tempFile);
+            $response = new BinaryFileResponse($tempFile, 200);
+            $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+            $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
+            $response->deleteFileAfterSend(true);
+            return $response;
+        } else return $this->getForbiddenResponse();
     }
 
     /**
@@ -99,14 +102,16 @@ class FileRepositoryController extends Controller
         $repo->setParameters($this->get('request')->query->all());
 
         $filePath = $this->get('request')->query->get('filePath');
-        $fileProxy = $repo->get($filePath);
-        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
-        $fileProxy->toFile($tempFile);
-        $response = new BinaryFileResponse($tempFile, 200);
-        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
-        $response->headers->set('Content-Disposition', "filename=\"".$fileProxy->getName()."\"");
-        $response->deleteFileAfterSend(true);
-        return $response;
+        if($repo->getUserPermissions()->canDownloadFile($filePath)) {
+            $fileProxy = $repo->get($filePath);
+            $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+            $fileProxy->toFile($tempFile);
+            $response = new BinaryFileResponse($tempFile, 200);
+            $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+            $response->headers->set('Content-Disposition', "filename=\"".$fileProxy->getName()."\"");
+            $response->deleteFileAfterSend(true);
+            return $response;
+        } else return $this->getForbiddenResponse();
     }
 
     /**
@@ -159,7 +164,7 @@ class FileRepositoryController extends Controller
         $filePath = $this->get('request')->query->get('filePath');
         $filePath = $filePath == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $filePath;
 
-        $permissions = $repo->getPermissions()->getAllFor($filePath);
+        $permissions = $repo->getUserPermissions()->getAllFor($filePath);
 
         $response = new JsonResponse($permissions, 200);
         return $response;
@@ -222,6 +227,17 @@ class FileRepositoryController extends Controller
         }
 
         $response = new JsonResponse($data, 200);
+        return $response;
+    }
+
+    /**
+     * @return Response
+     */
+    private function getForbiddenResponse()
+    {
+        $response = new Response();
+        $response->setContent("Content forbidden");
+        $response->setStatusCode('403');
         return $response;
     }
 

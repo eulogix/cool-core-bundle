@@ -78,7 +78,8 @@ class DSstore implements StoreInterface {
         $DSResponse = $this->dataSource->execute($DSRequest);
         $this->processDSResponse( $DSResponse );
 
-        $storeResponse = new StoreResponse();
+        $storeResponse = $this->getEmptyStoreResponse($DSResponse);
+
         $storeResponse->setData( $DSResponse->getData() );
         $storeResponse->setSummary($DSResponse->getSummary());
         $storeResponse->setStartRow($dojoRequest->getRangeFrom());
@@ -147,10 +148,26 @@ class DSstore implements StoreInterface {
         $dsr->setOperationType($dsr::OPERATION_TYPE_REMOVE)
             ->setParameters([ $primaryKeyField => $recordId ]);
 
-        $dsresponse = $this->dataSource->execute($dsr);
+        $DSResponse = $this->dataSource->execute($dsr);
 
+        return $this->getEmptyStoreResponse($DSResponse);
+    }
+
+    /**
+     * Provides an empty store response prepopulated with status and errors
+     *
+     * @param DSResponse $DSResponse
+     * @return StoreResponse
+     */
+    protected function getEmptyStoreResponse(DSResponse $DSResponse) {
         $storeResponse = new StoreResponse();
-        $storeResponse->setStatus(StoreResponse::STATUS_TRANSACTION_SUCCESS);
+        switch($DSResponse->getStatus()) {
+            case DSResponse::STATUS_TRANSACTION_SUCCESS : $storeResponse->setStatus(StoreResponse::STATUS_TRANSACTION_SUCCESS); break;
+            case DSResponse::STATUS_TRANSACTION_FAILED : $storeResponse->setStatus(StoreResponse::STATUS_TRANSACTION_FAILED); break;
+        }
+        if($DSResponse->getErrorReport()->hasErrors())
+            $storeResponse->setErrorReport($DSResponse->getErrorReport());
+
         return $storeResponse;
     }
 

@@ -14,6 +14,7 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Controller;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Dojo\DSstore;
 use Eulogix\Cool\Lib\Dojo\StoreInterface;
+use Eulogix\Cool\Lib\Dojo\StoreResponse;
 use Eulogix\Cool\Lib\Dojo\XhrStoreRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

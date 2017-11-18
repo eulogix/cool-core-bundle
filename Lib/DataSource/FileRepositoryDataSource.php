@@ -17,6 +17,7 @@ use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
 use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\Error\ErrorReport;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -80,8 +81,8 @@ class FileRepositoryDataSource extends BaseDataSource {
      * @return DSResponse
      */
     public function executeFetch(DSRequest $req) {
-        $success = false;
         $dsresponse = new DSResponse($this);
+        $errors = new ErrorReport();
 
         $data = [];
 
@@ -95,18 +96,18 @@ class FileRepositoryDataSource extends BaseDataSource {
                 $data = $this->fromFileProxy($f, $this->repo->getFileProperties($getOneById, 'dec_'));
         } else {
             if($parentId = @$req->getParameters()['_parent_id']) {
-
                 $parentId = $this->cleanPath($parentId);
-                $files = $this->repo->getChildrenOf($parentId, false)->fetch();
+                if($this->repo->getUserPermissions()->canBrowse($parentId)) {
+                    $files = $this->repo->getChildrenOf($parentId, false)->fetch();
 
-                foreach($files as $f) {
-                    /**
-                     * @var SimpleFileProxy $f
-                     */
-                    $f->setParentId($parentId === null ? self::ROOT_PLACEHOLDER : $parentId);
-                    $data[] = $this->fromFileProxy($f, $this->repo->getFileProperties($f->getId(), 'dec_'));
-                }
-
+                    foreach($files as $f) {
+                        /**
+                         * @var SimpleFileProxy $f
+                         */
+                        $f->setParentId($parentId === null ? self::ROOT_PLACEHOLDER : $parentId);
+                        $data[] = $this->fromFileProxy($f, $this->repo->getFileProperties($f->getId(), 'dec_'));
+                    }
+                } else $errors->addGeneralError("Forbidden");
             } else if($search = @$req->getParameters()['_search']) {
 
                 $searchDir = @$req->getParameters()['searchDir'];
@@ -123,8 +124,14 @@ class FileRepositoryDataSource extends BaseDataSource {
             }
         }
 
-        $dsresponse->setData($data);
-        $dsresponse->setStatus($success);
+        if($errors->hasErrors()) {
+            $dsresponse->setStatus(false);
+            $dsresponse->setErrorReport($errors);
+        } else {
+            $dsresponse->setStatus(true);
+            $dsresponse->setData($data);
+        }
+
         return $dsresponse;
     }
 
@@ -227,13 +234,20 @@ class FileRepositoryDataSource extends BaseDataSource {
      */
     public function executeRemove(DSRequest $req)
     {
-        $success = true;
         $filePath = $req->getParameters()[ $this->getPrimaryKey() ];
 
-        $this->repo->delete($filePath);
-
         $dsresponse = new DSResponse($this);
-        $dsresponse->setStatus($success);
+
+        if($this->repo->getUserPermissions()->canDelete($filePath)) {
+            $this->repo->delete($filePath);
+            $dsresponse->setStatus(true);
+        } else {
+            $dsresponse->setStatus(false);
+            $errors = new ErrorReport();
+            $errors->addGeneralError("Forbidden");
+            $dsresponse->setErrorReport($errors);
+        }
+
         return $dsresponse;
     }
 
@@ -251,12 +265,23 @@ class FileRepositoryDataSource extends BaseDataSource {
         try {
             if ($req->getOldValues()[ 'name' ] != $req->getValues()[ 'name' ]) {
                 //file RENAME
-                $this->repo->rename($req->getValues()[ 'id' ], $req->getValues()[ 'name' ]);
-                $data = $this->fromFileProxy( $this->repo->get($filePath) );
+                if($this->repo->getUserPermissions()->canRename($filePath)) {
+                    $this->repo->rename($req->getValues()[ 'id' ], $req->getValues()[ 'name' ]);
+                    $data = $this->fromFileProxy( $this->repo->get($filePath) );
+                } else {
+                    $dsresponse->addGeneralError("Forbidden");
+                    $success = false;
+                }
             } elseif ($this->cleanPath( $req->getOldValues()[ 'parId' ] ) != $this->cleanPath( $req->getValues()[ 'parId' ] ) ) {
                 //file MOVE
-                $newPath = $this->repo->move($filePath, $this->cleanPath( $req->getValues()[ 'parId' ]));
-                $data = $this->fromFileProxy( $this->repo->get($newPath) );
+                $targetPath = $this->cleanPath( $req->getValues()[ 'parId' ]);
+                if($this->repo->getUserPermissions()->canMove($filePath, $targetPath)) {
+                    $newPath = $this->repo->move($filePath, $targetPath);
+                    $data = $this->fromFileProxy( $this->repo->get($newPath) );
+                } else {
+                    $dsresponse->addGeneralError("Forbidden");
+                    $success = false;
+                }
             }
         } catch(\Exception $e) {
             $dsresponse->addGeneralError($e->getMessage());

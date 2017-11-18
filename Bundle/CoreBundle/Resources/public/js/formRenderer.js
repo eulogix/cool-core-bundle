@@ -392,7 +392,7 @@ define([
         _parseProperties: function(propsString) {
 
             var ret = {};
-            propsString.replace(/([a-z0-9]+) *= *("(.+?)"|'(.+?)'|(.+?))(?=( |$))/img, function(luigi, propName, rawPropValue, pvDblQuot, pvSingleQuot, pvNoQuot) {
+            propsString.replace(/([a-z0-9]+) *= *("(.+?)"|'(.+?)'|(.+?))(?=( |$))/img, function(blank, propName, rawPropValue, pvDblQuot, pvSingleQuot, pvNoQuot) {
                 ret[propName] = pvDblQuot || pvSingleQuot || pvNoQuot;
             });
 

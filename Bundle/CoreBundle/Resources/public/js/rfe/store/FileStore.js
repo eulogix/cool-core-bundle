@@ -98,9 +98,11 @@ define([
 			return refPut.apply(this, arguments).then(function(data) {
 				self.onChange(object);
 				return data.id;
-			}, function() {
+			}, function(error) {
 				// when request fails change id back
 				object[self.parentAttr] = oldParentId;
+				COOL.handleXhrError(error);
+				throw error;
 			});
 		},
 
@@ -110,6 +112,9 @@ define([
 				object.id = newId;
 				self.onNewItem(object);	// notifies tree
 				return newId;
+			}, function(error) {
+				COOL.handleXhrError(error);
+				throw error;
 			});
 		},
 
@@ -117,6 +122,9 @@ define([
 			var self = this, object = this.get(id);
 			return refDel.apply(this, arguments).then(function() {
 				self.onDelete(object);	// notifies tree
+			}, function(error) {
+				COOL.handleXhrError(error);
+				throw error;
 			});
 		},
 
@@ -165,7 +173,6 @@ define([
 			}
 			// children not cached yet, query master store and add result to cache
 			else {
-
 				results = self.storeMaster.getChildren({id:id});	// query has to be a string, otherwise jsonrest will add a querystring instead of REST resource
                 alreadyCached = false;
 			}
@@ -193,7 +200,11 @@ define([
 				}
 				this.childrenCache[id] = children;
 				return children;
-			}));
+			}), function(error){
+					COOL.handleXhrError(error);
+					throw error;
+				}
+			);
 		},
 
 		/**

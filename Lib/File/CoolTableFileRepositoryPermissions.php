@@ -19,10 +19,9 @@ use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * this repository mimics a hierarchical file repository
- * ids are composed as follows
+ * user permissions for file and folders, relies on settings
  *
- * /<schemaName>/<tableName>/<recordPk>[/category|optional]/numericFileId
+ *
  *
  * @author Pietro Baricco <pietro@eulogix.com>
  */
@@ -30,8 +29,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CoolTableFileRepositoryPermissions extends BaseFileRepositoryPermissions {
 
     /**
-     * @param $path
-     * @return bool
+     * @inheritdoc
      */
     public function canBrowse($path)
     {
@@ -39,20 +37,15 @@ class CoolTableFileRepositoryPermissions extends BaseFileRepositoryPermissions {
     }
 
     /**
-     * @param $path
-     * @param FileProxyInterface|null $file
-     * @return bool
+     * @inheritdoc
      */
     public function canCreateFileIn($path, $file = null)
     {
-        $p = $this->getRepository()->parsePathId($path);
-        return($p['category'] || $p['pk']);
+        return $this->isDir($path);
     }
 
     /**
-     * @param $path
-     * @param FileProxyInterface|null $dir
-     * @return bool
+     * @inheritdoc
      */
     public function canCreateDirIn($path, $dir = null)
     {
@@ -60,56 +53,77 @@ class CoolTableFileRepositoryPermissions extends BaseFileRepositoryPermissions {
     }
 
     /**
-     * @param $path
-     * @return bool
+     * @inheritdoc
      */
     public function canDownloadFile($path)
     {
-        return true;
+        return $this->isFile($path);
     }
 
     /**
-     * @param $path
-     * @return bool
+     * @inheritdoc
      */
     public function canDelete($path)
     {
-        return true;
+        return $this->isFile($path);
     }
 
     /**
-     * @param $path
-     * @return bool
+     * @inheritdoc
      */
     public function canOverwrite($path)
     {
-        return true;
+        return $this->isFile($path);
     }
 
     /**
-     * @param $path
-     * @param $targetDir
-     * @return bool
+     * @inheritdoc
      */
     public function canMove($path, $targetDir)
     {
-        return true;
+        return $this->isFile($path) && $this->isDir($targetDir);
     }
 
     /**
-     * @param $path
-     * @param null $newName
-     * @return bool
+     * @inheritdoc
      */
     public function canRename($path, $newName = null)
     {
-        return true;
+        return $this->isFile($path);
     }
 
     /**
-     * @return CoolTableFileRepository
+     * @inheritdoc
      */
     public function getRepository() {
         return parent::getRepository();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function canSetProperties($path)
+    {
+        return $this->isFile($path);
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    private function isFile($path) {
+        $p = $this->getRepository()->parsePathId($path);
+        return !empty($p['file_id']);
+
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    private function isDir($path) {
+        $p = $this->getRepository()->parsePathId($path);
+        return($p['category'] || $p['pk']);
+    }
+
 }

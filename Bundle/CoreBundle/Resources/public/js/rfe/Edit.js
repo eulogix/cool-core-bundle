@@ -54,6 +54,8 @@ define([
 							obj = self.store.storeMemory.get(obj.parId);
 							self.display(obj);
 						}
+					}, function(error){
+						COOL.handleXhrError(error);
 					});
 					return skip;
 				}, error);

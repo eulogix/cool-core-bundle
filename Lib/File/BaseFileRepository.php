@@ -24,6 +24,11 @@ abstract class BaseFileRepository implements FileRepositoryInterface
     private $parameters;
 
     /**
+     * @var BaseFileRepositoryPermissions
+     */
+    protected $permissions, $userPermissions;
+
+    /**
      * @inheritdoc
      */
     public function getParameters() {
@@ -146,4 +151,41 @@ abstract class BaseFileRepository implements FileRepositoryInterface
         }
         return $results;
     }
+
+    /**
+     * @return BaseFileRepositoryPermissions
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param BaseFileRepositoryPermissions $permissions
+     * @return BaseFileRepository
+     */
+    public function setPermissions($permissions)
+    {
+        $this->permissions = $permissions;
+        return $this;
+    }
+
+    /**
+     * @return BaseFileRepositoryPermissions
+     */
+    public function getUserPermissions()
+    {
+        return $this->userPermissions ?? $this->permissions;
+    }
+
+    /**
+     * @param BaseFileRepositoryPermissions $userPermissions
+     * @return BaseFileRepository
+     */
+    public function setUserPermissions($userPermissions)
+    {
+        $this->userPermissions = $userPermissions;
+        return $this;
+    }
+
 }

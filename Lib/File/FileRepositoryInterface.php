@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\File;
 
+use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -38,9 +39,18 @@ interface FileRepositoryInterface {
     public function setParameters(array $parameters = []);
 
     /**
+     * Base permissions, these deal with file system limitations or other physical constraints.
+     * Checks are made in the base get/delete/store methods
      * @return BaseFileRepositoryPermissions
      */
     public function getPermissions();
+
+    /**
+     * Permissions related to what the logged user can or can not do.
+     * Checks are made in forms and APIs
+     * @return BaseFileRepositoryPermissions
+     */
+    public function getUserPermissions();
 
     /**
      * returns a unique identifier for the repository, used to differentiate caches..
@@ -82,7 +92,7 @@ interface FileRepositoryInterface {
     /**
      * @param string $path
      * @return $this
-     * @throws \Exception
+     * @throws ForbiddenException
      */
     public function delete($path);
 
@@ -90,6 +100,7 @@ interface FileRepositoryInterface {
      * @param string $path
      * @param string $target
      * @return string The new file path
+     * @throws ForbiddenException
      */
     public function move($path, $target);
 
@@ -97,7 +108,7 @@ interface FileRepositoryInterface {
      * @param string $path
      * @param string $newName
      * @return $this
-     * @throws \Exception
+     * @throws ForbiddenException
      */
     public function rename($path, $newName);
 
@@ -115,7 +126,7 @@ interface FileRepositoryInterface {
      * @param string $path
      * @param string $collisionStrategy overwrite|skip|append
      * @return FileProxyInterface a fileProxy representing the inserted file
-     * @throws \Exception
+     * @throws ForbiddenException
      */
     public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy='overwrite');
 
@@ -123,7 +134,7 @@ interface FileRepositoryInterface {
      * @param string $path
      * @param string $folderName
      * @return $this
-     * @throws \Exception
+     * @throws ForbiddenException
      */
     public function createFolder($path, $folderName);
 
@@ -132,7 +143,7 @@ interface FileRepositoryInterface {
      * @param array $properties
      * @param bool $merge
      * @return $this
-     * @throws \Exception
+     * @throws ForbiddenException
      */
     public function setFileProperties($path, array $properties, $merge=false);
 

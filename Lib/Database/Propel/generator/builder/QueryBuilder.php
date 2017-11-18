@@ -39,7 +39,8 @@ class QueryBuilder extends \QueryBuilder {
      * <code>";
         if ($count === 1) {
             $script .= "
-     * \$objs = \$c->findPksKeepingKeyOrder(array(12, 56, 832), \$con); STUOCAZZO";
+     * \$objs = \$c->findPksKeepingKeyOrder(array(12, 56, 832), \$con);
+     ";
         } else {
             $script .= "
      * \$objs = \$c->findPksKeepingKeyOrder(array(array(12, 56), array(832, 123), array(123, 456)), \$con);";

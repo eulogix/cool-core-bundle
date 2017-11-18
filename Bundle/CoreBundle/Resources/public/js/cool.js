@@ -8,11 +8,14 @@ define([
 
     "cool/file/repository",
     "cool/dialog/manager",
-    "cool/util/formatters"
+    "cool/util/formatters",
+
+    "cool/store/errors/DsError"
 
 ], function(lang, array, request, xhr,
             registry,
-            coolFileRepository, dialogManager, formatters) {
+            coolFileRepository, dialogManager, formatters,
+            DsError) {
   
     var cool = {
 
@@ -92,7 +95,7 @@ define([
                         }
                       }, function(err){
 
-                        dialogManager.showXhrError("XHR error in cool.widgetFactory", url, err.response.text);
+                        dialogManager.showXhrError(err);
                         self.signalWidgetLoaded(serverId);
 
                       }, function(evt){
@@ -164,7 +167,13 @@ define([
 
         getFormatters: function() { return formatters; },
 
-        getDialogManager: function() { return dialogManager; }
+        getDialogManager: function() { return dialogManager; },
+
+        handleXhrError: function(error) {
+            if(error instanceof DsError)
+                alert(error.getErrors().pop());
+            else this.getDialogManager().showXhrError(error);
+        }
 
     };
 

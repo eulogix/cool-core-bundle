@@ -227,7 +227,8 @@ abstract class BaseTableExtensionFieldQuery extends ModelCriteria
     /**
      * Find objects by primary key while maintaining the original sort order of the keys
      * <code>
-     * $objs = $c->findPksKeepingKeyOrder(array(12, 56, 832), $con); STUOCAZZO
+     * $objs = $c->findPksKeepingKeyOrder(array(12, 56, 832), $con);
+     
      * </code>
      * @param     array $keys Primary keys to use for the query
      * @param     PropelPDO $con an optional connection object

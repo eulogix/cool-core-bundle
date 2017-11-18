@@ -34,7 +34,7 @@ define("cool/rundeck",
                             if(exec['date-ended']) {
                                 clearInterval(handle);
                                 if(lang.exists('exec.failedNodes')) {
-                                    dialogManager.showXhrError("Error in rundeck job execution", '', exec['tail']);
+                                    console.log(exec['tail']);
                                 } else onFinish(exec);
                             }
                         }
