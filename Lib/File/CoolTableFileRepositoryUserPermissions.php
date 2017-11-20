@@ -40,8 +40,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CoolTableFileRepositoryUserPermissions extends BaseFileRepositoryPermissions {
 
     const SETTING_CAN_BROWSE = 'canBrowse';
-    const SETTING_CAN_CREATE_FILES = 'canCreateFiles';
-    const SETTING_CAN_DOWNLOAD_FILES = 'canDownloadFiles';
+    const SETTING_CAN_CREATE_FILES = 'canCreate';
+    const SETTING_CAN_DOWNLOAD_FILES = 'canDownload';
     const SETTING_CAN_DELETE = 'canDelete';
     const SETTING_CAN_OVERWRITE = 'canOverwrite';
     const SETTING_CAN_MOVE = 'canMove';
