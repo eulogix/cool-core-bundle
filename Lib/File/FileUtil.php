@@ -88,7 +88,7 @@ class FileUtil {
             ,"html"=>"text/html"
         );
 
-        return @$mime_types[$extension];
+        return @$mime_types[strtolower($extension)];
     }
 
     /**
