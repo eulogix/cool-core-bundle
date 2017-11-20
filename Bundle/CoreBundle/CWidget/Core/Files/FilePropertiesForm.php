@@ -50,8 +50,12 @@ class FilePropertiesForm extends Form {
             $this->addMessageWarning("Working on {1} files!",count($filePaths));
 
         $allProperties = [];
-        foreach($filePaths as $fp)
+        foreach($filePaths as $fp) {
             $allProperties[] = $this->repo->getAvailableFileProperties($fp);
+
+            if(!$this->repo->getUserPermissions()->canSetProperties($fp))
+                $this->setReadOnly(true);
+        }
         $this->properties = count($allProperties) == 1 ? array_pop($allProperties) : call_user_func_array('array_intersect_key',$allProperties);
 
         foreach($this->properties as $prop)
@@ -59,7 +63,9 @@ class FilePropertiesForm extends Form {
 
         $this->rawFill( $this->repo->getMergedFileProperties($filePaths) );
 
-        $this->addFieldSubmit('save');
+        if(!$this->getReadOnly())
+            $this->addFieldSubmit('save');
+
         return $this;
     }
 
