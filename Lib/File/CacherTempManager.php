@@ -20,23 +20,42 @@ use Eulogix\Cool\Lib\Cool;
 
 class CacherTempManager implements TempManagerInterface
 {
+
+    const PREFIX_TMP_UPLOAD_MANAGER = "TMPUPMGR";
+    const PREFIX_TMP_DOWNLOAD = "TMPDL";
+
     /**
      * @var CacherInterface
      */
     var $cacher;
 
-    public function __construct(CacherInterface $cacher) {
+    /**
+     * @var string
+     */
+    var $tempFolder;
+
+    /**
+     * @var int
+     */
+    var $purgeEverySeconds = 0;
+
+    public function __construct(CacherInterface $cacher, $tempFolder = null, $purgeEverySeconds = 0) {
         $this->cacher = $cacher;
+        $this->tempFolder = $tempFolder ?? sys_get_temp_dir();
+        $this->purgeEverySeconds = $purgeEverySeconds;
     }
 
     /**
      * @inheritdoc
      */
     public function storeFile($uploadedName, $temporaryUploadedFile) {
-        $t = tempnam(sys_get_temp_dir(),'TMPUPMGR');
+        $t = tempnam($this->tempFolder, self::PREFIX_TMP_UPLOAD_MANAGER);
         copy($temporaryUploadedFile, $t);
         $id = md5($t);
         $this->cacher->store('TEMP_FILE'.$id, ['tempName'=>$t, 'uploadedName'=>$uploadedName]);
+
+        $this->purge();
+
         return $id;
     }
 
@@ -66,7 +85,7 @@ class CacherTempManager implements TempManagerInterface
      * @inheritdoc
      */
     public function getTempKeyFromFileProxy(FileProxyInterface $fp) {
-        $t = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $t = tempnam($this->tempFolder, self::PREFIX_TMP_DOWNLOAD);
         $fp->toFile($t);
         $id = md5($t);
         $this->cacher->store('TEMP_DL_KEY'.$id, ['tempName'=>$t, 'fileName'=>$fp->getName()]);
@@ -92,5 +111,20 @@ class CacherTempManager implements TempManagerInterface
     public function getDownloadUrlFromFileProxy(FileProxyInterface $fp)
     {
         return Cool::getInstance()->getContainer()->get('router')->generate('_downloadTempFile', array('key' => $this->getTempKeyFromFileProxy($fp)));
+    }
+
+    /**
+     * performs a cleanup of stale files in temp folder
+     * with a 10% probability
+     */
+    private function purge() {
+        if($this->purgeEverySeconds > 0 && rand(0,100) > 90)
+            foreach (glob($this->tempFolder . "/*") as $fileName) {
+                if(preg_match('/\/('.self::PREFIX_TMP_UPLOAD_MANAGER.'|'.self::PREFIX_TMP_DOWNLOAD.')/sim', $fileName)) {
+                    $fileAge = time() - filectime($fileName);
+                    if ($fileAge > $this->purgeEverySeconds)
+                        @unlink($fileName);
+                }
+            }
     }
 }
