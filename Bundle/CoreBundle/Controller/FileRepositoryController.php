@@ -63,7 +63,7 @@ class FileRepositoryController extends Controller
         if($repo->getUserPermissions()->canDownloadFile($filePath)) {
             $fileProxy = $repo->get($filePath);
 
-            $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+            $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), 'DOWNLOAD');
             $fileProxy->toFile($tempFile);
             $response = new BinaryFileResponse($tempFile, 200);
             $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
@@ -84,7 +84,7 @@ class FileRepositoryController extends Controller
         $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
 
         $fileProxy = $storage->getById($fileId);
-        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), 'DOWNLOAD');
         $fileProxy->toFile($tempFile);
         $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
@@ -104,7 +104,7 @@ class FileRepositoryController extends Controller
         $filePath = $this->get('request')->query->get('filePath');
         if($repo->getUserPermissions()->canDownloadFile($filePath)) {
             $fileProxy = $repo->get($filePath);
-            $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+            $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), 'DOWNLOAD');
             $fileProxy->toFile($tempFile);
             $response = new BinaryFileResponse($tempFile, 200);
             $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
@@ -125,7 +125,7 @@ class FileRepositoryController extends Controller
         $storage = Cool::getInstance()->getFactory()->getSchemaFileStorage($schema);
 
         $fileProxy = $storage->getById($fileId);
-        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), 'DOWNLOAD');
         $fileProxy->toFile($tempFile);
         $response = new BinaryFileResponse($tempFile, 200);
         $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));

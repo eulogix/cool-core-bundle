@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\DataSource\Renderer;
 
+use Eulogix\Cool\Lib\Cool;
 use PHPExcel;
 use PHPExcel_Cell;
 use PHPExcel_Style_Alignment;
@@ -76,7 +77,7 @@ class ExcelRenderer extends BaseRenderer implements RendererInterface{
 
         $writer = new PHPExcel_Writer_Excel2007( $phpExcelObject );
 
-        $t = tempnam(sys_get_temp_dir(),"XLSX");
+        $t = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),"XLSX");
         $writer->save($t);
         $ret = file_get_contents($t);
         @unlink($t);

@@ -41,7 +41,7 @@ class CacherTempManager implements TempManagerInterface
 
     public function __construct(CacherInterface $cacher, $tempFolder = null, $purgeEverySeconds = 0) {
         $this->cacher = $cacher;
-        $this->tempFolder = $tempFolder ?? sys_get_temp_dir();
+        $this->tempFolder = $tempFolder ?? Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder();
         $this->purgeEverySeconds = $purgeEverySeconds;
     }
 

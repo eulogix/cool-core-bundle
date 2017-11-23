@@ -41,4 +41,11 @@ class Manager {
         return Cool::getInstance()->getCoreSchema()->fetch($sql, [":name"=>$name, ":space"=>$space], true, $this->cacheDurationSecs);
     }
 
+    /**
+     * @return string
+     */
+    public function getTempFolder() {
+        return Cool::getInstance()->getContainer()->getParameter('cool.temp_folder') ?? sys_get_temp_dir();
+    }
+
 } 

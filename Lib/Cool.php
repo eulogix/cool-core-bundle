@@ -267,4 +267,5 @@ class Cool {
         $schemas = $this->getAvailableSchemas();
         return @$schemas[ $schemaName ]['attach_to'] ?? false;
     }
+
 }

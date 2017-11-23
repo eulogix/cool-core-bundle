@@ -59,7 +59,7 @@ EOF
         $pgDumpLine = "pg_dump --host=\"{$host}\" --port=\"{$port}\" --username=\"$user\" --dbname=\"$database\"";
         $pgSQLLine = "psql --host=\"{$host}\" --port=\"{$port}\" --username=\"$user\" --dbname=\"$database\"";
 
-        $targetFile = tempnam(sys_get_temp_dir(),'SQL');
+        $targetFile = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
 
         $cmds =[
             "{$pgDumpLine} -n {$schema}  -f \"{$targetFile}_h1\"",

@@ -13,6 +13,7 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Tests\Files;
 
 use bheller\ImagesGenerator\ImagesGeneratorProvider;
 use Eulogix\Cool\Bundle\CoreBundle\Tests\Cases\baseTestCase;
+use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
@@ -82,7 +83,7 @@ class FilesTest extends baseTestCase
         $folderSize = 0;
         $pictureCount = 0;
         do {
-            $randomPicture = $faker->imageGenerator(sys_get_temp_dir(), $faker->numberBetween(8000, 10240), $faker->numberBetween(6000, 8000), 'jpg', true, $faker->word, $faker->hexColor, $faker->hexColor);
+            $randomPicture = $faker->imageGenerator(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), $faker->numberBetween(8000, 10240), $faker->numberBetween(6000, 8000), 'jpg', true, $faker->word, $faker->hexColor, $faker->hexColor);
             $folderSize += filesize($randomPicture);
             $proxy = SimpleFileProxy::fromFileSystem($randomPicture);
 

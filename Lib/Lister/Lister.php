@@ -416,7 +416,7 @@ abstract class Lister extends Widget implements ListerInterface {
 
         $data = $this->getExportData();
         if(count($data) > 0 && ($renderer = $this->getRenderer($format)) ) {
-            $t = tempnam(sys_get_temp_dir(),'LISTEREXPORT');
+            $t = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'LISTEREXPORT');
             file_put_contents($t, $renderer->renderData($data, $raw, $this->getColumnsSorted()));
             $f->setContentFile($t);
             $this->downloadFile($f);

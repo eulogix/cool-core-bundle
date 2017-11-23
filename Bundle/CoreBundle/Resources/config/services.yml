@@ -67,7 +67,7 @@ services:
 
     cool.file.temp_manager:
         class: Eulogix\Cool\Lib\File\CacherTempManager
-        arguments: ["@cool.dbcacher", "%cool.cacher_temp_manager_temp_folder%", "%cool.cacher_temp_manager_purge_interval%"]
+        arguments: ["@cool.dbcacher", "%cool.temp_folder%", "%cool.cacher_temp_manager_purge_interval%"]
 
     cool.ds.manager:
         class: Eulogix\Cool\Lib\DataSource\DataSourceManager

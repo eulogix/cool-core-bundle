@@ -72,7 +72,7 @@ class AjaxController extends Controller
     public function downloadTempFile($key)
     {
         $fileProxy = Cool::getInstance()->getFactory()->getFileTempManager()->getFileProxyFromTempKey($key);
-        $tempFile = tempnam(sys_get_temp_dir(),'DOWNLOAD');
+        $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder() ,'DOWNLOAD');
         $fileProxy->toFile($tempFile);
         $response = new BinaryFileResponse($tempFile, 200);
 

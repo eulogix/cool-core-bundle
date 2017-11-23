@@ -219,7 +219,7 @@ class Differ {
         $this->applySqlFiles($this->sqlFiles['pre_sync'], $this->database, $this->user, $this->schema);
 
         //then we apply the diff
-        $diff = tempnam(sys_get_temp_dir(),'SQL');
+        $diff = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
         file_put_contents($diff, $diffContent);
 
         $ret = $this->pgExec("psql --host=\"{$this->host}\" --port=\"{$this->port}\" --dbname=\"{$this->database}\" --username={$this->user} --file=\"$diff\"",
@@ -396,7 +396,7 @@ class Differ {
             ['public', $schemaName],
             $this->complementarySchemas
         );
-        $temp_file = tempnam(sys_get_temp_dir(),'SQL');
+        $temp_file = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
         file_put_contents($temp_file, $this->getCreateSchemaStatements($schemasToCreate));
         array_unshift($this->sqlFiles['sync'], $temp_file);
 
@@ -420,15 +420,15 @@ class Differ {
      * @return bool|string
      */
     public function getDiffScript() {
-        $old_dump = tempnam(sys_get_temp_dir(),'SQL');
-        $new_dump = tempnam(sys_get_temp_dir(),'SQL');
+        $old_dump = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
+        $new_dump = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
 
         //grab the old and new dumps
         if($this->dumpOldSchema($old_dump) &&
             $this->dumpCurrentSchema($new_dump)) {
 
             //diff them
-            $diff = tempnam(sys_get_temp_dir(),'SQL');
+            $diff = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
 
             $apgDiffCmd = "java -jar \"{$this->getApgDiffJar()}\"";
 
@@ -495,7 +495,7 @@ class Differ {
 
         //extension init is needed here because pg_dump does not manage it
         //TODO: refactor this as a resource script
-        $temp_file = tempnam(sys_get_temp_dir(),'SQL');
+        $temp_file = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'SQL');
         file_put_contents($temp_file, "
 CREATE EXTENSION IF NOT EXISTS plv8;
 CREATE EXTENSION IF NOT EXISTS plcoffee;
@@ -557,7 +557,7 @@ CREATE EXTENSION IF NOT EXISTS hstore SCHEMA pg_catalog;
      * @return string
      */
     function createTempDir() {
-        $tempfile=tempnam(sys_get_temp_dir(),'');
+        $tempfile=tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'');
         if (file_exists($tempfile)) { unlink($tempfile); }
         mkdir($tempfile);
         if (is_dir($tempfile)) { return $tempfile; }

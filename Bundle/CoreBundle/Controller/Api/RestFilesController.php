@@ -71,7 +71,7 @@ class RestFilesController extends BaseRestController
 
             $fp = new SimpleFileProxy();
             $fp->setName( $paramFetcher->get('fileName') );
-            $t = tempnam(sys_get_temp_dir(),'RESTUPLOAD');
+            $t = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'RESTUPLOAD');
             file_put_contents($t, base64_decode($paramFetcher->get('fileContent')));
             $fp->setContentFile($t);
             $cat = $paramFetcher->get('category');
