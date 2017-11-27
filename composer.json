@@ -47,6 +47,8 @@
     },
     "bin": [
         "bin/cool-install-apgdiff",
-        "bin/cool-install-dojo-deps"
+        "bin/cool-install-dojo-deps",
+        "bin/database-listen",
+        "bin/database-listener-stop"
     ]
 }
