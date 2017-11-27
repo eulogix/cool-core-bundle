@@ -300,15 +300,14 @@ class SchemaFileStorage {
     {
         $f = new SimpleFileProxy();
 
-        //TODO: compile all the fields
+        $this->setStoredContentToFileProxy($data[ 'checksum_sha1' ], $f);
+
         $f->setId($data[ 'file_id' ])
           ->setName($data[ 'file_name' ])
           ->setSize($data[ 'file_size' ])
           ->setCreationDate(new \DateTime(@$data['upload_date']))
           ->setLastModificationDate(new \DateTime(@$data['last_modification_date']))
           ->setProperties(json_decode(@$data['properties'], true));
-
-        $this->setStoredContentToFileProxy($data[ 'checksum_sha1' ], $f);
 
         return $f;
     }
