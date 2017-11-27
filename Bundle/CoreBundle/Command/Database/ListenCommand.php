@@ -16,14 +16,12 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Symfony\Console\CoolCommand;
 use Eulogix\Lib\Database\Postgres\NotificationEvent;
 use Eulogix\Lib\Database\Postgres\NotificationListener;
-use PDO;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -78,14 +76,7 @@ class ListenCommand extends CoolCommand
             }
         );
 
-        $listener->startListening();
-
-        $sw = new Stopwatch();
-        $sw->start('loop');
-
-        while(!$minutes || ($sw->getEvent('loop')->getDuration()/1000/60 < $minutes)) {
-            $listener->doOneLoop();
-        }
+        $listener->listen($minutes);
     }
 
     /**

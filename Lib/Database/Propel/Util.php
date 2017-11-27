@@ -30,6 +30,10 @@ class Util {
             /** @var CoolPropelObject $item */
             $hash[] = ['value'=>$item->$valueMethod(), 'label'=>$item->getHumanDescription()];
         }
+
+        if($valueMethod == "getPrimaryKey")
+            $hash = array_orderby($hash, 'value', SORT_ASC);
+
         return new SimpleValueMap($hash);
     }
 

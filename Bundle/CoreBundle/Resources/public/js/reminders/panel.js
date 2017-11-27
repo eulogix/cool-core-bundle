@@ -141,18 +141,20 @@ define("cool/reminders/panel",
 
                 var t = this;
 
-                var debugButton = new iconButton({
-                    label: this.getTranslator().trans('debug'),
-                    onClick: function() {
-                        t.toggleDebugMode();
-                    },
-                    style: "float:right;",
-                    iconSrc: "/bower_components/fugue/icons/bug.png",
-                    showLabel: false,
-                    tooltip: this.getTranslator().trans('debug_tip')
-                });
+                if(this.showDebug) {
+                    var debugButton = new iconButton({
+                        label: this.getTranslator().trans('debug'),
+                        onClick: function() {
+                            t.toggleDebugMode();
+                        },
+                        style: "float:right;",
+                        iconSrc: "/bower_components/fugue/icons/bug.png",
+                        showLabel: false,
+                        tooltip: this.getTranslator().trans('debug_tip')
+                    });
 
-                this.toolbar.addChild(debugButton);
+                    this.toolbar.addChild(debugButton);
+                }
 
                 d.resolve();
                 return d;
