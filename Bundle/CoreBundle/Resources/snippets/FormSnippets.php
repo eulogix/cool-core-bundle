@@ -87,6 +87,19 @@ class FormSnippets
     }
 
     /**
+     * @SnippetMeta(category="form_action", contextIgnore={"widget"}, directInvocation="true", description="Hide fields")
+     *
+     * @param FormInterface $widget
+     * @param string $fieldNames Comma separated list of fields to hide
+     */
+    public static function hideField(FormInterface $widget, $fieldNames)
+    {
+        $_fieldNames = explode(',', $fieldNames);
+        foreach($_fieldNames as $fieldName)
+            $widget->getField($fieldName)->hide();
+    }
+
+    /**
      * @SnippetMeta(category="form_action", contextIgnore={"widget"}, directInvocation="true", description="Set field VALUE")
      *
      * @param FormInterface $widget

@@ -755,17 +755,18 @@ abstract class Widget implements WidgetInterface {
                 ->setIncludeDecodings(true);
 
             $resp = $trailDS->execute($dsr);
-            $rows = $resp->getData();
-            $buf = "<table>";
-            foreach($rows as $row) {
-                $rd = $row['_decodifications'];
-                $buf.="<tr>
-                            <td style='padding-right: 5px'>{$rd[DSFieldAuditTrailDataSource::AUDITED_FIELD]}</td>
-                            <td style='padding-right: 5px'>{$rd[AuditSchema::FIELD_VALIDITY_FROM]}</td>
-                            <td>{$rd[AuditSchema::FIELD_COOL_USER_ID]}</td>
-                      </tr>";
-            }
-            $buf .= "</table>";
+            if($rows = $resp->getRows()) {
+                $buf = "<table>";
+                foreach($rows as $row) {
+                    $rd = $row['_decodifications'];
+                    $buf.="<tr>
+                                <td style='padding-right: 5px'>{$rd[DSFieldAuditTrailDataSource::AUDITED_FIELD]}</td>
+                                <td style='padding-right: 5px'>{$rd[AuditSchema::FIELD_VALIDITY_FROM]}</td>
+                                <td>{$rd[AuditSchema::FIELD_COOL_USER_ID]}</td>
+                          </tr>";
+                }
+                $buf .= "</table>";
+            } else $buf = "-";
         }
 
         return [
