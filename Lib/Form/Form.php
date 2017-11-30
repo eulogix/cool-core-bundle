@@ -664,7 +664,7 @@ class Form extends Widget implements FormInterface {
         if($f = $this->getFileFromField($this->request->get('fieldName'))) {
             $url = Cool::getInstance()->getFactory()->getFileTempManager()->getDownloadUrlFromFileProxy($f);
             if($url)
-                return $url;
+                return ['downloadUrl'=>$url];
         }
         $this->addMessage(Message::TYPE_ERROR, "FILE_NOT_FOUND");
     }

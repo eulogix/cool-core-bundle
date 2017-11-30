@@ -45,7 +45,6 @@ define("cool/controls/file",
             this.inherited(arguments);
 
             this.containerTable.style.cssText = this.cssStyles.join(';');
-            console.log(this.cssStyles.join(';'));
 
             this.progressBarToggler = new Toggler({
                 node: this.progressBarNode,
@@ -63,8 +62,6 @@ define("cool/controls/file",
             }
             var t = this;
 
-            console.log("id: "+this.progressBarWidget.id);
-
             var field = new dojox.form.Uploader({
                 multiple: this.definition.parameters.multiple,
                 uploadOnSelect: true,
@@ -75,7 +72,8 @@ define("cool/controls/file",
             this.own(field);
             field.startup();
 
-            this.addDropTarget(this.detailsNode);
+            if(!this.isReadOnly)
+                this.addDropTarget(this.detailsNode);
 
             this.uploadButtonNode.appendChild(field.domNode);
 
@@ -110,12 +108,9 @@ define("cool/controls/file",
                 t._refreshView();
             });
 
-            if(this.isReadOnly()) {
-                field.set('readOnly', true);
-                field.set('disabled', true);
-            }
 
             this.field = field;
+
             this._refreshView();
 
             if(this.definition.value !== undefined) {
@@ -177,7 +172,8 @@ define("cool/controls/file",
             return !(
                     this.isWaiting() ||
                     (this.maxFiles > 0 && this.countUploadedFiles() >= this.maxFiles) ||
-                    this.operations.removeStoredFile
+                    this.operations.removeStoredFile ||
+                    this.isReadOnly()
                    );
         },
 
@@ -204,18 +200,20 @@ define("cool/controls/file",
                 storedFileNode.innerHTML = this.viewData.name+' ('+this._hFileSize(this.viewData.size)+')';
                 storedFileNode.style.cursor = "hand";
 
-                if(this.operations.removeStoredFile) {
-                    storedFileNode.style.textDecoration = "line-through";
-                    var undoBtn = dojo.doc.createElement('img');
-                    undoBtn.src = "/bower_components/fugue/icons/arrow-curve-180-left.png";
-                    undoBtn.onclick = function() {
-                        t._unRemoveStoredFile();
-                    }
-                } else {
-                    var removeBtn = dojo.doc.createElement('img');
-                    removeBtn.src = "/bower_components/fugue/icons/minus-circle-frame.png";
-                    removeBtn.onclick = function() {
-                        t._removeStoredFile();
+                if(!this.isReadOnly()) {
+                    if(this.operations.removeStoredFile) {
+                        storedFileNode.style.textDecoration = "line-through";
+                        var undoBtn = dojo.doc.createElement('img');
+                        undoBtn.src = "/bower_components/fugue/icons/arrow-curve-180-left.png";
+                        undoBtn.onclick = function() {
+                            t._unRemoveStoredFile();
+                        }
+                    } else {
+                        var removeBtn = dojo.doc.createElement('img');
+                        removeBtn.src = "/bower_components/fugue/icons/minus-circle-frame.png";
+                        removeBtn.onclick = function() {
+                            t._removeStoredFile();
+                        }
                     }
                 }
 
@@ -235,9 +233,11 @@ define("cool/controls/file",
 
             this.field.set('disabled', !this.canAddFiles());
 
-            this.detailsNode.innerHTML = Object.keys(this.uploadedFiles).length == 0 ?
-                this.definition.parameters.detailsPaneLabel || GlobalTranslator.trans('file_control_drag_here'+(this.isMultiple() ? '_multiple' : ''))
-                : '';
+            if(!this.isReadOnly)
+                this.detailsNode.innerHTML = Object.keys(this.uploadedFiles).length == 0 ?
+                    this.definition.parameters.detailsPaneLabel || GlobalTranslator.trans('file_control_drag_here'+(this.isMultiple() ? '_multiple' : ''))
+                    : '';
+            else this.detailsNode.style.display = 'none';
 
             for(var fileName in this.uploadedFiles) {
                 this._addDetailRow( this.detailsNode,  fileName );
@@ -280,8 +280,7 @@ define("cool/controls/file",
 
         _downloadFile: function() {
             this.getContainerWidget().callAction('downloadField', function(data){
-                //data is the URL to the temp downloader
-                document.location = data;
+                document.location = data.downloadUrl;
             }, {fieldName: this.getName()}, {dontLock: true});
         },
 
