@@ -30,6 +30,18 @@ class WidgetSnippets
     }
 
     /**
+     * @SnippetMeta(category="widget_variable", contextIgnore={"widget"}, directInvocation="true", description="Get ATTRIBUTE value")
+     *
+     * @param WidgetInterface $widget
+     * @param string $attributeName the name of the attribute to fetch
+     * @return string
+     */
+    public static function getAttributeValue(WidgetInterface $widget, $attributeName)
+    {
+        return $widget->getAttributes()->get($attributeName);
+    }
+
+    /**
      * @SnippetMeta(category="widget_action", contextIgnore={"widget"}, directInvocation="true", description="Output message")
      *
      * @param WidgetInterface $widget
