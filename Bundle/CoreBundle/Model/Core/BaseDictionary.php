@@ -646,6 +646,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'hidden_flag' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'show_summary_flag' => 
         array (
           'attributes' => 

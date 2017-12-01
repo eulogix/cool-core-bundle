@@ -47,6 +47,7 @@ class ListerConfigColumnTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolT
         $this->addColumn('name', 'Name', 'LONGVARCHAR', true, null, null);
         $this->addColumn('sortable_flag', 'SortableFlag', 'BOOLEAN', false, null, null);
         $this->addColumn('editable_flag', 'EditableFlag', 'BOOLEAN', false, null, null);
+        $this->addColumn('hidden_flag', 'HiddenFlag', 'BOOLEAN', false, null, null);
         $this->addColumn('show_summary_flag', 'ShowSummaryFlag', 'BOOLEAN', false, null, null);
         $this->addColumn('width', 'Width', 'LONGVARCHAR', false, null, null);
         $this->addColumn('cell_template', 'CellTemplate', 'LONGVARCHAR', false, null, null);

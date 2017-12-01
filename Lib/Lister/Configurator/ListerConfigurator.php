@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Lister\Configurator;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumn;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigQuery;
 use Eulogix\Cool\Lib\Lister\ListerInterface;
 use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
@@ -56,13 +57,16 @@ class ListerConfigurator extends WidgetConfigurator {
             }
 
             $configColumns = $config->getListerConfigColumns();
-            $configColumnNames = [];
+            /**
+             * @var ListerConfigColumn[] $configColumnsArray
+             */
+            $configColumnsArray = [];
 
             $tempInitialSort = [];
 
             //configure existing columns using configuration parameters
             foreach($configColumns as $configColumn) {
-                $configColumnNames[] = $configColumn->getName();
+                $configColumnsArray[ $configColumn->getName() ] = $configColumn;
 
                 $widgetColumn = $widget->getColumn($configColumn->getName());
                 if(!$widgetColumn)
@@ -105,17 +109,21 @@ class ListerConfigurator extends WidgetConfigurator {
                 $widget->setInitialSort($initialSort);
 
             //then remove columns not specified in the configuration
-            if(count($configColumnNames)>0) {
+            if(count($configColumnsArray)>0) {
                 $ds = $widget->getDataSource();
                 $listerColumns = $widget->getColumnNames();
-                foreach($listerColumns as $listerColumn)
-                    if(!in_array($listerColumn, $configColumnNames)) {
-                        if($ds->hasField($listerColumn)) {
-                            if(!$widget->isColumnPropagated($listerColumn))
-                                $widget->getDataSource()->getField($listerColumn)->setLazyFetch(true);
-                            $widget->removeColumn($listerColumn);
-                        } else $widget->addMessageWarning("The lister definition contains a column ({1}) not defined in the datasource ({2}). Check the PHP code!", $listerColumn, get_class($ds));
-                    }
+                foreach($listerColumns as $listerColumn) {
+
+                    $columnConfigured = isset( $configColumnsArray[ $listerColumn ] );
+                    $columnVisible = $columnConfigured && !$configColumnsArray[ $listerColumn ]->getHiddenFlag();
+
+                    if ($ds->hasField($listerColumn) && !$columnConfigured && !$widget->isColumnPropagated($listerColumn))
+                            $widget->getDataSource()->getField($listerColumn)->setLazyFetch(true);
+
+                    if(!$columnVisible)
+                        $widget->removeColumn($listerColumn);
+                    
+                }
             }
 
         }

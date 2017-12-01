@@ -23,6 +23,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method ListerConfigColumnQuery orderBySortableFlag($order = Criteria::ASC) Order by the sortable_flag column
  * @method ListerConfigColumnQuery orderByEditableFlag($order = Criteria::ASC) Order by the editable_flag column
+ * @method ListerConfigColumnQuery orderByHiddenFlag($order = Criteria::ASC) Order by the hidden_flag column
  * @method ListerConfigColumnQuery orderByShowSummaryFlag($order = Criteria::ASC) Order by the show_summary_flag column
  * @method ListerConfigColumnQuery orderByWidth($order = Criteria::ASC) Order by the width column
  * @method ListerConfigColumnQuery orderByCellTemplate($order = Criteria::ASC) Order by the cell_template column
@@ -44,6 +45,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumnQuery groupByName() Group by the name column
  * @method ListerConfigColumnQuery groupBySortableFlag() Group by the sortable_flag column
  * @method ListerConfigColumnQuery groupByEditableFlag() Group by the editable_flag column
+ * @method ListerConfigColumnQuery groupByHiddenFlag() Group by the hidden_flag column
  * @method ListerConfigColumnQuery groupByShowSummaryFlag() Group by the show_summary_flag column
  * @method ListerConfigColumnQuery groupByWidth() Group by the width column
  * @method ListerConfigColumnQuery groupByCellTemplate() Group by the cell_template column
@@ -75,6 +77,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method ListerConfigColumn findOneByName(string $name) Return the first ListerConfigColumn filtered by the name column
  * @method ListerConfigColumn findOneBySortableFlag(boolean $sortable_flag) Return the first ListerConfigColumn filtered by the sortable_flag column
  * @method ListerConfigColumn findOneByEditableFlag(boolean $editable_flag) Return the first ListerConfigColumn filtered by the editable_flag column
+ * @method ListerConfigColumn findOneByHiddenFlag(boolean $hidden_flag) Return the first ListerConfigColumn filtered by the hidden_flag column
  * @method ListerConfigColumn findOneByShowSummaryFlag(boolean $show_summary_flag) Return the first ListerConfigColumn filtered by the show_summary_flag column
  * @method ListerConfigColumn findOneByWidth(string $width) Return the first ListerConfigColumn filtered by the width column
  * @method ListerConfigColumn findOneByCellTemplate(string $cell_template) Return the first ListerConfigColumn filtered by the cell_template column
@@ -96,6 +99,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\ListerConfigColumnQuery;
  * @method array findByName(string $name) Return ListerConfigColumn objects filtered by the name column
  * @method array findBySortableFlag(boolean $sortable_flag) Return ListerConfigColumn objects filtered by the sortable_flag column
  * @method array findByEditableFlag(boolean $editable_flag) Return ListerConfigColumn objects filtered by the editable_flag column
+ * @method array findByHiddenFlag(boolean $hidden_flag) Return ListerConfigColumn objects filtered by the hidden_flag column
  * @method array findByShowSummaryFlag(boolean $show_summary_flag) Return ListerConfigColumn objects filtered by the show_summary_flag column
  * @method array findByWidth(string $width) Return ListerConfigColumn objects filtered by the width column
  * @method array findByCellTemplate(string $cell_template) Return ListerConfigColumn objects filtered by the cell_template column
@@ -216,7 +220,7 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, show_summary_flag, width, cell_template, cell_template_js, dijit_widget_template, dijit_widget_set_value_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_js_expression, tooltip_url_js_expression, tooltip_max_width, tooltip_delay_msec FROM core.lister_config_column WHERE lister_config_column_id = :p0';
+        $sql = 'SELECT lister_config_column_id, lister_config_id, name, sortable_flag, editable_flag, hidden_flag, show_summary_flag, width, cell_template, cell_template_js, dijit_widget_template, dijit_widget_set_value_js, column_style_css, sort_order, sortby_order, sortby_direction, truncate_chars, tooltip_js_expression, tooltip_url_js_expression, tooltip_max_width, tooltip_delay_msec FROM core.lister_config_column WHERE lister_config_column_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -496,6 +500,33 @@ abstract class BaseListerConfigColumnQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ListerConfigColumnPeer::EDITABLE_FLAG, $editableFlag, $comparison);
+    }
+
+    /**
+     * Filter the query on the hidden_flag column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByHiddenFlag(true); // WHERE hidden_flag = true
+     * $query->filterByHiddenFlag('yes'); // WHERE hidden_flag = true
+     * </code>
+     *
+     * @param     boolean|string $hiddenFlag The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ListerConfigColumnQuery The current query, for fluid interface
+     */
+    public function filterByHiddenFlag($hiddenFlag = null, $comparison = null)
+    {
+        if (is_string($hiddenFlag)) {
+            $hiddenFlag = in_array(strtolower($hiddenFlag), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(ListerConfigColumnPeer::HIDDEN_FLAG, $hiddenFlag, $comparison);
     }
 
     /**

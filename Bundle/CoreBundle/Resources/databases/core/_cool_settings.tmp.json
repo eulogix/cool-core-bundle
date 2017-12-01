@@ -374,6 +374,9 @@
                     "editable_flag": {
                         "attributes": []
                     },
+                    "hidden_flag": {
+                        "attributes": []
+                    },
                     "show_summary_flag": {
                         "attributes": []
                     },

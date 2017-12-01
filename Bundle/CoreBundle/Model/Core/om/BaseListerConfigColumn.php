@@ -69,6 +69,12 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     protected $editable_flag;
 
     /**
+     * The value for the hidden_flag field.
+     * @var        boolean
+     */
+    protected $hidden_flag;
+
+    /**
      * The value for the show_summary_flag field.
      * @var        boolean
      */
@@ -236,6 +242,17 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
     {
 
         return $this->editable_flag;
+    }
+
+    /**
+     * Get the [hidden_flag] column value.
+     *
+     * @return boolean
+     */
+    public function getHiddenFlag()
+    {
+
+        return $this->hidden_flag;
     }
 
     /**
@@ -527,6 +544,35 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
 
         return $this;
     } // setEditableFlag()
+
+    /**
+     * Sets the value of the [hidden_flag] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return ListerConfigColumn The current object (for fluent API support)
+     */
+    public function setHiddenFlag($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->hidden_flag !== $v) {
+            $this->hidden_flag = $v;
+            $this->modifiedColumns[] = ListerConfigColumnPeer::HIDDEN_FLAG;
+        }
+
+
+        return $this;
+    } // setHiddenFlag()
 
     /**
      * Sets the value of the [show_summary_flag] column.
@@ -888,21 +934,22 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->sortable_flag = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
             $this->editable_flag = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
-            $this->show_summary_flag = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
-            $this->width = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->cell_template = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->cell_template_js = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->dijit_widget_template = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->dijit_widget_set_value_js = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->column_style_css = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->sort_order = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
-            $this->sortby_order = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->sortby_direction = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->truncate_chars = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
-            $this->tooltip_js_expression = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
-            $this->tooltip_url_js_expression = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
-            $this->tooltip_max_width = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
-            $this->tooltip_delay_msec = ($row[$startcol + 19] !== null) ? (int) $row[$startcol + 19] : null;
+            $this->hidden_flag = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+            $this->show_summary_flag = ($row[$startcol + 6] !== null) ? (boolean) $row[$startcol + 6] : null;
+            $this->width = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->cell_template = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->cell_template_js = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->dijit_widget_template = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->dijit_widget_set_value_js = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->column_style_css = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->sort_order = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
+            $this->sortby_order = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
+            $this->sortby_direction = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->truncate_chars = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
+            $this->tooltip_js_expression = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
+            $this->tooltip_url_js_expression = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
+            $this->tooltip_max_width = ($row[$startcol + 19] !== null) ? (int) $row[$startcol + 19] : null;
+            $this->tooltip_delay_msec = ($row[$startcol + 20] !== null) ? (int) $row[$startcol + 20] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -912,7 +959,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 20; // 20 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 21; // 21 = ListerConfigColumnPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ListerConfigColumn object", $e);
@@ -1165,6 +1212,9 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::EDITABLE_FLAG)) {
             $modifiedColumns[':p' . $index++]  = 'editable_flag';
         }
+        if ($this->isColumnModified(ListerConfigColumnPeer::HIDDEN_FLAG)) {
+            $modifiedColumns[':p' . $index++]  = 'hidden_flag';
+        }
         if ($this->isColumnModified(ListerConfigColumnPeer::SHOW_SUMMARY_FLAG)) {
             $modifiedColumns[':p' . $index++]  = 'show_summary_flag';
         }
@@ -1235,6 +1285,9 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                         break;
                     case 'editable_flag':
                         $stmt->bindValue($identifier, $this->editable_flag, PDO::PARAM_BOOL);
+                        break;
+                    case 'hidden_flag':
+                        $stmt->bindValue($identifier, $this->hidden_flag, PDO::PARAM_BOOL);
                         break;
                     case 'show_summary_flag':
                         $stmt->bindValue($identifier, $this->show_summary_flag, PDO::PARAM_BOOL);
@@ -1436,48 +1489,51 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 return $this->getEditableFlag();
                 break;
             case 5:
-                return $this->getShowSummaryFlag();
+                return $this->getHiddenFlag();
                 break;
             case 6:
-                return $this->getWidth();
+                return $this->getShowSummaryFlag();
                 break;
             case 7:
-                return $this->getCellTemplate();
+                return $this->getWidth();
                 break;
             case 8:
-                return $this->getCellTemplateJs();
+                return $this->getCellTemplate();
                 break;
             case 9:
-                return $this->getDijitWidgetTemplate();
+                return $this->getCellTemplateJs();
                 break;
             case 10:
-                return $this->getDijitWidgetSetValueJs();
+                return $this->getDijitWidgetTemplate();
                 break;
             case 11:
-                return $this->getColumnStyleCss();
+                return $this->getDijitWidgetSetValueJs();
                 break;
             case 12:
-                return $this->getSortOrder();
+                return $this->getColumnStyleCss();
                 break;
             case 13:
-                return $this->getSortbyOrder();
+                return $this->getSortOrder();
                 break;
             case 14:
-                return $this->getSortbyDirection();
+                return $this->getSortbyOrder();
                 break;
             case 15:
-                return $this->getTruncateChars();
+                return $this->getSortbyDirection();
                 break;
             case 16:
-                return $this->getTooltipJsExpression();
+                return $this->getTruncateChars();
                 break;
             case 17:
-                return $this->getTooltipUrlJsExpression();
+                return $this->getTooltipJsExpression();
                 break;
             case 18:
-                return $this->getTooltipMaxWidth();
+                return $this->getTooltipUrlJsExpression();
                 break;
             case 19:
+                return $this->getTooltipMaxWidth();
+                break;
+            case 20:
                 return $this->getTooltipDelayMsec();
                 break;
             default:
@@ -1514,21 +1570,22 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
             $keys[2] => $this->getName(),
             $keys[3] => $this->getSortableFlag(),
             $keys[4] => $this->getEditableFlag(),
-            $keys[5] => $this->getShowSummaryFlag(),
-            $keys[6] => $this->getWidth(),
-            $keys[7] => $this->getCellTemplate(),
-            $keys[8] => $this->getCellTemplateJs(),
-            $keys[9] => $this->getDijitWidgetTemplate(),
-            $keys[10] => $this->getDijitWidgetSetValueJs(),
-            $keys[11] => $this->getColumnStyleCss(),
-            $keys[12] => $this->getSortOrder(),
-            $keys[13] => $this->getSortbyOrder(),
-            $keys[14] => $this->getSortbyDirection(),
-            $keys[15] => $this->getTruncateChars(),
-            $keys[16] => $this->getTooltipJsExpression(),
-            $keys[17] => $this->getTooltipUrlJsExpression(),
-            $keys[18] => $this->getTooltipMaxWidth(),
-            $keys[19] => $this->getTooltipDelayMsec(),
+            $keys[5] => $this->getHiddenFlag(),
+            $keys[6] => $this->getShowSummaryFlag(),
+            $keys[7] => $this->getWidth(),
+            $keys[8] => $this->getCellTemplate(),
+            $keys[9] => $this->getCellTemplateJs(),
+            $keys[10] => $this->getDijitWidgetTemplate(),
+            $keys[11] => $this->getDijitWidgetSetValueJs(),
+            $keys[12] => $this->getColumnStyleCss(),
+            $keys[13] => $this->getSortOrder(),
+            $keys[14] => $this->getSortbyOrder(),
+            $keys[15] => $this->getSortbyDirection(),
+            $keys[16] => $this->getTruncateChars(),
+            $keys[17] => $this->getTooltipJsExpression(),
+            $keys[18] => $this->getTooltipUrlJsExpression(),
+            $keys[19] => $this->getTooltipMaxWidth(),
+            $keys[20] => $this->getTooltipDelayMsec(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1589,48 +1646,51 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
                 $this->setEditableFlag($value);
                 break;
             case 5:
-                $this->setShowSummaryFlag($value);
+                $this->setHiddenFlag($value);
                 break;
             case 6:
-                $this->setWidth($value);
+                $this->setShowSummaryFlag($value);
                 break;
             case 7:
-                $this->setCellTemplate($value);
+                $this->setWidth($value);
                 break;
             case 8:
-                $this->setCellTemplateJs($value);
+                $this->setCellTemplate($value);
                 break;
             case 9:
-                $this->setDijitWidgetTemplate($value);
+                $this->setCellTemplateJs($value);
                 break;
             case 10:
-                $this->setDijitWidgetSetValueJs($value);
+                $this->setDijitWidgetTemplate($value);
                 break;
             case 11:
-                $this->setColumnStyleCss($value);
+                $this->setDijitWidgetSetValueJs($value);
                 break;
             case 12:
-                $this->setSortOrder($value);
+                $this->setColumnStyleCss($value);
                 break;
             case 13:
-                $this->setSortbyOrder($value);
+                $this->setSortOrder($value);
                 break;
             case 14:
-                $this->setSortbyDirection($value);
+                $this->setSortbyOrder($value);
                 break;
             case 15:
-                $this->setTruncateChars($value);
+                $this->setSortbyDirection($value);
                 break;
             case 16:
-                $this->setTooltipJsExpression($value);
+                $this->setTruncateChars($value);
                 break;
             case 17:
-                $this->setTooltipUrlJsExpression($value);
+                $this->setTooltipJsExpression($value);
                 break;
             case 18:
-                $this->setTooltipMaxWidth($value);
+                $this->setTooltipUrlJsExpression($value);
                 break;
             case 19:
+                $this->setTooltipMaxWidth($value);
+                break;
+            case 20:
                 $this->setTooltipDelayMsec($value);
                 break;
         } // switch()
@@ -1662,21 +1722,22 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setSortableFlag($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setEditableFlag($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setShowSummaryFlag($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setWidth($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCellTemplate($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setCellTemplateJs($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDijitWidgetTemplate($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setDijitWidgetSetValueJs($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setColumnStyleCss($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setSortOrder($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setSortbyOrder($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setSortbyDirection($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setTruncateChars($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setTooltipJsExpression($arr[$keys[16]]);
-        if (array_key_exists($keys[17], $arr)) $this->setTooltipUrlJsExpression($arr[$keys[17]]);
-        if (array_key_exists($keys[18], $arr)) $this->setTooltipMaxWidth($arr[$keys[18]]);
-        if (array_key_exists($keys[19], $arr)) $this->setTooltipDelayMsec($arr[$keys[19]]);
+        if (array_key_exists($keys[5], $arr)) $this->setHiddenFlag($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setShowSummaryFlag($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setWidth($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setCellTemplate($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setCellTemplateJs($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDijitWidgetTemplate($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setDijitWidgetSetValueJs($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setColumnStyleCss($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setSortOrder($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setSortbyOrder($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setSortbyDirection($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setTruncateChars($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setTooltipJsExpression($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setTooltipUrlJsExpression($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setTooltipMaxWidth($arr[$keys[19]]);
+        if (array_key_exists($keys[20], $arr)) $this->setTooltipDelayMsec($arr[$keys[20]]);
     }
 
     /**
@@ -1693,6 +1754,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         if ($this->isColumnModified(ListerConfigColumnPeer::NAME)) $criteria->add(ListerConfigColumnPeer::NAME, $this->name);
         if ($this->isColumnModified(ListerConfigColumnPeer::SORTABLE_FLAG)) $criteria->add(ListerConfigColumnPeer::SORTABLE_FLAG, $this->sortable_flag);
         if ($this->isColumnModified(ListerConfigColumnPeer::EDITABLE_FLAG)) $criteria->add(ListerConfigColumnPeer::EDITABLE_FLAG, $this->editable_flag);
+        if ($this->isColumnModified(ListerConfigColumnPeer::HIDDEN_FLAG)) $criteria->add(ListerConfigColumnPeer::HIDDEN_FLAG, $this->hidden_flag);
         if ($this->isColumnModified(ListerConfigColumnPeer::SHOW_SUMMARY_FLAG)) $criteria->add(ListerConfigColumnPeer::SHOW_SUMMARY_FLAG, $this->show_summary_flag);
         if ($this->isColumnModified(ListerConfigColumnPeer::WIDTH)) $criteria->add(ListerConfigColumnPeer::WIDTH, $this->width);
         if ($this->isColumnModified(ListerConfigColumnPeer::CELL_TEMPLATE)) $criteria->add(ListerConfigColumnPeer::CELL_TEMPLATE, $this->cell_template);
@@ -1775,6 +1837,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $copyObj->setName($this->getName());
         $copyObj->setSortableFlag($this->getSortableFlag());
         $copyObj->setEditableFlag($this->getEditableFlag());
+        $copyObj->setHiddenFlag($this->getHiddenFlag());
         $copyObj->setShowSummaryFlag($this->getShowSummaryFlag());
         $copyObj->setWidth($this->getWidth());
         $copyObj->setCellTemplate($this->getCellTemplate());
@@ -1910,6 +1973,7 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
         $this->name = null;
         $this->sortable_flag = null;
         $this->editable_flag = null;
+        $this->hidden_flag = null;
         $this->show_summary_flag = null;
         $this->width = null;
         $this->cell_template = null;

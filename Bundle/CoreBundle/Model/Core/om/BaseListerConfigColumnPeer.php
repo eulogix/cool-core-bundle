@@ -31,13 +31,13 @@ abstract class BaseListerConfigColumnPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\ListerConfigColumnTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 20;
+    const NUM_COLUMNS = 21;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 20;
+    const NUM_HYDRATE_COLUMNS = 21;
 
     /** the column name for the lister_config_column_id field */
     const LISTER_CONFIG_COLUMN_ID = 'core.lister_config_column.lister_config_column_id';
@@ -53,6 +53,9 @@ abstract class BaseListerConfigColumnPeer
 
     /** the column name for the editable_flag field */
     const EDITABLE_FLAG = 'core.lister_config_column.editable_flag';
+
+    /** the column name for the hidden_flag field */
+    const HIDDEN_FLAG = 'core.lister_config_column.hidden_flag';
 
     /** the column name for the show_summary_flag field */
     const SHOW_SUMMARY_FLAG = 'core.lister_config_column.show_summary_flag';
@@ -118,12 +121,12 @@ abstract class BaseListerConfigColumnPeer
      * e.g. ListerConfigColumnPeer::$fieldNames[ListerConfigColumnPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId', 'ListerConfigId', 'Name', 'SortableFlag', 'EditableFlag', 'ShowSummaryFlag', 'Width', 'CellTemplate', 'CellTemplateJs', 'DijitWidgetTemplate', 'DijitWidgetSetValueJs', 'ColumnStyleCss', 'SortOrder', 'SortbyOrder', 'SortbyDirection', 'TruncateChars', 'TooltipJsExpression', 'TooltipUrlJsExpression', 'TooltipMaxWidth', 'TooltipDelayMsec', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId', 'listerConfigId', 'name', 'sortableFlag', 'editableFlag', 'showSummaryFlag', 'width', 'cellTemplate', 'cellTemplateJs', 'dijitWidgetTemplate', 'dijitWidgetSetValueJs', 'columnStyleCss', 'sortOrder', 'sortbyOrder', 'sortbyDirection', 'truncateChars', 'tooltipJsExpression', 'tooltipUrlJsExpression', 'tooltipMaxWidth', 'tooltipDelayMsec', ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID, ListerConfigColumnPeer::LISTER_CONFIG_ID, ListerConfigColumnPeer::NAME, ListerConfigColumnPeer::SORTABLE_FLAG, ListerConfigColumnPeer::EDITABLE_FLAG, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG, ListerConfigColumnPeer::WIDTH, ListerConfigColumnPeer::CELL_TEMPLATE, ListerConfigColumnPeer::CELL_TEMPLATE_JS, ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE, ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS, ListerConfigColumnPeer::COLUMN_STYLE_CSS, ListerConfigColumnPeer::SORT_ORDER, ListerConfigColumnPeer::SORTBY_ORDER, ListerConfigColumnPeer::SORTBY_DIRECTION, ListerConfigColumnPeer::TRUNCATE_CHARS, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID', 'LISTER_CONFIG_ID', 'NAME', 'SORTABLE_FLAG', 'EDITABLE_FLAG', 'SHOW_SUMMARY_FLAG', 'WIDTH', 'CELL_TEMPLATE', 'CELL_TEMPLATE_JS', 'DIJIT_WIDGET_TEMPLATE', 'DIJIT_WIDGET_SET_VALUE_JS', 'COLUMN_STYLE_CSS', 'SORT_ORDER', 'SORTBY_ORDER', 'SORTBY_DIRECTION', 'TRUNCATE_CHARS', 'TOOLTIP_JS_EXPRESSION', 'TOOLTIP_URL_JS_EXPRESSION', 'TOOLTIP_MAX_WIDTH', 'TOOLTIP_DELAY_MSEC', ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id', 'lister_config_id', 'name', 'sortable_flag', 'editable_flag', 'show_summary_flag', 'width', 'cell_template', 'cell_template_js', 'dijit_widget_template', 'dijit_widget_set_value_js', 'column_style_css', 'sort_order', 'sortby_order', 'sortby_direction', 'truncate_chars', 'tooltip_js_expression', 'tooltip_url_js_expression', 'tooltip_max_width', 'tooltip_delay_msec', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId', 'ListerConfigId', 'Name', 'SortableFlag', 'EditableFlag', 'HiddenFlag', 'ShowSummaryFlag', 'Width', 'CellTemplate', 'CellTemplateJs', 'DijitWidgetTemplate', 'DijitWidgetSetValueJs', 'ColumnStyleCss', 'SortOrder', 'SortbyOrder', 'SortbyDirection', 'TruncateChars', 'TooltipJsExpression', 'TooltipUrlJsExpression', 'TooltipMaxWidth', 'TooltipDelayMsec', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId', 'listerConfigId', 'name', 'sortableFlag', 'editableFlag', 'hiddenFlag', 'showSummaryFlag', 'width', 'cellTemplate', 'cellTemplateJs', 'dijitWidgetTemplate', 'dijitWidgetSetValueJs', 'columnStyleCss', 'sortOrder', 'sortbyOrder', 'sortbyDirection', 'truncateChars', 'tooltipJsExpression', 'tooltipUrlJsExpression', 'tooltipMaxWidth', 'tooltipDelayMsec', ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID, ListerConfigColumnPeer::LISTER_CONFIG_ID, ListerConfigColumnPeer::NAME, ListerConfigColumnPeer::SORTABLE_FLAG, ListerConfigColumnPeer::EDITABLE_FLAG, ListerConfigColumnPeer::HIDDEN_FLAG, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG, ListerConfigColumnPeer::WIDTH, ListerConfigColumnPeer::CELL_TEMPLATE, ListerConfigColumnPeer::CELL_TEMPLATE_JS, ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE, ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS, ListerConfigColumnPeer::COLUMN_STYLE_CSS, ListerConfigColumnPeer::SORT_ORDER, ListerConfigColumnPeer::SORTBY_ORDER, ListerConfigColumnPeer::SORTBY_DIRECTION, ListerConfigColumnPeer::TRUNCATE_CHARS, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID', 'LISTER_CONFIG_ID', 'NAME', 'SORTABLE_FLAG', 'EDITABLE_FLAG', 'HIDDEN_FLAG', 'SHOW_SUMMARY_FLAG', 'WIDTH', 'CELL_TEMPLATE', 'CELL_TEMPLATE_JS', 'DIJIT_WIDGET_TEMPLATE', 'DIJIT_WIDGET_SET_VALUE_JS', 'COLUMN_STYLE_CSS', 'SORT_ORDER', 'SORTBY_ORDER', 'SORTBY_DIRECTION', 'TRUNCATE_CHARS', 'TOOLTIP_JS_EXPRESSION', 'TOOLTIP_URL_JS_EXPRESSION', 'TOOLTIP_MAX_WIDTH', 'TOOLTIP_DELAY_MSEC', ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id', 'lister_config_id', 'name', 'sortable_flag', 'editable_flag', 'hidden_flag', 'show_summary_flag', 'width', 'cell_template', 'cell_template_js', 'dijit_widget_template', 'dijit_widget_set_value_js', 'column_style_css', 'sort_order', 'sortby_order', 'sortby_direction', 'truncate_chars', 'tooltip_js_expression', 'tooltip_url_js_expression', 'tooltip_max_width', 'tooltip_delay_msec', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
     /**
@@ -133,12 +136,12 @@ abstract class BaseListerConfigColumnPeer
      * e.g. ListerConfigColumnPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId' => 0, 'ListerConfigId' => 1, 'Name' => 2, 'SortableFlag' => 3, 'EditableFlag' => 4, 'ShowSummaryFlag' => 5, 'Width' => 6, 'CellTemplate' => 7, 'CellTemplateJs' => 8, 'DijitWidgetTemplate' => 9, 'DijitWidgetSetValueJs' => 10, 'ColumnStyleCss' => 11, 'SortOrder' => 12, 'SortbyOrder' => 13, 'SortbyDirection' => 14, 'TruncateChars' => 15, 'TooltipJsExpression' => 16, 'TooltipUrlJsExpression' => 17, 'TooltipMaxWidth' => 18, 'TooltipDelayMsec' => 19, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId' => 0, 'listerConfigId' => 1, 'name' => 2, 'sortableFlag' => 3, 'editableFlag' => 4, 'showSummaryFlag' => 5, 'width' => 6, 'cellTemplate' => 7, 'cellTemplateJs' => 8, 'dijitWidgetTemplate' => 9, 'dijitWidgetSetValueJs' => 10, 'columnStyleCss' => 11, 'sortOrder' => 12, 'sortbyOrder' => 13, 'sortbyDirection' => 14, 'truncateChars' => 15, 'tooltipJsExpression' => 16, 'tooltipUrlJsExpression' => 17, 'tooltipMaxWidth' => 18, 'tooltipDelayMsec' => 19, ),
-        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID => 0, ListerConfigColumnPeer::LISTER_CONFIG_ID => 1, ListerConfigColumnPeer::NAME => 2, ListerConfigColumnPeer::SORTABLE_FLAG => 3, ListerConfigColumnPeer::EDITABLE_FLAG => 4, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG => 5, ListerConfigColumnPeer::WIDTH => 6, ListerConfigColumnPeer::CELL_TEMPLATE => 7, ListerConfigColumnPeer::CELL_TEMPLATE_JS => 8, ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE => 9, ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS => 10, ListerConfigColumnPeer::COLUMN_STYLE_CSS => 11, ListerConfigColumnPeer::SORT_ORDER => 12, ListerConfigColumnPeer::SORTBY_ORDER => 13, ListerConfigColumnPeer::SORTBY_DIRECTION => 14, ListerConfigColumnPeer::TRUNCATE_CHARS => 15, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION => 16, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION => 17, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH => 18, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC => 19, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID' => 0, 'LISTER_CONFIG_ID' => 1, 'NAME' => 2, 'SORTABLE_FLAG' => 3, 'EDITABLE_FLAG' => 4, 'SHOW_SUMMARY_FLAG' => 5, 'WIDTH' => 6, 'CELL_TEMPLATE' => 7, 'CELL_TEMPLATE_JS' => 8, 'DIJIT_WIDGET_TEMPLATE' => 9, 'DIJIT_WIDGET_SET_VALUE_JS' => 10, 'COLUMN_STYLE_CSS' => 11, 'SORT_ORDER' => 12, 'SORTBY_ORDER' => 13, 'SORTBY_DIRECTION' => 14, 'TRUNCATE_CHARS' => 15, 'TOOLTIP_JS_EXPRESSION' => 16, 'TOOLTIP_URL_JS_EXPRESSION' => 17, 'TOOLTIP_MAX_WIDTH' => 18, 'TOOLTIP_DELAY_MSEC' => 19, ),
-        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id' => 0, 'lister_config_id' => 1, 'name' => 2, 'sortable_flag' => 3, 'editable_flag' => 4, 'show_summary_flag' => 5, 'width' => 6, 'cell_template' => 7, 'cell_template_js' => 8, 'dijit_widget_template' => 9, 'dijit_widget_set_value_js' => 10, 'column_style_css' => 11, 'sort_order' => 12, 'sortby_order' => 13, 'sortby_direction' => 14, 'truncate_chars' => 15, 'tooltip_js_expression' => 16, 'tooltip_url_js_expression' => 17, 'tooltip_max_width' => 18, 'tooltip_delay_msec' => 19, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
+        BasePeer::TYPE_PHPNAME => array ('ListerConfigColumnId' => 0, 'ListerConfigId' => 1, 'Name' => 2, 'SortableFlag' => 3, 'EditableFlag' => 4, 'HiddenFlag' => 5, 'ShowSummaryFlag' => 6, 'Width' => 7, 'CellTemplate' => 8, 'CellTemplateJs' => 9, 'DijitWidgetTemplate' => 10, 'DijitWidgetSetValueJs' => 11, 'ColumnStyleCss' => 12, 'SortOrder' => 13, 'SortbyOrder' => 14, 'SortbyDirection' => 15, 'TruncateChars' => 16, 'TooltipJsExpression' => 17, 'TooltipUrlJsExpression' => 18, 'TooltipMaxWidth' => 19, 'TooltipDelayMsec' => 20, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('listerConfigColumnId' => 0, 'listerConfigId' => 1, 'name' => 2, 'sortableFlag' => 3, 'editableFlag' => 4, 'hiddenFlag' => 5, 'showSummaryFlag' => 6, 'width' => 7, 'cellTemplate' => 8, 'cellTemplateJs' => 9, 'dijitWidgetTemplate' => 10, 'dijitWidgetSetValueJs' => 11, 'columnStyleCss' => 12, 'sortOrder' => 13, 'sortbyOrder' => 14, 'sortbyDirection' => 15, 'truncateChars' => 16, 'tooltipJsExpression' => 17, 'tooltipUrlJsExpression' => 18, 'tooltipMaxWidth' => 19, 'tooltipDelayMsec' => 20, ),
+        BasePeer::TYPE_COLNAME => array (ListerConfigColumnPeer::LISTER_CONFIG_COLUMN_ID => 0, ListerConfigColumnPeer::LISTER_CONFIG_ID => 1, ListerConfigColumnPeer::NAME => 2, ListerConfigColumnPeer::SORTABLE_FLAG => 3, ListerConfigColumnPeer::EDITABLE_FLAG => 4, ListerConfigColumnPeer::HIDDEN_FLAG => 5, ListerConfigColumnPeer::SHOW_SUMMARY_FLAG => 6, ListerConfigColumnPeer::WIDTH => 7, ListerConfigColumnPeer::CELL_TEMPLATE => 8, ListerConfigColumnPeer::CELL_TEMPLATE_JS => 9, ListerConfigColumnPeer::DIJIT_WIDGET_TEMPLATE => 10, ListerConfigColumnPeer::DIJIT_WIDGET_SET_VALUE_JS => 11, ListerConfigColumnPeer::COLUMN_STYLE_CSS => 12, ListerConfigColumnPeer::SORT_ORDER => 13, ListerConfigColumnPeer::SORTBY_ORDER => 14, ListerConfigColumnPeer::SORTBY_DIRECTION => 15, ListerConfigColumnPeer::TRUNCATE_CHARS => 16, ListerConfigColumnPeer::TOOLTIP_JS_EXPRESSION => 17, ListerConfigColumnPeer::TOOLTIP_URL_JS_EXPRESSION => 18, ListerConfigColumnPeer::TOOLTIP_MAX_WIDTH => 19, ListerConfigColumnPeer::TOOLTIP_DELAY_MSEC => 20, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LISTER_CONFIG_COLUMN_ID' => 0, 'LISTER_CONFIG_ID' => 1, 'NAME' => 2, 'SORTABLE_FLAG' => 3, 'EDITABLE_FLAG' => 4, 'HIDDEN_FLAG' => 5, 'SHOW_SUMMARY_FLAG' => 6, 'WIDTH' => 7, 'CELL_TEMPLATE' => 8, 'CELL_TEMPLATE_JS' => 9, 'DIJIT_WIDGET_TEMPLATE' => 10, 'DIJIT_WIDGET_SET_VALUE_JS' => 11, 'COLUMN_STYLE_CSS' => 12, 'SORT_ORDER' => 13, 'SORTBY_ORDER' => 14, 'SORTBY_DIRECTION' => 15, 'TRUNCATE_CHARS' => 16, 'TOOLTIP_JS_EXPRESSION' => 17, 'TOOLTIP_URL_JS_EXPRESSION' => 18, 'TOOLTIP_MAX_WIDTH' => 19, 'TOOLTIP_DELAY_MSEC' => 20, ),
+        BasePeer::TYPE_FIELDNAME => array ('lister_config_column_id' => 0, 'lister_config_id' => 1, 'name' => 2, 'sortable_flag' => 3, 'editable_flag' => 4, 'hidden_flag' => 5, 'show_summary_flag' => 6, 'width' => 7, 'cell_template' => 8, 'cell_template_js' => 9, 'dijit_widget_template' => 10, 'dijit_widget_set_value_js' => 11, 'column_style_css' => 12, 'sort_order' => 13, 'sortby_order' => 14, 'sortby_direction' => 15, 'truncate_chars' => 16, 'tooltip_js_expression' => 17, 'tooltip_url_js_expression' => 18, 'tooltip_max_width' => 19, 'tooltip_delay_msec' => 20, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
     /**
@@ -217,6 +220,7 @@ abstract class BaseListerConfigColumnPeer
             $criteria->addSelectColumn(ListerConfigColumnPeer::NAME);
             $criteria->addSelectColumn(ListerConfigColumnPeer::SORTABLE_FLAG);
             $criteria->addSelectColumn(ListerConfigColumnPeer::EDITABLE_FLAG);
+            $criteria->addSelectColumn(ListerConfigColumnPeer::HIDDEN_FLAG);
             $criteria->addSelectColumn(ListerConfigColumnPeer::SHOW_SUMMARY_FLAG);
             $criteria->addSelectColumn(ListerConfigColumnPeer::WIDTH);
             $criteria->addSelectColumn(ListerConfigColumnPeer::CELL_TEMPLATE);
@@ -238,6 +242,7 @@ abstract class BaseListerConfigColumnPeer
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.sortable_flag');
             $criteria->addSelectColumn($alias . '.editable_flag');
+            $criteria->addSelectColumn($alias . '.hidden_flag');
             $criteria->addSelectColumn($alias . '.show_summary_flag');
             $criteria->addSelectColumn($alias . '.width');
             $criteria->addSelectColumn($alias . '.cell_template');

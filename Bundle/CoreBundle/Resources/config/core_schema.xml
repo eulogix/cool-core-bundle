@@ -289,6 +289,7 @@
         
         <column name="sortable_flag" type="BOOLEAN"/>
         <column name="editable_flag" type="BOOLEAN"/>
+        <column name="hidden_flag" type="BOOLEAN"/>
         <column name="show_summary_flag" type="BOOLEAN"/>
 
         <column name="width" type="LONGVARCHAR"/>
