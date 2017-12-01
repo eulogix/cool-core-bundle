@@ -1,0 +1,51 @@
+{% set uid="widget"~random() %}
+
+<div id="container{{ uid }}" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:false" style="padding: 0">
+
+    <div id="listerPane{{ uid }}" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding: 0; border:0; border-bottom: 1px solid #B5BCC7;">
+        {{ coolWidget( lister, listerParameters,
+        {
+            onLoad: uid ~ 'init(newWidget);',
+            containerStyle: "height:100%; width:100%;"
+        },
+        {
+            id: listerId,
+            editorFormDivId: 'editorDiv' ~ uid,
+        }
+        ) }}
+    </div>
+
+    <div id="editorPane{{ uid }}" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'bottom'" style="padding: 0; border:0; border-top: 1px solid #B5BCC7;">
+        <div id="editorDiv{{ uid }}"></div>
+    </div>
+
+</div>
+
+
+
+<script>
+    dojo.connect(_container_, "onLoad", function(){
+        _container_.domNode.style.padding = '0';
+        _container_.getParent().resize();
+        setTimeout(function(){ _container_.getParent().resize() }, 500);
+    });
+
+    function {{ uid }}init(widget) {
+        widget.domNode.style.height = "100%";
+        widget.onlyContent = true;
+        widget.fillContent = true;
+        widget.maxHeight = 0;
+
+
+        widget.on('editorOpened', function(e){
+            dojo.byId('editorPane{{ uid }}').style.height = "70%";
+            dijit.byId('container{{ uid }}').layout();
+
+            e.editor.on('close', function () {
+                dojo.byId('editorPane{{ uid }}').style.height = "0%";
+                dijit.byId('container{{ uid }}').layout();
+            });
+
+        });
+    }
+</script>

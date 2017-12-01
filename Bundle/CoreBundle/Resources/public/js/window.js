@@ -65,7 +65,7 @@ define("cool/window",
 
         resize: function() {
             this.inherited(arguments);
-            if(this.fillContent) {
+            if(!this._beingDestroyed && this.fillContent) {
                 var nodeBox = domGeometry.getContentBox(this.domNode.parentNode);
                 var titleBox = domGeometry.getContentBox(this.titleBarNode);
                 domStyle.set(this.domNode, {
@@ -78,8 +78,8 @@ define("cool/window",
                     "height": (nodeBox.h - titleBox.h -1)+"px",
                     "overflow": "auto"
                 });
+                this.emit('resize');
             }
-            this.emit('resize');
         }
 
 

@@ -141,7 +141,7 @@ define("cool/_listerEditorMixin",
 
                                 if(lister.editorFormDivId) {
                                     lister.editorDiv = dojo.byId(lister.editorFormDivId);
-                                    newEditorForm.fillContent = true;
+                                    //newEditorForm.fillContent = true;
                                 } else {
                                     if(!lister.editorDiv) {
                                         lister.editorDiv = dojo.doc.createElement('div');
