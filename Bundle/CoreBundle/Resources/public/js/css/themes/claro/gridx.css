@@ -99,6 +99,7 @@ gridx
     vertical-align: top;
     text-shadow: 1px 1px 1px #fff;
     /*    filter: dropshadow(color=#fff, offx=1, offy=1);*/
+    text-align: center;
 }
 
 .dijit_a11y.claro .gridxHeaderRow .gridxCell {
