@@ -37,7 +37,7 @@ class ListenCommand extends CoolCommand
         $this
             ->setName('cool:database:listen')
             ->setDescription('listens to notifications channels and calls appropriate hooks')
-            ->addOption('minutes', null, InputOption::VALUE_OPTIONAL, "If set, will die after <minutes> minutes", 0)
+            ->addOption('minutes', null, InputOption::VALUE_OPTIONAL, "If set, will respawn every x minutes", 0)
             ->setHelp("");
     }
 
