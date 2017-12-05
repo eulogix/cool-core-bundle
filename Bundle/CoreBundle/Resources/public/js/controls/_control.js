@@ -161,9 +161,9 @@ define("cool/controls/_control",
 
         buttonCount: 0,
 
-        _appendButtonNode: function(node){
+        _appendButtonNode: function(node, position){
             domStyle.set(node, "float", "left");
-            domConstruct.place(node, this.buttonsNode, "first");
+            domConstruct.place(node, this.buttonsNode, position || "first");
             this.buttonCount++;
             domStyle.set(this.buttonsNode, "display", "table-cell");
             domStyle.set(this.buttonsNode, "width", (this.buttonCount*23)+"px");

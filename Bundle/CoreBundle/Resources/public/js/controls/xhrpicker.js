@@ -85,7 +85,10 @@ define("cool/controls/xhrpicker",
             this.buttonToggler = new Toggler({
                 node: clearButton.domNode,
                 showFunc: fx.fadeIn,
-                hideFunc: fx.fadeOut
+                hideFunc: fx.fadeOut,
+                onEnd: function(node){
+                    clearButton.domNode.style.display = t._isEmptyTogglerVisible() ? 'inline' : 'none';
+                }
             });
 
             this.fieldNode.appendChild(field.domNode);
@@ -141,9 +144,13 @@ define("cool/controls/xhrpicker",
         },
 
         _refreshToggles: function() {
-            if(!this.isReadOnly() && this.get('value'))
+            if(this._isEmptyTogglerVisible())
                  this.buttonToggler.show();
             else this.buttonToggler.hide();
+        },
+
+        _isEmptyTogglerVisible: function() {
+            return !this.isReadOnly() && this.get('value');
         }
 
     });
