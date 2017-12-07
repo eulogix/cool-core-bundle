@@ -16,7 +16,7 @@ use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Lib\Error\ErrorReport;
 
 /**

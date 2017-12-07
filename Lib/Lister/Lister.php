@@ -25,7 +25,7 @@ use Eulogix\Cool\Lib\File\FileProxyCollectionInterface;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Form\Form;
 use Eulogix\Lib\Error\ErrorReport;
 use Eulogix\Cool\Lib\Lister\Configurator\ListerConfigurator;

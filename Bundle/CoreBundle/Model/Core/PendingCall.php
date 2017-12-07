@@ -13,7 +13,7 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Model\Core;
 
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\om\BasePendingCall;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Twilio\BasePhoneCall;
 
 class PendingCall extends BasePendingCall

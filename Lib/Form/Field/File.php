@@ -15,7 +15,7 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileCommand;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>

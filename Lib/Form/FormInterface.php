@@ -14,7 +14,7 @@ namespace Eulogix\Cool\Lib\Form;
 use ArrayIterator;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\ValueMapInterface;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\Widget\WidgetInterface;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;

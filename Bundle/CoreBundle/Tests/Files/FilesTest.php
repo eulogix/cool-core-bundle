@@ -17,7 +17,7 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
 use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Security\CoolUser;
 use Faker\Factory;
 

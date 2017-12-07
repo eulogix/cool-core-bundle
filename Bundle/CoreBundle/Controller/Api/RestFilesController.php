@@ -12,7 +12,7 @@
 namespace Eulogix\Cool\Bundle\CoreBundle\Controller\Api;
 
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
-use Eulogix\Cool\Lib\File\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Symfony\Controller\BaseRestController;
 use FOS\RestBundle\Request\ParamFetcher;
