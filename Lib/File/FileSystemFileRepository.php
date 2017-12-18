@@ -33,6 +33,7 @@ class FileSystemFileRepository extends BaseFileRepository {
         if(!file_exists($baseFolder) || !is_dir($baseFolder))
             throw new \Exception("$baseFolder does not exist or is not a directory");
         $this->baseFolder = $baseFolder;
+        $this->setPermissions( new FileSystemFileRepositoryPermissions($this));
     }
 
     /**
@@ -146,7 +147,7 @@ class FileSystemFileRepository extends BaseFileRepository {
             /**
              * @var \SplFileInfo $file
              */
-            if($file->getRealPath() != $rootFs && $file->getFilename() != '..') {
+            if($file->getRealPath() != $rootFs && $file->getFilename() != '..' && ($recursive || $file->getFilename() != '.') ) {
                 $ret->add($this->getFileProxy($file));
             }
         }

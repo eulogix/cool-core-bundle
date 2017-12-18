@@ -233,7 +233,7 @@ define("cool/controls/file",
 
             this.field.set('disabled', !this.canAddFiles());
 
-            if(!this.isReadOnly)
+            if(!this.isReadOnly())
                 this.detailsNode.innerHTML = Object.keys(this.uploadedFiles).length == 0 ?
                     this.definition.parameters.detailsPaneLabel || GlobalTranslator.trans('file_control_drag_here'+(this.isMultiple() ? '_multiple' : ''))
                     : '';
