@@ -93,7 +93,7 @@ class CoolTableFileRepositoryPermissions extends BaseFileRepositoryPermissions {
     }
 
     /**
-     * @inheritdoc
+     * @return CoolTableFileRepository
      */
     public function getRepository() {
         return parent::getRepository();

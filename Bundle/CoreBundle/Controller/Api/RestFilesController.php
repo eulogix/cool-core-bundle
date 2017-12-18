@@ -67,7 +67,7 @@ class RestFilesController extends BaseRestController
         try {
             $schema = Cool::getInstance()->getSchema($schemaName);
             if(!$obj = $schema->getPropelObject($table, $pk))
-                return $this->returnError(404);
+                return $this->returnError(404, "$schemaName:$table:$pk");
 
             $fp = new SimpleFileProxy();
             $fp->setName( $paramFetcher->get('fileName') );

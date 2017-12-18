@@ -12,6 +12,9 @@
 namespace Eulogix\Cool\Lib\File;
 
 
+use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxyCollection;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class BaseFileRepository implements FileRepositoryInterface
@@ -27,6 +30,11 @@ abstract class BaseFileRepository implements FileRepositoryInterface
      * @var BaseFileRepositoryPermissions
      */
     protected $permissions, $userPermissions;
+
+    /**
+     * @var string
+     */
+    protected $workingDir = '/';
 
     /**
      * @inheritdoc
@@ -188,4 +196,40 @@ abstract class BaseFileRepository implements FileRepositoryInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function setWorkingDir($folderId) {
+        $this->workingDir = $this->cleanPath($folderId);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getWorkingDir() {
+        return $this->workingDir;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFQPath($path)
+    {
+        $path = $path ? $path : $this->getWorkingDir(); //null means root (/)
+
+        if($path[0] == '/')
+            return $this->cleanPath($path); //$p is an absolute path
+
+        return $this->cleanPath($this->getWorkingDir().'/'.$path);
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function cleanPath($path) {
+        $ret = str_replace('//', '/', preg_replace('%^[/]*(.+?)[/]*$%im', '/$1', $path));
+        return $ret == '/' ? null : $ret;
+    }
 }

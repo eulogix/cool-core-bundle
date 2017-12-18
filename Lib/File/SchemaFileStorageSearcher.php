@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\File;
 
+use Eulogix\Lib\File\Proxy\SimpleFileProxyCollection;
 use Eulogix\Lib\Util\AbstractPagedIterator;
 
 /**

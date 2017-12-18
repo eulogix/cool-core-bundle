@@ -453,11 +453,6 @@ class DictionaryBuilder {
             if($tablePhpName)
                 $tableSettings[$tableName]['attributes'][Dictionary::TBL_ATT_PHP_NAME] = $tablePhpName;
 
-                /*Dictionary::TBL_ATT_NAMESPACE  =>  $tableNamespace.'\\'.$tablePhpName,
-                    Dictionary::TBL_ATT_PROPEL_MODEL_NAMESPACE  =>  $tableNamespace.'\\'.$tablePhpName,
-                    Dictionary::TBL_ATT_PROPEL_PEER_NAMESPACE   =>  $tableNamespace.'\\'.$tablePhpName.'Peer',
-                    Dictionary::TBL_ATT_PROPEL_QUERY_NAMESPACE  =>  $tableNamespace.'\\'.$tablePhpName.'Query',*/
-
             $tableSettings[$tableName] = array_merge_recursive($tableSettings[$tableName], $ce['choices']);
 
             foreach($tbl->column as $col) {

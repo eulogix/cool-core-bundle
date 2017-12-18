@@ -15,7 +15,7 @@ use bheller\ImagesGenerator\ImagesGeneratorProvider;
 use Eulogix\Cool\Bundle\CoreBundle\Tests\Cases\baseTestCase;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
-use Eulogix\Cool\Lib\File\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Security\CoolUser;
@@ -25,7 +25,7 @@ use Faker\Factory;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class FilesTest extends baseTestCase
+class MemoryUsageTest extends baseTestCase
 {
 
     public function tdestHashing() {

@@ -13,6 +13,8 @@ namespace Eulogix\Cool\Lib\File;
 
 use Error;
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Lib\File\FileUtils;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Lib\Image\ImageTools;
 
 /**
@@ -145,6 +147,33 @@ class FileUtil {
             case self::THUMB_CORRUPT    : copy( Cool::getInstance()->getFactory()->getFileLocator()->locate('@EulogixCoolCoreBundle/Resources/public/res/gfx/system/preview-corrupt.jpg'), $tempImage); break;
         }
         return $tempImage;
+    }
+
+    /**
+     * @param string $extension
+     * @return string
+     */
+    public static function getTempFileName($extension=null) {
+        return FileUtils::getTempFileName(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), $extension);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTempFolder() {
+        return FileUtils::getTempFolder(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder());
+    }
+
+    /**
+     * @param string $folder
+     * @return bool
+     */
+    public static function rmFolder($folder) {
+        if(is_dir($folder)) {
+            exec("rm -rf \"{$folder}\"");
+            return true;
+        }
+        return false;
     }
 
 }

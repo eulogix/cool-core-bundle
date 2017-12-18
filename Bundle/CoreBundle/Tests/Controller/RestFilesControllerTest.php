@@ -20,8 +20,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class RestFilesControllerTest extends WebTestCase
 {
 
-    private $filePath = null;
-
     private static function getClient() {
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin',
@@ -62,7 +60,7 @@ class RestFilesControllerTest extends WebTestCase
         $pages = $data["pages_count"];
 
         $fetched = 0;
-        for($i=0;$i<2;$i++) {
+        for($i=0;$i<$pages;$i++) {
 
             $client = self::getClient();
             $client->request('POST', '/cool/api/files/search',

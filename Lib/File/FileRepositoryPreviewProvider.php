@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Lib\File;
 
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>

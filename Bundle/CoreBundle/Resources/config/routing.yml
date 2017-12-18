@@ -33,6 +33,11 @@ api_files:
     prefix:   /cool/api/files
     type:     annotation
 
+api_filerepo:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/RestFileRepositoryController.php"
+    prefix:   /cool/api/filerepo
+    type:     annotation
+
 api_notifications:
     resource: "@EulogixCoolCoreBundle/Controller/Api/NotificationsController.php"
     prefix:   /cool/api/notifications
@@ -41,6 +46,11 @@ api_notifications:
 api_pentaho:
     resource: "@EulogixCoolCoreBundle/Controller/Api/PentahoController.php"
     prefix:   /cool/api/pentaho
+    type:     annotation
+
+api_templates:
+    resource: "@EulogixCoolCoreBundle/Controller/Api/TemplatesController.php"
+    prefix:   /cool/api/templates
     type:     annotation
 
 reminders:

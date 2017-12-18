@@ -17,6 +17,9 @@ use Eulogix\Cool\Lib\Database\Schema;
 use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
 use Eulogix\Cool\Lib\Translation\Translator;
 use Eulogix\Cool\Lib\Translation\TranslatorInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
+use Eulogix\Lib\File\Proxy\SimpleFileProxyCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -29,11 +32,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 
 class CoolTableFileRepository extends BaseFileRepository {
-
-    /**
-     * @var string
-     */
-    private $workingDir = '/';
 
     /**
      * @var Schema
@@ -167,21 +165,6 @@ class CoolTableFileRepository extends BaseFileRepository {
     /**
      * @inheritdoc
      */
-    public function setWorkingDir($folderId) {
-        $this->workingDir = $folderId;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getWorkingDir() {
-        return $this->workingDir;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy='overwrite') {
         if($this->getPermissions()->canCreateFileIn($path)) {
 
@@ -218,7 +201,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     /**
      * @inheritdoc
      */
-    public function getChildrenOf($path, $recursive = false, $includeHidden = false) {
+    public function getChildrenOf($path = null, $recursive = false, $includeHidden = false) {
         $p = $this->parsePathId($path);
         $this->configFromPath($path);
 
@@ -267,19 +250,6 @@ class CoolTableFileRepository extends BaseFileRepository {
 
         //TODO manage higher nest levels
         return new SimpleFileProxyCollection($files);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFQPath($path)
-    {
-        $path = $path ? $path : $this->getWorkingDir(); //null means root (/)
-
-        $p = str_replace('//','/',$path);
-        if($p[0]=='/')
-            return $p; //$p is an absolute path
-        return $this->getWorkingDir().'/'.$p;
     }
 
     /**

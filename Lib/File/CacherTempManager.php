@@ -13,6 +13,8 @@ namespace Eulogix\Cool\Lib\File;
 
 use Eulogix\Lib\Cache\CacherInterface;
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>

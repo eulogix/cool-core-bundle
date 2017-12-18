@@ -153,3 +153,6 @@ services:
     cool.wiki.appHelp:
         class: Eulogix\Cool\Lib\Wiki\WikiMediaConnector
         arguments: ["%app_help_wiki_api%", "%app_help_wiki_article_base%", "%app_help_wiki_username%", "%app_help_wiki_password%"]
+
+    cool.templateRendererFactory:
+        class: Eulogix\Cool\Lib\Template\RendererFactory

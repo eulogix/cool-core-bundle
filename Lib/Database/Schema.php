@@ -424,6 +424,9 @@ class Schema implements Shimmable
     {
         if ($pk) {
             $queryClass = $this->getDictionary()->getPropelQueryNamespace($tableName);
+            if (!class_exists($queryClass))
+                $queryClass = $this->getDictionary()->getPropelQueryNamespace($this->getName().'.'.$tableName);
+
             if (class_exists($queryClass)) {
                 return $queryClass::create()->findPk(
                     is_array($pk) && count($pk) == 1 ? $pk[ 0 ] : $pk,
@@ -432,6 +435,9 @@ class Schema implements Shimmable
             }
         } else {
             $modelClass = $this->getDictionary()->getPropelModelClassNamespace($tableName);
+            if (!class_exists($modelClass))
+                $modelClass = $this->getDictionary()->getPropelModelClassNamespace($this->getName().'.'.$tableName);
+
             if (class_exists($modelClass)) {
                 return new $modelClass();
             }

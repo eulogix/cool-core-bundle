@@ -11,6 +11,8 @@
 
 namespace Eulogix\Cool\Lib\File;
 
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+
 interface TempManagerInterface
 {
     /**

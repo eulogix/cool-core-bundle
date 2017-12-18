@@ -22,6 +22,7 @@ use Eulogix\Cool\Lib\Reminder\RemindersManager;
 use Eulogix\Cool\Lib\Security\GroupManager;
 use Eulogix\Cool\Lib\Security\UserManager;
 use Eulogix\Cool\Lib\Session\CoolSession;
+use Eulogix\Cool\Lib\Template\RendererFactory;
 use Eulogix\Cool\Lib\Widget\Help\HelpProviderFactoryInterface;
 use Eulogix\Cool\Lib\Wiki\WikiMediaConnector;
 use Eulogix\Lib\Activiti\ActivitiClient;
@@ -288,5 +289,12 @@ class Factory {
      */
     public function getAppHelpWiki() {
         return Cool::getInstance()->getContainer()->get('cool.wiki.appHelp');
+    }
+
+    /**
+     * @return RendererFactory
+     */
+    public function getTemplateRendererFactory() {
+        return Cool::getInstance()->getContainer()->get('cool.templateRendererFactory');
     }
 }

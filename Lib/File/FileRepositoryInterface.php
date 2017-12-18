@@ -12,6 +12,8 @@
 namespace Eulogix\Cool\Lib\File;
 
 use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
+use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -54,7 +56,7 @@ interface FileRepositoryInterface {
 
     /**
      * returns a unique identifier for the repository, used to differentiate caches..
-     * @return $string
+     * @return string
      */
     public function getUid();
 
@@ -85,6 +87,7 @@ interface FileRepositoryInterface {
     /**
      * @param string $path
      * @return FileProxyInterface
+     * @throws ForbiddenException
      * @throws \Exception
      */
     public function get($path);
@@ -93,6 +96,7 @@ interface FileRepositoryInterface {
      * @param string $path
      * @return $this
      * @throws ForbiddenException
+     * @throws \Exception
      */
     public function delete($path);
 
@@ -101,6 +105,7 @@ interface FileRepositoryInterface {
      * @param string $target
      * @return string The new file path
      * @throws ForbiddenException
+     * @throws \Exception
      */
     public function move($path, $target);
 
@@ -109,6 +114,7 @@ interface FileRepositoryInterface {
      * @param string $newName
      * @return $this
      * @throws ForbiddenException
+     * @throws \Exception
      */
     public function rename($path, $newName);
 
@@ -117,9 +123,10 @@ interface FileRepositoryInterface {
      * @param bool $recursive
      * @param bool $includeHidden
      * @return FileProxyCollectionInterface
+     * @throws ForbiddenException
      * @throws \Exception
      */
-    public function getChildrenOf($path, $recursive = false, $includeHidden=false);
+    public function getChildrenOf($path = null, $recursive = false, $includeHidden = false);
 
     /**
      * @param FileProxyInterface $file
@@ -127,14 +134,16 @@ interface FileRepositoryInterface {
      * @param string $collisionStrategy overwrite|skip|append
      * @return FileProxyInterface a fileProxy representing the inserted file
      * @throws ForbiddenException
+     * @throws \Exception
      */
-    public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy='overwrite');
+    public function storeFileAt(FileProxyInterface $file, $path = null, $collisionStrategy='overwrite');
 
     /**
      * @param string $path
      * @param string $folderName
      * @return $this
      * @throws ForbiddenException
+     * @throws \Exception
      */
     public function createFolder($path, $folderName);
 
@@ -144,6 +153,7 @@ interface FileRepositoryInterface {
      * @param bool $merge
      * @return $this
      * @throws ForbiddenException
+     * @throws \Exception
      */
     public function setFileProperties($path, array $properties, $merge=false);
 
