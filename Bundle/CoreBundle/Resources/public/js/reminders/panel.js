@@ -511,7 +511,7 @@ define("cool/reminders/panel",
             },
 
             _cellDecorator: function(value) {
-                return value > 0 ? '<b>'+value+'</b>' : '-';
+                return value > 0 ? '<b>'+value.toLocaleString()+'</b>' : '-';
             },
 
             /**
