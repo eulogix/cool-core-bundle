@@ -13,8 +13,8 @@ namespace Eulogix\Cool\Lib\Form\Field;
 
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileCommand;
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 
 /**
