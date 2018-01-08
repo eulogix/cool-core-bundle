@@ -311,12 +311,12 @@ BEGIN
 source_schema := '{{ currentSchema }}';
 audit_schema := '{{ auditSchema }}';
 
-EXECUTE format('SELECT core.get_table_pkfields(''%1$I'',''%2$I'')', source_schema, table_name) INTO pkFieldName;
+EXECUTE format('SELECT core.get_table_pkfields(''%1$s'',''%2$s'')', source_schema, table_name) INTO pkFieldName;
 
 EXECUTE format( 'SELECT' ||
 		' 	lower(mr.aud_validity_range) as aud_date,' ||
-		'	pr."%1$I" as previous_value,' ||
-		' 	mr."%1$I" as current_value,' ||
+		'	pr.%1$I::TEXT as previous_value,' ||
+		' 	mr.%1$I::TEXT as current_value,' ||
 		' 	mr.aud_cool_user_id' ||
 		' FROM %2$I.%3$I mr ' ||
 		' LEFT JOIN %2$I.%3$I pr ON pr.%4$I = mr.%4$I AND pr.aud_version = mr.aud_version-1' ||
@@ -325,9 +325,9 @@ EXECUTE format( 'SELECT' ||
 		' ORDER BY mr.aud_version DESC LIMIT 1',
 		column_name, audit_schema, table_name, pkFieldName, record_pk) INTO tempData;
 
-user_id 	= tempData.aud_cool_user_id;
-date 		= tempData.aud_date;
-previous_value 	= tempData.previous_value;
+user_id 	:= tempData.aud_cool_user_id;
+date 		:= tempData.aud_date;
+previous_value 	:= tempData.previous_value;
 
 END;
 $$ LANGUAGE plpgsql;
