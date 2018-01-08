@@ -288,3 +288,43 @@ BEGIN
 END;
 $body$
 language 'plpgsql';
+
+
+
+-- returns info about the last time a field has been modified
+
+CREATE OR REPLACE FUNCTION {{ currentSchema }}.get_column_last_modification_info(table_name TEXT, column_name TEXT, record_pk INT
+	,OUT user_id INT
+	,OUT date TIMESTAMP
+	,OUT previous_value TEXT
+) AS $$
+DECLARE
+  source_schema text;
+  audit_schema text;
+  pkFieldName text;
+  tempData record;
+BEGIN
+
+source_schema := '{{ currentSchema }}';
+audit_schema := '{{ auditSchema }}';
+
+EXECUTE format('SELECT core.get_table_pkfields(''%1$I'',''%2$I'')', source_schema, table_name) INTO pkFieldName;
+
+EXECUTE format( 'SELECT' ||
+		' 	lower(mr.aud_validity_range) as aud_date,' ||
+		'	pr."%1$I" as previous_value,' ||
+		' 	mr."%1$I" as current_value,' ||
+		' 	mr.aud_cool_user_id' ||
+		' FROM %2$I.%3$I mr ' ||
+		' LEFT JOIN %2$I.%3$I pr ON pr.%4$I = mr.%4$I AND pr.aud_version = mr.aud_version-1' ||
+		' WHERE mr.%4$I = %5$s'  ||
+		' AND exist(mr.aud_changed_fields, ''%1$s'')' ||
+		' ORDER BY mr.aud_version DESC LIMIT 1',
+		column_name, audit_schema, table_name, pkFieldName, record_pk) INTO tempData;
+
+user_id 	= tempData.aud_cool_user_id;
+date 		= tempData.aud_date;
+previous_value 	= tempData.previous_value;
+
+END;
+$$ LANGUAGE plpgsql;
