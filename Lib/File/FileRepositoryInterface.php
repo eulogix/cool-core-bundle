@@ -112,7 +112,7 @@ interface FileRepositoryInterface {
     /**
      * @param string $path
      * @param string $newName
-     * @return $this
+     * @return string The new file id
      * @throws ForbiddenException
      * @throws \Exception
      */
@@ -141,7 +141,7 @@ interface FileRepositoryInterface {
     /**
      * @param string $path
      * @param string $folderName
-     * @return $this
+     * @return FileProxyInterface a fileProxy representing the created folder
      * @throws ForbiddenException
      * @throws \Exception
      */

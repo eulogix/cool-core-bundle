@@ -384,7 +384,7 @@ class CoolTableFileRepository extends BaseFileRepository {
         if($this->getPermissions()->canRename($path, $newName)) {
             $p = $this->parsePathId($path);
             $this->storage->rename($p[ 'file_id' ], $newName);
-            return $this;
+            return $path;
         } else throw new ForbiddenException();
     }
 

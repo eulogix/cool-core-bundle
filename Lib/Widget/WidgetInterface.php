@@ -12,13 +12,13 @@
 namespace Eulogix\Cool\Lib\Widget;
 
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\Translation\TranslatorInterface;
 use Eulogix\Cool\Lib\Widget\Configurator\WidgetConfigurator;
 use Eulogix\Cool\Lib\Widget\Factory\WidgetFactoryInterface;
 use Eulogix\Cool\Lib\Widget\Help\HelpItem;
 use Eulogix\Cool\Lib\Widget\Help\WidgetHelpProviderInterface;
 use Eulogix\Lib\Error\ErrorReport;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 

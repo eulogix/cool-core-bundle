@@ -11,11 +11,11 @@
 
 namespace Eulogix\Cool\Lib\DataSource;
 
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Lib\Error\ErrorReport;
 
@@ -202,7 +202,30 @@ class FileRepositoryDataSource extends BaseDataSource {
      */
     public function executeAdd(DSRequest $req)
     {
-        // TODO: Implement executeAdd() method.
+        $dsresponse = new DSResponse($this);
+        $success = true;
+        $data = [];
+
+        $values = $req->getValues();
+        $parentFolder = $this->cleanPath($values['parId']);
+
+        try {
+            if($this->repo->getUserPermissions()->canCreateDirIn($parentFolder)) {
+                $newFolder = $this->repo->createFolder($parentFolder, $values['name']);
+                $newFolder->setParentId($parentFolder === null ? self::ROOT_PLACEHOLDER : $parentFolder);
+                $data = $this->fromFileProxy($newFolder);
+            } else {
+                $dsresponse->addGeneralError("Forbidden");
+                $success = false;
+            }
+        } catch(\Exception $e) {
+            $dsresponse->addGeneralError($e->getMessage());
+            $success = false;
+        }
+
+        $dsresponse->setStatus($success);
+        $dsresponse->setData($data);
+        return $dsresponse;
     }
 
     /**
@@ -266,8 +289,8 @@ class FileRepositoryDataSource extends BaseDataSource {
             if ($req->getOldValues()[ 'name' ] != $req->getValues()[ 'name' ]) {
                 //file RENAME
                 if($this->repo->getUserPermissions()->canRename($filePath)) {
-                    $this->repo->rename($req->getValues()[ 'id' ], $req->getValues()[ 'name' ]);
-                    $data = $this->fromFileProxy( $this->repo->get($filePath) );
+                    $newId = $this->repo->rename($req->getValues()[ 'id' ], $req->getValues()[ 'name' ]);
+                    $data = $this->fromFileProxy( $this->repo->get($newId) );
                 } else {
                     $dsresponse->addGeneralError("Forbidden");
                     $success = false;

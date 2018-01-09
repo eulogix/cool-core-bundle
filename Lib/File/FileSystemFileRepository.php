@@ -106,7 +106,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     /**
      * @param string $path
      * @param string $newName
-     * @return $this
+     * @return string The renamed file id
      * @throws \Exception
      */
     public function rename($path, $newName)
@@ -118,8 +118,9 @@ class FileSystemFileRepository extends BaseFileRepository {
 
         $source = $this->get($path);
         $fsPath = $this->toFsPath($path);
-        $fsPathTarget = $this->toFsPath($source->getParentId().DIRECTORY_SEPARATOR.$newName);
+        $fsPathTarget = $this->toFsPath($newId = $source->getParentId().DIRECTORY_SEPARATOR.$newName);
         rename($fsPath, $fsPathTarget);
+        return $newId;
     }
 
     /**
@@ -169,7 +170,8 @@ class FileSystemFileRepository extends BaseFileRepository {
         if(!$this->validFileName($file->getName()))
             throw new ForbiddenException("{$file->getName()} is not a valid file or folder name");
 
-        $fsPath = $this->toFsPath($rpath = $path.DIRECTORY_SEPARATOR.$file->getName());
+        $FQP = $this->getFQPath($path);
+        $fsPath = $this->toFsPath($rpath = $FQP.DIRECTORY_SEPARATOR.$file->getName());
         $file->toFile($fsPath);
         return $this->get($rpath);
     }
@@ -177,7 +179,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     /**
      * @param string $path
      * @param string $folderName
-     * @return $this
+     * @return FileProxyInterface a fileProxy representing the created folder
      * @throws ForbiddenException
      */
     public function createFolder($path, $folderName)
@@ -187,12 +189,13 @@ class FileSystemFileRepository extends BaseFileRepository {
         if(!$this->validFileName($folderName))
             throw new ForbiddenException("$folderName is not a valid file or folder name");
 
-        if(!$this->exists($rpath = $path.DIRECTORY_SEPARATOR.$folderName)) {
+        $FQP = $this->getFQPath($path);
+        if(!$this->exists($rpath = $FQP.DIRECTORY_SEPARATOR.$folderName)) {
             $fsPath = $this->toFsPath($rpath);
             mkdir($fsPath);
         }
 
-        return $this;
+        return $this->get($rpath);
     }
 
     /**

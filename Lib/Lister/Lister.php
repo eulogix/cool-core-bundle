@@ -12,7 +12,6 @@
 namespace Eulogix\Cool\Lib\Lister;
 
 use Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor\BaseConfigEditorForm;
-use Eulogix\Cool\Bundle\CoreBundle\CWidget\WidgetEditor\WidgetEditor;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
 use Eulogix\Cool\Lib\DataSource\DSField;
@@ -21,15 +20,15 @@ use Eulogix\Cool\Lib\DataSource\Renderer\ExcelRenderer;
 use Eulogix\Cool\Lib\DataSource\Renderer\RendererInterface;
 use Eulogix\Cool\Lib\Dojo\ListerStore;
 use Eulogix\Cool\Lib\Dojo\XhrStoreRequest;
-use Eulogix\Cool\Lib\File\FileProxyCollectionInterface;
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
-use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Cool\Lib\Form\Form;
-use Eulogix\Lib\Error\ErrorReport;
 use Eulogix\Cool\Lib\Lister\Configurator\ListerConfigurator;
 use Eulogix\Cool\Lib\Widget\Widget;
+use Eulogix\Lib\Error\ErrorReport;
+use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
