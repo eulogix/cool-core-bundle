@@ -72,7 +72,7 @@ define("cool/controls/file",
             this.own(field);
             field.startup();
 
-            if(!this.isReadOnly)
+            if(!this.isReadOnly())
                 this.addDropTarget(this.detailsNode);
 
             this.uploadButtonNode.appendChild(field.domNode);

@@ -163,14 +163,19 @@ define([
 									event.preventDefault();
 									return false;
 								}
+							/* since a name change may result in the id of the file to change, we must signal a deletion
+							 * followed by an insertion
+							 * */
 						}
 
 						var obj = evt.cell.row.data;
-
+						var oldId = obj.id;
 						obj[store.labelAttr] = evt.value;
 
-						store.put(obj).then(function() {
-							grid.save();
+						store.put(obj).then(function(newId) {
+
+							self.reload();
+							//grid.save();
 						}, function(error){
 							self.reload();
 						});
@@ -280,19 +285,13 @@ define([
 			return def;
 		},
 
-
-
         reload: function() {
-
             //var dndController = this.tree.dndController.declaredClass;
             this.currentPath = this.currentTreeObject.id;
-            this.store.childrenCache = [];
+            this.store.childrenCache = {};
             this.store.storeMemory.setData([]);
 			this.grid.refresh();
-
-            this.initState();
-
-
+			this.initState();
         },
 
 		search: function(query) {
@@ -302,7 +301,7 @@ define([
 			query = query || this.searchBox.get('value');
 
 			this.store.query({_search:'1', searchDir:this.currentPath, extended_query:query}).then(function(data){
-				t.store.childrenCache = [];
+				t.store.childrenCache = {};
 				t.store.storeMemory.setData(data);
 
 				t._refreshVisuals();

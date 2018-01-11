@@ -16,8 +16,7 @@ define([
 	'dijit/tree/ObjectStoreModel'
 ], function(declare, lang, when, Deferred, array, Memory, xhrStore, Observable, Cache, ObjectStoreModel) {
 
-	// references for MonkeyPatching the store.Cache
-	var refPut, refDel, refAdd;
+
 
 	/**
 	 * Class which creates a store to work with remote files over REST and local caching.
@@ -44,6 +43,11 @@ define([
 
 		rfe: null,
 
+		// references for MonkeyPatching the store.Cache
+		refPut: null,
+		refDel:null,
+		refAdd: null,
+
 		/**
 		 * Constructs the caching file store.
 		 * @constructor
@@ -69,9 +73,9 @@ define([
 			});
 			storeCache = new Cache(storeMaster, storeMemory);
 
-			refPut = storeCache.put;
-			refDel = storeCache.remove;
-			refAdd = storeCache.add;
+			this.refPut = storeCache.put;
+			this.refDel = storeCache.remove;
+			this.refAdd = storeCache.add;
 
 			storeCache.put = this.put;
 			storeCache.remove = this.remove;
@@ -89,15 +93,22 @@ define([
 		 * @param {object} options
 		 */
 		put: function(object, options) {
-			var self = this, oldParentId;
+			var self = this, oldParentId, oldId;
 
+			oldId = object[this.idProperty];
 			oldParentId = object[this.parentAttr];
 			if (options && options.parent) {
 				object[this.parentAttr] = options.parent[this.idProperty];
 			}
-			return refPut.apply(this, arguments).then(function(data) {
-				self.onChange(object);
-				return data.id;
+			return this.refPut.apply(this, arguments).then(function(data) {
+				var newId = data[self.idProperty];
+				if(newId != oldId) {
+					self.childrenCache = {};
+					self.onDelete({id:oldId});
+					object[self.idProperty] = newId;
+					self.onNewItem(object);
+				} else self.onChange(object);
+				return newId;
 			}, function(error) {
 				// when request fails change id back
 				object[self.parentAttr] = oldParentId;
@@ -108,10 +119,9 @@ define([
 
 		add: function(object, options) {
 			var self = this;
-			return refAdd.apply(this, arguments).then(function(newId) {
-				object.id = newId;
-				self.onNewItem(object);	// notifies tree
-				return newId;
+			return this.refAdd.apply(this, arguments).then(function(insertedObject) {
+				self.onNewItem(insertedObject);	// notifies tree
+				return insertedObject;
 			}, function(error) {
 				COOL.handleXhrError(error);
 				throw error;
@@ -120,7 +130,7 @@ define([
 
 		remove: function(id) {
 			var self = this, object = this.get(id);
-			return refDel.apply(this, arguments).then(function() {
+			return this.refDel.apply(this, arguments).then(function() {
 				self.onDelete(object);	// notifies tree
 			}, function(error) {
 				COOL.handleXhrError(error);
@@ -174,7 +184,8 @@ define([
 			// children not cached yet, query master store and add result to cache
 			else {
 				results = self.storeMaster.getChildren({id:id});	// query has to be a string, otherwise jsonrest will add a querystring instead of REST resource
-                alreadyCached = false;
+
+				alreadyCached = false;
 			}
 
 			return when(results, lang.hitch(this, function(results) {
@@ -367,7 +378,7 @@ define([
 		 * @param {object} object
 		 */
 		onNewItem: function(object) {
-			var parent = this.storeMemory.get(object.parId);
+			var parent = this.get(object.parId);
 			// since we know, that objects with this parItem are already cached (except the new one), we just query the memoryStore and add it
 			when(this.getChildren(parent), lang.hitch(this, function(children) {
 				this.onChildrenChange(parent, children);

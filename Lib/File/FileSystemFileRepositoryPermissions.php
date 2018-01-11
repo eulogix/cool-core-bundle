@@ -74,7 +74,7 @@ class FileSystemFileRepositoryPermissions extends BaseFileRepositoryPermissions 
      */
     public function canMove($path, $targetDir)
     {
-        return $this->isFile($path) && $this->isDir($targetDir);
+        return $this->isDir($targetDir);
     }
 
     /**

@@ -22,9 +22,18 @@ define([
 		menuItems: null,
 
 		postCreate: function() {
+			var rfe = this.rfe;
 			this.inherited('postCreate', arguments);
 
 			var menu, menuItems = this.menuItems = {};
+
+			menuItems.newFolder = new MenuItem({
+				label: this.rfe.translator.trans("new folder"),
+				onClick: function() { rfe.createRename({dir:true}); },
+				iconClass: "dijitIconFile",
+				disabled: false
+			});
+			this.addChild(menuItems.newFolder);
 
 			menuItems.download = new MenuItem({
 				label: this.rfe.translator.trans("download"),
@@ -40,6 +49,7 @@ define([
 				disabled: true
 			});
 			this.addChild(menuItems.rename);
+
 			menuItems.del = new MenuItem({
 				label: this.rfe.translator.trans("delete"),
 				onClick: lang.hitch(this.rfe, this.rfe.del),
@@ -54,6 +64,7 @@ define([
 				disabled: true
 			});
 			this.addChild(menuItems.properties);
+
 
 		},
 
