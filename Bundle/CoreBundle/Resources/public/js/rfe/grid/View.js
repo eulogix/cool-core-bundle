@@ -3,8 +3,9 @@ define([
 	'dojo/on',
     "dojo/dom-style",
 	'dgrid/Grid',
-	'put-selector/put'
-], function(declare, on, domStyle, Grid, put) {
+	'put-selector/put',
+	"cool/util/UrlUtils"
+], function(declare, on, domStyle, Grid, put, UrlUtils) {
 
 	return declare(null, {
 
@@ -101,7 +102,7 @@ define([
                     break;
 				case 'image':
 					img.className = 'iconImage';
-					img.src = this.rfe.servicePreview+'&filePath='+obj.id;
+					img.src = UrlUtils.addParams(self.servicePreview, {'filePath' : obj.id});
 					//img.width = this.iconWidth;
 					img.removeAttribute('width');
 					img.removeAttribute('height');

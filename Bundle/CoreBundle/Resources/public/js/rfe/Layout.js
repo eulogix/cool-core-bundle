@@ -205,6 +205,7 @@ define([
 			var div = domConstruct.create('div', null, this.panes.gridPane.domNode);
 
 			this.grid = new Grid({
+				noDataMessage: self.translator.trans("No data found"),
 				rfe: this,
 				columns: this._getGridColumns(),
 				tabIndex: 31,

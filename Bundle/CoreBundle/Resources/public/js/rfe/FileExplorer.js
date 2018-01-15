@@ -24,9 +24,11 @@ define([
 	'cool/rfe/Keyboard',
 	'cool/rfe/dnd/Manager',	// needs to be loaded for dnd
 	"cool/file/fileUtils",
-	"cool/dialog/manager"
+	"cool/dialog/manager",
+	"cool/util/UrlUtils",
+	"dojox/widget/Standby"
 ], function(lang, declare, array, Deferred, when, dom, domClass, on, query, Stateful,
-				registry, _Base, Layout, History, Edit, FileStore, dialogs, Keyboard, Manager, fileUtils, dialogManager) {
+				registry, _Base, Layout, History, Edit, FileStore, dialogs, Keyboard, Manager, fileUtils, dialogManager, UrlUtils, Standby) {
 
 	/*
 	 *	@class cool/rfe/FileExporer
@@ -124,8 +126,8 @@ define([
 									var rowObject = grid.row(node).data;
 									if(rowObject.dir !== true && (rowObject.size > 0))
 										siblings.push({
-											'serveUrl' : self.serviceServe+'&filePath='+rowObject.id,
-											'downloadUrl' : self.serviceDownload+'&filePath='+rowObject.id,
+											'serveUrl' : UrlUtils.addParams(self.serviceServe, {'filePath' : rowObject.id}),
+											'downloadUrl' : UrlUtils.addParams(self.serviceDownload, {'filePath' : rowObject.id}),
 											'ext' :	rowObject.ext || '',
 											'title' : rowObject.name
 										});
@@ -138,8 +140,8 @@ define([
 								}
 								else {
 									fileUtils.previewOrDownload(
-										self.serviceServe+'&filePath='+object.id,
-										self.serviceDownload+'&filePath='+object.id,
+										UrlUtils.addParams(self.serviceServe, {'filePath' : object.id}),
+										UrlUtils.addParams(self.serviceDownload, {'filePath' : object.id}),
 										object.ext || '',
 										object.name,
 										siblings
@@ -196,11 +198,13 @@ define([
 				dfd = new Deferred();
 
 			if (object.dir) {
+				self._lockForServerCall();
 				when(store.getChildren(object), function() {
 					on.once(grid, "dgrid-refresh-complete", function() {
 						dfd.resolve(object);
 						self._refreshGridColumns();
 						self._refreshVisuals();
+						self._unlockFromServerCall();
 					});
 					var sort = grid.get('sort');
 					grid.set('query', {parId: object.id}, {sort: sort});
@@ -295,24 +299,47 @@ define([
         },
 
 		search: function(query) {
-			var t = this;
+			var self = this;
 			var grid = this.grid;
 
 			query = query || this.searchBox.get('value');
 
-			this.store.query({_search:'1', searchDir:this.currentPath, extended_query:query}).then(function(data){
-				t.store.childrenCache = {};
-				t.store.storeMemory.setData(data);
+			self._lockForServerCall();
 
-				t._refreshVisuals();
+			this.store.query({_search:'1', searchDir:this.currentPath, extended_query:query}).then(function(data){
+				self.store.childrenCache = {};
+				self.store.storeMemory.setData(data);
+				self._unlockFromServerCall();
+				self._refreshVisuals();
 
 				on.once(grid, "dgrid-refresh-complete", function() {
-					t._refreshGridColumns(t.currentPath, true);
+					self._refreshGridColumns(self.currentPath, true);
 				});
 
 				var sort = grid.get('sort');
 				grid.set('query', {}, {sort: sort});
 			});
+		},
+
+		_lockForServerCall: function() {
+			if(!this._standby) {
+				var standby = new Standby({
+					target: this.domNode,
+					duration: 50,
+					color:'white'
+				});
+				document.body.appendChild(standby.domNode);
+				standby.startup();
+				this._standby = standby;
+			}
+
+			this._standby.show();
+		},
+
+		_unlockFromServerCall: function() {
+			if(this._standby) {
+				this._standby.hide();
+			}
 		},
 
         /**

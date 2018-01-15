@@ -3,8 +3,9 @@ define([
 	'dojo/_base/declare',
 	'dojo/Deferred',
 	'cool/rfe/dialogs/dialogs',
-	"cool/file/fileUtils"
-], function(lang, declare, Deferred, dialogs, fileUtils) {
+	"cool/file/fileUtils",
+	"cool/util/UrlUtils"
+], function(lang, declare, Deferred, dialogs, fileUtils, UrlUtils) {
 
 	/**
 	 * Provides functionality to edit files and folders.
@@ -196,7 +197,7 @@ define([
 			for (id in selection) {
 				object = store.storeMemory.get(id);
 				fileUtils.downloadToClient(
-					this.serviceDownload+'&filePath='+id,
+					UrlUtils.addParams(this.serviceDownload, {'filePath' : id}),
 					object.ext || '');
 			}
 		}
