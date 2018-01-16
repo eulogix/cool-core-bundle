@@ -328,3 +328,57 @@ previous_value 	:= tempData.previous_value;
 
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- restores an audit event id 
+
+DROP FUNCTION IF EXISTS {{ currentSchema }}.restore_record(text, int);
+
+CREATE or REPLACE FUNCTION {{ currentSchema }}.audit_restore_record(source_table text, aud_event_id bigint) RETURNS VOID AS $$
+
+var table_schema = '{{ currentSchema }}';
+var audit_schema = '{{ auditSchema }}';
+var auditTableQualifier = audit_schema+"."+source_table;
+
+var sourceColumnNames = [];
+
+var s = "select * from INFORMATION_SCHEMA.COLUMNS where table_name = '"+source_table+"' AND table_schema='"+table_schema+"'";
+var sourceTableColumns = plv8.execute( s );
+for(var i=0; i < sourceTableColumns.length; i++) {
+    var sourceColumn = sourceTableColumns[i];
+    sourceColumnNames.push(sourceColumn.column_name);
+}
+
+var statements = [
+	"INSERT INTO "+table_schema+"."+source_table+" (",
+	sourceColumnNames.join(','),
+	") SELECT ",
+	sourceColumnNames.join(','),
+	" FROM "+auditTableQualifier,
+	" WHERE aud_event_id = "+aud_event_id
+];
+
+plv8.execute(statements.join("\n"));
+
+$$ LANGUAGE plv8;
+
+
+-- restores the last version of a record
+
+DROP FUNCTION IF EXISTS {{ currentSchema }}.audit_restore_last_record(text, bigint);
+
+CREATE or REPLACE FUNCTION
+    {{ currentSchema }}.audit_restore_last_record(source_table text, pk bigint) RETURNS VOID AS $$
+
+var table_schema = '{{ currentSchema }}';
+var audit_schema = '{{ auditSchema }}';
+var auditTableQualifier = audit_schema+"."+source_table;
+
+var tablePkFields = plv8.execute("select core.get_table_pkfields('"+table_schema+"','"+source_table+"') as pk");
+if(tablePkFields.length == 1) {
+	var pkField = tablePkFields.pop().pk;
+	var eventIdToRestore = plv8.execute("SELECT MAX(aud_event_id) as mid from "+auditTableQualifier+" where "+pkField+" = "+pk+" AND aud_action != 'D'").pop().mid;
+	plv8.execute("SELECT "+table_schema+".audit_restore_record('"+source_table+"',"+eventIdToRestore+")");
+}
+
+$$ LANGUAGE plv8;
