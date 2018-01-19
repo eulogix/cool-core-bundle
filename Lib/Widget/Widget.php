@@ -625,7 +625,10 @@ abstract class Widget implements WidgetInterface {
             $this->addMessageError("Rule ".$rule->getName()." could not be processed: ".$e->getMessage());
         }
 
-        return [];
+        return [
+            'valid' => false,
+            'report'=> []
+        ];
     }
 
     /**
