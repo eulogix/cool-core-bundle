@@ -24,13 +24,15 @@ use Eulogix\Cool\Lib\Lister\Column;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
-class ExcelRenderer extends BaseRenderer implements RendererInterface{
+class ExcelRenderer extends BaseRenderer {
 
     /**
      * @inheritdoc
      */
     public function renderData(array $rows, $raw, array $listerColumnsDefinitions=null)
     {
+        $tracker = $this->getProgressTracker();
+
         $visibleColumnNames = array_keys($listerColumnsDefinitions);
         $filteredRows = $this->filterData($rows, $visibleColumnNames);
 
@@ -50,10 +52,13 @@ class ExcelRenderer extends BaseRenderer implements RendererInterface{
             $phpExcelObject->createSheet();
             $phpExcelObject->setActiveSheetIndex( $phpExcelObject->getActiveSheetIndex()+1 );
         }
+        $tracker->logProgress(25);
 
         $phpExcelObject->getActiveSheet()->setTitle('Raw Data');
         $this->renderHeaders($visibleColumnNames, $phpExcelObject->getActiveSheet(), 0);
         $phpExcelObject->getActiveSheet()->fromArray($this->getRawRows($filteredRows), null, 'A2');
+
+        $tracker->logProgress(50);
 
         if(!$raw) {
             $phpExcelObject->createSheet();
@@ -64,6 +69,8 @@ class ExcelRenderer extends BaseRenderer implements RendererInterface{
             $this->renderHeaders(array_keys($fullData[0]), $phpExcelObject->getActiveSheet(), 0);
             $phpExcelObject->getActiveSheet()->fromArray($fullData, null, 'A2');
         }
+
+        $tracker->logProgress(75);
 
         $phpExcelObject->createSheet();
         $phpExcelObject->setActiveSheetIndex( $phpExcelObject->getActiveSheetIndex()+1 );
@@ -81,6 +88,8 @@ class ExcelRenderer extends BaseRenderer implements RendererInterface{
         $writer->save($t);
         $ret = file_get_contents($t);
         @unlink($t);
+
+        $tracker->logProgress(100);
 
         return $ret;
     }

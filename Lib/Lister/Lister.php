@@ -403,26 +403,53 @@ abstract class Lister extends Widget implements ListerInterface {
     }
 
     public function onExport() {
-
         Cool::getInstance()->freeSession();
 
         $format = $this->request->get("format");
         $raw = $this->request->has("raw");
 
-        $f = new SimpleFileProxy();
-        $cleanFileName = preg_replace('/[^a-z0-9-\[\]]/sim','',$this->getTitle());
-        $f->setName( $cleanFileName.".".$format );
+        $t = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'LISTEREXPORT');
+        try {
+            if($renderer = $this->getRenderer($format)) {
+                $cleanFileName = preg_replace('/[^a-z0-9-\[\]]/sim','',$this->getTitle()).".".$format;
 
-        $data = $this->getExportData();
-        if(count($data) > 0 && ($renderer = $this->getRenderer($format)) ) {
-            $t = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'LISTEREXPORT');
-            file_put_contents($t, $renderer->renderData($data, $raw, $this->getColumnsSorted()));
-            $f->setContentFile($t);
-            $this->downloadFile($f);
+                $renderedData = $renderer->render($this->getLastDSRequest(), $raw, $this->getColumnsSorted(), $this->getAttributes()->get(self::ATTR_MAX_SYNC_EXPORT_ROWS) ?? self::DEFAULT_MAX_SYNC_EXPORT_ROWS);
+
+                if(is_array($renderedData)) {
+                    $outputFile = $renderedData['outputFile'];
+                    $tempKey = Cool::getInstance()->getFactory()->getFileTempManager()->getTempKeyFromLocalFile($outputFile, $cleanFileName);
+                    $downloadUrl = Cool::getInstance()->getFactory()->getFileTempManager()->getDownloadUrlFromTempKey($tempKey);
+
+                    $this->addCommandJs(
+                       "
+                        var messageId = 'ASYNC_EXPORT{$renderedData['id']}';
+                        widget.renderMessage(widget.getCommonTranslator().trans('ASYNC_EXPORT'), 'info', messageId, {canClose: false});
+                        widget.getMessage(messageId).setProgressBarVisibility(true);
+                        require(['cool/rundeck'], function(rundeck) {
+                            rundeck.logExecution({$renderedData['id']},
+                                function(progress){
+                                   console.log(progress);
+                                   widget.getMessage(messageId).progressBar.set({value: progress});
+                                },
+                                function(exec) {
+                                    widget.closeMessage(messageId);
+                                    document.location = '{$downloadUrl}';
+                                });
+                        });
+                    ");
+
+                } else {
+                    $f = new SimpleFileProxy();
+                    $f->setName( $cleanFileName );
+                    file_put_contents($t, $renderedData);
+                    $f->setContentFile($t);
+                    $this->downloadFile($f);
+                }
+            } else throw new \Exception("No renderer found for format {$format}");
+        } catch(\Exception $e) {
+            $this->addMessageError($e->getMessage());
+        } finally {
             @unlink($t);
-        } else {
-            $this->addMessageError("NOTHING TO EXPORT");
-            return;
         }
     }
 
@@ -432,7 +459,7 @@ abstract class Lister extends Widget implements ListerInterface {
      */
     public function getRenderer($format) {
         switch($format) {
-            case 'xlsx': return new ExcelRenderer();
+            case 'xlsx': return new ExcelRenderer($this->getDataSource());
         }
         return null;
     }
@@ -473,26 +500,6 @@ abstract class Lister extends Widget implements ListerInterface {
         $dojoRequest = XhrStoreRequest::fromGetAndPostArrays( $lastStoreRequest['getData'], $lastStoreRequest['postData']);
         $dsRequest = $dojoStore->getQueryDSRequest($dojoRequest);
         return $dsRequest;
-    }
-
-    /**
-     * produces an array of rows which will be exported
-     * @return array
-     */
-    protected function getExportData() {
-        $dsRequest = $this->getLastDSRequest();
-        $dsRequest->setIncludeMeta(false);
-        $dsRequest->setStartRow(0);
-        $dsRequest->setEndRow($this->getExportDataMaxRows()); //limit result to 10k rows. set to null to get all the rows
-
-        if( $ds = $this->getDataSource() ) {
-            $dsresponse = $ds->execute($dsRequest);
-            if($dsresponse->getStatus() == $dsresponse::STATUS_TRANSACTION_SUCCESS) {
-                return $dsresponse->getData();
-            }
-        }
-
-        return [];
     }
 
     /**
@@ -572,14 +579,6 @@ abstract class Lister extends Widget implements ListerInterface {
         }
 
         return new ErrorReport();
-    }
-
-    /**
-     * @return int
-     */
-    protected function getExportDataMaxRows()
-    {
-        return 10000;
     }
 
     /**

@@ -95,7 +95,7 @@ class Schema implements Shimmable
     public function getShimUID() {
         $UID = get_class($this) .
                ($this->isMultiTenant() ? $this->getCurrentSchema() : "") .
-               (Cool::getInstance()->getFactory()->getSession()->getDebugLookups() ? "_DL_" : "_NODL_");
+               (session_status() == PHP_SESSION_ACTIVE && Cool::getInstance()->getFactory()->getSession()->getDebugLookups() ? "_DL_" : "_NODL_");
         return md5($UID);
     }
 

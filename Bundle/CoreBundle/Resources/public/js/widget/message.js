@@ -96,6 +96,10 @@ define("cool/widget/message",
         setText: function(message) {
             this.text = message;
             this.messageNode.innerHTML = this.text;
+        },
+
+        setProgressBarVisibility: function(onOrOff) {
+            domStyle.set(this.progressBarContainer, 'display', onOrOff ? 'inline' : 'none');
         }
 
     });

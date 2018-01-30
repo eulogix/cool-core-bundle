@@ -33,6 +33,7 @@ interface ListerInterface extends WidgetInterface {
     const ATTR_SHOW_TOOLBAR = "show_toolbar";
     const ATTR_PROPAGATED_FIELDS = "propagated_fields";
     const ATTR_INITIAL_SELECTION = "initial_selection";
+    const ATTR_MAX_SYNC_EXPORT_ROWS = "max_sync_export_rows";
 
     const ATTR_MAX_HEIGHT = "max_height";
     const ATTR_MIN_HEIGHT = "min_height";
@@ -49,6 +50,9 @@ interface ListerInterface extends WidgetInterface {
 
     const ROW_META_ROWCLASS = 'rowClass'; //a class that is applied to the row
     const ROW_META_CELLCLASS = 'cellClass'; //a class applied to all cells in the row
+
+    const DEFAULT_MAX_SYNC_EXPORT_ROWS = 300;
+
     /**
     * adds a new column
     * 

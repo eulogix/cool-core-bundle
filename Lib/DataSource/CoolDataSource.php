@@ -76,6 +76,10 @@ abstract class CoolDataSource extends SqlDataSource implements Shimmable {
      * @return DSResponse
      */
     public function executeFetch(DSRequest $req) {
+
+        $progressTracker = $this->getProgressTracker();
+        $progressTracker->logProgress(0);
+
         $success = false;
         $dsresponse = new DSResponse($this);
 
@@ -122,6 +126,7 @@ abstract class CoolDataSource extends SqlDataSource implements Shimmable {
                 //multiple record fetch
                 $sql = $this->getSql($req->getStartRow(), $req->getEndRow(), $req->getSortByFields(), $req->getParameters(), $req->getQuery());
                 $rows = $db->fetchArray( $sql['statement'], $sql['parameters'] );
+                $progressTracker->logProgress(15);
 
                 $errorCode = $db->getConnection()->errorCode();
                 if($errorCode != '00000') {
@@ -130,21 +135,28 @@ abstract class CoolDataSource extends SqlDataSource implements Shimmable {
                     throw new \Exception($errorCode.' -> '.$lastQuery . var_export($errorInfo) );
                 }
 
+                $progressTracker->openSub(60);
                 if($req->getIncludeDecodings()) {
                     $rows = $this->addDecodedValuesToRows($rows);
                 }
+                $progressTracker->closeSub();
+
+                $progressTracker->logProgress(75);
 
                 if($req->getIncludeMeta()) {
                     $rows = $this->addMetaToRows($rows);
                 }
+                $progressTracker->logProgress(80);
 
                 if($req->getIncludeRecordDescriptions()) {
                     $rows = $this->addDescriptionsToRows($rows);
                 }
+                $progressTracker->logProgress(85);
 
                 if($req->getIncludeFiles()) {
                     $rows = $this->addFilesToRows($rows);
                 }
+                $progressTracker->logProgress(90);
 
                 $dsresponse->setData($rows);
                 $dsresponse->setStartRow($req->getStartRow());
@@ -168,6 +180,7 @@ abstract class CoolDataSource extends SqlDataSource implements Shimmable {
 
         }
 
+        $progressTracker->logProgress(100);
 
         $dsresponse->setStatus($success);
         return $dsresponse;

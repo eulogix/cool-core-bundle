@@ -11,8 +11,9 @@
 
 namespace Eulogix\Cool\Lib\DataSource;
 
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\Progress\ProgressTracker;
 use Eulogix\Lib\Validation\BeanValidatorInterface;
 
 /**
@@ -57,6 +58,11 @@ interface DataSourceInterface {
      * @return $this
      */
     public function removeParameter($name);
+
+    /**
+     * @return ProgressTracker
+     */
+    public function getProgressTracker();
 
     /**
      * This method carries out the actual processing of a DataSource request.
@@ -113,7 +119,14 @@ interface DataSourceInterface {
      * @return DSResponse
      */
     public function executeUpdate(DSRequest $req);
-    
+
+    /**
+     * utility function that performs a simple count
+     * @param DSRequest $dsRequest
+     * @return int
+     */
+    public function count(DSRequest $dsRequest);
+
     /**
     * adds a field
     * @param string $fieldName

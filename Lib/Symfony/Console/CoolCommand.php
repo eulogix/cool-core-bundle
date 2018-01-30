@@ -81,7 +81,7 @@ class CoolCommand extends ContainerAwareCommand {
             $job->setCompletionPercentage($percentage);
             $job->save();
         }
-        echo("[PROGRESS: $percentage%]\n");
+        echo("[PROGRESS: ".floor($percentage)."%]\n");
     }
 
     /**

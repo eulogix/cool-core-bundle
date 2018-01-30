@@ -42,6 +42,14 @@ interface TempManagerInterface
     public function getTempKeyFromFileProxy(FileProxyInterface $fp);
 
     /**
+     * generates a temporary key used to mask the path of a local file
+     * @param string $file
+     * @param string $fileName optional
+     * @return string
+     */
+    public function getTempKeyFromLocalFile($file, $fileName = null);
+
+    /**
      * @param $key
      * @return FileProxyInterface|null
      */
@@ -52,4 +60,10 @@ interface TempManagerInterface
      * @return string
      */
     public function getDownloadUrlFromFileProxy(FileProxyInterface $fp);
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getDownloadUrlFromTempKey($key);
 }

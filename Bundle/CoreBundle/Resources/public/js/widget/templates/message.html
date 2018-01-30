@@ -1,5 +1,8 @@
 <div>
     <div data-dojo-attach-point="containerNode">
-        <img data-dojo-attach-point="messageIcon" class="icon" style="vertical-align:middle; margin-right:10px;"/>&nbsp;<span data-dojo-attach-point="messageNode"></span>
+         <img data-dojo-attach-point="messageIcon" class="icon" style="vertical-align:middle; margin-right:10px;"/>&nbsp;<span data-dojo-attach-point="messageNode"></span>
+         <span data-dojo-attach-point="progressBarContainer" style="display:none; text-align: right;float: right; margin-left: auto;">
+            <div data-dojo-attach-point="progressBar" data-dojo-type="dijit/ProgressBar" style="width:300px; float: right" data-dojo-props="maximum:100"></div>
+         </span>
     </div>
 </div>

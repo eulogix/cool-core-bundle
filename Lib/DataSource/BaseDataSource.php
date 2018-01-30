@@ -13,9 +13,11 @@ namespace Eulogix\Cool\Lib\DataSource;
 
 use Eulogix\Cool\Lib\Factory\Factory;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
+use Eulogix\Lib\Progress\ProgressTracker;
 use Eulogix\Cool\Lib\Traits\ParametersHolder;
 use Eulogix\Cool\Lib\Util\DataFormatter;
 use Eulogix\Lib\Error\ErrorReport;
+use Eulogix\Lib\Traits\ProgressTrackerHolder;
 use Eulogix\Lib\Validation\BeanValidatorInterface;
 
 /**
@@ -24,7 +26,7 @@ use Eulogix\Lib\Validation\BeanValidatorInterface;
 
 abstract class BaseDataSource implements DataSourceInterface {
 
-    use ParametersHolder;
+    use ParametersHolder, ProgressTrackerHolder;
 
     /**
      * @var BeanValidatorInterface
@@ -193,10 +195,30 @@ abstract class BaseDataSource implements DataSourceInterface {
     /**
      * @inheritdoc
      */
-    protected function addDecodedValuesToRows( $rows ) {
+    public function count(DSRequest $dsRequest) {
+        $wkRequest = clone $dsRequest;
+        $wkRequest->setOperationType(DSRequest::OPERATION_TYPE_COUNT);
+        $wkRequest->setIncludeMeta(false);
+        $wkRequest->setIncludeDecodings(false);
+
+        $dsResponse = $this->execute($wkRequest);
+        if($dsResponse->getStatus() == DSResponse::STATUS_TRANSACTION_SUCCESS) {
+            return $dsResponse->getTotalRows();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $rows
+     * @return mixed
+     */
+    protected function addDecodedValuesToRows( array $rows ) {
         $ret = $rows;
+        $i = 0; $rowsNr = count($rows);
         foreach($ret as &$row) {
             $row = $this->addDecodedValuesToHash($row);
+            $this->getProgressTracker()->logProgress(100*$i++/$rowsNr);
         }
         return $ret;
     }
