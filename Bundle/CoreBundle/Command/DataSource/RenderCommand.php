@@ -50,7 +50,7 @@ EOF
     {
         parent::execute($input, $output);
         $command = $this;
-sleep(200);
+
         $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
         $input = $cacher->fetch($input->getArgument('input_key'));
 

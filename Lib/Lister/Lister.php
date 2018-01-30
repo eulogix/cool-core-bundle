@@ -421,14 +421,12 @@ abstract class Lister extends Widget implements ListerInterface {
                     $downloadUrl = Cool::getInstance()->getFactory()->getFileTempManager()->getDownloadUrlFromTempKey($tempKey);
 
                     $this->addCommandJs(
-                       "
-                        var messageId = 'ASYNC_EXPORT{$renderedData['id']}';
+                       "var messageId = 'ASYNC_EXPORT{$renderedData['id']}';
                         widget.renderMessage(widget.getCommonTranslator().trans('ASYNC_EXPORT'), 'info', messageId, {canClose: false});
                         widget.getMessage(messageId).setProgressBarVisibility(true);
                         require(['cool/rundeck'], function(rundeck) {
                             rundeck.logExecution({$renderedData['id']},
                                 function(progress){
-                                   console.log(progress);
                                    widget.getMessage(messageId).progressBar.set({value: progress});
                                 },
                                 function(exec) {
