@@ -226,6 +226,26 @@ class Cool {
         }
     }
 
+    public function getCurrentSchemas() {
+        $ret = [];
+        $schemas = $this->getAvailableSchemaNames();
+        foreach($schemas as $schemaName) {
+            $ret[ $schemaName ] = $this->getSchema($schemaName)->getCurrentSchema();
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array $schemas
+     * @throws \Exception
+     */
+    public function setCurrentSchemas(array $schemas) {
+        foreach($schemas as $schemaName => $currentSchema) {
+            if($this->getSchema($schemaName)->isMultiTenant())
+                $this->getSchema($schemaName)->setCurrentSchema($currentSchema);
+        }
+    }
+
     /**
      * @return array
      */
@@ -266,6 +286,37 @@ class Cool {
     public function getAttachedToSchemaName($schemaName) {
         $schemas = $this->getAvailableSchemas();
         return @$schemas[ $schemaName ]['attach_to'] ?? false;
+    }
+
+    /**
+     * captures the execution environment (eg in a web session) in order to restore it typically in a command
+     * in order to simplify the development of asynchronous operations
+     * @return array
+     */
+    public function getExcutionEnvironment() {
+        return [
+            'securityToken' => $this->getContainer()->get('security.token_storage')->getToken(),
+            'sessionData' => $this->getFactory()->getSession()->all(),
+            'currentSchemas' => $this->getCurrentSchemas(),
+        ];
+    }
+
+    /**
+     * restores a previously captured execution environment
+     * @param array $executionEnvironment
+     * @return array
+     */
+    public function restoreExcutionEnvironment(array $executionEnvironment) {
+        if($securityToken = @$executionEnvironment['securityToken'])
+            $this->getContainer()->get('security.token_storage')->setToken($securityToken);
+
+        if($sessionData = @$executionEnvironment['sessionData']) {
+            unset($sessionData['_security_secured_area']);
+            $this->getFactory()->getSession()->replace($sessionData);
+        }
+
+        if($currentSchemas = @$executionEnvironment['currentSchemas'])
+            $this->setCurrentSchemas($currentSchemas);
     }
 
 }

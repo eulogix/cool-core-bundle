@@ -54,6 +54,9 @@ EOF
         $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
         $input = $cacher->fetch($input->getArgument('input_key'));
 
+        if($executionEnvironment = @unserialize($input['executionEnvironment']))
+            Cool::getInstance()->restoreExcutionEnvironment($executionEnvironment);
+
         $outputFile = $input['outputFile'];
         $raw = $input['raw'];
 
@@ -75,8 +78,12 @@ EOF
             }
         );
 
-        $data = $Renderer->render($DSRequest, $raw, $listerColumnsDefinitions);
-        file_put_contents($outputFile, $data);
+        try {
+            $data = $Renderer->render($DSRequest, $raw, $listerColumnsDefinitions);
+            file_put_contents($outputFile, $data);
+        } catch(\Exception $e) {
+            file_put_contents($outputFile, $e->getTraceAsString());
+        }
     }
 
 }

@@ -53,6 +53,8 @@ abstract class BaseRenderer implements RendererInterface {
                 $inputKey = md5(microtime());
 
                 $cacher->store($inputKey, [
+                    'executionEnvironment' => serialize(Cool::getInstance()->getExcutionEnvironment()),
+
                     'raw' => $raw,
                     'listerColumnsDefinitions' => serialize($listerColumnsDefinitions),
                     'DSRequest' => serialize($request),
