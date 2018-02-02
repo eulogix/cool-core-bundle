@@ -62,8 +62,20 @@ interface TempManagerInterface
     public function getDownloadUrlFromFileProxy(FileProxyInterface $fp);
 
     /**
+     * @param FileProxyInterface $fp
+     * @return string
+     */
+    public function getServeUrlFromFileProxy(FileProxyInterface $fp);
+
+    /**
      * @param string $key
      * @return string
      */
     public function getDownloadUrlFromTempKey($key);
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getServeUrlFromTempKey($key);
 }

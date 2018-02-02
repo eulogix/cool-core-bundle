@@ -88,6 +88,27 @@ class AjaxController extends Controller
     }
 
     /**
+     * @Route("/serveTempFile/{key}", name="_serveTempFile")
+     */
+    public function serveTempFile($key)
+    {
+        $fileProxy = Cool::getInstance()->getFactory()->getFileTempManager()->getFileProxyFromTempKey($key);
+        $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder() ,'DOWNLOAD');
+        $fileProxy->toFile($tempFile);
+        $response = new BinaryFileResponse($tempFile, 200);
+
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            $fileProxy->getName()
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
+        $response->deleteFileAfterSend(true);
+        return $response;
+    }
+
+    /**
      * @Route("/vmap/column/{schema}/{table}/{column}", name="columnVmap", options={"expose"=true}, defaults={"value" = null})
      */
     public function columnVmapAction($schema, $table, $column, Request $request)

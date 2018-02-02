@@ -128,9 +128,25 @@ class CacherTempManager implements TempManagerInterface
     /**
      * @inheritdoc
      */
+    public function getServeUrlFromFileProxy(FileProxyInterface $fp)
+    {
+        return $this->getServeUrlFromTempKey($this->getTempKeyFromFileProxy($fp));
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getDownloadUrlFromTempKey($key)
     {
         return Cool::getInstance()->getContainer()->get('router')->generate('_downloadTempFile', array('key' => $key));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getServeUrlFromTempKey($key)
+    {
+        return Cool::getInstance()->getContainer()->get('router')->generate('_serveTempFile', array('key' => $key));
     }
 
     /**

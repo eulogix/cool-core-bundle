@@ -738,6 +738,20 @@ abstract class Widget implements WidgetInterface {
         $this->addCommandJs("document.location='$url'");
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function previewOrDownloadFile(FileProxyInterface $f) {
+        $tempManager = Cool::getInstance()->getFactory()->getFileTempManager();
+        $tempKey = $tempManager->getTempKeyFromFileProxy($f);
+        $downloadUrl = $tempManager->getDownloadUrlFromTempKey($tempKey);
+        $serveUrl = $tempManager->getServeUrlFromTempKey($tempKey);
+
+        $this->addCommandJs("require(['cool/file/fileUtils'], function(fileUtils) {
+            fileUtils.previewOrDownload('$serveUrl','$downloadUrl','{$f->getExtension()}','{$f->getName()}');
+        });");
+    }
+
     public function onGetFieldAuditTrail() {
         $ds = $this->getDataSource();
         $buf = "Audit trail not available";

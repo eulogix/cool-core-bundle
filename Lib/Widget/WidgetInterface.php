@@ -342,6 +342,12 @@ interface WidgetInterface {
     public function downloadFile(FileProxyInterface $f);
 
     /**
+     * as above, but tries to preview previewable files somehow (gallery, pdf popups..)
+     * @param FileProxyInterface $f
+     */
+    public function previewOrDownloadFile(FileProxyInterface $f);
+
+    /**
      * @return array
      */
     public function getRuleContext();
