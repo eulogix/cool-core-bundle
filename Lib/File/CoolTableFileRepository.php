@@ -130,11 +130,16 @@ class CoolTableFileRepository extends BaseFileRepository {
      * @param Schema $schema
      * @param string $tableName
      * @param CoolPropelObject $propelObj
+     * @throws \Exception
      */
     private function __construct(Schema $schema=null, $tableName=null, CoolPropelObject $propelObj=null) {
         if($schema)
             $this->setSchemaAndTable($schema->getName(), $tableName);
         if($propelObj){
+
+            if($propelObj->isNew())
+                throw new \Exception("Unsaved objects can not yet access their file repository.");
+
             $this->propelObj = $propelObj;
             $this->pk = $propelObj->getPrimaryKeyAsString();
             $this->pkField = $propelObj->getCoolTableMap()->getPkFields()[0];

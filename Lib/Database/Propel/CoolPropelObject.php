@@ -16,9 +16,9 @@ use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Schema;
 use Eulogix\Cool\Lib\File\CoolTableFileRepository;
 use Eulogix\Cool\Lib\File\FileCommand;
-use Eulogix\Cool\Lib\File\FileProxyInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\Form\Field\FieldInterface;
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Money\Currency;
 use Money\Money;
 

@@ -786,12 +786,20 @@ class Form extends Widget implements FormInterface {
         $newValues = $this->getValues();
 
         $changedFields = [];
-        foreach($oldValues as $fieldName => $fieldValue)
-            if($fieldValue != @$newValues[$fieldName])
+        foreach($oldValues as $fieldName => $fieldValue) {
+            $newValue = isset($newValues[$fieldName]) ? $newValues[$fieldName] : null;
+
+            /* a direct comparison would raise notices when comparing different types
+               this happens when the changed field is a file: old value is an int, new value
+               a file proxy */
+            if(serialize($fieldValue) != serialize($newValue))
                 $changedFields[$fieldName] = [
                     'old' => $fieldValue,
-                    'new' => @$newValues[$fieldName]
+                    'new' => $newValue
                 ];
+        }
+
+
         return $changedFields;
     }
 
