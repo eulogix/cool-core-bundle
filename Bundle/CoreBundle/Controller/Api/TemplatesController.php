@@ -97,7 +97,7 @@ class TemplatesController extends BaseRestController
                     $message = $e->getMessage();
                     break;
                 }
-                default: return $this->returnError(500);
+                default: return $this->returnError(500, $e->getMessage());
             }
         }
 

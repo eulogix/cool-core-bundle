@@ -51,7 +51,7 @@ abstract class BaseFileRepository implements FileRepositoryInterface
     public function setParameters(array $parameters = []) {
         $this->getParameters()->replace($parameters);
 
-        if(@$parameters['workingDir'])
+        if( isset($parameters['workingDir']) )
             $this->setWorkingDir($parameters['workingDir']);
 
         return $this;
