@@ -14,14 +14,20 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Controller;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\FileRepositoryDataSource;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
+use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -228,6 +234,59 @@ class FileRepositoryController extends Controller
 
         $response = new JsonResponse($data, 200);
         return $response;
+    }
+
+    /**
+     * handles file uploads from within CKeditor
+     * @Route("{repositoryId}/CKUpload", name="frepoCKUpload", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function CKUploadAction($repositoryId)
+    {
+        $data = [
+            "uploaded" => 0,
+            "error" => [
+                "message" => "no files uploaded"
+            ]
+        ];
+
+        try {
+            $repo = FileRepositoryFactory::fromId($repositoryId);
+            $filePath = $this->get('request')->query->get('filePath');
+            if(!$repo->exists($filePath))
+                $repo->createFolder($filePath);
+
+            /**
+             * @var UploadedFile $uploadedFile
+             */
+            foreach($this->get('request')->files->getIterator() as $uploadedFile) {
+
+                $proxy = new SimpleFileProxy();
+                $proxy->setName($uploadedFile->getClientOriginalName())
+                    ->setContentFile($uploadedFile->getPathname());
+                $storedFile = $repo->storeFileAt($proxy, $filePath, FileRepositoryInterface::COLLISION_STRATEGY_RENAME);
+
+                $data = [
+                    "uploaded" => 1,
+                    "fileName" => $storedFile->getName(),
+                    "url" => urldecode(Cool::getInstance()->getContainer()->get('router')->generate('frepoServe', [
+                        'repositoryId' => $repositoryId,
+                        'filePath' => $filePath.DIRECTORY_SEPARATOR.$storedFile->getName()
+                    ]))
+                ];
+            }
+        } catch(\Exception $e) {
+            $data = [
+                "uploaded" => 0,
+                "error" => [
+                    "message" => $e->getMessage()
+                ]
+            ];
+        }
+
+        $response = new JsonResponse($data, 200);
+        return $response;
+
     }
 
     /**

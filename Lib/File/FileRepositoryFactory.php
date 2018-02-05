@@ -28,15 +28,36 @@ class FileRepositoryFactory {
         if(!$id) {
             throw new \Exception("missing repository service id");
         }
-        $container = Cool::getInstance()->getContainer();
-        $serviceName = "file.repository.$id";
 
-        if($container->has($serviceName)) {
-            $serviceObj = $container->get($serviceName);
-            if($serviceObj instanceof FileRepositoryInterface)
-                return $serviceObj;
-            else throw new \Exception("service $serviceName does not implement FileRepositoryInterface");
-        } else throw new \Exception("service $serviceName does not exist");
+        if(preg_match('/^TMP/sim', $id)) {
+            $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
+            return unserialize($cacher->fetch($id));
+        } else {
+            $container = Cool::getInstance()->getContainer();
+            $serviceName = "file.repository.$id";
+
+            if ($container->has($serviceName)) {
+                $serviceObj = $container->get($serviceName);
+                if ($serviceObj instanceof FileRepositoryInterface) {
+                    return $serviceObj;
+                } else {
+                    throw new \Exception("service $serviceName does not implement FileRepositoryInterface");
+                }
+            } else {
+                throw new \Exception("service $serviceName does not exist");
+            }
+        }
     }
 
+    /**
+     * @param FileRepositoryInterface $repository
+     * @return string a temporary id
+     */
+    public static function register(FileRepositoryInterface $repository) {
+        $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
+        $serializedClass = serialize($repository);
+        $key = 'TMP'.sha1($serializedClass);
+        $cacher->store($key, $serializedClass);
+        return $key;
+    }
 } 

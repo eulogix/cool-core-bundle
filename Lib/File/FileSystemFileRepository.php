@@ -37,8 +37,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * returns a unique identifier for the repository, used to differentiate caches..
-     * @return string
+     * @inheritdoc
      */
     public function getUid()
     {
@@ -46,8 +45,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @return boolean
+     * @inheritdoc
      */
     public function exists($path)
     {
@@ -56,9 +54,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @return FileProxyInterface
-     * @throws \Exception
+     * @inheritdoc
      */
     public function get($path)
     {
@@ -69,9 +65,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @return $this
-     * @throws \Exception
+     * @inheritdoc
      */
     public function delete($path)
     {
@@ -85,10 +79,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param string $target
-     * @return string The new file path
-     * @throws \Exception
+     * @inheritdoc
      */
     public function move($path, $target)
     {
@@ -104,10 +95,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param string $newName
-     * @return string The renamed file id
-     * @throws \Exception
+     * @inheritdoc
      */
     public function rename($path, $newName)
     {
@@ -124,11 +112,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param bool $recursive
-     * @param bool $includeHidden
-     * @return FileProxyCollectionInterface
-     * @throws \Exception
+     * @inheritdoc
      */
     public function getChildrenOf($path = null, $recursive = false, $includeHidden = false)
     {
@@ -157,33 +141,46 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param FileProxyInterface $file
-     * @param string $path
-     * @param string $collisionStrategy overwrite|skip|append
-     * @return FileProxyInterface a fileProxy representing the inserted file
-     * @throws ForbiddenException
+     * @inheritdoc
      */
-    public function storeFileAt(FileProxyInterface $file, $path = null, $collisionStrategy = 'overwrite')
+    public function storeFileAt(FileProxyInterface $file, $path = null, $collisionStrategy = self::COLLISION_STRATEGY_OVERWRITE)
     {
         if(!$this->exists($path))
             throw new ForbiddenException("$path does not exist");
         if(!$this->validFileName($file->getName()))
             throw new ForbiddenException("{$file->getName()} is not a valid file or folder name");
 
+        $newName = $file->getName();
+
+        if($this->exists($path.DIRECTORY_SEPARATOR.$file->getName())) {
+            switch($collisionStrategy) {
+                case self::COLLISION_STRATEGY_SKIP: {
+                    throw new \Exception("File already exists", -1);
+                    break;
+                }
+                case self::COLLISION_STRATEGY_RENAME: {
+                    $newName = $this->getNextUncollidedName($path, $file);
+                    break;
+                }
+            }
+        }
+
         $FQP = $this->getFQPath($path);
-        $fsPath = $this->toFsPath($rpath = $FQP.DIRECTORY_SEPARATOR.$file->getName());
+        $fsPath = $this->toFsPath($rpath = $FQP.DIRECTORY_SEPARATOR.$newName);
         $file->toFile($fsPath);
         return $this->get($rpath);
     }
 
     /**
-     * @param string $path
-     * @param string $folderName
-     * @return FileProxyInterface a fileProxy representing the created folder
-     * @throws ForbiddenException
+     * @inheritdoc
      */
-    public function createFolder($path, $folderName)
+    public function createFolder($path, $folderName = null)
     {
+        if(!$folderName && preg_match('%^(.*?)/([^/]*)$%sim', $path, $m)) {
+            $path = $m[1];
+            $folderName = $m[2];
+        }
+
         if(!$this->exists($path))
             throw new ForbiddenException("$path does not exist");
         if(!$this->validFileName($folderName))
@@ -199,11 +196,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param array $properties
-     * @param bool $merge
-     * @return $this
-     * @throws ForbiddenException
+     * @inheritdoc
      */
     public function setFileProperties($path, array $properties, $merge = false)
     {
@@ -211,9 +204,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param string $decodingsPrefix if set, includes all the decodifications of the properties prefixing them
-     * @return array
+     * @inheritdoc
      */
     public function getFileProperties($path, $decodingsPrefix = null)
     {
@@ -221,9 +212,7 @@ class FileSystemFileRepository extends BaseFileRepository {
     }
 
     /**
-     * @param string $path
-     * @param bool $recursive
-     * @return FileProperty[]
+     * @inheritdoc
      */
     public function getAvailableFileProperties($path, $recursive = false)
     {

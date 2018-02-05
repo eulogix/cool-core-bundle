@@ -232,4 +232,20 @@ abstract class BaseFileRepository implements FileRepositoryInterface
         $ret = str_replace('//', '/', preg_replace('%^[/]*(.+?)[/]*$%im', '/$1', $path));
         return $ret == '/' ? null : $ret;
     }
+
+    /**
+     * returns the next available name for a file, when it already exists
+     *
+     * @param string $path
+     * @param FileProxyInterface $file
+     * @return string
+     */
+    protected function getNextUncollidedName($path, FileProxyInterface $file) {
+        $i = 0;
+        do {
+            $newName = $file->getBaseName().($i?" ($i).":".").$file->getCompleteExtension();
+            $i++;
+        } while($this->exists($path.DIRECTORY_SEPARATOR.$newName));
+        return $newName;
+    }
 }

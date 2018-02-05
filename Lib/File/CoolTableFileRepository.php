@@ -170,7 +170,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     /**
      * @inheritdoc
      */
-    public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy='overwrite') {
+    public function storeFileAt(FileProxyInterface $file, $path=null, $collisionStrategy = self::COLLISION_STRATEGY_OVERWRITE) {
         if($this->getPermissions()->canCreateFileIn($path)) {
 
             $p = $this->parsePathId($path);
@@ -178,15 +178,15 @@ class CoolTableFileRepository extends BaseFileRepository {
             if($p['category'] || $p['pk']) {
                 $newFileName = $file->getName();
                 $baseName = $file->getBaseName();
-                $ext = $file->getExtension();
+                $ext = $file->getCompleteExtension();
 
-                if($collisionStrategy != 'overwrite') {
+                if($collisionStrategy != self::COLLISION_STRATEGY_OVERWRITE) {
                     $i = 1;
                     do {
                         $existingFilesCount = $this->storage->query($p['table'], $p['pk'], $p['category'], $newFileName)->count();
 
                         if($existingFilesCount > 0) {
-                            if($collisionStrategy == 'skip')
+                            if($collisionStrategy == self::COLLISION_STRATEGY_SKIP)
                                 throw new \Exception("File already exists", -1);
                             $newFileName = $baseName.'_('.$i++.')'.($ext ? ".$ext" : "");
                             $file->setName($newFileName);
@@ -396,7 +396,7 @@ class CoolTableFileRepository extends BaseFileRepository {
     /**
      * @inheritdoc
      */
-    public function createFolder($path, $folderName) {
+    public function createFolder($path, $folderName = null) {
         throw new ForbiddenException();
     }
 

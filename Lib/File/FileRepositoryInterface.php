@@ -29,6 +29,10 @@ interface FileRepositoryInterface {
     const QUERY_DATE_FROM = 'date_from';
     const QUERY_DATE_TO = 'date_to';
 
+    const COLLISION_STRATEGY_OVERWRITE = 'overwrite';
+    const COLLISION_STRATEGY_SKIP = 'skip';
+    const COLLISION_STRATEGY_RENAME = 'rename';
+
     /**
      * @return ParameterBag
      */
@@ -136,7 +140,7 @@ interface FileRepositoryInterface {
      * @throws ForbiddenException
      * @throws \Exception
      */
-    public function storeFileAt(FileProxyInterface $file, $path = null, $collisionStrategy='overwrite');
+    public function storeFileAt(FileProxyInterface $file, $path = null, $collisionStrategy = self::COLLISION_STRATEGY_OVERWRITE);
 
     /**
      * @param string $path
@@ -145,7 +149,7 @@ interface FileRepositoryInterface {
      * @throws ForbiddenException
      * @throws \Exception
      */
-    public function createFolder($path, $folderName);
+    public function createFolder($path, $folderName = null);
 
     /**
      * @param string $path
