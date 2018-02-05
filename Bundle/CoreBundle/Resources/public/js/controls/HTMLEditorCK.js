@@ -16,6 +16,7 @@ define("cool/controls/HTMLEditorCK",
         editor: null,
 
     	coolInit : function() {
+            var self = this;
             this.inherited(arguments);
 
             var ckParams = {};
@@ -27,6 +28,13 @@ define("cool/controls/HTMLEditorCK",
                 });
 
             this.editor = CKEDITOR.appendTo(this.fieldNode, ckParams);
+
+            this.editor.on('loaded', function(evt){
+                var width = self.getParameter('width');
+                var height = self.getParameter('height');
+                if(width && height)
+                    self.editor.resize(width, height);
+            });
 
             //TODO: readonly, onchange...
 

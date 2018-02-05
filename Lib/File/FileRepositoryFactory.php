@@ -60,4 +60,12 @@ class FileRepositoryFactory {
         $cacher->store($key, $serializedClass);
         return $key;
     }
+
+    /**
+     * @param string $temporaryId
+     */
+    public static function unregister($temporaryId) {
+        $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
+        $cacher->delete($temporaryId);
+    }
 } 

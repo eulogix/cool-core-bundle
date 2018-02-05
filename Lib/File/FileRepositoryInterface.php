@@ -11,7 +11,9 @@
 
 namespace Eulogix\Cool\Lib\File;
 
+use Eulogix\Cool\Lib\File\Action\FileAction;
 use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
+use Eulogix\Cool\Lib\Widget\Menu;
 use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -185,6 +187,13 @@ interface FileRepositoryInterface {
     public function getAvailableFileProperties($path, $recursive=false);
 
     /**
+     * this menu is rendered by the rfe browser to offer item specific actions
+     * @param string $path
+     * @return Menu
+     */
+    public function getContextualMenuFor($path);
+
+    /**
      * @param string $startPath
      * @param array $query
      * @param bool $recursive
@@ -199,4 +208,15 @@ interface FileRepositoryInterface {
      * @return array
      */
     public function parseExtendedQuery($queryString);
+
+    /**
+     * @return FileAction[]
+     */
+    public function getFileActions();
+
+    /**
+     * @param FileAction $action
+     * @return $this
+     */
+    public function registerFileAction(FileAction $action);
 }

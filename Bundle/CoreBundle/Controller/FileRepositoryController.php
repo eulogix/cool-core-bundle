@@ -161,6 +161,23 @@ class FileRepositoryController extends Controller
     }
 
     /**
+     * @Route("{repositoryId}/getContextualMenuFor", name="frepoGetContextualMenuFor", options={"expose"=true})
+     */
+    public function getContextualMenuForAction($repositoryId)
+    {
+        $repo = FileRepositoryFactory::fromId($repositoryId);
+        $repo->setParameters($this->get('request')->query->all());
+
+        $filePath = $this->get('request')->query->get('filePath');
+        $filePath = $filePath == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $filePath;
+
+        $contextMenu = $repo->getContextualMenuFor($filePath);
+        $data = $contextMenu ? $contextMenu->getDefinition() : [];
+        $response = new JsonResponse($data, 200);
+        return $response;
+    }
+
+    /**
      * @Route("{repositoryId}/getPermissions", name="frepoGetPermissions", options={"expose"=true})
      */
     public function getPermissionsAction($repositoryId)
@@ -300,4 +317,14 @@ class FileRepositoryController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/{repositoryId}/browser", name="frepoBrowser", options={"expose"=true})
+     * @Template(engine="twig")
+     */
+    public function fileRepositoryBrowserAction($repositoryId)
+    {
+        $templateVars = $this->get('request')->query->all();
+        $templateVars['repositoryId'] = $repositoryId;
+        return $this->render('EulogixCoolCoreBundle:File:fileRepositoryBrowser.html.twig', $templateVars);
+    }
 }

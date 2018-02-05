@@ -54,6 +54,7 @@ define([
                 setTimeout(function() { widget.resize(); }, 3000);
 
                 widget.dialog = d;
+                d.widget = widget;
 
                 d.show();
 

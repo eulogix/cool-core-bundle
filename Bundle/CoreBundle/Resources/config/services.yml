@@ -156,3 +156,6 @@ services:
 
     cool.templateRendererFactory:
         class: Eulogix\Cool\Lib\Template\RendererFactory
+
+    file.action.editTwigTemplate:
+        class: Eulogix\Cool\Lib\File\Action\Edit\EditTwigTemplateAction

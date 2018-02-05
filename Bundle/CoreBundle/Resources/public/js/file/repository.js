@@ -10,6 +10,7 @@ define("cool/file/repository",
                 Lightbox) {
 
     return declare("cool.file.repository", [], {
+
         /**
          * client side functionalities linked to a server side file repository
          */
@@ -79,8 +80,23 @@ define("cool/file/repository",
             return d;
         },
 
+        getContextualMenuFor: function(filePath) {
+            var d = new Deferred();
+
+            COOL.callCommand('frepoGetContextualMenuFor',
+                function(data) { d.resolve(data); },
+                this._buildParameters({filePath: filePath})
+            );
+
+            return d;
+        },
+
         _buildParameters: function(parameters) {
             return lang.mixin({}, this.allArgs, parameters);
+        },
+
+        getAllArgs: function() {
+            return this.allArgs;
         }
     });
  

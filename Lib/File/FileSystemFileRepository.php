@@ -12,7 +12,6 @@
 namespace Eulogix\Cool\Lib\File;
 
 use Eulogix\Cool\Lib\File\Exception\ForbiddenException;
-use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Lib\File\Proxy\SimpleFileProxyCollection;
@@ -34,6 +33,14 @@ class FileSystemFileRepository extends BaseFileRepository {
             throw new \Exception("$baseFolder does not exist or is not a directory");
         $this->baseFolder = $baseFolder;
         $this->setPermissions( new FileSystemFileRepositoryPermissions($this));
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseFolder()
+    {
+        return $this->baseFolder;
     }
 
     /**

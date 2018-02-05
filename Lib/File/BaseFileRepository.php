@@ -12,6 +12,8 @@
 namespace Eulogix\Cool\Lib\File;
 
 
+use Eulogix\Cool\Lib\File\Action\FileAction;
+use Eulogix\Cool\Lib\Widget\Menu;
 use Eulogix\Lib\File\Proxy\FileProxyCollectionInterface;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
 use Eulogix\Lib\File\Proxy\SimpleFileProxyCollection;
@@ -35,6 +37,11 @@ abstract class BaseFileRepository implements FileRepositoryInterface
      * @var string
      */
     protected $workingDir = '/';
+
+    /**
+     * @var FileAction[]
+     */
+    protected $fileActions = [];
 
     /**
      * @inheritdoc
@@ -222,6 +229,38 @@ abstract class BaseFileRepository implements FileRepositoryInterface
             return $this->cleanPath($path); //$p is an absolute path
 
         return $this->cleanPath($this->getWorkingDir().'/'.$path);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getContextualMenuFor($path) {
+
+        $file = $this->get($path);
+        $menu = new Menu();
+
+        foreach($this->getFileActions() as $fileAction) {
+            $fileAction->setFileRepository($this);
+            if($fileAction->appliesTo($file)) {
+                $fileAction->populateContextualMenu($menu);
+            }
+        }
+
+        return $menu;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFileActions() {
+        return $this->fileActions;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerFileAction(FileAction $action) {
+        $this->fileActions[] = $action;
     }
 
     /**
