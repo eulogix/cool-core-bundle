@@ -181,7 +181,7 @@ define([
 
 			this.menuItems.del.set('disabled', !selected);
 			this.menuItems.properties.set('disabled', !selected);
-		},
+		}
 
 	});
 });
