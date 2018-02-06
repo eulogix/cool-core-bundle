@@ -232,30 +232,30 @@ abstract class Dictionary {
     * returns an associative array of triggers for a given table
     *
     * @param mixed $tableName
-    * @return []
+    * @return array
     */
     public function getTableTriggers($tableName) {
-        return $this->getSettings()['tables'][$tableName][self::TBL_ATT_TRIGGERS];
+        return $this->getSettings()['tables'][$tableName][self::TBL_ATT_TRIGGERS] ?? [];
     }
 
     /**
      * returns an associative array of triggers for a given table
      *
      * @param mixed $tableName
-     * @return array []
+     * @return array
      */
     public function getTableFilesCategories($tableName) {
-        return @$this->getSettings()['tables'][$tableName][self::TBL_ATT_FILES][self::TBL_ATT_FILES_CATEGORY];
+        return $this->getSettings()['tables'][$tableName][self::TBL_ATT_FILES][self::TBL_ATT_FILES_CATEGORY] ?? [];
     }
 
     /**
     * returns an associative array of custom SQL snippets for a given table
     *
     * @param mixed $tableName
-    * @return []
+    * @return array
     */
     public function getTableSQLSnippets($tableName) {
-        return $this->getSettings()['tables'][$tableName][self::TBL_ATT_SQL_SNIPPETS];
+        return $this->getSettings()['tables'][$tableName][self::TBL_ATT_SQL_SNIPPETS] ?? [];
     }
 
     /**
@@ -266,7 +266,7 @@ abstract class Dictionary {
     * @return mixed
     */
     public function getTableAttribute($tableName,$attributeName) {
-        return @$this->getTableAttributes($tableName)[ $attributeName ];
+        return $this->getTableAttributes($tableName)[ $attributeName ] ?? null;
     }
 
     /**
@@ -340,23 +340,19 @@ abstract class Dictionary {
     * @return mixed
     */
     public function getColumnAttribute($tableName,$columnName,$attributeName) {
-        $inlineAttributes = @$this->getTableColumns($tableName)[ $columnName ]['attributes'];
-        if(!is_array($inlineAttributes))
-            $inlineAttributes = [];
+        $tableColumns = $this->getTableColumns($tableName);
 
-        if(@$inlineAttributes[$attributeName])
+        $inlineAttributes = $tableColumns[ $columnName ]['attributes'] ?? [];
+        if(isset($inlineAttributes[$attributeName]))
             return $inlineAttributes[$attributeName];
 
-        $nestedAttributes = $this->getTableColumns($tableName)[ $columnName ];
-        if(!is_array($nestedAttributes))
-            $nestedAttributes = [];
-
-        if(@$nestedAttributes[$attributeName])
+        $nestedAttributes = $tableColumns[ $columnName ] ?? [];
+        if(isset($nestedAttributes[$attributeName]))
             return $nestedAttributes[$attributeName];
 
+        return null;
     }
 
-    
     /**
     * must be implemented by the generated baseDictionary that extends this class
     * @return []

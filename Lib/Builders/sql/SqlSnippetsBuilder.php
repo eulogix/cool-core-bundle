@@ -56,7 +56,7 @@ class SqlSnippetsBuilder {
         if($dictionary = $this->getDictionary()) {
             foreach($dictionary->getTableNames() as $tbl) {
                 //TODO: manage the position and the order
-                if($snippets = @$dictionary->getTableSQLSnippets($tbl)) {
+                if($snippets = $dictionary->getTableSQLSnippets($tbl)) {
                     foreach($snippets as $snippet) {
                         $sql.=$snippet['body']."\n\n";
                     }

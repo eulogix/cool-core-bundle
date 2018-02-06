@@ -92,7 +92,7 @@ class Field {
             return $this->getTableExtensionField()->getDictionaryLookup($schemaName, $translator);
         }
 
-        if($dlookup = @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), 'lookup')) {
+        if($dlookup = $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), 'lookup')) {
             $lookup = new Lookup($schemaName, $translator);
             $lookup->populate($dlookup);
             return $lookup;
@@ -105,7 +105,7 @@ class Field {
      * @return Control
      */
     public function getControl() {
-        if($c = @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), 'control')) {
+        if($c = $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), 'control')) {
             $control = new Control();
             $control->populate($c);
             return $control;
@@ -145,7 +145,7 @@ class Field {
      * @return string
      */
     public function getSource() {
-        return @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_SOURCE);
+        return $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_SOURCE);
     }
 
     /**
@@ -160,7 +160,7 @@ class Field {
      */
     public function getExtensionContainer() {
         if($this->isExtension()) {
-            return @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_SOURCE_DB_EXTENSION_CONTAINER);
+            return $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_SOURCE_DB_EXTENSION_CONTAINER);
         }
         return false;
     }
@@ -170,7 +170,7 @@ class Field {
      */
     public function getTableExtensionField() {
         if($this->isExtension()) {
-            $tableExtensionFieldId = @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_TABLE_EXTENSION_FIELD_ID);
+            $tableExtensionFieldId = $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_TABLE_EXTENSION_FIELD_ID);
             return TableExtensionFieldQuery::create()->findPk($tableExtensionFieldId);
         }
         return false;
@@ -181,7 +181,7 @@ class Field {
      */
     public function getConstraints() {
         $ret = [];
-        if($cts = @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_CONSTRAINTS)) {
+        if($cts = $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_CONSTRAINTS)) {
             foreach($cts as $c) {
                 $constraint = new Constraint();
                 $constraint->populate($c);
@@ -196,7 +196,7 @@ class Field {
      */
     public function isCalculated()
     {
-        return @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_CALCULATED) == true;
+        return $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_CALCULATED) == true;
     }
 
     /**
@@ -204,7 +204,7 @@ class Field {
      */
     public function isEditable()
     {
-        return @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_EDITABLE) !== false;
+        return $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_EDITABLE) !== false;
     }
 
     /**
@@ -212,7 +212,7 @@ class Field {
      */
     public function isFTSIndexable()
     {
-        return @$this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_FTS) == true;
+        return $this->getDictionary()->getColumnAttribute($this->getTableName(), $this->getName(), Dictionary::COL_ATT_FTS) == true;
     }
 
     /**

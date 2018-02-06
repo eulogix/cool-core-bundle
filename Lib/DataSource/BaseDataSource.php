@@ -231,7 +231,7 @@ abstract class BaseDataSource implements DataSourceInterface {
         $decodifications = [];
         foreach($hash as $fieldName => $rawValue)
             if( !in_array($fieldName, [self::RECORD_IDENTIFIER]) ) {
-                $decodifications[$fieldName] = $this->getDecodedValue($fieldName, $rawValue, @$hash[self::RECORD_IDENTIFIER]);
+                $decodifications[$fieldName] = $this->getDecodedValue($fieldName, $rawValue, $hash[self::RECORD_IDENTIFIER] ?? null);
             }
         return $decodifications;
     }
@@ -264,8 +264,8 @@ abstract class BaseDataSource implements DataSourceInterface {
     /**
      * @inheritdoc
      */
-    public function getRowDescription($row) {
-        return @$row[ $this->getPrimaryKey() ];
+    public function getRowDescription(array $row) {
+        return $row[ $this->getPrimaryKey() ] ?? null;
     }
 
     /**

@@ -298,9 +298,10 @@ class CoolPropelObject extends \BaseObject {
     /**
      * fetches the value of a calculated field from the <tablename>_calc view
      * @param string $fieldName
+     * @return mixed|null
      */
     public function getCalculatedField($fieldName) {
-        return @$this->getCalculatedFields()[$fieldName];
+        return $this->getCalculatedFields()[$fieldName] ?? null;
     }
 
     /**

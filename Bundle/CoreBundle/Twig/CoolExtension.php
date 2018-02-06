@@ -50,7 +50,7 @@ class CoolExtension extends \Twig_Extension
 
     public function widgetTranslate($context, $token, $parameters=[], TranslatorInterface $alternateTranslator = null)
     {
-        $translator = $alternateTranslator ?? @$context['coolTranslator'];
+        $translator = $alternateTranslator ?? ($context['coolTranslator'] ?? null);
         if($token !== null && $translator instanceOf TranslatorInterface) {
             return $translator->trans($token, $parameters);
         }
@@ -78,8 +78,8 @@ class CoolExtension extends \Twig_Extension
                 if($jsonDefinition === false)
                     throw new \Exception("JSON encode failure: ".json_last_error_msg());
 
-                $containerId = @$parameters['containerId'] ? @$parameters['containerId'] : 'widget'.mt_rand();
-                $containerStyle = @$parameters['containerStyle'];
+                $containerId = $parameters['containerId'] ?? 'widget'.mt_rand();
+                $containerStyle = $parameters['containerStyle'] ?? null;
                 return "<div id=\"$containerId\" style=\"{$containerStyle}\"></div>
                     <script>
 

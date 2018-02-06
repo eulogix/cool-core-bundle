@@ -150,8 +150,7 @@ class Cool {
      * @return string|null
      */
     public function getSchemaNamespace($schemaName) {
-        $schemas = $this->getAvailableSchemas();
-        return @$schemas[$schemaName]['namespace'];
+        return $this->getAvailableSchemas()[$schemaName]['namespace'] ?? null;
     }
 
     /**
@@ -274,7 +273,7 @@ class Cool {
         $schemas = $this->getAvailableSchemas();
         $ret = [];
         foreach($schemas as $configSchemaName => $schemaConfig)
-            if(@$schemaConfig['attach_to'] == $schemaName)
+            if(($schemaConfig['attach_to'] ?? null) == $schemaName)
                 $ret[] = $configSchemaName;
         return $ret;
     }
@@ -284,8 +283,7 @@ class Cool {
      * @return \string[]
      */
     public function getAttachedToSchemaName($schemaName) {
-        $schemas = $this->getAvailableSchemas();
-        return @$schemas[ $schemaName ]['attach_to'] ?? false;
+        return $this->getAvailableSchemas()[ $schemaName ]['attach_to'] ?? false;
     }
 
     /**

@@ -578,7 +578,7 @@ class CoolCrudDataSource extends CoolDataSource {
      * @return array
      */
     public function getDecodedHash($hash) {
-        if($this->isUnioned() && $hashSchema = @$hash[self::SCHEMA_IDENTIFIER]) {
+        if($this->isUnioned() && $hashSchema = ($hash[self::SCHEMA_IDENTIFIER] ?? null)) {
             if($this->getCoolSchema()->isSchemaNameValid($hashSchema))
                 $this->getCoolSchema()->setCurrentSchema($hashSchema);
         }
@@ -588,8 +588,8 @@ class CoolCrudDataSource extends CoolDataSource {
     /**
      * @inheritdoc
      */
-    public function getRowDescription($row) {
-        if ($this->isUnioned() && $hashSchema = @$row[ self::SCHEMA_IDENTIFIER ]) {
+    public function getRowDescription(array $row) {
+        if ($this->isUnioned() && $hashSchema = ($row[ self::SCHEMA_IDENTIFIER ] ?? null)) {
             if ($this->getCoolSchema()->isSchemaNameValid($hashSchema)) {
                 $this->getCoolSchema()->setCurrentSchema($hashSchema);
             }

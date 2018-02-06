@@ -142,7 +142,7 @@ class CoolValueMap extends BaseValueMap implements Shimmable
 
         $map = $this->getMap($value);
         try {
-            return @$map['label'];
+            return $map['label'] ?? null;
         } catch(\Exception $e) {
             return "({$value})!";
         }
@@ -213,7 +213,7 @@ class CoolValueMap extends BaseValueMap implements Shimmable
             }
         }
 
-        return $emptyValue ? $ret : @$ret[0];
+        return $emptyValue ? $ret : ($ret[0] ?? null);
     }
 
     /**

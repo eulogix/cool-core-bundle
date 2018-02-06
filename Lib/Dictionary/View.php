@@ -85,12 +85,11 @@ class View extends Bean {
      */
     public function getTables() {
         $ret = [];
-        if($tbls = @$this->getDictionary()->getViewSettings($this->getName())[Dictionary::VIEW_ATT_TABLES]) {
-            foreach($tbls as $t) {
-                $vt = new ViewTable($this);
-                $vt->populate($t);
-                $ret[] = $vt;
-            }
+        $viewTables = $this->getDictionary()->getViewSettings($this->getName())[Dictionary::VIEW_ATT_TABLES] ?? [];
+        foreach($viewTables as $t) {
+            $vt = new ViewTable($this);
+            $vt->populate($t);
+            $ret[] = $vt;
         }
         return $ret;
     }

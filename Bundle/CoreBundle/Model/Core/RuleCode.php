@@ -89,7 +89,7 @@ class RuleCode extends BaseRuleCode
                     foreach($matches as $match) {
                         $variablePlaceHolder = $match[0];
                         $varName = $match[1];
-                        $var = str_replace($variablePlaceHolder, @$context[$varName], $var);
+                        $var = str_replace($variablePlaceHolder, $context[$varName] ?? null, $var);
                     }
                 }
             }

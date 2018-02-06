@@ -60,7 +60,7 @@ class CoolTableMap extends \TableMap {
      * @return string|null
      */
     public function getCoolRawName() {
-        return @$this->getDictionary()->getTableRawName($this->getName());
+        return $this->getDictionary()->getTableRawName($this->getName());
     }
 
     /**
@@ -82,7 +82,7 @@ class CoolTableMap extends \TableMap {
     */
     public function getCoolTriggers() {
         $ret = [];
-        if($triggers = @$this->getDictionary()->getTableTriggers($this->getName())) {
+        if($triggers = $this->getDictionary()->getTableTriggers($this->getName())) {
             foreach($triggers as $t) {
                 $trigger = new Trigger();
                 $trigger->populate($t);
@@ -143,10 +143,7 @@ class CoolTableMap extends \TableMap {
      * @return Field|boolean
      */
     public function getCoolField($fieldName) {
-        if($field = @$this->getCoolFields()[$fieldName]) {
-            return $field;
-        }
-        return false;
+        return $this->getCoolFields()[$fieldName] ?? false;
     }
 
     /**
@@ -286,7 +283,7 @@ class CoolTableMap extends \TableMap {
      */
     public function getFileCategories() {
         $ret = [];
-        if($categories = @$this->getDictionary()->getTableFilesCategories($this->getName())) {
+        if($categories = $this->getDictionary()->getTableFilesCategories($this->getName())) {
             foreach($categories as $c) {
                 $category = new FileCategory();
                 $category->populate($c);
@@ -301,8 +298,7 @@ class CoolTableMap extends \TableMap {
      * @return FileCategory|false
      */
     public function getFileCategory($categoryName) {
-        $c = @$this->getFileCategories()[$categoryName];
-        return $c ? $c : false;
+        return $this->getFileCategories()[$categoryName] ?? false;
     }
 
     /**

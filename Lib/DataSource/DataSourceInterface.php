@@ -207,7 +207,7 @@ interface DataSourceInterface {
      * @param array $row
      * @return string
      */
-    public function getRowDescription($row);
+    public function getRowDescription(array $row);
 
     /**
      * return a row's meta information

@@ -97,11 +97,7 @@ class SimpleValueMap  extends BaseValueMap implements ValueMapInterface
             return '-';
 
         $map = $this->getMap($value);
-        try {
-            return @$map['label'];
-        } catch(\Exception $e) {
-            return "({$value})!";
-        }
+        return $map['label'] ?? "({$value})!";
     }
 
     /**
