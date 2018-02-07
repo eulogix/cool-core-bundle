@@ -222,10 +222,10 @@ abstract class Dictionary {
     * returns an associative array of attributes for a given table
     *
     * @param mixed $tableName
-    * @return []
+    * @return array
     */
     public function getTableAttributes($tableName) {
-        return $this->getSettings()['tables'][$tableName]['attributes'];
+        return $this->getSettings()['tables'][$tableName]['attributes'] ?? [];
     }
 
     /**

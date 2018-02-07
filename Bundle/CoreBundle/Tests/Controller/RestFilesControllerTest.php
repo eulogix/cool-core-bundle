@@ -115,8 +115,9 @@ class RestFilesControllerTest extends WebTestCase
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $returnData = json_decode($client->getResponse()->getContent(), true);
 
-        return json_decode($client->getResponse()->getContent(), true)['id'];
+        return $returnData['id'];
     }
 
     /**
