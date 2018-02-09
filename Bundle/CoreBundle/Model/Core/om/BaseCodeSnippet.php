@@ -675,6 +675,9 @@ abstract class BaseCodeSnippet extends CoolPropelObject implements Persistent
             $this->collCodeSnippetVariables = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

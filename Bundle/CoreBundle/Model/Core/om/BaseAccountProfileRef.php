@@ -346,6 +346,9 @@ abstract class BaseAccountProfileRef extends CoolPropelObject implements Persist
             $this->aAccount = null;
             $this->aAccountProfile = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

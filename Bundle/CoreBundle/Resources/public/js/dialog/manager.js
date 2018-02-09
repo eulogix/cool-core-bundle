@@ -11,10 +11,16 @@ define([
         "dojo/window",
         "dojo/request",
 
-        "dijit/Tooltip",
-        "dojox/widget/DialogSimple"
+        "dojo/fx",
+        "dojo/fx/Toggler",
 
-    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, domGeometry, win, request, Tooltip, Dialog) {
+        "dijit/Tooltip",
+        "dojox/widget/DialogSimple",
+
+        "cool/dijit/LazyContentPane", //allows script execution
+        "cool/dijit/iconButton"
+
+    ], function(declare, lang, on, mouse, dom, domConstruct, domStyle, domGeometry, win, request, dojoFx, Toggler, Tooltip, Dialog, ContentPane, iconButton) {
 
     return {
 
@@ -193,6 +199,83 @@ define([
                 style: "width: 1000px; height:600px; overflow:auto;"
             });
             errDialog.show();
+        },
+
+        openRouteInTabContainer: function (tabContainer, title, route, routeParameters, parameters) {
+            parameters = parameters || {};
+
+            var url = Routing.generate(route, routeParameters || {});
+            var uid = parameters.uid;
+            var existingChildren, contentPaneToSelect;
+
+            try {
+                if (uid && (existingChildren = tabContainer.get('child_' + uid))) {
+                    contentPaneToSelect = existingChildren;
+                } else {
+                    contentPaneToSelect = this._getNewContentPane(title, parameters);
+                    contentPaneToSelect.set('href', url);
+
+                    contentPaneToSelect.on('reload', function() {
+                        contentPaneToSelect.set('href', url);
+                    });
+
+                    tabContainer.addChild(contentPaneToSelect);
+
+                    if (parameters.uid) {
+                        tabContainer.set('child_' + uid, contentPaneToSelect);
+                        contentPaneToSelect.on('close', function () {
+                            tabContainer.set('child_' + uid, null);
+                        });
+                    }
+                }
+
+                tabContainer.selectChild(contentPaneToSelect);
+
+            } catch (e) {}
+        },
+
+        _getNewContentPane: function (title, parameters) {
+
+            parameters = parameters || {};
+
+            var contentPane = new ContentPane({
+
+                title: title,
+                closable: true,
+                executeScripts: true,
+                scriptHasHooks: true,
+                parseOnLoad: false,
+
+                onLoad: function (data) {
+                    if (!this.reloadButton) {
+
+                        this.reloadButton = new iconButton({
+                            onClick: function () { contentPane.emit('reload'); },
+                            iconSrc: "/bower_components/fugue/icons/arrow-circle.png",
+                            showLabel: false,
+                            tooltip: "Refresh"
+                        });
+
+                        this.buttonToggler = new Toggler({
+                            node: this.reloadButton.domNode,
+                            showFunc: dojoFx.wipeIn,
+                            hideFunc: dojoFx.wipeOut
+                        });
+                        domConstruct.place(this.reloadButton.domNode, this.controlButton.domNode, "first");
+                    }
+                },
+
+                onShow: function () {
+                    if (this.buttonToggler)
+                        this.buttonToggler.show();
+                },
+                onHide: function () {
+                    if (this.buttonToggler)
+                        this.buttonToggler.hide();
+                }
+            });
+
+            return contentPane;
         }
 
     }

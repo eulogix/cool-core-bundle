@@ -899,6 +899,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             $this->collUserNotificationsRelatedByUpdateUserId = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

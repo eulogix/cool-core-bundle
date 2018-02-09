@@ -407,6 +407,9 @@ abstract class BaseTableExtension extends CoolPropelObject implements Persistent
             $this->collTableExtensionFields = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

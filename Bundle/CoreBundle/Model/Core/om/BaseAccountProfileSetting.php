@@ -331,6 +331,9 @@ abstract class BaseAccountProfileSetting extends CoolPropelObject implements Per
 
             $this->aAccountProfile = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

@@ -459,6 +459,9 @@ abstract class BaseListerConfig extends CoolPropelObject implements Persistent
             $this->collListerConfigColumns = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

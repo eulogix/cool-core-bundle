@@ -346,6 +346,9 @@ abstract class BaseAccountGroupRef extends CoolPropelObject implements Persisten
             $this->aAccount = null;
             $this->aAccountGroup = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

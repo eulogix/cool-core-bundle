@@ -144,4 +144,20 @@ class PHP5ObjectBuilder extends \PHP5ObjectBuilder {
             return $parentTable;
         return new PropelBuilderTableProxy( $parentTable );
     }
+
+    /**
+     * Adds a reload() method to re-fetch the data for this object from the database.
+     *
+     * @param string &$script The script will be modified in this method.
+     */
+    protected function addReload(&$script)
+    {
+        parent::addReload($script);
+
+        $script = preg_replace(
+            '%(?<=// if \(deep\))%sim',
+            "\n\n\t\t\$this->reloadCalculatedFields();\n",
+            $script
+        );
+    }
 }

@@ -577,6 +577,23 @@ class Column {
     /**
      * @return self
      */
+    public function setUpAsProgressBar() {
+        $this->setDijitWidgetTemplate(
+            "<div data-dojo-attach-point='progressBar'
+                  data-dojo-type='dijit/ProgressBar'
+                  data-dojo-props=\"maximum: 100\"
+                  class='gridxHasGridCellValue'
+                  style='width: 100%'
+              ></div>")
+            ->setSetValueJs("
+                cellWidget.bar.progressBar('value', staticTemplateOutput);
+            ")->setWidth(100);
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
     private function truncate()
     {
         $maxChars = $this->getMaxChars() ? $this->getMaxChars() : self::MAX_CHARACTERS;

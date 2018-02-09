@@ -542,6 +542,9 @@ abstract class BaseRuleCode extends CoolPropelObject implements Persistent
             $this->aRule = null;
             $this->aCodeSnippet = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

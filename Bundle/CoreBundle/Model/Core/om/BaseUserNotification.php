@@ -685,6 +685,9 @@ abstract class BaseUserNotification extends CoolPropelObject implements Persiste
             $this->aAccountRelatedByCreationUserId = null;
             $this->aAccountRelatedByUpdateUserId = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

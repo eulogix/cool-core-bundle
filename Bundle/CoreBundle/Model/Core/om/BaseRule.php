@@ -454,6 +454,9 @@ abstract class BaseRule extends CoolPropelObject implements Persistent
             $this->collWidgetRules = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

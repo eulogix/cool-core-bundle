@@ -316,6 +316,9 @@ abstract class BaseAppSetting extends CoolPropelObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

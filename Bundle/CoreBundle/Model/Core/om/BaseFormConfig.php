@@ -373,6 +373,9 @@ abstract class BaseFormConfig extends CoolPropelObject implements Persistent
             $this->collFormConfigFields = null;
 
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

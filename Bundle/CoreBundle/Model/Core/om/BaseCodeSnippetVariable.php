@@ -331,6 +331,9 @@ abstract class BaseCodeSnippetVariable extends CoolPropelObject implements Persi
 
             $this->aCodeSnippet = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

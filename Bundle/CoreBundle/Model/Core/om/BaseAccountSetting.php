@@ -331,6 +331,9 @@ abstract class BaseAccountSetting extends CoolPropelObject implements Persistent
 
             $this->aAccount = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

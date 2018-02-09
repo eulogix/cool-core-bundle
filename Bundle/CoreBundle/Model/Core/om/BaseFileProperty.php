@@ -456,6 +456,9 @@ abstract class BaseFileProperty extends CoolPropelObject implements Persistent
 
             $this->aFieldDefinition = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

@@ -9,7 +9,7 @@
             containerStyle: "height:100%; width:100%;"
         },
         {
-            id: listerId,
+            id: listerId|default("lister" ~ uid),
             editorFormDivId: 'editorDiv' ~ uid,
         }
         ) }}

@@ -1026,6 +1026,9 @@ abstract class BaseListerConfigColumn extends CoolPropelObject implements Persis
 
             $this->aListerConfig = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

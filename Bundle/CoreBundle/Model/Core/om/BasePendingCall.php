@@ -554,6 +554,9 @@ abstract class BasePendingCall extends CoolPropelObject implements Persistent
 
             $this->aAccount = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

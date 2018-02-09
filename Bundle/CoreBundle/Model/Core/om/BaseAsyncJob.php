@@ -971,6 +971,9 @@ abstract class BaseAsyncJob extends CoolPropelObject implements Persistent
             $this->aAccountRelatedByCreationUserId = null;
             $this->aAccountRelatedByUpdateUserId = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

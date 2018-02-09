@@ -427,6 +427,9 @@ abstract class BaseTableExtensionField extends CoolPropelObject implements Persi
             $this->aTableExtension = null;
             $this->aFieldDefinition = null;
         } // if (deep)
+
+        $this->reloadCalculatedFields();
+
     }
 
     /**

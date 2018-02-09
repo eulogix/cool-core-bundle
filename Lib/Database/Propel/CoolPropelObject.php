@@ -346,7 +346,6 @@ class CoolPropelObject extends \BaseObject {
      * @return $this
      */
     public function reloadCalculatedFields() {
-        //TODO modify the OM builder so that this method is called with the standard reload() method
         $this->calculatedFields = null;
         return $this;
     }
