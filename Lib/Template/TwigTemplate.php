@@ -55,23 +55,50 @@ class TwigTemplate extends Template
      */
     public function getRenderedOutput($format = null)
     {
-        if($this->wkFolder)
-            $outputFile = $this->wkFolder.DIRECTORY_SEPARATOR.'output.html';
-        else $outputFile = FileUtil::getTempFileName('html');
+        if($this->wkFolder) {
+            switch(strtolower($format)) {
+                case 'zip' : $outputFile = $this->tempInput; break;
+                default : $outputFile = $this->wkFolder.DIRECTORY_SEPARATOR.'output.html';
+            }
+        } else $outputFile = FileUtil::getTempFileName('html');
 
         file_put_contents($outputFile, Cool::getInstance()->getFactory()->getTwig()->render(
             $this->tempInput,
             $this->getTemplateVariables()
         ));
 
-        if(strtolower($format) == 'pdf') {
-            $c = new Html2PdfConverter();
-            $ret = $c->convert($outputFile, 'pdf', $this->getParameters()->all());
-        } else $ret = SimpleFileProxy::fromFileSystem($outputFile, true);
+        switch(strtolower($format)) {
+            case 'pdf' : {
+                $c = new Html2PdfConverter();
+                $ret = $c->convert($outputFile, 'pdf', $this->getParameters()->all());
+                break;
+            }
+            case 'zip' : {
+                if($this->wkFolder) {
+                    $ret = ZipUtils::zipFolder($this->wkFolder);
+                    break;
+                }
+            }
+            default : $ret = SimpleFileProxy::fromFileSystem($outputFile, true);
+        }
 
         @unlink($outputFile);
         $ret->setName($this->templateName.'.'.$format);
         return $ret;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRenderedTemplateFile() {
+        if($this->wkFolder) {
+            $originalTpl = $this->getTemplateFile();
+            $newTpl = $this->getRenderedOutput('zip');
+            $newTpl->setName($originalTpl->getName());
+            $newTpl->setProperties($originalTpl->getProperties());
+            return $newTpl;
+        }
+        return null;
     }
 
     function __destruct() {

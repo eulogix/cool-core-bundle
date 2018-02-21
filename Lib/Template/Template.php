@@ -81,4 +81,12 @@ abstract class Template
      * @return FileProxyInterface
      */
     public abstract function getRenderedOutput($format = null);
+
+    /**
+     * if implemented, returns a template file with all the variables replaced
+     * @return FileProxyInterface|null
+     */
+    public function getRenderedTemplateFile() {
+        return null;
+    }
 }
