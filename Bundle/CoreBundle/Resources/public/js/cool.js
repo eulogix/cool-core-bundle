@@ -161,8 +161,8 @@ define([
             );
         },
 
-        repoFromId: function(repositoryId) {
-            return new coolFileRepository({repositoryId:repositoryId});
+        repoFromId: function(repositoryId, parameters) {
+            return new coolFileRepository(lang.mixin({repositoryId:repositoryId}, parameters || {}));
         },
 
         getFormatters: function() { return formatters; },

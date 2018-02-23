@@ -14,6 +14,7 @@ namespace Eulogix\Cool\Lib\Security;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountQuery;
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Cool\Lib\Enums\UserSettings;
 use Eulogix\Lib\Database\Postgres\PgUtils;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -154,6 +155,14 @@ class CoolUser implements UserInterface {
      */
     public function isAdmin() {
         return $this->hasRole( self::ROLE_ADMIN );
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEmailSignature()
+    {
+        return $this->getSetting(UserSettings::USER_SETTING_EMAIL_SIGNATURE);
     }
 
 }

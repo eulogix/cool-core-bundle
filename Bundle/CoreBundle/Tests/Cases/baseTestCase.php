@@ -32,6 +32,14 @@ class baseTestCase extends KernelTestCase
         self::bootKernel();
         Cool::getInstance()->initSchemas();
         \Propel::disableInstancePooling();
+
+        $container = self::$kernel->getContainer();
+
+        foreach(Cool::getInstance()->getAvailableSchemaNames() as $schemaName) {
+            $defaultSchemaParameter = "cool.test.schema.{$schemaName}.default_schema";
+            if($container->hasParameter($defaultSchemaParameter))
+                Cool::getInstance()->getSchema($schemaName)->setCurrentSchema( $container->getParameter($defaultSchemaParameter) );
+        }
     }
 
 }

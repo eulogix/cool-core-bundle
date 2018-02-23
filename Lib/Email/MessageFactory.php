@@ -70,4 +70,11 @@ class MessageFactory {
         return $msg;
     }
 
+    /**
+     * @return string
+     */
+    public function getMailerFrom()
+    {
+        return $this->mailerFrom;
+    }
 } 

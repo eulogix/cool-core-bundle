@@ -118,6 +118,8 @@ class CoolTableFileRepository extends BaseFileRepository {
             // {{ path('frepoGetPreviewImage', {'width': 100, 'repositoryId':'schema', 'filePath': '/core/account/cat_AVATAR/1' }) }}
             if( $parsedPath = self::parseFQPathId($filePath) ) {
                 $schema = Cool::getInstance()->getSchema($parsedPath['schema']);
+                if(isset($p['actualSchema']))
+                    $schema->setCurrentSchema($p['actualSchema']);
                 return self::fromCoolPropelObject($schema->getPropelObject($parsedPath['table'], $parsedPath['pk']));
             }
         }

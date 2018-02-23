@@ -365,13 +365,16 @@ class DictionaryBuilder {
                  */
                 $targetChildTagName = $targetChild->getName();
 
-                if( $targetChildTagName == $sourceChildTagName &&
-                    $this->getAttributeFrom($sourceChild, $attributeName) == $this->getAttributeFrom($targetChild, $attributeName)) {
+                $sourceAttributeValue = $this->getAttributeFrom($sourceChild, $attributeName);
+                $targetAttributeValue = $this->getAttributeFrom($targetChild, $attributeName);
 
+                //element exist in both xmls, so have to be merged
+                if($targetAttributeValue !== null && $targetChildTagName == $sourceChildTagName && $sourceAttributeValue == $targetAttributeValue ) {
                     $childExistsInTarget = true;
                     $this->mergeXmlAttributes($sourceChild, $targetChild);
                     $this->mergeXmlElementsBy($sourceChild, $targetChild, $attributeName);
                 }
+
             }
 
             if(!$childExistsInTarget)

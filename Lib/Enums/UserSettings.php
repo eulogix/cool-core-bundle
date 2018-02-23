@@ -18,4 +18,6 @@ namespace Eulogix\Cool\Lib\Enums;
 class UserSettings
 {
     const USER_SETTING_WIDGET_DISABLE = 'widget.disable.{1}';
+
+    const USER_SETTING_EMAIL_SIGNATURE = 'email_signature';
 }
