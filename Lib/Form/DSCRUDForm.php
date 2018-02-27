@@ -254,9 +254,6 @@ class DSCRUDForm extends Form  {
 
                     $this->storeOriginalValues( $originalValues );
 
-                    $this->addEvent("recordSaved");
-                    $this->dispatcher->dispatch(self::EVENT_RECORD_SAVED, new FormEvent($this));
-
                     return true;
                     
                     break;
@@ -288,6 +285,8 @@ class DSCRUDForm extends Form  {
         if($this->validate( array_keys($parameters) ) ) {
             if( $this->updateOrCreateRecord() ) {
                 $this->addMessage(Message::TYPE_INFO,"SAVED");
+                $this->addEvent("recordSaved");
+                $this->dispatcher->dispatch(self::EVENT_RECORD_SAVED, new FormEvent($this));
             }
         } else {
             $this->addMessage(Message::TYPE_ERROR, "NOT VALIDATED");

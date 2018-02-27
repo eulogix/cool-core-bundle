@@ -38,6 +38,10 @@ class CreateSessionTableCommand extends CoolCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('session.handler')->createTable();
+        try {
+            $this->getContainer()->get('session.handler')->createTable();
+        } catch(\Exception $e) {
+            $output->writeln($e->getMessage());
+        }
     }
 }

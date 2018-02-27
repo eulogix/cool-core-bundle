@@ -1,0 +1,11 @@
+[Unit]
+Description=Used with systemd images to run stuff at startup
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/init_script.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
