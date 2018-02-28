@@ -1,0 +1,20 @@
+<slave_config>
+    <!-- on a master server, the slaveserver node contains information about this Carte instance -->
+    <slaveserver>
+        <name>AppMaster</name>
+        <hostname>0.0.0.0</hostname>
+        <port>8080</port>
+
+        <!-- uncomment the next line if you want the DI Server to act as the load balancer -->
+        <webAppName>coolwebapp</webAppName>
+
+        <username>cluster</username>
+        <password>cluster</password>
+        <master>Y</master>
+    </slaveserver>
+
+    <repository>
+        <name>pentaho-libs_test_repo</name>
+    </repository>
+
+</slave_config>

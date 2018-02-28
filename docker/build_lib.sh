@@ -15,5 +15,12 @@ cd base_rundeck_image
 docker build --network=host --build-arg http_proxy=http://127.0.0.1:3128 -t cool_base_rundeck_image .
 cd ..
 
+cd base_tomcat_image
+docker build --network=host --build-arg http_proxy=http://127.0.0.1:3128 -t cool_base_tomcat_image .
+cd ..
+
+cd base_pdi_image
+docker build --network=host --build-arg http_proxy=http://127.0.0.1:3128 -t cool_base_pdi_image .
+cd ..
 
 

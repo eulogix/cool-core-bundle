@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories>
+
+    <repository>
+        <id>KettleFileRepository</id>
+        <name>pentaho-libs_test_repo</name>
+        <description>TEST_REPOSITORY</description>
+        <base_directory>/app/vendor/eulogix/libs-pentaho/tests/kettlerepo</base_directory>
+        <read_only>Y</read_only>
+        <hides_hidden_files>Y</hides_hidden_files>
+    </repository>
+
+</repositories>

@@ -121,10 +121,6 @@ services:
         class: Eulogix\Cool\Lib\Activiti\WorkFlowEngine
         arguments: ["@activiti.client", "%activiti_tenant_id%", "%activiti_cool_user_id%"]
 
-    pentaho.connector:
-        class: Eulogix\Lib\Pentaho\PDIConnector
-        arguments: ["%pdi_default_repository%", "%pdi_default_user%", "%pdi_default_password%"]
-
     java.bridge:
         class: Eulogix\Lib\Java\Bridge
         arguments: ["%java_bridge_url%"]

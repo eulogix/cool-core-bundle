@@ -13,7 +13,7 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Command\Pentaho;
 
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Symfony\Console\CoolCommand;
-use Eulogix\Lib\Pentaho\PDIConnector;
+use Eulogix\Lib\Pentaho\ConsolePDIConnector;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -70,19 +70,19 @@ class RunJobCommand extends CoolCommand
         $pdi = Cool::getInstance()->getFactory()->getPDIConnector();
 
         if($user)
-            $pdi->setUser($user);
+            $pdi->setRepositoryUser($user);
         if($password)
-            $pdi->setPassword($password);
+            $pdi->setRepositoryPassword($password);
         if($repositoryName)
             $pdi->setRepositoryName($repositoryName);
 
         $jobParams = $jobParamsJSON ? json_decode($jobParamsJSON, true) : [];
 
-        $exitCode = 0;
-        $commandOutput = $pdi->runJob($job, $jobPath ?? PDIConnector::DEFAULT_JOB_PATH, $jobParams, $exitCode);
+        $executionResult = $pdi->runJob($job, $jobPath ?? ConsolePDIConnector::DEFAULT_JOB_PATH, $jobParams);
 
-        $output->write($commandOutput);
-        return $exitCode;
+        $output->write($executionResult->getOutput());
+
+        return $executionResult->isSuccess()? 0 : 1;
     }
 
 }
