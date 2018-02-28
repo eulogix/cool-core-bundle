@@ -6,9 +6,6 @@
 
 FROM cool_base_php_image:latest
 
-# rd will use this to launch console jobs
-VOLUME ["/app"]
-
 RUN yum install -y --nogpgcheck java \
 && rpm -Uvh http://repo.rundeck.org/latest.rpm \
 && yum install -y --nogpgcheck rundeck rundeck-cli \
@@ -22,5 +19,8 @@ ADD ./import_jobs.sh /usr/bin/
 
 ADD ./image_init.service /etc/systemd/system/base_rundeck_image_init.service
 RUN systemctl enable base_rundeck_image_init.service
+
+# rd will use this to launch console jobs
+VOLUME ["/app"]
 
 EXPOSE 4440

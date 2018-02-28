@@ -11,8 +11,6 @@ RUN wget https://sourceforge.net/projects/pentaho/files/Data%20Integration/7.1/p
 
 RUN unzip pdi.zip
 
-VOLUME /root/.m2
-
 RUN yum install -y --nogpgcheck git maven
 
 RUN git clone https://github.com/eulogix/cool-kettle-integration.git \
@@ -42,5 +40,7 @@ RUN systemctl enable base_pdi_image_init.service
 
 RUN mkdir /var/log/pentaho \
 && chown www-data:www-data /var/log/pentaho
+
+VOLUME [ "/app" ]
 
 EXPOSE 8080

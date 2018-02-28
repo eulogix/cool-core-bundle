@@ -48,9 +48,17 @@ RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/master/web/i
 
 ADD ./etc/base_php_image_profile.sh /etc/profile.d/
 
-# Without this, init won't start the enabled services and exec'ing and starting
+ADD ./scripts/* /usr/bin/
+
+RUN mkdir /shared \
+&& mkdir /shared/xdebug_output \
+&& mkdir /shared/tmp \
+&& chmod 777 -R /shared
+VOLUME [ "/shared" ]
+
+# Sometimes ithout this, init won't start the enabled services and exec'ing and starting
 # them reports "Failed to get D-Bus connection: Operation not permitted".
-#VOLUME /run /tmp
+# VOLUME /run /tmp
 
 # Don't know if it's possible to run services without starting this
 CMD ["/usr/sbin/init"]

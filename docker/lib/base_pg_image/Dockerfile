@@ -47,11 +47,15 @@ RUN systemctl enable image_init.service
 ADD ./sql/* /opt/sql/
 ADD ./etc/* /opt/etc_base/
 
-# Without this, init won't start the enabled services and exec'ing and starting
+# Sometimes ithout this, init won't start the enabled services and exec'ing and starting
 # them reports "Failed to get D-Bus connection: Operation not permitted".
-VOLUME /run /tmp
+# VOLUME /run /tmp
 
 # Don't know if it's possible to run services without starting this
 CMD ["/usr/sbin/init"]
+
+VOLUME [ "/var/lib/pgsql/data"]
+VOLUME [ "/app" ]
+VOLUME [ "/shared" ]
 
 EXPOSE 5432

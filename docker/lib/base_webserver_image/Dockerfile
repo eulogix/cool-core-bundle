@@ -2,7 +2,7 @@
 # docker build --network=host --build-arg http_proxy=http://127.0.0.1:3128 -t cool_base_webserver_image .
 #
 # to run the image (from app root):
-# docker run -ti --cap-add SYS_ADMIN --security-opt seccomp:unconfined --mount type=bind,source="$(pwd)",target=/app -p 90:80 your_app_image:latest
+# docker run -ti --cap-add SYS_ADMIN --security-opt seccomp:unconfined --mount type=bind,source="$(pwd)",target=/app -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 your_app_image:latest
 
 FROM cool_base_php_image:latest
 
