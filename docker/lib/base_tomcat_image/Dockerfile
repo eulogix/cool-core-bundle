@@ -6,6 +6,7 @@
 
 FROM cool_base_php_image:latest
 
+RUN yum install -y --nogpgcheck java
 RUN yum install -y --nogpgcheck tomcat tomcat-admin-webapps tomcat-el-2.2-api tomcat-jsp-2.2-api tomcat-lib tomcat-servlet-3.0-api tomcat-webapps
 
 WORKDIR /tmp
@@ -34,16 +35,18 @@ RUN yum install -y --nogpgcheck git maven \
 
 ADD ./etc/activiti/activiti-context.xml /var/lib/tomcat/webapps/activiti-rest/WEB-INF/classes/activiti-context.xml
 
-RUN wget http://sourceforge.net/projects/php-java-bridge/files/Binary%20package/php-java-bridge_7.2.1/php-java-bridge_7.2.1_documentation.zip/download -O javabridge.zip
-RUN unzip javabridge.zip \
+# RUN wget http://sourceforge.net/projects/php-java-bridge/files/Binary%20package/php-java-bridge_7.2.1/php-java-bridge_7.2.1_documentation.zip/download -O javabridge.zip \
+RUN wget https://ufpr.dl.sourceforge.net/project/php-java-bridge/Binary%20package/php-java-bridge_7.2.1/php-java-bridge_7.2.1_documentation.zip -O javabridge.zip \
+&& unzip javabridge.zip \
 && mv JavaBridge.war /var/lib/tomcat/webapps/
 
 WORKDIR /var/lib/tomcat/webapps
 
 RUN chown tomcat:tomcat * -R
 
-ADD ./init_script.sh /usr/bin/base_tomcat_image_init.sh
-ADD ./image_init.service /etc/systemd/system/base_tomcat_image_init.service
-RUN systemctl enable base_tomcat_image_init.service
+COPY container-files /
+
+RUN systemctl enable tomcat_image_init.service \
+&& systemctl enable tomcat.service
 
 EXPOSE 8080

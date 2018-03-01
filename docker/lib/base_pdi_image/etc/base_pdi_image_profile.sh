@@ -1,1 +1,0 @@
-export PATH=/opt/data-integration/:$PATH

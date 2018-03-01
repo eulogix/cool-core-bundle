@@ -6,21 +6,21 @@
 
 FROM cool_base_php_image:latest
 
-RUN yum install -y --nogpgcheck java \
-&& rpm -Uvh http://repo.rundeck.org/latest.rpm \
-&& yum install -y --nogpgcheck rundeck rundeck-cli \
-&& chkconfig rundeckd on
+RUN yum install -y --nogpgcheck java
 
-ADD ./etc/rundeck/* /etc/rundeck/
-ADD ./etc/profile.sh /etc/profile.d/base_rundeck_image_env_vars.sh
-ADD ./init_script.sh /usr/bin/base_rundeck_image_init.sh
-ADD ./build_token.php /usr/bin/
-ADD ./import_jobs.sh /usr/bin/
-
-ADD ./image_init.service /etc/systemd/system/base_rundeck_image_init.service
-RUN systemctl enable base_rundeck_image_init.service
+RUN rpm -Uvh http://repo.rundeck.org/latest.rpm \
+&& yum install -y --nogpgcheck rundeck rundeck-cli
 
 # rd will use this to launch console jobs
 VOLUME ["/app"]
+
+ENV RD_PASSWORD=admin
+ENV RD_URL=http://docker-host.devel:4440
+ENV RD_USER=admin
+ENV RD_PASSWORD=admin
+
+COPY container-files /
+RUN systemctl enable rundeck_image_init.service \
+&& chkconfig rundeckd on
 
 EXPOSE 4440
