@@ -40,12 +40,7 @@ RUN echo "root:root" | chpasswd \
 && yum --enablerepo=remi-php71 install -y --nogpgcheck php php-bcmath php-cli php-common php-gd php-mbstring php-mcrypt php-mysqlnd php-opcache php-pdo php-pecl-apcu php-pecl-apcu-bc php-pecl-igbinary php-pecl-jsonc php-pecl-memcache php-pecl-memcached php-pecl-msgpack php-pecl-sqlite php-pecl-xdebug php-pecl-zip php-pecl-zmq php-pgsql php-process php-soap php-xml php-fpm php-pecl-http php-pecl-mailparse \
 && wget https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer -O - -q | php -- --quiet \
 && mv composer.phar /usr/bin/composer \
-&& chmod +x /usr/bin/composer \
-&& mkdir /shared \
-&& mkdir /shared/xdebug_output \
-&& mkdir /shared/tmp \
-&& mkdir /shared/log \
-&& chmod 777 -R /shared
+&& chmod +x /usr/bin/composer
 
 VOLUME [ "/shared" ]
 
