@@ -1,7 +1,7 @@
 {% set uid="widget"~random() %}
 
 <div id="container{{ uid }}" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:true, liveSplitters:false" style="padding: 0"
-        {% if containerCSSClass %}class="{{ containerCSSClass }}"{% endif %}>
+        {% if containerCSSClass is defined %}class="{{ containerCSSClass }}"{% endif %}>
 
     <div id="listerPane{{ uid }}" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" style="padding: 0; border:0; border-bottom: 1px solid #B5BCC7;">
         {{ coolWidget( lister, listerParameters,

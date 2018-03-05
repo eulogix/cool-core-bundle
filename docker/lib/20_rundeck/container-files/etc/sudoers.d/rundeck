@@ -1,0 +1,1 @@
+rundeck ALL=(www-data) NOPASSWD: ALL

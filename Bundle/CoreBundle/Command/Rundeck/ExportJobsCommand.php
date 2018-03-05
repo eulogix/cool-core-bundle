@@ -80,6 +80,7 @@ class ExportJobsCommand extends CoolCommand
             array_pop($levels);
             $j->setGroup(implode('/',$levels));
             $j->setProject($input->getArgument('project'));
+            $j->setMultipleExecutions(true);
 
             if(!$simulate) {
                 $rdOutput = $rd->importJobs($j->getXML(true));

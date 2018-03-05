@@ -50,7 +50,8 @@ class RunJobCommand extends CoolCommand
      * @return string
      */
     public function getSchedulerCommandUser() {
-        return $this->getContainer()->getParameter('pdi_command_user');
+        return $this->getContainer()->has('pdi_command_user') ?
+            $this->getContainer()->getParameter('pdi_command_user') : parent::getSchedulerCommandUser();
     }
 
     /**
@@ -80,7 +81,9 @@ class RunJobCommand extends CoolCommand
 
         $executionResult = $pdi->runJob($job, $jobPath ?? ConsolePDIConnector::DEFAULT_JOB_PATH, $jobParams);
 
-        $output->write($executionResult->getOutput());
+        $output->writeln("Carte job id: ".$executionResult->getId());
+        $output->writeln("Job output:\n ".$executionResult->getOutput());
+        $output->writeln("Job errors:\n ".$executionResult->getError());
 
         return $executionResult->isSuccess()? 0 : 1;
     }

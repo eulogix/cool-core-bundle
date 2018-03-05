@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+$cacheDir = @$_SERVER['WGET_CACHE_DIR'];
+if(!is_dir($cacheDir)) {
+    echo "\nENV var WGET_CACHE_DIR must be set and pointing to a valid directory\n";
+} else if($argc < 2 || $argc > 3) {
+    echo "$argc wgetcache <url> [optional <output>]";
+} else {
+    $url = $argv[1];
+    $output = @$argv[2];
+
+    if(!$output && preg_match('%([^/]+?)$%sim', $url, $m)) {
+        $output = $m[1];
+    }
+
+    $hash = md5($url);
+    $file = "{$cacheDir}/{$hash}_{$output}";
+    if(!file_exists($file) || filesize($file) == 0) {
+        echo "This url is not cached yet. fetching...\n";
+        shell_exec("wget \"{$url}\" -O \"{$file}\"");
+    } else echo "url is cached.\n";
+
+    if(!file_exists($file) || filesize($file) == 0) {
+        echo "Invalid url\n";
+        exit(1);
+    }
+
+    $curdir = getcwd();
+    shell_exec("cp \"{$file}\" \"{$curdir}/{$output}\"");
+
+    echo "Done\n";
+}

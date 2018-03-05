@@ -1,0 +1,12 @@
+[Unit]
+Description=Used with systemd images to run stuff at startup
+After=network.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/bin/pg_image_init.sh
+TimeoutStartSec=
+
+[Install]
+WantedBy=default.target
