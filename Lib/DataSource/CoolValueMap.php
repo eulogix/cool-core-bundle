@@ -204,8 +204,7 @@ class CoolValueMap extends BaseValueMap implements Shimmable
                     if($overridesHD === null) {
                         $c = new \ReflectionClass($obj);
                         $hd = $c->getMethod('getHumanDescription');
-                        $cn = $hd->getDeclaringClass()->getShortName();
-                        $overridesHD = $cn !== 'CoolPropelObject';
+                        $overridesHD = $hd->class !== 'Eulogix\Cool\Lib\Database\Propel\CoolPropelObject';
                     }
                     if($overridesHD)
                         $row['label'] = $obj->getHumanDescription();
