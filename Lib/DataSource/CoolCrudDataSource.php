@@ -659,16 +659,8 @@ class CoolCrudDataSource extends CoolDataSource {
 
     public function getTotalRows($parameters = array(), $query=null) {
         if($db = $this->getCoolSchema()) {
-
-            // we try to use the stripped query as it's faster, falling back to the normal one if that fails
-            try {
-                $select = $this->getStrippedCountSelectSql($parameters, $query);
-                return $db->fetch("SELECT COUNT(*) FROM ({$select['statement']}) as _tmp_", $select['parameters']);
-            } catch (\Exception $e) {
-                $select = $this->getFullSelectSql($parameters, $query);
-                return $db->fetch("SELECT COUNT(*) FROM ({$select['statement']}) as _tmp_", $select['parameters']);
-            }
-
+            $select = $this->getStrippedCountSelectSql($parameters, $query);
+            return $db->fetch("SELECT COUNT(*) FROM ({$select['statement']}) as _tmp_", $select['parameters']);
         }
         return 0;
     }
