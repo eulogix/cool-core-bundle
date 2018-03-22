@@ -35,6 +35,11 @@ Interface ReminderProviderInterface {
     public function getType();
 
     /**
+     * @return string
+     */
+    public function getCategory();
+
+    /**
      * returns all the pending reminders
      * @return integer
      */

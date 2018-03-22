@@ -40,6 +40,7 @@ class CoolRemindersManager extends RemindersManager {
                 $ds = new UserReminderDS($ur->getUserReminderId());
                 $dsProvider = new DSReminderProvider($ds->build(),[]);
                 $dsProvider->setType($ur->getType());
+                $dsProvider->setCategory($ur->getCategory());
 
                 if($lister = $ur->getLister())
                     $dsProvider->setDetailsLister($lister);

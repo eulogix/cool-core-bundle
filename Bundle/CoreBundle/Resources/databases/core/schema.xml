@@ -738,7 +738,10 @@
             <_control type="select"></_control>
         </column>
 
-        <column name="category" type="LONGVARCHAR"></column>
+        <column name="category" type="LONGVARCHAR">
+            <_lookup type="table" domainName="CORE_USER_REMINDER_CATEGORY"/>
+            <_control type="select"></_control>
+        </column>
 
         <column name="sort_order" type="INTEGER"/>
 

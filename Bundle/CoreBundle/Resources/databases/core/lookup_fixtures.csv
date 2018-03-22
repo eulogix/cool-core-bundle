@@ -10,6 +10,7 @@ CODE_SNIPPET_CATEGORY;lister_variable;"Lister Variable";"Lister Action";"Lister 
 CODE_SNIPPET_CATEGORY;widget_action;"Widget Action";"Widget Action";"Widget Action";"Widget Action";;
 CODE_SNIPPET_CATEGORY;widget_variable;"Widget Variable";"Widget Action";"Widget Action";"Widget Action";;
 CORE_GROUP_TYPE;;;;;;;
+CORE_USER_REMINDER_CATEGORY;;;;;;;
 CORE_USER_TYPE;;;;;;;
 EXT_FIELD_TYPE;;;;;;;
 RULE_CATEGORY;;;;;;;

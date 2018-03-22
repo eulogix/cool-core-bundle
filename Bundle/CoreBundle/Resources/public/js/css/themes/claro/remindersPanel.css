@@ -1,0 +1,8 @@
+.claro .remindersPanel .sectionTitle {
+    padding:5px;
+    margin-top:10px;
+    font-weight: bold;
+    color:#333333;
+    border-bottom: 1px solid #666666;
+    background: linear-gradient(transparent, #F4F9FF); /* Standard syntax */
+}

@@ -629,7 +629,10 @@
             
         </column>
 
-        <column name="category" type="LONGVARCHAR"/>
+        <column name="category" type="LONGVARCHAR">
+            
+            
+        </column>
 
         <column name="sort_order" type="INTEGER"/>
 

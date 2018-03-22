@@ -86,6 +86,14 @@ class FakeReminderProvider implements ReminderProviderInterface
     /**
      * @inheritdoc
      */
+    public function getCategory()
+    {
+        // TODO: Implement getCategory() method.
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function countAll()
     {
         // TODO: Implement countAll() method.

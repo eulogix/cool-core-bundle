@@ -1497,6 +1497,15 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'attributes' => 
           array (
           ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'table',
+            'domainName' => 'CORE_USER_REMINDER_CATEGORY',
+          ),
         ),
         'sort_order' => 
         array (

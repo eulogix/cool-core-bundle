@@ -11,6 +11,7 @@
 
 namespace Eulogix\Cool\Lib\Reminder;
 
+use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Traits\ParametersHolder;
 use Eulogix\Cool\Lib\Util\DateFunctions;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -229,6 +230,24 @@ abstract class RemindersManager {
         return [
             'counts'=>$allCounts,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategories() {
+        $categories = Cool::getInstance()->getCoreSchema()->getLookupTable('core_user_reminder_category');
+        $ret = ['all'=>[], 'bykey'=>[]];
+        foreach($categories as $category) {
+            $ret['all'][ $category['value'] ] = [
+                'label' => $category['label']
+            ];
+        }
+        foreach($this->getAllProviders() as $uniqueKey => $provider) {
+            $ret['bykey'][$uniqueKey] = $provider->getCategory();
+        }
+
+        return $ret;
     }
 
     /**

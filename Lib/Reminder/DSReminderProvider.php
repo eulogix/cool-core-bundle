@@ -32,7 +32,7 @@ class DSReminderProvider implements ReminderProviderInterface {
     /**
      * @var string
      */
-    protected $detailsLister, $type;
+    protected $detailsLister, $type, $category;
 
     use ParametersHolder;
 
@@ -150,5 +150,24 @@ class DSReminderProvider implements ReminderProviderInterface {
         $this->type = $type;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     * @return $this
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
 
 }

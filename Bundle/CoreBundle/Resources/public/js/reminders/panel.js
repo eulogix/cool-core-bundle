@@ -2,6 +2,7 @@ define("cool/reminders/panel",
     [
         "dojo/_base/declare",
         "dojo/_base/lang",
+        "dojo/_base/array",
         "dojo/_base/event",
         "dojo/Deferred",
         "dojo/Evented",
@@ -37,7 +38,7 @@ define("cool/reminders/panel",
         "cool/dijit/iconButton",
 
         "dojo/text!./templates/panel.html"
-    ], function(declare, lang, event, deferred, Evented,
+    ], function(declare, lang, array, event, deferred, Evented,
                 _WidgetBase,
                 _TemplatedMixin,
                 _WidgetsInTemplateMixin,
@@ -75,9 +76,9 @@ define("cool/reminders/panel",
 
             widgetsInTemplate: true,
 
-            grid : {},
+            grids : [],
 
-            simpleGrid : {},
+            simpleGrids : [],
 
             detailsWidget: {},
 
@@ -86,6 +87,8 @@ define("cool/reminders/panel",
             currentView : null,
 
             translator : null,
+
+            categories: {},
 
             label_1week: '',
             label_2weeks: '',
@@ -156,9 +159,14 @@ define("cool/reminders/panel",
                     this.toolbar.addChild(debugButton);
                 }
 
-                d.resolve();
+                cool.callCommand('getReminderCategories', function(data) {
+                    t.categories = data;
+                    d.resolve();
+                });
+
                 return d;
             },
+
 
             reloadData: function() {
                 this.refreshDatedGrid();
@@ -276,64 +284,74 @@ define("cool/reminders/panel",
                     data: this.getQueryParameters()
                 }).then(function(matrix){
 
+                    t.destroyDatedGrids();
+
+                    var categories = t.getCategoriesFor(Object.keys(matrix.counts));
+
                     var layout = t.buildLayout(matrix);
-                    var store = t.buildStore(matrix);
 
-                    var grid = new Grid({
-                        store: store,
-                        structure: layout,
-                        autoHeight: true,
-                        modules: [
-                           // mods.VirtualVScroller,
-                            selectCell,
-                            CellWidget
-                        ]
+                    array.forEach(categories, function(category){
+
+                        var store = t.buildStore(matrix, category);
+
+                        var grid = new Grid({
+                            store: store,
+                            structure: layout,
+                            autoHeight: true,
+                            modules: [
+                                // mods.VirtualVScroller,
+                                selectCell,
+                                CellWidget
+                            ]
+                        });
+
+                        t.own(grid);
+
+                        t.grids.push(grid);
+
+                        var titleDiv = dojo.doc.createElement('div');
+                        domClass.add(titleDiv, 'sectionTitle');
+                        titleDiv.innerHTML = t.categories.all[category].label;
+                        t.viewContainer.domNode.appendChild(titleDiv);
+
+                        t.viewContainer.domNode.appendChild(grid.domNode);
+
+                        dojo.connect(grid, "onCellClick", function(evt){
+                        });
+
+                        //ensures that only one cell is selected
+                        dojo.connect(grid.select.cell, "onSelected", function(cell){
+                            var selected = grid.select.cell.getSelected();
+                            for(var i=0;i<selected.length;i++) {
+                                var row = selected[i][0];
+                                var col = selected[i][1];
+                                if((row!=cell.row.id) || (col!=cell.column.id))
+                                    grid.select.cell.deselectById(row, col);
+                            }
+                            //open details for cell
+                            if(col != 'key')
+                                t.openDetail(row, col);
+                        });
+
+                        //if there are errors, the line is red
+                        dojo.connect(grid.body, 'onAfterRow', function(row){
+
+                            var rowData = row.rawData();
+                            var node = row.node();
+
+
+                            if( t.debugMode && rowData.errors.length > 0) {
+                                domClass.remove(node, "gridxRowOdd");
+                                domClass.toggle(node, "gridxRowError", true);
+                            }
+
+                        });
+
+                        grid.startup();
+
                     });
 
-                    t.own(grid);
-
-                    if(lang.isFunction(t.grid.destroyRecursive)) {
-                        t.grid.destroyRecursive();
-                    }
-
-                    t.grid = grid;
-
-                    t.viewContainer.domNode.appendChild(grid.domNode);
-
-
-                    dojo.connect(grid, "onCellClick", function(evt){
-                    });
-
-                    //ensures that only one cell is selected
-                    dojo.connect(grid.select.cell, "onSelected", function(cell){
-                        var selected = grid.select.cell.getSelected();
-                        for(var i=0;i<selected.length;i++) {
-                            var row = selected[i][0];
-                            var col = selected[i][1];
-                            if((row!=cell.row.id) || (col!=cell.column.id))
-                                grid.select.cell.deselectById(row, col);
-                        }
-                        //open details for cell
-                        if(col != 'key')
-                            t.openDetail(row, col);
-                    });
-
-                    //if there are errors, the line is red
-                    dojo.connect(grid.body, 'onAfterRow', function(row){
-
-                        var rowData = row.rawData();
-                        var node = row.node();
-
-
-                        if( t.debugMode && rowData.errors.length > 0) {
-                            domClass.remove(node, "gridxRowOdd");
-                            domClass.toggle(node, "gridxRowError", true);
-                        }
-
-                    });
-
-                    grid.startup();
-                    d.resolve(grid);
+                    d.resolve();
 
                 }, function(err){
                     dialogManager.showXhrError(err);
@@ -354,6 +372,10 @@ define("cool/reminders/panel",
                     method: "POST",
                     data: this.getQueryParameters()
                 }).then(function(matrix){
+
+                    self.destroySimpleGrids();
+
+                    var categories = self.getCategoriesFor(Object.keys(matrix.counts));
 
                     var layout = [
                         {id: 'key', field: 'key', name: self.getTranslator().trans("Key"), width: '80%',
@@ -393,59 +415,64 @@ define("cool/reminders/panel",
                         {id: 'count', field: 'count', name: self.getTranslator().trans("Count"), width: '20%', decorator:self._cellDecorator}
                     ];
 
-                    var store = self.buildSimpleStore(matrix);
+                    array.forEach(categories, function(category){
+                        var store = self.buildSimpleStore(matrix, category);
 
-                    var grid = new Grid({
-                        store: store,
-                        structure: layout,
-                        autoHeight: true,
-                        modules: [
-                            // mods.VirtualVScroller,
-                            selectCell,
-                            CellWidget
-                        ]
+                        var grid = new Grid({
+                            store: store,
+                            structure: layout,
+                            autoHeight: true,
+                            modules: [
+                                // mods.VirtualVScroller,
+                                selectCell,
+                                CellWidget
+                            ]
+                        });
+
+                        self.own(grid);
+
+                        self.simpleGrids.push(grid);
+
+                        var titleDiv = dojo.doc.createElement('div');
+                        domClass.add(titleDiv, 'sectionTitle');
+                        titleDiv.innerHTML = self.categories.all[category].label;
+                        self.simpleGridContainer.domNode.appendChild(titleDiv);
+
+                        self.simpleGridContainer.domNode.appendChild(grid.domNode);
+
+                        //if there are errors, the line is red
+                        dojo.connect(grid.body, 'onAfterRow', function(row){
+
+                            var rowData = row.rawData();
+                            var node = row.node();
+
+                            if(self.debugMode && rowData.errors.length > 0) {
+                                domClass.remove(node, "gridxRowOdd");
+                                domClass.toggle(node, "gridxRowError", true);
+                            }
+
+                        });
+
+                        dojo.connect(grid, "onCellClick", function(evt){
+                        });
+
+                        //ensures that only one cell is selected
+                        dojo.connect(grid.select.cell, "onSelected", function(cell){
+                            var selected = grid.select.cell.getSelected();
+                            for(var i=0;i<selected.length;i++) {
+                                var row = selected[i][0];
+                                var col = selected[i][1];
+                                if((row!=cell.row.id) || (col!=cell.column.id))
+                                    grid.select.cell.deselectById(row, col);
+                            }
+                            self.openSimpleDetail(grid, row);
+                        });
+
+                        grid.startup();
+
                     });
 
-                    self.own(grid);
-
-                    if(lang.isFunction(self.simpleGrid.destroyRecursive)) {
-                        self.simpleGrid.destroyRecursive();
-                    }
-
-                    self.simpleGrid = grid;
-
-                    self.simpleGridContainer.domNode.appendChild(grid.domNode);
-
-                    //if there are errors, the line is red
-                    dojo.connect(grid.body, 'onAfterRow', function(row){
-
-                        var rowData = row.rawData();
-                        var node = row.node();
-
-                        if(self.debugMode && rowData.errors.length > 0) {
-                            domClass.remove(node, "gridxRowOdd");
-                            domClass.toggle(node, "gridxRowError", true);
-                        }
-
-                    });
-
-                    dojo.connect(grid, "onCellClick", function(evt){
-                    });
-
-                    //ensures that only one cell is selected
-                    dojo.connect(grid.select.cell, "onSelected", function(cell){
-                        var selected = grid.select.cell.getSelected();
-                        for(var i=0;i<selected.length;i++) {
-                            var row = selected[i][0];
-                            var col = selected[i][1];
-                            if((row!=cell.row.id) || (col!=cell.column.id))
-                                grid.select.cell.deselectById(row, col);
-                        }
-                        self.openSimpleDetail(row);
-                    });
-
-                    grid.startup();
-                    d.resolve(grid);
+                    d.resolve();
 
                 }, function(err){
                     dialogManager.showXhrError(err);
@@ -455,6 +482,44 @@ define("cool/reminders/panel",
                 return d;
             },
 
+            getCategoriesFor: function(keys) {
+                var self = this;
+                var usedCategories = {};
+                array.forEach(keys, function(key){
+                    usedCategories[ self.categories.bykey[key] ] = 1;
+                });
+                return Object.keys(usedCategories);
+            },
+
+            destroySimpleGrids: function() {
+                array.forEach(this.simpleGrids, function(gridObj){
+                    if(lang.isFunction(gridObj.destroyRecursive)) {
+                        gridObj.destroyRecursive();
+                    }
+                });
+                this.simpleGridContainer.domNode.innerHTML = '';
+            },
+
+            destroyDatedGrids: function() {
+                array.forEach(this.datedGrids, function(gridObj){
+                    if(lang.isFunction(gridObj.destroyRecursive)) {
+                        gridObj.destroyRecursive();
+                    }
+                });
+                this.viewContainer.domNode.innerHTML = '';
+            },
+
+            refreshSimpleGrids: function() {
+                array.forEach(this.simpleGrids, function(gridObj){
+                    gridObj.body.refresh();
+                });
+            },
+
+            refreshDatedGrids: function() {
+                array.forEach(this.grids, function(gridObj){
+                    gridObj.body.refresh();
+                });
+            },
 
             openDetail: function(key, day) {
                 var t = this;
@@ -482,9 +547,9 @@ define("cool/reminders/panel",
                 });
             },
 
-            openSimpleDetail: function(key) {
+            openSimpleDetail: function(gridObj, key) {
                 var t = this;
-                var record = t.simpleGrid.row(key).rawData();
+                var record = gridObj.row(key).rawData();
                 cool.widgetFactory(record.detailsLister, lang.mixin({
                     translationDomain: record.detailsTranslationDomain,
                     provider: key
@@ -584,13 +649,14 @@ define("cool/reminders/panel",
                 return layout;
             },
 
-            buildStore: function(matrix) {
+            buildStore: function(matrix, category) {
 
                 var rows = [];
                 var cs = null;
 
                 for(var countSet in matrix.counts)
-                    if(matrix.counts.hasOwnProperty(countSet)) {
+                    if(matrix.counts.hasOwnProperty(countSet) &&
+                        this.categories.bykey[countSet] == category) {
 
                         cs = matrix.counts[countSet];
 
@@ -618,13 +684,14 @@ define("cool/reminders/panel",
                 return new Memory({data:rows});
             },
 
-            buildSimpleStore: function(matrix) {
+            buildSimpleStore: function(matrix, category) {
 
                 var rows = [];
                 var cs = null;
 
-                for(var countSet in matrix.counts)
-                    if(matrix.counts.hasOwnProperty(countSet)) {
+                for(var countSet in matrix.counts) {
+                    if(matrix.counts.hasOwnProperty(countSet) &&
+                       this.categories.bykey[countSet] == category) {
                         cs = matrix.counts[countSet];
                         var row = {
                             id: countSet,
@@ -640,6 +707,7 @@ define("cool/reminders/panel",
 
                         rows.push(row);
                     }
+                }
 
                 return new Memory({data:rows});
             },
@@ -701,8 +769,8 @@ define("cool/reminders/panel",
             toggleDebugMode: function() {
                 var t = this;
                 t.debugMode = !t.debugMode;
-                t.simpleGrid.body.refresh();
-                t.grid.body.refresh();
+                t.refreshSimpleGrids();
+                t.refreshDatedGrids();
             }
 
         });

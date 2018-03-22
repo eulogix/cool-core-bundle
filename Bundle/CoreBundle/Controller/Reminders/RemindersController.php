@@ -57,6 +57,15 @@ class RemindersController extends Controller
     }
 
     /**
+     * @Route("/getCategories", name="getReminderCategories", options={"expose"=true})
+     */
+    public function getCategories(Request $request) {
+        $manager = Cool::getInstance()->getFactory()->getRemindersManager();
+        $manager->getParameters()->replace($request->request->all());
+        return new JsonResponse( $manager->getCategories() );
+    }
+
+    /**
      * @Route("/getParameters", name="NotificationsGetParameters", options={"expose"=true})
      */
     public function getParameters() {

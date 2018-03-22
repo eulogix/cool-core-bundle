@@ -859,7 +859,14 @@
                         }
                     },
                     "category": {
-                        "attributes": []
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "CORE_USER_REMINDER_CATEGORY"
+                        }
                     },
                     "sort_order": {
                         "attributes": []
