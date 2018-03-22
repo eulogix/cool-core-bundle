@@ -51,7 +51,8 @@
         </column>
 
         <column name="roles" type="LONGVARCHAR" sqlType="text[]" description="SF security roles"></column>
-
+		<column name="last_password_update" type="TIMESTAMP"></column>
+		
         <unique>
             <unique-column name="login_name"/>
         </unique>
@@ -70,6 +71,17 @@
             <![CDATA[
                     NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=''hidden'';*/
+                    return NEW;
+                ]]>
+        </_trigger>
+		
+		<_trigger name="last_password_modified" when="BEFORE INSERT OR UPDATE" language="plpgsql">
+            <![CDATA[
+                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN
+
+                            NEW.last_password_update = NOW();
+                    END IF;
+
                     return NEW;
                 ]]>
         </_trigger>
