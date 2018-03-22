@@ -173,6 +173,27 @@ class LookupsBuilder {
                     $sql.=" EXCEPTION WHEN OTHERS THEN END; $$;\n";
                 }
 
+            }
+            return $sql;
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    private function getConstraintsScript()
+    {
+        $allLookups = $this->getLookups();
+        if(isset($allLookups[Lookup::TYPE_TABLE])) {
+            $sql ="SET lc_messages TO 'en_US.UTF-8';\n\n";
+            $lookups = $allLookups[Lookup::TYPE_TABLE];
+            $fields = $this->getFields();
+
+            foreach($lookups as $domainName => $relations) {
+                $tn = strtolower($domainName);
+
                 //3. create foreign keys to lookup tables
                 foreach($relations as $rel) {
                     /** @var Lookup $lookup */
@@ -218,6 +239,15 @@ class LookupsBuilder {
      */
     public function outputTableScript($targetFile) {
         if($script = $this->getTableScript()) {
+            file_put_contents($targetFile, $script);
+        }
+    }
+
+    /**
+     * @param string $targetFile
+     */
+    public function outputConstraintsScript($targetFile) {
+        if($script = $this->getConstraintsScript()) {
             file_put_contents($targetFile, $script);
         }
     }

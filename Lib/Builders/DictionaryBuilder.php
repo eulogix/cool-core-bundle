@@ -154,7 +154,8 @@ class DictionaryBuilder {
 
         //lookups
         $lookupsBuilder = new LookupsBuilder($this->schemaName);
-        $lookupsBuilder->outputTableScript($this->projectDir."/sql/post_sync/003_auto_cool_lookups.sql");
+        $lookupsBuilder->outputTableScript($this->projectDir."/sql/pre_sync/003_auto_cool_lookups.sql");
+        $lookupsBuilder->outputConstraintsScript($this->projectDir."/sql/post_sync/003_auto_cool_lookups.sql");
         $lookupsBuilder->outputEnumScript($this->projectDir."/sql/post_sync/004_auto_cool_lookups_enum.sql");
         $lookupsBuilder->outputLookupFunctions($this->projectDir."/sql/post_sync/004_auto_cool_lookup_functions.sql");
         //the fixture sql has to be executed last as it always triggers errors of duplicate keys, executing it earlier
