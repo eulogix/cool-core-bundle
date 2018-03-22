@@ -2,7 +2,7 @@ SET lc_messages TO 'en_US.UTF-8';
 
 SET SCHEMA 'core';
 
-            CREATE OR REPLACE FUNCTION account_hash_password() 
+            CREATE OR REPLACE FUNCTION account_password() 
             RETURNS trigger AS $$
                 DECLARE
                         oldpath text;
@@ -13,6 +13,9 @@ SET SCHEMA 'core';
             
                     NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=''hidden'';*/
+                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN
+                        NEW.last_password_update = NOW();
+                    END IF;
                     PERFORM set_config('search_path', oldpath, false);
 RETURN NEW;
                 
@@ -20,11 +23,11 @@ RETURN NEW;
                     END
             $$ LANGUAGE plpgsql;
 
-            DROP TRIGGER IF EXISTS T_account_hash_password ON core.account;
+            DROP TRIGGER IF EXISTS T_account_password ON core.account;
 
-            CREATE TRIGGER T_account_hash_password BEFORE INSERT OR UPDATE ON core.account
+            CREATE TRIGGER T_account_password BEFORE INSERT OR UPDATE ON core.account
               FOR EACH ROW
-              EXECUTE PROCEDURE account_hash_password();
+              EXECUTE PROCEDURE account_password();
 
             CREATE OR REPLACE FUNCTION table_extension_field_DELETE_FIELDS() 
             RETURNS trigger AS $$

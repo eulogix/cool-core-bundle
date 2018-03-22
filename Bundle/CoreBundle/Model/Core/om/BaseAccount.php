@@ -4,11 +4,13 @@ namespace Eulogix\Cool\Bundle\CoreBundle\Model\Core\om;
 
 use \BasePeer;
 use \Criteria;
+use \DateTime;
 use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
 use \PropelCollection;
+use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
@@ -139,6 +141,12 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
      * @var        string
      */
     protected $roles;
+
+    /**
+     * The value for the last_password_update field.
+     * @var        string
+     */
+    protected $last_password_update;
 
     /**
      * @var        PropelObjectCollection|AccountSetting[] Collection to store aggregation of AccountSetting objects.
@@ -443,6 +451,41 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     {
 
         return $this->roles;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [last_password_update] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getLastPasswordUpdate($format = null)
+    {
+        if ($this->last_password_update === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->last_password_update);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_password_update, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -761,6 +804,29 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     } // setRoles()
 
     /**
+     * Sets the value of [last_password_update] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return Account The current object (for fluent API support)
+     */
+    public function setLastPasswordUpdate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->last_password_update !== null || $dt !== null) {
+            $currentDateAsString = ($this->last_password_update !== null && $tmpDt = new DateTime($this->last_password_update)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->last_password_update = $newDateAsString;
+                $this->modifiedColumns[] = AccountPeer::LAST_PASSWORD_UPDATE;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setLastPasswordUpdate()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -807,6 +873,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             $this->company_name = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
             $this->validity = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
             $this->roles = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->last_password_update = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -816,7 +883,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 15; // 15 = AccountPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = AccountPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Account object", $e);
@@ -1283,6 +1350,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::ROLES)) {
             $modifiedColumns[':p' . $index++]  = 'roles';
         }
+        if ($this->isColumnModified(AccountPeer::LAST_PASSWORD_UPDATE)) {
+            $modifiedColumns[':p' . $index++]  = 'last_password_update';
+        }
 
         $sql = sprintf(
             'INSERT INTO core.account (%s) VALUES (%s)',
@@ -1338,6 +1408,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                         break;
                     case 'roles':
                         $stmt->bindValue($identifier, $this->roles, PDO::PARAM_STR);
+                        break;
+                    case 'last_password_update':
+                        $stmt->bindValue($identifier, $this->last_password_update, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1591,6 +1664,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             case 14:
                 return $this->getRoles();
                 break;
+            case 15:
+                return $this->getLastPasswordUpdate();
+                break;
             default:
                 return null;
                 break;
@@ -1635,6 +1711,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             $keys[12] => $this->getCompanyName(),
             $keys[13] => $this->getValidity(),
             $keys[14] => $this->getRoles(),
+            $keys[15] => $this->getLastPasswordUpdate(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1751,6 +1828,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             case 14:
                 $this->setRoles($value);
                 break;
+            case 15:
+                $this->setLastPasswordUpdate($value);
+                break;
         } // switch()
     }
 
@@ -1790,6 +1870,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[12], $arr)) $this->setCompanyName($arr[$keys[12]]);
         if (array_key_exists($keys[13], $arr)) $this->setValidity($arr[$keys[13]]);
         if (array_key_exists($keys[14], $arr)) $this->setRoles($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setLastPasswordUpdate($arr[$keys[15]]);
     }
 
     /**
@@ -1816,6 +1897,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::COMPANY_NAME)) $criteria->add(AccountPeer::COMPANY_NAME, $this->company_name);
         if ($this->isColumnModified(AccountPeer::VALIDITY)) $criteria->add(AccountPeer::VALIDITY, $this->validity);
         if ($this->isColumnModified(AccountPeer::ROLES)) $criteria->add(AccountPeer::ROLES, $this->roles);
+        if ($this->isColumnModified(AccountPeer::LAST_PASSWORD_UPDATE)) $criteria->add(AccountPeer::LAST_PASSWORD_UPDATE, $this->last_password_update);
 
         return $criteria;
     }
@@ -1893,6 +1975,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $copyObj->setCompanyName($this->getCompanyName());
         $copyObj->setValidity($this->getValidity());
         $copyObj->setRoles($this->getRoles());
+        $copyObj->setLastPasswordUpdate($this->getLastPasswordUpdate());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -4374,6 +4457,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $this->company_name = null;
         $this->validity = null;
         $this->roles = null;
+        $this->last_password_update = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

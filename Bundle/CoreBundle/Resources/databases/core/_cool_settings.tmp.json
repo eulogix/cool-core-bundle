@@ -12,10 +12,10 @@
                 },
                 "trigger": [
                     {
-                        "name": "hash_password",
+                        "name": "password",
                         "language": "plpgsql",
                         "when": "BEFORE INSERT OR UPDATE",
-                        "body": "\n            \n                    NEW.hashed_password = md5(NEW.password);\n                    \/*NEW.password=''hidden'';*\/\n                    return NEW;\n                \n        "
+                        "body": "\n            \n                    NEW.hashed_password = md5(NEW.password);\n                    \/*NEW.password=''hidden'';*\/\n                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN\n                        NEW.last_password_update = NOW();\n                    END IF;\n                    return NEW;\n                \n        "
                     }
                 ],
                 "files": {
@@ -91,6 +91,9 @@
                         }
                     },
                     "roles": {
+                        "attributes": []
+                    },
+                    "last_password_update": {
                         "attributes": []
                     }
                 }

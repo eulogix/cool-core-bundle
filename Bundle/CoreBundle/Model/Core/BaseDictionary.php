@@ -27,13 +27,16 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
       array (
         0 => 
         array (
-          'name' => 'hash_password',
+          'name' => 'password',
           'language' => 'plpgsql',
           'when' => 'BEFORE INSERT OR UPDATE',
           'body' => '
             
                     NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=\'\'hidden\'\';*/
+                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN
+                        NEW.last_password_update = NOW();
+                    END IF;
                     return NEW;
                 
         ',
@@ -165,6 +168,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'roles' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'last_password_update' => 
         array (
           'attributes' => 
           array (

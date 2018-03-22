@@ -38,6 +38,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery orderByCompanyName($order = Criteria::ASC) Order by the company_name column
  * @method AccountQuery orderByValidity($order = Criteria::ASC) Order by the validity column
  * @method AccountQuery orderByRoles($order = Criteria::ASC) Order by the roles column
+ * @method AccountQuery orderByLastPasswordUpdate($order = Criteria::ASC) Order by the last_password_update column
  *
  * @method AccountQuery groupByAccountId() Group by the account_id column
  * @method AccountQuery groupByLoginName() Group by the login_name column
@@ -54,6 +55,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery groupByCompanyName() Group by the company_name column
  * @method AccountQuery groupByValidity() Group by the validity column
  * @method AccountQuery groupByRoles() Group by the roles column
+ * @method AccountQuery groupByLastPasswordUpdate() Group by the last_password_update column
  *
  * @method AccountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AccountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -116,6 +118,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method Account findOneByCompanyName(string $company_name) Return the first Account filtered by the company_name column
  * @method Account findOneByValidity(string $validity) Return the first Account filtered by the validity column
  * @method Account findOneByRoles(string $roles) Return the first Account filtered by the roles column
+ * @method Account findOneByLastPasswordUpdate(string $last_password_update) Return the first Account filtered by the last_password_update column
  *
  * @method array findByAccountId(int $account_id) Return Account objects filtered by the account_id column
  * @method array findByLoginName(string $login_name) Return Account objects filtered by the login_name column
@@ -132,6 +135,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method array findByCompanyName(string $company_name) Return Account objects filtered by the company_name column
  * @method array findByValidity(string $validity) Return Account objects filtered by the validity column
  * @method array findByRoles(string $roles) Return Account objects filtered by the roles column
+ * @method array findByLastPasswordUpdate(string $last_password_update) Return Account objects filtered by the last_password_update column
  */
 abstract class BaseAccountQuery extends ModelCriteria
 {
@@ -237,7 +241,7 @@ abstract class BaseAccountQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT account_id, login_name, password, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles FROM core.account WHERE account_id = :p0';
+        $sql = 'SELECT account_id, login_name, password, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles, last_password_update FROM core.account WHERE account_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -796,6 +800,49 @@ abstract class BaseAccountQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AccountPeer::ROLES, $roles, $comparison);
+    }
+
+    /**
+     * Filter the query on the last_password_update column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLastPasswordUpdate('2011-03-14'); // WHERE last_password_update = '2011-03-14'
+     * $query->filterByLastPasswordUpdate('now'); // WHERE last_password_update = '2011-03-14'
+     * $query->filterByLastPasswordUpdate(array('max' => 'yesterday')); // WHERE last_password_update < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $lastPasswordUpdate The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AccountQuery The current query, for fluid interface
+     */
+    public function filterByLastPasswordUpdate($lastPasswordUpdate = null, $comparison = null)
+    {
+        if (is_array($lastPasswordUpdate)) {
+            $useMinMax = false;
+            if (isset($lastPasswordUpdate['min'])) {
+                $this->addUsingAlias(AccountPeer::LAST_PASSWORD_UPDATE, $lastPasswordUpdate['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($lastPasswordUpdate['max'])) {
+                $this->addUsingAlias(AccountPeer::LAST_PASSWORD_UPDATE, $lastPasswordUpdate['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AccountPeer::LAST_PASSWORD_UPDATE, $lastPasswordUpdate, $comparison);
     }
 
     /**

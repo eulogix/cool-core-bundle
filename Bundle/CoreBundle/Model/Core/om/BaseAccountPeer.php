@@ -33,13 +33,13 @@ abstract class BaseAccountPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\AccountTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 15;
+    const NUM_COLUMNS = 16;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 15;
+    const NUM_HYDRATE_COLUMNS = 16;
 
     /** the column name for the account_id field */
     const ACCOUNT_ID = 'core.account.account_id';
@@ -86,6 +86,9 @@ abstract class BaseAccountPeer
     /** the column name for the roles field */
     const ROLES = 'core.account.roles';
 
+    /** the column name for the last_password_update field */
+    const LAST_PASSWORD_UPDATE = 'core.account.last_password_update';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -105,12 +108,12 @@ abstract class BaseAccountPeer
      * e.g. AccountPeer::$fieldNames[AccountPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('AccountId', 'LoginName', 'Password', 'HashedPassword', 'Type', 'FirstName', 'LastName', 'Sex', 'Email', 'Telephone', 'Mobile', 'DefaultLocale', 'CompanyName', 'Validity', 'Roles', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('accountId', 'loginName', 'password', 'hashedPassword', 'type', 'firstName', 'lastName', 'sex', 'email', 'telephone', 'mobile', 'defaultLocale', 'companyName', 'validity', 'roles', ),
-        BasePeer::TYPE_COLNAME => array (AccountPeer::ACCOUNT_ID, AccountPeer::LOGIN_NAME, AccountPeer::PASSWORD, AccountPeer::HASHED_PASSWORD, AccountPeer::TYPE, AccountPeer::FIRST_NAME, AccountPeer::LAST_NAME, AccountPeer::SEX, AccountPeer::EMAIL, AccountPeer::TELEPHONE, AccountPeer::MOBILE, AccountPeer::DEFAULT_LOCALE, AccountPeer::COMPANY_NAME, AccountPeer::VALIDITY, AccountPeer::ROLES, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ACCOUNT_ID', 'LOGIN_NAME', 'PASSWORD', 'HASHED_PASSWORD', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'SEX', 'EMAIL', 'TELEPHONE', 'MOBILE', 'DEFAULT_LOCALE', 'COMPANY_NAME', 'VALIDITY', 'ROLES', ),
-        BasePeer::TYPE_FIELDNAME => array ('account_id', 'login_name', 'password', 'hashed_password', 'type', 'first_name', 'last_name', 'sex', 'email', 'telephone', 'mobile', 'default_locale', 'company_name', 'validity', 'roles', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        BasePeer::TYPE_PHPNAME => array ('AccountId', 'LoginName', 'Password', 'HashedPassword', 'Type', 'FirstName', 'LastName', 'Sex', 'Email', 'Telephone', 'Mobile', 'DefaultLocale', 'CompanyName', 'Validity', 'Roles', 'LastPasswordUpdate', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('accountId', 'loginName', 'password', 'hashedPassword', 'type', 'firstName', 'lastName', 'sex', 'email', 'telephone', 'mobile', 'defaultLocale', 'companyName', 'validity', 'roles', 'lastPasswordUpdate', ),
+        BasePeer::TYPE_COLNAME => array (AccountPeer::ACCOUNT_ID, AccountPeer::LOGIN_NAME, AccountPeer::PASSWORD, AccountPeer::HASHED_PASSWORD, AccountPeer::TYPE, AccountPeer::FIRST_NAME, AccountPeer::LAST_NAME, AccountPeer::SEX, AccountPeer::EMAIL, AccountPeer::TELEPHONE, AccountPeer::MOBILE, AccountPeer::DEFAULT_LOCALE, AccountPeer::COMPANY_NAME, AccountPeer::VALIDITY, AccountPeer::ROLES, AccountPeer::LAST_PASSWORD_UPDATE, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ACCOUNT_ID', 'LOGIN_NAME', 'PASSWORD', 'HASHED_PASSWORD', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'SEX', 'EMAIL', 'TELEPHONE', 'MOBILE', 'DEFAULT_LOCALE', 'COMPANY_NAME', 'VALIDITY', 'ROLES', 'LAST_PASSWORD_UPDATE', ),
+        BasePeer::TYPE_FIELDNAME => array ('account_id', 'login_name', 'password', 'hashed_password', 'type', 'first_name', 'last_name', 'sex', 'email', 'telephone', 'mobile', 'default_locale', 'company_name', 'validity', 'roles', 'last_password_update', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -120,12 +123,12 @@ abstract class BaseAccountPeer
      * e.g. AccountPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('AccountId' => 0, 'LoginName' => 1, 'Password' => 2, 'HashedPassword' => 3, 'Type' => 4, 'FirstName' => 5, 'LastName' => 6, 'Sex' => 7, 'Email' => 8, 'Telephone' => 9, 'Mobile' => 10, 'DefaultLocale' => 11, 'CompanyName' => 12, 'Validity' => 13, 'Roles' => 14, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('accountId' => 0, 'loginName' => 1, 'password' => 2, 'hashedPassword' => 3, 'type' => 4, 'firstName' => 5, 'lastName' => 6, 'sex' => 7, 'email' => 8, 'telephone' => 9, 'mobile' => 10, 'defaultLocale' => 11, 'companyName' => 12, 'validity' => 13, 'roles' => 14, ),
-        BasePeer::TYPE_COLNAME => array (AccountPeer::ACCOUNT_ID => 0, AccountPeer::LOGIN_NAME => 1, AccountPeer::PASSWORD => 2, AccountPeer::HASHED_PASSWORD => 3, AccountPeer::TYPE => 4, AccountPeer::FIRST_NAME => 5, AccountPeer::LAST_NAME => 6, AccountPeer::SEX => 7, AccountPeer::EMAIL => 8, AccountPeer::TELEPHONE => 9, AccountPeer::MOBILE => 10, AccountPeer::DEFAULT_LOCALE => 11, AccountPeer::COMPANY_NAME => 12, AccountPeer::VALIDITY => 13, AccountPeer::ROLES => 14, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ACCOUNT_ID' => 0, 'LOGIN_NAME' => 1, 'PASSWORD' => 2, 'HASHED_PASSWORD' => 3, 'TYPE' => 4, 'FIRST_NAME' => 5, 'LAST_NAME' => 6, 'SEX' => 7, 'EMAIL' => 8, 'TELEPHONE' => 9, 'MOBILE' => 10, 'DEFAULT_LOCALE' => 11, 'COMPANY_NAME' => 12, 'VALIDITY' => 13, 'ROLES' => 14, ),
-        BasePeer::TYPE_FIELDNAME => array ('account_id' => 0, 'login_name' => 1, 'password' => 2, 'hashed_password' => 3, 'type' => 4, 'first_name' => 5, 'last_name' => 6, 'sex' => 7, 'email' => 8, 'telephone' => 9, 'mobile' => 10, 'default_locale' => 11, 'company_name' => 12, 'validity' => 13, 'roles' => 14, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        BasePeer::TYPE_PHPNAME => array ('AccountId' => 0, 'LoginName' => 1, 'Password' => 2, 'HashedPassword' => 3, 'Type' => 4, 'FirstName' => 5, 'LastName' => 6, 'Sex' => 7, 'Email' => 8, 'Telephone' => 9, 'Mobile' => 10, 'DefaultLocale' => 11, 'CompanyName' => 12, 'Validity' => 13, 'Roles' => 14, 'LastPasswordUpdate' => 15, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('accountId' => 0, 'loginName' => 1, 'password' => 2, 'hashedPassword' => 3, 'type' => 4, 'firstName' => 5, 'lastName' => 6, 'sex' => 7, 'email' => 8, 'telephone' => 9, 'mobile' => 10, 'defaultLocale' => 11, 'companyName' => 12, 'validity' => 13, 'roles' => 14, 'lastPasswordUpdate' => 15, ),
+        BasePeer::TYPE_COLNAME => array (AccountPeer::ACCOUNT_ID => 0, AccountPeer::LOGIN_NAME => 1, AccountPeer::PASSWORD => 2, AccountPeer::HASHED_PASSWORD => 3, AccountPeer::TYPE => 4, AccountPeer::FIRST_NAME => 5, AccountPeer::LAST_NAME => 6, AccountPeer::SEX => 7, AccountPeer::EMAIL => 8, AccountPeer::TELEPHONE => 9, AccountPeer::MOBILE => 10, AccountPeer::DEFAULT_LOCALE => 11, AccountPeer::COMPANY_NAME => 12, AccountPeer::VALIDITY => 13, AccountPeer::ROLES => 14, AccountPeer::LAST_PASSWORD_UPDATE => 15, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ACCOUNT_ID' => 0, 'LOGIN_NAME' => 1, 'PASSWORD' => 2, 'HASHED_PASSWORD' => 3, 'TYPE' => 4, 'FIRST_NAME' => 5, 'LAST_NAME' => 6, 'SEX' => 7, 'EMAIL' => 8, 'TELEPHONE' => 9, 'MOBILE' => 10, 'DEFAULT_LOCALE' => 11, 'COMPANY_NAME' => 12, 'VALIDITY' => 13, 'ROLES' => 14, 'LAST_PASSWORD_UPDATE' => 15, ),
+        BasePeer::TYPE_FIELDNAME => array ('account_id' => 0, 'login_name' => 1, 'password' => 2, 'hashed_password' => 3, 'type' => 4, 'first_name' => 5, 'last_name' => 6, 'sex' => 7, 'email' => 8, 'telephone' => 9, 'mobile' => 10, 'default_locale' => 11, 'company_name' => 12, 'validity' => 13, 'roles' => 14, 'last_password_update' => 15, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -214,6 +217,7 @@ abstract class BaseAccountPeer
             $criteria->addSelectColumn(AccountPeer::COMPANY_NAME);
             $criteria->addSelectColumn(AccountPeer::VALIDITY);
             $criteria->addSelectColumn(AccountPeer::ROLES);
+            $criteria->addSelectColumn(AccountPeer::LAST_PASSWORD_UPDATE);
         } else {
             $criteria->addSelectColumn($alias . '.account_id');
             $criteria->addSelectColumn($alias . '.login_name');
@@ -230,6 +234,7 @@ abstract class BaseAccountPeer
             $criteria->addSelectColumn($alias . '.company_name');
             $criteria->addSelectColumn($alias . '.validity');
             $criteria->addSelectColumn($alias . '.roles');
+            $criteria->addSelectColumn($alias . '.last_password_update');
         }
     }
 
