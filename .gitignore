@@ -1,0 +1,3 @@
+deploy/vagrant-singlevm/.vagrant/
+deploy/vagrant/.vagrant/machines/default/virtualbox/creator_uid
+deploy/vagrant/.vagrant/

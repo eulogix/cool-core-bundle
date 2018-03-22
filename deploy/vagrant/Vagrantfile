@@ -1,0 +1,76 @@
+
+# config parameters
+require 'yaml'
+settings = YAML.load_file 'vagrant.yml'
+
+VM_NAME = settings['main']['name']
+VM_HOST = settings['main']['hostname']
+VM_IP = settings['main']['ip']
+VM_MEMORY = settings['main']['memory']
+
+SQUID_SPOOL_SHARE = settings['shares']['squid_spool']
+WGET_CACHE_SHARE = settings['shares']['wget_cache']
+SMB_SHARE = settings['shares']['app']
+SMB_USER = settings['main']['shares_user']
+SMB_PASSWORD = settings['main']['shares_password']
+# end config parameters
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"
+
+    #config.ssh.username = 'root'
+    #config.ssh.password = 'vagrant'
+    #config.ssh.insert_key = 'true'
+
+    config.vm.hostname = VM_NAME
+
+    config.vm.provider "hyperv" do |h|
+        h.vmname = VM_NAME
+        #uncomment if you have win10 10586+
+        #h.enable_virtualization_extensions = true
+        h.differencing_disk = true
+        h.memory = 4096
+    end
+
+    # Set VM name in Virtualbox
+    config.vm.provider "virtualbox" do |v|
+        v.name = VM_NAME
+        v.memory = 8192
+    end
+
+    #DHCP — comment this out if planning on using NAT instead
+    #config.vm.network "private_network", type: "dhcp"
+    config.vm.network "public_network"
+
+    # # Port forwarding — uncomment this to use NAT instead of DHCP
+    # config.vm.network "forwarded_port", guest: 80, host: VM_PORT
+    # Sync folder
+
+    # this one doesn't work as cifs can't be provisioned before mount.
+    # don't feel like repackaging the image, so a hack will do for now
+    #config.vm.synced_folder HOST_PATH, "/opt/wget_cache", id: "app", :mount_options => ["uid=33,gid=33"]
+
+    config.vm.provision :file, source: '../lib', destination: "/tmp/install_lib"
+
+    config.vm.provision "shell", :args => [SMB_SHARE, SMB_USER, SMB_PASSWORD, SQUID_SPOOL_SHARE, WGET_CACHE_SHARE], inline: <<-SHELL
+
+        chown root:root -R /tmp/install_lib
+        chmod 777 -R /tmp/install_lib
+        /bin/cp -Rf  /tmp/install_lib/common/* /
+        /bin/cp -Rf  /tmp/install_lib/vagrant/* /
+
+        /tmp/install_lib/vagrant_base.sh "$@"
+        # from now on, yum uses the squid proxy
+        . /etc/profile
+        /tmp/install_lib/vagrant_base_installs.sh "$@"
+
+        /tmp/install_lib/install/docker.sh
+
+        service docker start
+        chkconfig docker on
+
+        rm -rf /tmp/install_lib
+        yum clean all
+
+    SHELL
+end

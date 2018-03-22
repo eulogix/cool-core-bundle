@@ -12,6 +12,8 @@
 namespace Eulogix\Cool\Lib\Database\Postgres;
 
 use Eulogix\Cool\Lib\Cool;
+use Eulogix\Lib\Database\Postgres\DumpFixer;
+use Hoa\Compiler\Visitor\Dump;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -345,9 +347,11 @@ class Differ {
         if(!in_array($schema, $schemasToDump))
             $schemasToDump[] = $schema;
 
-        $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s ".$this->getPgDumpSchemasDefinition($schemasToDump)." --username=$user $database >\"$targetFile\"",
+        $this->shellExec($cmd = "pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s ".$this->getPgDumpSchemasDefinition($schemasToDump)." --username=$user $database >\"$targetFile\"",
             "dump of the old schema, as is");
 
+        DumpFixer::fixDump($targetFile);
+        
         file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
 
         // convert MT schema to public
@@ -368,6 +372,8 @@ class Differ {
                 $schemaName = $this->isMultiTenant ? self::TEMP_SCHEMA_NAME : $this->schema;
                 $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s --schema=\"$schemaName\" --username=$user $temp_db >\"$targetFile\"",
                     "final dump of the stripped schema to our target file");
+
+                DumpFixer::fixDump($targetFile);
             }
 
             file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
@@ -408,6 +414,8 @@ class Differ {
         $this->shellExec("pg_dump --host=\"{$this->host}\" --port=\"{$this->port}\" -s --schema=\"$schemaName\" --username=$user $temp_db >\"$targetFile\"",
             "dump of the updated schema");
 
+        DumpFixer::fixDump($targetFile);
+
         file_put_contents($targetFile, $this->stripDumpFromUnneededStatemets(file_get_contents($targetFile)));
 
         $this->shellExec("dropdb --host=\"{$this->host}\" --port=\"{$this->port}\" --username=$user $temp_db",
@@ -445,7 +453,7 @@ class Differ {
                 $ret = file_get_contents($diff);
 
                 //apgdiff failed for some reason!
-                if(preg_match('/Exception in .+?java\..+?at .+?cz/sm', $ret)) {
+                if(preg_match('/Exception in.+?cz\.startnet/sim', $ret)) {
                     $this->hasErrors = true;
                     $this->lastErrors['errors'][] = "APGDIFF FAILED: ".$ret;
                     return false;
