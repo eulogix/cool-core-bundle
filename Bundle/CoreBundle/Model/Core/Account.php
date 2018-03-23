@@ -92,4 +92,11 @@ class Account extends BaseAccount
     public function getGroupIds() {
         return $this->getCoolDatabase()->fetchArrayWithNumericKeys("SELECT account_group_id FROM account_group_ref WHERE account_id = :id", [':id' => $this->getAccountId()]);
     }
+	
+	public function verifyPassExpiration()
+    {
+		//TODO
+		//pending of model update
+        return TRUE;
+    }
 }
