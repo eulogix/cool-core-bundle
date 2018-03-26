@@ -93,10 +93,13 @@ class Schema implements Shimmable
      * @return string
      */
     public function getShimUID() {
-        $UID = get_class($this) .
-               ($this->isMultiTenant() ? $this->getCurrentSchema() : "") .
-               (session_status() == PHP_SESSION_ACTIVE && Cool::getInstance()->getFactory()->getSession()->getDebugLookups() ? "_DL_" : "_NODL_");
-        return md5($UID);
+        $session = Cool::getInstance()->getFactory()->getSession();
+        return md5(implode(';',[
+            get_class($this),
+            ($this->isMultiTenant() ? $this->getCurrentSchema() : ""),
+            ($session && $session->getDebugLookups() ? "_DL_" : "_NODL_"),
+            ($session ? $session->getLocale() : "")
+        ]));
     }
 
     /**

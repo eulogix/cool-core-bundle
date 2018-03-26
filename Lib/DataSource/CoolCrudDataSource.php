@@ -92,8 +92,15 @@ class CoolCrudDataSource extends CoolDataSource {
      * @return string
      */
     public function getShimUID() {
-        $UID = get_class($this). $this->schemaName . serialize($this->tableRelations) . serialize($this->getFieldNames()) . $this->getCoolSchema()->getCurrentSchema();
-        return md5($UID);
+        $session = Cool::getInstance()->getFactory()->getSession();
+        return md5(implode(';',[
+            get_class($this),
+            $this->schemaName,
+            serialize($this->tableRelations),
+            serialize($this->getFieldNames()),
+            $this->getCoolSchema()->getCurrentSchema(),
+            $session ? $session->getLocale() : ""
+        ]));
     }
 
     /**
