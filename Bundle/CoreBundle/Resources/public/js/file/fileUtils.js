@@ -61,7 +61,7 @@ define([
             dialog.show({ group:"gallery", title:'Gallery' });
         },
 
-        downloadToClient: function(url, title) {
+        downloadToClient: function(url) {
             window.location = url;
         },
 

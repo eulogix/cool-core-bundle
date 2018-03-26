@@ -18,6 +18,7 @@ use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileRepositoryPreviewProvider;
 use Eulogix\Cool\Lib\File\FileUtil;
 use Eulogix\Lib\File\Proxy\SimpleFileProxy;
+use Eulogix\Lib\File\ZipUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -64,18 +65,45 @@ class FileRepositoryController extends Controller
         $repo = FileRepositoryFactory::fromId($repositoryId);
         $repo->setParameters($this->get('request')->query->all());
 
-        $filePath = $this->get('request')->query->get('filePath');
+        $query = $this->get('request')->query;
 
-        if($repo->getUserPermissions()->canDownloadFile($filePath)) {
-            $fileProxy = $repo->get($filePath);
+        $filePaths = $query->has('filePaths') ? json_decode($query->get('filePaths')) : [];
+        if($query->has('filePath'))
+            $filePaths[] = $query->get('filePath');
+
+        $downloadableFilePaths = array_filter($filePaths, function($fp) use ($repo) {
+            return $repo->getUserPermissions()->canDownloadFile($fp) && !$repo->get($fp)->isDirectory();
+        });
+
+        $nrDownloadableFiles = count($downloadableFilePaths);
+        if($nrDownloadableFiles > 0) {
+            $multiDl = false;
+            if($nrDownloadableFiles == 1) {
+                $fileProxy = $repo->get($downloadableFilePaths[0]);
+            } else {
+                $tempFolder = FileUtil::getTempFolder();
+                foreach ($downloadableFilePaths as $filePath) {
+                    if($fileProxy = $repo->get($filePath)) {
+                        $fileProxy->toFile($tempFolder.DIRECTORY_SEPARATOR.$fileProxy->getName());
+                    }
+                }
+                $fileProxy = ZipUtils::zipFolder($tempFolder);
+                $fileProxy->setName('multiDownload.zip');
+                if(file_exists($tempFolder) && is_dir($tempFolder))
+                    exec("rm -rf \"{$tempFolder}\"");
+                $multiDl = true;
+            }
 
             $tempFile = tempnam( Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(), 'DOWNLOAD');
             $fileProxy->toFile($tempFile);
+            if($multiDl)
+                $fileProxy->clear();
             $response = new BinaryFileResponse($tempFile, 200);
             $response->headers->set('Content-Type', FileUtil::getMIMEType($fileProxy->getExtension()));
             $response->headers->set('Content-Disposition', "attachment; filename=\"".$fileProxy->getName()."\"");
             $response->deleteFileAfterSend(true);
             return $response;
+
         } else return $this->getForbiddenResponse();
     }
 

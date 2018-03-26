@@ -192,13 +192,10 @@ define([
 
 		download: function() {
 			var store = this.store, id, selection, object;
-
-			selection = this.context.isOnGrid ? this.grid.selection : this.tree.selectedItems;
-			for (id in selection) {
-				object = store.storeMemory.get(id);
-				fileUtils.downloadToClient(
-					UrlUtils.addParams(this.serviceDownload, {'filePath' : id}),
-					object.ext || '');
+			if(this.context.isOnGrid) {
+                selection = this.grid.selection;
+                if(Object.keys(selection).length > 0)
+                    fileUtils.downloadToClient(UrlUtils.addParams(this.serviceDownload, {'filePaths' : JSON.stringify(Object.keys(selection))}));
 			}
 		}
 
