@@ -130,6 +130,9 @@
         <index>
             <index-column name="name"/>
         </index>
+        <index>
+            <index-column name="account_id"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -166,6 +169,9 @@
         <index>
             <index-column name="name"/>
         </index>
+        <index>
+            <index-column name="account_profile_id"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -200,6 +206,15 @@
             <unique-column name="account_id"/>
             <unique-column name="account_profile_id"/>
         </unique>
+        <index>
+            <index-column name="account_id"/>
+        </index>
+        <index>
+            <index-column name="account_profile_id"/>
+        </index>
+        <index>
+            <index-column name="sort_order"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -224,6 +239,9 @@
         <unique>
             <unique-column name="name"/>
         </unique>
+        <index>
+            <index-column name="type"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -260,6 +278,13 @@
             <unique-column name="account_id"/>
             <unique-column name="account_group_id"/>
         </unique>
+        <index>
+            <index-column name="account_id"/>
+        </index>
+        <index>
+            <index-column name="account_group_id"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -285,6 +310,12 @@
             <unique-column name="name"/>
             <unique-column name="variation"/>
         </unique>
+        <index>
+            <index-column name="name"/>
+        </index>
+        <index>
+            <index-column name="variation"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -314,6 +345,12 @@
             <unique-column name="name"/>
             <unique-column name="form_config_id"/>
         </unique>
+        <index>
+            <index-column name="form_config_id"/>
+        </index>
+        <index>
+            <index-column name="name"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -336,6 +373,12 @@
             <unique-column name="name"/>
             <unique-column name="variation"/>
         </unique>
+        <index>
+            <index-column name="name"/>
+        </index>
+        <index>
+            <index-column name="variation"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -395,6 +438,12 @@
             <unique-column name="name"/>
             <unique-column name="lister_config_id"/>
         </unique>
+        <index>
+            <index-column name="lister_config_id"/>
+        </index>
+        <index>
+            <index-column name="name"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -421,7 +470,12 @@
             <unique-column name="domain_name"/>
             <unique-column name="value"/>
         </unique>
-
+        <index>
+            <index-column name="domain_name"/>
+        </index>
+        <index>
+            <index-column name="sort_order"/>
+        </index>
         <behavior name="extendable"/>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
@@ -440,6 +494,15 @@
         <column name="description" type="LONGVARCHAR">
             <_control type="textarea"></_control>
         </column>
+        <index>
+            <index-column name="db_schema"/>
+        </index>
+        <index>
+            <index-column name="db_table"/>
+        </index>
+        <index>
+            <index-column name="active_flag"/>
+        </index>
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -471,12 +534,22 @@
                     foreign="field_definition_id"/>
         </foreign-key>
 
+        <index>
+            <index-column name="table_extension_id"/>
+        </index>
+        <index>
+            <index-column name="field_definition_id"/>
+        </index>
+        <index>
+            <index-column name="active_flag"/>
+        </index>
+
         <_trigger name="DELETE_FIELDS" when="AFTER DELETE" language="plpgsql" >
             DELETE FROM field_definition WHERE field_definition_id = OLD.field_definition_id;
             RETURN NULL; -- ignored, this is an AFTER trigger
         </_trigger>
         <behavior name="notifier">
-			<parameter name="schema" value="core"></parameter>
+            <parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
         </behavior>
     </table>
@@ -510,6 +583,11 @@
         <column name="description" type="LONGVARCHAR">
             <_control type="textarea"></_control>
         </column>
+
+        <index>
+            <index-column name="name"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -558,10 +636,13 @@
             <unique-column name="locale"/>
             <unique-column name="token"/>
         </unique>
-        
-        <index><index-column name="active_flag"/></index>                 
-        <index><index-column name="used_flag"/></index>       
-        
+
+        <index><index-column name="domain_name"/></index>
+        <index><index-column name="locale"/></index>
+        <index><index-column name="token"/></index>
+        <index><index-column name="active_flag"/></index>
+        <index><index-column name="used_flag"/></index>
+
         <!-- this trigger activates the translation the first time that a non-default value is inserted in the value field -->
         <_trigger name="activate" language="plpgsql" when="BEFORE INSERT OR UPDATE">
             <![CDATA[
@@ -673,6 +754,9 @@
                     foreign="account_id"/>
         </foreign-key>
 
+        <index><index-column name="user_id"/></index>
+        <index><index-column name="context"/></index>
+
         <behavior name="auditable">
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
         </behavior>
@@ -711,10 +795,16 @@
             <index-column name="context_schema"/>
         </index>
         <index>
+            <index-column name="context_actual_schema"/>
+        </index>
+        <index>
             <index-column name="context_table"/>
         </index>
         <index>
             <index-column name="context_category"/>
+        </index>
+        <index>
+            <index-column name="field_definition_id"/>
         </index>
 
         <behavior name="notifier">
@@ -765,6 +855,16 @@
             <_control type="textarea"></_control>
         </column>
 
+        <index>
+            <index-column name="type"/>
+        </index>
+        <index>
+            <index-column name="category"/>
+        </index>
+        <index>
+            <index-column name="sort_order"/>
+        </index>
+
         <unique>
             <unique-column name="name"></unique-column>
         </unique>
@@ -798,6 +898,11 @@
         <unique>
             <unique-column name="name"></unique-column>
         </unique>
+
+        <index>
+            <index-column name="category"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -842,6 +947,20 @@
             <unique-column name="name"></unique-column>
             <unique-column name="rule_id"></unique-column>
         </unique>
+
+        <index>
+            <index-column name="name"/>
+        </index>
+        <index>
+            <index-column name="rule_id"/>
+        </index>
+        <index>
+            <index-column name="enabled_flag"/>
+        </index>
+        <index>
+            <index-column name="code_snippet_id"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -891,6 +1010,16 @@
             <unique-column name="name"></unique-column>
         </unique>
 
+        <index>
+            <index-column name="category"/>
+        </index>
+        <index>
+            <index-column name="nspace"/>
+        </index>
+        <index>
+            <index-column name="name"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -908,6 +1037,11 @@
         <foreign-key foreignTable="code_snippet" onDelete="restrict">
             <reference local="code_snippet_id" foreign="code_snippet_id"/>
         </foreign-key>
+
+        <index>
+            <index-column name="code_snippet_id"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -942,6 +1076,20 @@
             <unique-column name="widget_rule_id"></unique-column>
             <unique-column name="widget_id"></unique-column>
         </unique>
+
+        <index>
+            <index-column name="parent_widget_rule_id"/>
+        </index>
+        <index>
+            <index-column name="widget_id"/>
+        </index>
+        <index>
+            <index-column name="rule_id"/>
+        </index>
+        <index>
+            <index-column name="enabled_flag"/>
+        </index>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
@@ -973,6 +1121,7 @@
         <unique>
             <unique-column name="name"></unique-column>
         </unique>
+
         <behavior name="notifier">
 			<parameter name="schema" value="core"></parameter>
             <parameter name="target" value="EulogixCoolCoreBundle/core"></parameter>
