@@ -330,7 +330,7 @@ define("cool/reminders/panel",
                             }
                             //open details for cell
                             if(col != 'key')
-                                t.openDetail(row, col);
+                                t.openDetail(grid, row, col);
                         });
 
                         //if there are errors, the line is red
@@ -521,10 +521,10 @@ define("cool/reminders/panel",
                 });
             },
 
-            openDetail: function(key, day) {
+            openDetail: function(gridObj, key, day) {
                 var t = this;
-                var record = t.grid.row(key).rawData();
-                var column = t.grid.column(day);
+                var record = gridObj.row(key).rawData();
+                var column = gridObj.column(day);
 
                 cool.widgetFactory(record.detailsLister, lang.mixin({
                     translationDomain: record.detailsTranslationDomain,
