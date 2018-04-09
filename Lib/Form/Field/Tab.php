@@ -40,6 +40,8 @@ class Tab extends Field {
                 $opt[] = array( self::OPTIONS_LABEL_ATTR => is_numeric($key) ? $value : $key, self::OPTIONS_VALUE_ATTR => $value);
             } elseif( $this->checkOption($value) ) {
                 $opt[] = $value;
+            } elseif( isset($value['value'])) {
+                $this->addValue( $value['value'], '[NT] '.$value['value'] );
             } else {
                 throw new \Exception("bad option value : ".var_export($value, true));
             }

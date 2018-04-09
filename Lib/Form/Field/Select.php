@@ -48,6 +48,8 @@ class Select extends Field {
                 $opt[] = array('label'=>is_numeric($key) ? $value : $key, 'value'=>$value);
             } elseif( $this->checkOption($value) ) {
                 $opt[] = $value;
+            } elseif( isset($value['value'])) {
+                $this->addValue( $value['value'], '[NT] '.$value['value'] );
             } else {
                 throw new \Exception("bad option value : ".var_export($value, true));
             }
