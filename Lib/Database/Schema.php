@@ -603,14 +603,21 @@ class Schema implements Shimmable
         $cdb = Cool::getInstance()->getCoreSchema();
         $currentLocale = Cool::getInstance()->getFactory()->getSession()->getLocale();
 
-        $stmt = "SELECT value AS value, dec_{$currentLocale} AS label FROM lookup WHERE domain_name=:domain_name";
+        $stmt = "SELECT value, dec_{$currentLocale} AS label, sort_order, ext, filter FROM lookup WHERE domain_name=:domain_name";
         if ($filter = $this->getSchemaFilter()) {
             $stmt .= " AND (schema_filter IS NULL OR ('{$filter}' = ANY(schema_filter)))";
         }
         $stmt .= " ORDER BY sort_order ASC, label ASC";
 
         $ret = $cdb->fetchArray($stmt, array(":domain_name" => $domainName), false, 60 * 5);
-
+        foreach ($ret as &$row) {
+            foreach ($row as $k => $v) {
+                if (PgUtils::isPGArray($v)) {
+                    $row[ $k ] = PgUtils::fromPGArray($v);
+                }
+            }
+        }
+        
         return $ret;
     }
 
