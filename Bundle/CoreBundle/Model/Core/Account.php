@@ -18,6 +18,8 @@ use Eulogix\Cool\Lib\Cool;
 
 class Account extends BaseAccount
 {
+    const DEFAULT_PASSWORD_EXPIRATION_DAYS = 90;
+
     public function getSetting($settingName)
     {
         $cdb = Cool::getInstance()->getCoreSchema()->fetch("SELECT value FROM account_setting_prioritized WHERE account_id=:user_id AND name=:name AND valid=TRUE",array(':user_id'=>$this->getAccountId(), ':name'=>$settingName));
@@ -92,44 +94,30 @@ class Account extends BaseAccount
     public function getGroupIds() {
         return $this->getCoolDatabase()->fetchArrayWithNumericKeys("SELECT account_group_id FROM account_group_ref WHERE account_id = :id", [':id' => $this->getAccountId()]);
     }
-	
-	public function verifyPassExpiration()
+
+    /**
+     * @return bool
+     */
+	public function isPasswordExpired()
     {
-        $expirationTime = 90;
-        $differenceFormat = '%a';
-
-        if(
-        Cool::getInstance()->getContainer()->has('max_password_lifetime') )
-        {
-            $expirationTime = Cool::getInstance()->getContainer()->getParameter('max_password_lifetime');
-        }
-
-        $lastUpdate = $this->getLastPasswordUpdate();
-
-        $datetime1 =  $lastUpdate;
-        $datetime2 = new \DateTime();
-
-        $interval = date_diff($datetime1, $datetime2);
-
-        $password_age = $interval->format($differenceFormat);
-
-        return $password_age<$expirationTime;
-
+        $expirationDays = Cool::getInstance()->getContainer()->getParameter('cool.max_passwords_lifetime_days') ?? self::DEFAULT_PASSWORD_EXPIRATION_DAYS;
+        return $this->getPasswordAgeInDays() >= $expirationDays;
     }
 
+    /**
+     * @return int
+     */
+    public function getPasswordAgeInDays() {
+        $interval = date_diff($this->getLastPasswordUpdate(), new \DateTime());
+        return $interval->format('%a');
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setPassword($v)
     {
         $this->setHashedPassword(md5($v));
         return parent::setPassword($v);
-    }
-
-    public function validatePass ($v){
-        if (empty($v))
-            return FALSE;
-        $containsUppercase  = preg_match('/[A-Z]/',$v);
-        $containsLowercase  = preg_match('/[a-z]/',$v);
-        $containsDigit   = preg_match('/\d/',$v);
-
-        return ($containsUppercase && $containsLowercase && $containsDigit);
     }
 }
