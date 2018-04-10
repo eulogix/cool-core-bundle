@@ -95,8 +95,41 @@ class Account extends BaseAccount
 	
 	public function verifyPassExpiration()
     {
-		//TODO
-		//pending of model update
-        return TRUE;
+        $expirationTime = 90;
+        $differenceFormat = '%a';
+
+        if(
+        Cool::getInstance()->getContainer()->has('max_password_lifetime') )
+        {
+            $expirationTime = Cool::getInstance()->getContainer()->getParameter('max_password_lifetime');
+        }
+
+        $lastUpdate = $this->getLastPasswordUpdate();
+
+        $datetime1 =  $lastUpdate;
+        $datetime2 = new \DateTime();
+
+        $interval = date_diff($datetime1, $datetime2);
+
+        $password_age = $interval->format($differenceFormat);
+
+        return $password_age<$expirationTime;
+
+    }
+
+    public function setPassword($v)
+    {
+        $this->setHashedPassword(md5($v));
+        return parent::setPassword($v);
+    }
+
+    public function validatePass ($v){
+        if (empty($v))
+            return FALSE;
+        $containsUppercase  = preg_match('/[A-Z]/',$v);
+        $containsLowercase  = preg_match('/[a-z]/',$v);
+        $containsDigit   = preg_match('/\d/',$v);
+
+        return ($containsUppercase && $containsLowercase && $containsDigit);
     }
 }
