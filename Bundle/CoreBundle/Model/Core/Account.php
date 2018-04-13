@@ -108,8 +108,11 @@ class Account extends BaseAccount
      * @return int
      */
     public function getPasswordAgeInDays() {
-        $interval = date_diff($this->getLastPasswordUpdate(), new \DateTime());
-        return $interval->format('%a');
+        if($this->getLastPasswordUpdate()) {
+            $interval = date_diff($this->getLastPasswordUpdate(), new \DateTime());
+            return $interval->format('%a');
+        }
+        return 0;
     }
 
     /**

@@ -115,17 +115,19 @@ class Select extends Field {
      */
     public function filterAnotherField($fieldName, $vmapColumn) {
         $f = "  var selectedValue = control.getSelectedOption().value;
-                widget.getField('$fieldName').filterOnFunction(function(option){
-                    if(option.hasOwnProperty('$vmapColumn')) {
-                        var columnValue = option['$vmapColumn'];
-                        // if columnValue is an array, we look for selectedValue in it
-                        if(Array.isArray(columnValue)) {
-                            return dojo.indexOf(columnValue, selectedValue) >= 0;
-                        }
-                        // otherwise we check if the values match, or if the column value is null
-                        else return !columnValue || (columnValue == selectedValue);
-                    } else return true;
-                });";
+                if(widget.getField('$fieldName')) {
+                    widget.getField('$fieldName').filterOnFunction(function(option){
+                        if(option.hasOwnProperty('$vmapColumn')) {
+                            var columnValue = option['$vmapColumn'];
+                            // if columnValue is an array, we look for selectedValue in it
+                            if(Array.isArray(columnValue)) {
+                                return dojo.indexOf(columnValue, selectedValue) >= 0;
+                            }
+                            // otherwise we check if the values match, or if the column value is null
+                            else return !columnValue || (columnValue == selectedValue);
+                        } else return true;
+                    });
+                } else console.error('Field {$this->getName()} is set to filter field {$fieldName}, but it is not shown in form {$this->getForm()->getId()}');";
         $this->setOnChangeOrLoad($f);
     }
 

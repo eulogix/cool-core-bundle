@@ -88,6 +88,9 @@ return declare("cool.store.xhrstore", base, {
 	//		The prefix to apply to sort attribute names that are ascending
 	descendingPrefix: "D",
 
+	//used to bypass queries for empty fields
+    nilToken : '[{NIL}]',
+
     lastErrors : {},
 
     lastStatus : true,
@@ -107,9 +110,15 @@ return declare("cool.store.xhrstore", base, {
 		//		used to provide HTTP headers instead.
 		// returns: Object
 		//		The object in the store that matches the given id.
-        var query = {};
-        query[this.idProperty] = id;
-		return this.query(query, options);
+		if(id = this.nilToken) {
+			var d = new Deferred();
+			d.resolve({label:'-', value:this.nilToken});
+			return d;
+		} else {
+            var query = {};
+            query[this.idProperty] = id;
+            return this.query(query, options);
+		}
 	},
 
 	// accepts: String
