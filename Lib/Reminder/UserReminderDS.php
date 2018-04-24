@@ -79,7 +79,7 @@ class UserReminderDS extends BaseReminderDS
      */
     public function getStrippedCountSelectSql($parameters = array(), $query=null)
     {
-        return $this->buildFullSelectSql($parameters, $query, true);
+        return $this->buildFullSelectSql($parameters, $query, !$this->isRequestComingFromALister($parameters));
     }
 
     /**

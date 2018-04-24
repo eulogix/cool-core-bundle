@@ -194,6 +194,15 @@ interface FileRepositoryInterface {
     public function getContextualMenuFor($path);
 
     /**
+     * returns a string that identifies a unique context for a given path.
+     * This context is used to configure the UI so that upload forms, properties forms and the like
+     * can be customized according to a given context
+     * @param string $path
+     * @return string
+     */
+    public function getContextFor($path) : string;
+
+    /**
      * @param string $startPath
      * @param array $query
      * @param bool $recursive

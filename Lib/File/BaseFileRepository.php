@@ -287,4 +287,11 @@ abstract class BaseFileRepository implements FileRepositoryInterface
         } while($this->exists($path.DIRECTORY_SEPARATOR.$newName));
         return $newName;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getContextFor($path) : string {
+        return $this->getUid();
+    }
 }

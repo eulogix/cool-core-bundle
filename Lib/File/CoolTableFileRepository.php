@@ -476,4 +476,18 @@ class CoolTableFileRepository extends BaseFileRepository {
         return $this->schema;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getContextFor($path) : string {
+        if($parsedPath = $this->parsePathId($path)) {
+            $notNullChunks = array_filter(
+                [ $parsedPath['schema'], $parsedPath['table'], $parsedPath['category'] ],
+                function($item){ return $item; }
+            );
+            return strtoupper(implode($notNullChunks, '_'));
+        }
+        return 'ROOT';
+    }
+
 }

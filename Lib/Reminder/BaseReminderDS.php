@@ -77,6 +77,19 @@ abstract class BaseReminderDS extends CoolCrudDataSource {
     }
 
     /**
+     * used to differentiate querying strategy if the request comes from a lister
+     * instead of the base counting matrix.
+     * The reason is that requests coming from a detail lister may contain parameters
+     * that render the query stripping impractical
+     *
+     * @param array $parameters
+     * @return bool
+     */
+    public function isRequestComingFromALister(array $parameters) {
+        return isset($parameters['provider']);
+    }
+
+    /**
      * @inheritdoc
      */
     public function execute(DSRequest $req) {

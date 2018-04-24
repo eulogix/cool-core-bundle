@@ -110,7 +110,7 @@ return declare("cool.store.xhrstore", base, {
 		//		used to provide HTTP headers instead.
 		// returns: Object
 		//		The object in the store that matches the given id.
-		if(id = this.nilToken) {
+		if(id === this.nilToken) {
 			var d = new Deferred();
 			d.resolve({label:'-', value:this.nilToken});
 			return d;

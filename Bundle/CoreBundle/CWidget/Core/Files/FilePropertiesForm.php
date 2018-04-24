@@ -49,12 +49,15 @@ class FilePropertiesForm extends Form {
         if(count($filePaths)>1)
             $this->addMessageWarning("Working on {1} files!",count($filePaths));
 
+        $folders = [];
         $allProperties = [];
         foreach($filePaths as $fp) {
             $allProperties[] = $this->repo->getAvailableFileProperties($fp);
 
             if(!$this->repo->getUserPermissions()->canSetProperties($fp))
                 $this->setReadOnly(true);
+
+            $folders[$this->repo->get($fp)->getParentId()] = 1;
         }
         $this->properties = count($allProperties) == 1 ? array_pop($allProperties) : call_user_func_array('array_intersect_key',$allProperties);
 
@@ -66,7 +69,16 @@ class FilePropertiesForm extends Form {
         if(!$this->getReadOnly())
             $this->addFieldSubmit('save');
 
+        $this->getAttributes()->set('context', count($folders) !== 1 ? 'MIXED' : $this->repo->getContextFor(array_keys($folders)[0]));
+
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId() {
+        return "COOL_FILE_PROPERTIES_FORM";
     }
 
     public function onSubmit() {
@@ -84,7 +96,7 @@ class FilePropertiesForm extends Form {
         }
     }
 
-    public function getLayout() {
+    public function getDefaultLayout() {
         $l = "<FIELDS>\n";
         foreach($this->properties as $prop) {
             $l.=$prop->getName().":250\n";

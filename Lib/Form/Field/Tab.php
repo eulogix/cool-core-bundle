@@ -41,7 +41,7 @@ class Tab extends Field {
             } elseif( $this->checkOption($value) ) {
                 $opt[] = $value;
             } elseif( isset($value['value'])) {
-                $this->addValue( $value['value'], '[NT] '.$value['value'] );
+                $opt[] = array('label'=>'[NT] '.$value['value'], 'value'=>$value['value']);
             } else {
                 throw new \Exception("bad option value : ".var_export($value, true));
             }
