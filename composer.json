@@ -25,12 +25,6 @@
         "yohang/finite" : "~1.1",
         "bheller/images-generator": "^1.0",
 
-        "react/zmq": "0.2.*|0.3.*",
-        "php-pm/php-pm": "dev-master@dev",
-        "cboden/ratchet": "0.4.*@dev",
-        "php-pm/httpkernel-adapter": "dev-master@dev",
-        "react/http": "dev-master#cd15204bd15d106d7832c680e4fb0ca0ce2f5e30",
-
         "eulogix/libs-misc": "*@dev",
         "eulogix/libs-activiti": "*@dev",
         "eulogix/libs-rundeck": "*@dev",
