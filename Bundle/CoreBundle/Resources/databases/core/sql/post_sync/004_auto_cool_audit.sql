@@ -250,6 +250,9 @@ BEGIN
         -- build or update the history table
         PERFORM core.update_audit_table(tablename, '{{ currentSchema }}', tablename, '{{ auditSchema }}');
 
+        EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_history_row ON {{ currentSchema }}.' || tablename || ' CASCADE;';
+        EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_history_stm ON {{ currentSchema }}.' || tablename || ' CASCADE;';
+
         EXECUTE format('CREATE TRIGGER audit_trigger_history_row AFTER INSERT OR UPDATE OR DELETE
                     ON {{ currentSchema }}.%3$I
                     FOR EACH ROW EXECUTE PROCEDURE {{ auditSchema }}.' || tablename || '_audit_trigger_func_row(%1$L, %2$L);'

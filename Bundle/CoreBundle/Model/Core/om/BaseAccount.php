@@ -144,6 +144,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
 
     /**
      * The value for the last_password_update field.
+     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
      * @var        string
      */
     protected $last_password_update;
@@ -287,6 +288,26 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $userNotificationsRelatedByUpdateUserIdScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
+     */
+    public function applyDefaultValues()
+    {
+    }
+
+    /**
+     * Initializes internal state of BaseAccount object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
 
     /**
      * Get the [account_id] column value.
@@ -4462,6 +4483,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

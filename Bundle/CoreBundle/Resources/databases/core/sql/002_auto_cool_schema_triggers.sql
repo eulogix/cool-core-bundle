@@ -13,7 +13,7 @@ SET SCHEMA 'core';
             
                     NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=''hidden'';*/
-                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN
+                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,'0')) THEN
                         NEW.last_password_update = NOW();
                     END IF;
                     PERFORM set_config('search_path', oldpath, false);
@@ -25,7 +25,7 @@ RETURN NEW;
 
             DROP TRIGGER IF EXISTS T_account_password ON core.account;
 
-            CREATE TRIGGER T_account_password BEFORE INSERT OR UPDATE ON core.account
+            CREATE TRIGGER T_account_password BEFORE UPDATE ON core.account
               FOR EACH ROW
               EXECUTE PROCEDURE account_password();
 

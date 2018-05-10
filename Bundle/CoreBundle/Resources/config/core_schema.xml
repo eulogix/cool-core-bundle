@@ -30,7 +30,7 @@
         </column>
 
         <column name="roles" type="LONGVARCHAR" sqlType="text[]" description="SF security roles"/>
-		<column name="last_password_update" type="TIMESTAMP"/>
+		<column name="last_password_update" type="TIMESTAMP" defaultExpr="CURRENT_TIMESTAMP"/>
 		
         <unique>
             <unique-column name="login_name"/>

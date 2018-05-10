@@ -29,12 +29,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         array (
           'name' => 'password',
           'language' => 'plpgsql',
-          'when' => 'BEFORE INSERT OR UPDATE',
+          'when' => 'BEFORE UPDATE',
           'body' => '
             
                     NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=\'\'hidden\'\';*/
-                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,0)) THEN
+                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,\'0\')) THEN
                         NEW.last_password_update = NOW();
                     END IF;
                     return NEW;
