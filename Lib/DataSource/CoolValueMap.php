@@ -49,11 +49,13 @@ class CoolValueMap extends BaseValueMap implements Shimmable
      */
     public function getShimUID() {
         $session = Cool::getInstance()->getFactory()->getSession();
-        return md5(implode(';',[
+        return md5(json_encode([
             get_class($this),
             $session ? $session->getLocale() : "",
             Cool::getInstance()->getSchema($this->schemaName)->getCurrentSchema(),
-            $this->tableName]));
+            $this->tableName,
+            $this->allowedValues
+        ]));
     }
 
     /**

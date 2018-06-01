@@ -511,17 +511,24 @@ define("cool/_widget",
 
                     if(!this.alreadyBuilt) {
                         //in the constructor we set up the various container nodes in the correct order
-                        this.actionsNode = dojo.doc.createElement('div');      
-                        this.notificationsNode = dojo.doc.createElement('div');
-                        this.contentNode = dojo.doc.createElement('div');
+                        //if those are already defined, such as when the base widget is templated, we keep
+                        //the existing ones
+                        this.actionsNode = this.actionsNode || dojo.doc.createElement('div');
+                        this.notificationsNode = this.notificationsNode || dojo.doc.createElement('div');
+                        this.contentNode = this.contentNode || dojo.doc.createElement('div');
                         this.contentNode.id = Math.random().toString(10).replace('.','');
-                        this.slotsNode = dojo.doc.createElement('div');
+                        this.slotsNode = this.slotsNode || dojo.doc.createElement('div');
                         this.slotsNode.className = "hiddenNode";      
                         
-                        this.domNode.appendChild(this.actionsNode);
-                        this.domNode.appendChild(this.notificationsNode);
-                        this.domNode.appendChild(this.contentNode);
-                        this.domNode.appendChild(this.slotsNode);
+                        if(!this.actionsNode.parentNode)
+                            this.domNode.appendChild(this.actionsNode);
+                        if(!this.notificationsNode.parentNode)
+                            this.domNode.appendChild(this.notificationsNode);
+                        if(!this.contentNode.parentNode)
+                            this.domNode.appendChild(this.contentNode);
+                        if(!this.slotsNode.parentNode)
+                            this.domNode.appendChild(this.slotsNode);
+
                         this.alreadyBuilt = true;
                     
                         if(this.isDebug()) {

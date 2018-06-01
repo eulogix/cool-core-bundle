@@ -28,7 +28,10 @@ class EditTwigTemplateAction extends FileAction
     public function appliesTo(FileProxyInterface $file)
     {
         if($this->getFileRepository()->getUserPermissions()->canOverwrite($file->getId())) {
-            if($file->getCompleteExtension() == 'zip') {
+            $ext = $file->getCompleteExtension();
+            if(preg_match('/twig/sim', $ext)) {
+                return true;
+            } else if($file->getCompleteExtension() == 'zip') {
                 return in_array('template.html.twig', ZipUtils::getContentList($file));
             }
         }

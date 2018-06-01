@@ -766,9 +766,10 @@ class Form extends Widget implements FormInterface {
 
     /**
      * @param array $values
+     * @param bool $force
      */
-    public function storeOriginalValues(array $values = null) {
-        $this->getServerAttributes()->set( self::ATTRIBUTE_ORIGINAL_VALUES, $values ?? $this->getValues() );
+    public function storeOriginalValues(array $values = null, $force = false) {
+        $this->getServerAttributes()->set( self::ATTRIBUTE_ORIGINAL_VALUES, $force ? $values : ($values ?? $this->getValues()) );
     }
 
     /**
@@ -801,6 +802,17 @@ class Form extends Widget implements FormInterface {
 
 
         return $changedFields;
+    }
+
+    /**
+     * @param string $fieldName
+     * @return bool
+     */
+    public function isFieldChanged(string $fieldName) {
+        $oldValues = $this->getOriginalValues();
+        $newValue = $this->getField($fieldName)->getPersistableValue();
+        $newValue = $newValue === '' ? null : $newValue;
+        return serialize($oldValues[$fieldName]) != serialize($newValue);
     }
 
     /**

@@ -38,6 +38,7 @@ class ImportSnippetsCommand extends CoolCommand
         $this
             ->setName('cool:import-snippets')
             ->setDescription('Imports code snippets from registered bundles')
+            ->addOption('bundles', null, InputOption::VALUE_OPTIONAL, 'if set, only the bundles specified in this comma separated list will be processed')
             ->setHelp("");
     }
 
@@ -47,16 +48,20 @@ class ImportSnippetsCommand extends CoolCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->getContainer()->get('kernel');
-        $bundles = $kernel->getBundles();
+        $allBundles = $kernel->getBundles();
 
-        foreach($bundles as $bundle) {
-            /**
-             * @var BundleInterface $bundle
-             */
-            $snippetsFolder = $bundle->getPath().'/Resources/snippets';
-            if(file_exists($snippetsFolder)) {
-                $output->writeln("\nProcessing Bundle <info>{$bundle->getName()}</info>...\n");
-                $this->importFromFolder($snippetsFolder, $output);
+        $bundles = $input->getOption('bundles');
+        $bundles = $bundles ? explode(',',$bundles) : null;
+
+        /** @var BundleInterface $bundle */
+        foreach($allBundles as $bundle) {
+            $output->writeln("Processing bundle {$bundle->getName()}...");
+            if(!$bundles || in_array($bundle->getName(), $bundles)) {
+                $snippetsFolder = $bundle->getPath().'/Resources/snippets';
+                if(file_exists($snippetsFolder)) {
+                    $output->writeln("\n\tImporting from  Bundle <info>{$bundle->getName()}</info>...\n");
+                    $this->importFromFolder($snippetsFolder, $output);
+                }
             }
         }
     }

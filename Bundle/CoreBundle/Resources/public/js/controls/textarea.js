@@ -46,7 +46,25 @@ define("cool/controls/textarea",
 
 		_getValueAttr: function() {
 			return this.field.get('value');
-		}
+		},
+
+        insertAtCursor(text) {
+
+    	    var textarea = this.field.textbox;
+            var newValue = this.get('value');
+
+            if (textarea.selectionStart || textarea.selectionStart === '0') {
+                var startPos = textarea.selectionStart;
+                var endPos = textarea.selectionEnd;
+                newValue = textarea.value.substring(0, startPos)
+                    + text
+                    + textarea.value.substring(endPos, textarea.value.length);
+            } else {
+                newValue += text;
+            }
+
+            this.set('value', newValue);
+        }
 
     });
  

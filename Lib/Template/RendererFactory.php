@@ -62,16 +62,13 @@ class RendererFactory
     protected function getRendererForSimpleFile(FileProxyInterface $templateFile, $format=null)
     {
         $format = strtolower($format ?? $templateFile->getCompleteExtension());
-        switch($format) {
-            case 'html':
-            case 'htm':
-            case 'htm.twig':
-            case 'html.twig': {
-                $ret = new TwigTemplate();
-                $ret->setTemplateFile($templateFile);
-                return $ret;
-            }
+
+        if(preg_match('/twig/sim', $format)) {
+            $ret = new TwigTemplate();
+            $ret->setTemplateFile($templateFile);
+            return $ret;
         }
+
         return null;
     }
 }

@@ -19,10 +19,11 @@ use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\FileSystemFileRepository;
 use Eulogix\Cool\Lib\File\FileUtil;
-use Eulogix\Cool\Lib\Form\Field\HTMLEditor;
 use Eulogix\Cool\Lib\Form\Form;
+use Eulogix\Cool\Lib\Template\TwigTemplate;
 use Eulogix\Cool\Lib\Widget\Message;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
 use Eulogix\Lib\File\ZipUtils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -35,26 +36,38 @@ class TwigTemplateEditorForm extends Form
      */
     protected $fileRepository;
 
+    public static function getClientWidget() {
+        return 'cool/file/twigTemplateEditor';
+    }
+
     /**
      * @inheritdoc
      */
     public function build() {
         parent::build();
 
-        $this->addFieldHTMLEditor("template")->useCKEditor();
+        $template = $this->getTemplateProxy();
+        if(preg_match('/(htm*|zip)/sim', $template->getExtension())) {
+            $this->addFieldHTMLEditor("template")->useCKEditor();
+        } else $this->addFieldTextArea("template");
+
         $this->addFieldHidden('tempRepoKey');
-        $this->addFieldSubmit('save');
+        $this->addFieldHidden('innerTemplateName');
+        $this->addFieldHidden('zippedTemplate');
+        $this->addFieldHidden('sampleData');
 
         $this->initTempRepo();
+
+        $this->addFieldSubmit('save');
 
         $this->addCommandJs("
             if(widget.dialog) {
                 require(['dojo/dom-geometry'], function(domGeometry) {
-                    var contentBox = domGeometry.getContentBox(widget.dialog.containerNode);
-                    widget.getField('template').editor.on('loaded', function(evt){
-                       widget.getField('template').editor.resize('100%', contentBox.h - 100);
-                    });
-
+                    var contentBox = domGeometry.getContentBox(widget.contentNode);
+                        if(widget.getField('template').editor)
+                            widget.getField('template').editor.on('loaded', function(evt){
+                               widget.getField('template').editor.resize('100%', contentBox.h - 100);
+                            });
                 });
             }
         ");
@@ -64,6 +77,7 @@ class TwigTemplateEditorForm extends Form
 
     /**
      * @return string
+     * @throws \Exception
      */
     private function initTempRepo() {
         $templateField = $this->getField('template');
@@ -74,17 +88,21 @@ class TwigTemplateEditorForm extends Form
             $tempFolder = FileUtil::getTempFolder();
 
             $template = $this->getTemplateProxy();
-            ZipUtils::unpack($template, $tempFolder);
+            if($template->getExtension() == 'zip') {
+                ZipUtils::unpack($template, $tempFolder);
+                $innerTemplateName = 'template.html.twig';
+                $this->getField('zippedTemplate')->setValue(1);
+            } else {
+                $innerTemplateName = $template->getName();
+                $template->toFile($tempFolder.DIRECTORY_SEPARATOR.$innerTemplateName);
+            }
 
             $tempRepo = new FileSystemFileRepository($tempFolder);
             $key = FileRepositoryFactory::register($tempRepo);
 
             $this->fixRelativePaths($tempFolder, $key);
 
-            /**
-             * @var HTMLEditor $templateField
-             */
-            $templateContent = file_get_contents($tempFolder.DIRECTORY_SEPARATOR.'template.html.twig');
+            $templateContent = file_get_contents($tempFolder.DIRECTORY_SEPARATOR.$innerTemplateName);
             $isUTF8 = preg_match('//u', $templateContent);
             $validUTF8 = mb_check_encoding($templateContent, 'UTF-8');
 
@@ -101,9 +119,12 @@ class TwigTemplateEditorForm extends Form
 
             $templateField->setValue($templateContent);
             $this->getField('tempRepoKey')->setValue($key);
-        }
+            $this->getField('innerTemplateName')->setValue($innerTemplateName);
 
-        $templateField->setUploadRepoId($key, '/ck_uploads');
+
+        }
+        if(method_exists($templateField, 'setUploadRepoId'))
+            $templateField->setUploadRepoId($key, '/ck_uploads');
     }
 
     /**
@@ -145,12 +166,19 @@ class TwigTemplateEditorForm extends Form
         if($this->validate( array_keys($request) ) ) {
             try {
 
+                $innerTemplateName = $this->request->get('innerTemplateName');
                 $tempFolder = $this->getTempFileRepository()->getBaseFolder();
-                file_put_contents($tempFolder.DIRECTORY_SEPARATOR.'template.html.twig', $this->getField('template')->getValue());
+                file_put_contents($tempFolder.DIRECTORY_SEPARATOR.$innerTemplateName, $this->getField('template')->getValue());
                 $this->cleanTemplate($tempFolder, $this->getBaseTempRepoUrl( $this->request->get('tempRepoKey') ));
 
                 $oldTemplate = $this->getTemplateProxy();
-                $newTemplate = ZipUtils::zipFolder($tempFolder);
+                if($this->request->get('zippedTemplate')) {
+                    $newTemplate = ZipUtils::zipFolder($tempFolder);
+                } else {
+                    $newTemplate = new SimpleFileProxy();
+                    $newTemplate->setContent(file_get_contents($tempFolder.DIRECTORY_SEPARATOR.$innerTemplateName));
+                }
+
                 $newTemplate->setName($oldTemplate->getName());
                 $newTemplate->setProperties($oldTemplate->getProperties());
 
@@ -179,6 +207,23 @@ class TwigTemplateEditorForm extends Form
     }
 
     /**
+     * @return mixed|string
+     */
+    public function onGetPreview() {
+
+        $twigTemplate = new TwigTemplate();
+        $template = new SimpleFileProxy();
+        $template->setContent($this->getRequest()->get('template'));
+        try {
+            $twigTemplate->setTemplateFile($template);
+            $twigTemplate->setData(json_decode($this->getRequest()->get('sampleData'), true));
+            return ['preview' => $twigTemplate->getRenderedOutput()->getContent()];
+        } catch (\Exception $e) {
+            return ['preview' => $e->getMessage()];
+        }
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId() {
@@ -186,7 +231,7 @@ class TwigTemplateEditorForm extends Form
     }
 
     public function getLayout() {
-        return "<div style='width:100%; height: 100%'><FIELDS>template:100%:500
+        return "<div style='width:100%; height: 100%;'><FIELDS>template:100%:500
 save</FIELDS></div>";
     }
 

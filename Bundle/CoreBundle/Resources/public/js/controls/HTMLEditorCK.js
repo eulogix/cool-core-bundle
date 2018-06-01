@@ -50,7 +50,11 @@ define("cool/controls/HTMLEditorCK",
 
   		_getValueAttr: function() {
   			return this.editor.getData();
-  		}
+  		},
+
+        insertAtCursor(text) {
+            this.editor.insertText(text);
+        }
 
     });
  

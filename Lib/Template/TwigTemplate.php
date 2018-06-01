@@ -91,14 +91,18 @@ class TwigTemplate extends Template
      * @inheritdoc
      */
     public function getRenderedTemplateFile() {
+        $originalTpl = $this->getTemplateFile();
+
         if($this->wkFolder) {
-            $originalTpl = $this->getTemplateFile();
             $newTpl = $this->getRenderedOutput('zip');
-            $newTpl->setName($originalTpl->getName());
-            $newTpl->setProperties($originalTpl->getProperties());
-            return $newTpl;
+        } else {
+            $newTpl = $this->getRenderedOutput($originalTpl->getExtension());
         }
-        return null;
+
+        $newTpl->setName($originalTpl->getName());
+        $newTpl->setProperties($originalTpl->getProperties());
+
+        return $newTpl;
     }
 
     function __destruct() {

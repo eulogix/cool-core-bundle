@@ -101,6 +101,12 @@ services:
         arguments:
             - "@request_stack"
 
+    # maps the system temp folder on a repository
+    file.repository.tempFiles:
+        class:            Eulogix\Cool\Lib\File\FileSystemFileRepository
+        arguments:
+            - "%cool.temp_folder%"
+
     rundeck.client:
         class: Eulogix\Lib\Rundeck\RundeckClient
         arguments: ["%rundeck_url%", "%rundeck_auth_token%", "%rundeck_project_id%"]

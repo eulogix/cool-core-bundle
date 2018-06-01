@@ -19,6 +19,8 @@ use Eulogix\Cool\Lib\DataSource\DataSourceManager;
 use Eulogix\Cool\Lib\DataSource\ValueMapInterface;
 use Eulogix\Cool\Lib\Email\MessageFactory;
 use Eulogix\Cool\Lib\Email\MessageRenderer;
+use Eulogix\Cool\Lib\File\FileRepositoryFactory;
+use Eulogix\Cool\Lib\File\FileRepositoryInterface;
 use Eulogix\Cool\Lib\File\SchemaFileStorage;
 use Eulogix\Cool\Lib\File\TempManagerInterface;
 use Eulogix\Cool\Lib\Push\PushManager;
@@ -295,5 +297,13 @@ class Factory {
      */
     public function getTemplateRendererFactory() {
         return Cool::getInstance()->getContainer()->get('cool.templateRendererFactory');
+    }
+
+    /**
+     * @return FileRepositoryInterface
+     * @throws \Exception
+     */
+    public function getTempFileRepository() {
+        return FileRepositoryFactory::fromId('tempFiles');
     }
 }
