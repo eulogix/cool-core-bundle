@@ -83,20 +83,24 @@ Vagrant.configure("2") do |config|
         initialize_pg.sh
         service postgresql-9.6 start
         systemctl enable postgresql-9.6.service
+        sudo -u www-data php /app/app/console cool:database:createSessionTable
 
         #rundeck
+        echo "127.0.0.1  rundeck">>/etc/hosts
         /tmp/install_lib/install/rundeck.sh
         /bin/cp -Rf  /tmp/install_lib/rundeck/* /
         service rundeckd start
         systemctl enable rundeckd.service
 
         #pdi
+        echo "127.0.0.1  pentaho">>/etc/hosts
         cd /opt
         /bin/cp -Rf  /tmp/install_lib/pdi/* /
         /tmp/install_lib/wget/pdi.sh
         /tmp/install_lib/install/pdi.sh
 
         #tomcat
+        echo "127.0.0.1  tomcat">>/etc/hosts
         mkdir /tmp/bloat
         cd /tmp/bloat
         /bin/cp -Rf  /tmp/install_lib/tomcat/files/* /
@@ -105,19 +109,15 @@ Vagrant.configure("2") do |config|
         /tmp/install_lib/install/tomcat.sh
         /tmp/install_lib/install/activiti.sh
         initialize_activiti.sh
-        chown tomcat:tomcat -R /var/lib/tomcat/webapps \
+        cd /
+        chown tomcat:tomcat -R /var/lib/tomcat/webapps
         service tomcat start
         systemctl enable tomcat.service
-        rm -rf /tmp/bloat
+
+        /tmp/install_lib/vagrant_custom.sh "$@"
 
         rm -rf /tmp/install_lib
         yum clean all
 
-
-        # change in nginx, rundeck and pdi config files the default hostname with $6
-        # in derived box
-        # - import base dump
-        # - import rundeck jobs
-        # - import activiti workflows
     SHELL
 end

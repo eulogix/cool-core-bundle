@@ -5,9 +5,3 @@
 . /etc/profile
 
 env
-
-echo "\n"
-echo "\n"
-echo "ASSSS"
-echo "\n"
-echo "\n"
