@@ -6,6 +6,7 @@ settings = YAML.load_file 'vagrant.yml'
 VM_NAME = settings['main']['name']
 VM_HOST = settings['main']['hostname']
 VM_IP = settings['main']['ip']
+LOCAL_IP = settings['main']['local_ip']
 VM_MEMORY = settings['main']['memory']
 
 SQUID_SPOOL_SHARE = settings['shares']['squid_spool']

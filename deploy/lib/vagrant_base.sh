@@ -27,6 +27,10 @@ fstab_line="$5   /opt/wget_cache   cifs  _netdev,username=$2,password=$3,dir_mod
 echo "$fstab_line" >>/etc/fstab
 mount -a
 
+sed -i -E "s/172\.17\.0\.1/$7/"  /usr/bin/xdebug_debugger_off.ini
+sed -i -E "s/172\.17\.0\.1/$7/"  /usr/bin/xdebug_profiler_off.ini
+sed -i -E "s/172\.17\.0\.1/$7/"  /usr/bin/xdebug_profiler_on.ini
+
 /tmp/install_lib/sshd_conf.sh
 service sshd restart
 
