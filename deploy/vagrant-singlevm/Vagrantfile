@@ -62,8 +62,11 @@ Vagrant.configure("2") do |config|
         /bin/cp -Rf  /tmp/install_lib/vagrant/* /
 
         /tmp/install_lib/vagrant_base.sh "$@"
+
         # from now on, yum uses the squid proxy
+        echo "export http_proxy='http://127.0.0.1:3128'" >/etc/profile.d/proxy.sh
         . /etc/profile
+        
         /tmp/install_lib/vagrant_base_installs.sh "$@"
 
         /tmp/install_lib/install/pg_client.sh

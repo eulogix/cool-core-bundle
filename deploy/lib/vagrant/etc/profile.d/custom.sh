@@ -1,5 +1,4 @@
 export WGET_CACHE_DIR=/opt/wget_cache
-export http_proxy='http://127.0.0.1:3128'
 export PGDATA=/shared/pg_data
 
 export JAVA_HOME=/usr/lib/jvm/jre
