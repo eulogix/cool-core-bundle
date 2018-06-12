@@ -48,7 +48,7 @@ define("cool/controls/textarea",
 			return this.field.get('value');
 		},
 
-        insertAtCursor(text) {
+        insertAtCursor: function(text) {
 
     	    var textarea = this.field.textbox;
             var newValue = this.get('value');

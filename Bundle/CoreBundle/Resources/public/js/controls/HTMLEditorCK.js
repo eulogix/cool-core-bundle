@@ -52,7 +52,7 @@ define("cool/controls/HTMLEditorCK",
   			return this.editor.getData();
   		},
 
-        insertAtCursor(text) {
+        insertAtCursor: function(text) {
             this.editor.insertText(text);
         }
 
