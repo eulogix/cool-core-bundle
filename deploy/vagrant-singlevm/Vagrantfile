@@ -8,6 +8,7 @@ VM_HOST = settings['main']['hostname']
 VM_IP = settings['main']['ip']
 LOCAL_IP = settings['main']['local_ip']
 VM_MEMORY = settings['main']['memory']
+SCHEMA_LIST = settings['main']['default_schema_list']
 
 SQUID_SPOOL_SHARE = settings['shares']['squid_spool']
 WGET_CACHE_SHARE = settings['shares']['wget_cache']
@@ -52,7 +53,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :file, source: '../lib', destination: "/tmp/install_lib"
 
-    config.vm.provision "shell", :args => [SMB_SHARE, SMB_USER, SMB_PASSWORD, SQUID_SPOOL_SHARE, WGET_CACHE_SHARE, VM_HOST, LOCAL_IP], inline: <<-SHELL
+    config.vm.provision "shell", :args => [SMB_SHARE, SMB_USER, SMB_PASSWORD, SQUID_SPOOL_SHARE, WGET_CACHE_SHARE, VM_HOST, LOCAL_IP, SCHEMA_LIST], inline: <<-SHELL
 
         hostName="$6"
 
@@ -66,7 +67,7 @@ Vagrant.configure("2") do |config|
         # from now on, yum uses the squid proxy
         echo "export http_proxy='http://127.0.0.1:3128'" >/etc/profile.d/proxy.sh
         . /etc/profile
-        
+
         /tmp/install_lib/vagrant_base_installs.sh "$@"
 
         /tmp/install_lib/install/pg_client.sh
