@@ -113,6 +113,9 @@ Vagrant.configure("2") do |config|
         /tmp/install_lib/install/maven.sh
         /tmp/install_lib/install/tomcat.sh
         /tmp/install_lib/install/activiti.sh
+        /bin/cp -f /tmp/install_lib/tomcat/tomcat-users.xml /etc/tomcat/tomcat-users.xml
+        /bin/cp -f /tmp/install_lib/tomcat/activiti-context.xml /var/lib/tomcat/webapps/activiti-rest/WEB-INF/classes/activiti-context.xml
+        /bin/cp -f /tmp/install_lib/tomcat/db.properties /var/lib/tomcat/webapps/activiti-rest/WEB-INF/classes/db.properties
         initialize_activiti.sh
         cd /
         chown tomcat:tomcat -R /var/lib/tomcat/webapps

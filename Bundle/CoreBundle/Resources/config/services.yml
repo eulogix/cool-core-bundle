@@ -129,7 +129,7 @@ services:
 
     java.bridge:
         class: Eulogix\Lib\Java\Bridge
-        arguments: ["%java_bridge_url%"]
+        arguments: ["%java_bridge_url%", "%kernel.root_dir%/cache"]
 
     ds.userNotifications:
         class: Eulogix\Cool\Lib\DataSource\Classes\Notifications\UserNotificationsDataSource

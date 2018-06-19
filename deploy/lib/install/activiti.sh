@@ -18,5 +18,6 @@ git clone https://github.com/eulogix/cool-activiti-integration.git
 cd cool-activiti-integration
 mvn clean install
 cp target/uber*.jar /var/lib/tomcat/webapps/activiti-rest/WEB-INF/lib/
+cp target/uber*.jar /var/lib/tomcat/webapps/JavaBridge/WEB-INF/lib/
 cd /tmp
 rm -rf bloat
