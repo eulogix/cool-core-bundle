@@ -13,6 +13,7 @@ SCHEMA_LIST = settings['main']['default_schema_list']
 SQUID_SPOOL_SHARE = settings['shares']['squid_spool']
 WGET_CACHE_SHARE = settings['shares']['wget_cache']
 SMB_SHARE = settings['shares']['app']
+DATA_SHARE = settings['shares']['data']
 SMB_USER = settings['main']['shares_user']
 SMB_PASSWORD = settings['main']['shares_password']
 
@@ -53,7 +54,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :file, source: '../lib', destination: "/tmp/install_lib"
 
-    config.vm.provision "shell", :args => [SMB_SHARE, SMB_USER, SMB_PASSWORD, SQUID_SPOOL_SHARE, WGET_CACHE_SHARE, VM_HOST, LOCAL_IP, SCHEMA_LIST], inline: <<-SHELL
+    config.vm.provision "shell", :args => [SMB_SHARE, SMB_USER, SMB_PASSWORD, SQUID_SPOOL_SHARE, WGET_CACHE_SHARE, VM_HOST, LOCAL_IP, SCHEMA_LIST, DATA_SHARE], inline: <<-SHELL
 
         hostName="$6"
 

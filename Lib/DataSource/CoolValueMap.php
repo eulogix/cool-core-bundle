@@ -184,8 +184,10 @@ class CoolValueMap extends BaseValueMap implements Shimmable
         else {
             $sql = "SELECT $pk AS value, COALESCE($labelExpression,'') AS label FROM {$this->getTableName()}";
 
-            if($this->allowedValues) {
-                $sql.=" WHERE $pk IN (".implode(',',$this->allowedValues).")";
+            if(is_array($this->allowedValues)) {
+                if(count($this->allowedValues) > 0)
+                    $sql.=" WHERE $pk IN (".implode(',',$this->allowedValues).")";
+                else $sql.=" WHERE FALSE ";
             } else $sql.=" WHERE TRUE ";
 
             $sqlParams = [];

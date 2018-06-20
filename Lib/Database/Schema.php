@@ -652,6 +652,41 @@ class Schema implements Shimmable
     }
 
     /**
+     * @param string $value
+     * @param string $domainName
+     * @return bool
+     */
+    public function lookupValueExists($value, $domainName) {
+        return in_array($value, $this->getLookupValues($domainName));
+    }
+
+    /**
+     * use this to avoid exceptions when you need to add a lookup that may not exist
+     * @param $value
+     * @param $domainName
+     * @return \PDOStatement
+     */
+    public function insertLookupValue($value, $domainName) {
+        $tableName = strtolower($domainName);
+        $locales = Cool::getInstance()->getFactory()->getLocaleManager()->getAvailableLocales();
+
+        $localeFields = array_map(function($locale){
+            return "\"dec_{$locale}\"";
+        }, $locales);
+
+        $localePlaceHolders = array_map(function($locale){
+            return ":{$locale}";
+        }, $locales);
+
+        $sql = "INSERT INTO lookups.{$tableName} (\"value\", ".implode(',',$localeFields).") VALUES (:value, ".implode(',',$localePlaceHolders).")";
+        $parameters = [':value' => $value];
+        foreach($localePlaceHolders as $pc)
+            $parameters[$pc] = $value;
+
+        return $this->query($sql, $parameters);
+    }
+
+    /**
      * returns a string if a filter has to be applied when retrieving lookup tables, null otherwise
      * @return null|string
      */
@@ -738,7 +773,8 @@ class Schema implements Shimmable
      * @param string $prefix
      * @param callable $lambdaFilter
      * @param bool $addConstraints
-     * @returns DSField[]
+     * @return DSField[]
+     * @throws \PropelException
      */
     public function getDSFieldsFor($tableName, $prefix='', $lambdaFilter=null, $addConstraints=false) {
 

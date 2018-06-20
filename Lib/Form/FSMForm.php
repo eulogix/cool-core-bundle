@@ -161,15 +161,20 @@ abstract class FSMForm extends Form implements StatefulInterface
     protected function addTransitionButtons() {
         $transitions = $this->getFSM()->getCurrentState()->getTransitions();
         foreach($transitions as $t) {
+            $parameters = ['transition' => $t];
             $button = $this->addFieldButton($t)
-                ->setOnClick("return widget.mixAction('changeStatus', {transition:'$t'});")
                 ->setDisabledOnClick(true);
 
             if(preg_match('/_next$/sim', $t))
                 $button->setRightIcon('/bower_components/fugue/icons/document-page-next.png');
 
-            if(preg_match('/_prev$/sim', $t))
+            if(preg_match('/_prev$/sim', $t)) {
                 $button->setLeftIcon('/bower_components/fugue/icons/document-page-previous.png');
+                // inhibits validation for prev button
+                $parameters['_prev'] = 1;
+            }
+
+            $button->setOnClick("return widget.mixAction('changeStatus', ".json_encode($parameters).");");
         }
     }
 
@@ -179,7 +184,7 @@ abstract class FSMForm extends Form implements StatefulInterface
         $parameters = $this->request->all();
         $this->rawFill( $parameters );
 
-        if($this->validate( array_keys($parameters) ) ) {
+        if(@$parameters['_prev'] == 1 || $this->validate( array_keys($parameters) ) ) {
             $hasErrors = false;
 
             switch( $status = $this->getFSM()->getCurrentState()->getName() ) {

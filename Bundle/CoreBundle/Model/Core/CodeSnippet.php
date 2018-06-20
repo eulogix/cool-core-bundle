@@ -3,6 +3,7 @@
 namespace Eulogix\Cool\Bundle\CoreBundle\Model\Core;
 
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\om\BaseCodeSnippet;
+use Eulogix\Cool\Lib\Cool;
 
 class CodeSnippet extends BaseCodeSnippet
 {
@@ -23,6 +24,22 @@ class CodeSnippet extends BaseCodeSnippet
      */
     public function getHumanDescription() {
         return implode(" - ", [ $this->getDecodedField('category'), $this->getDescription() ]);
+    }
+
+    /**
+     * @param \PropelPDO|null $con
+     * @return bool
+     */
+    public function preSave(\PropelPDO $con = null)
+    {
+        if($this->getCategory()) {
+            $core = Cool::getInstance()->getCoreSchema();
+            $domain = 'CODE_SNIPPET_CATEGORY';
+            if(!$core->lookupValueExists($this->getCategory(), $domain))
+                $core->insertLookupValue($this->getCategory(), $domain);
+        }
+
+        return true;
     }
 
     /**
