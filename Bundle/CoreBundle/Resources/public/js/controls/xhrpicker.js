@@ -112,7 +112,7 @@ define("cool/controls/xhrpicker",
 
             this._appendButtonNode(clearButton.domNode);
 
-            if(this.definition.value) {
+            if(this.definition.hasOwnProperty('value')) {
                 this.set('value', this.definition.value);
                 this.emit("valueInit", {});
             }

@@ -38,7 +38,7 @@ define("cool/controls/HTMLEditorCK",
 
             //TODO: readonly, onchange...
 
-            if(this.definition.value !== undefined) {
+            if(this.definition.hasOwnProperty('value')) {
                 this.set('value', this.definition.value);
                 this.emit("valueInit", {});
             }

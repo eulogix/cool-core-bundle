@@ -53,7 +53,7 @@ define("cool/controls/select",
                     } else dialogManager.bindTooltip(field.domNode, this.definition.tooltip.content, this.definition.tooltip.maxWidth);
                 }
 
-                if(this.definition.value !== undefined) {
+                if(this.definition.hasOwnProperty('value')) {
                     this.set('value', this.definition.value);
                     this.emit("valueInit", {});
                 }

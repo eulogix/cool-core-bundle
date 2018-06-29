@@ -59,7 +59,7 @@ define("cool/controls/number",
 
             field.set('constraints', constraints);
 
-            if(this.definition.value !== undefined) {
+            if(this.definition.hasOwnProperty('value')) {
                 this.set('value', this.definition.value);
                 this.emit("valueInit", {});
             }

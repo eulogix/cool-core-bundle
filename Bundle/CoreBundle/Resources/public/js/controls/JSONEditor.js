@@ -25,7 +25,7 @@ define("cool/controls/JSONEditor",
 				schema: this._getSchema()
 			});
 
-			if(this.definition.value !== undefined) {
+			if(this.definition.hasOwnProperty('value')) {
 				this.set('value', this.definition.value);
 			}
 		},

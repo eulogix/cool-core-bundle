@@ -65,7 +65,7 @@ define("cool/controls/listPicker",
             this.grid2.placeAt(this.grid2div, "first");
             this.grid2.startup();
 
-            if(this.definition.value !== undefined) {
+            if(this.definition.hasOwnProperty('value')) {
                 this.set('value', this.definition.value);
                 this.emit("valueInit", {});
             }

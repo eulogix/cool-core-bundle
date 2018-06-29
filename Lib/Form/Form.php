@@ -780,6 +780,23 @@ class Form extends Widget implements FormInterface {
     }
 
     /**
+     * normalizes types and values to perform comparisons between old and new values
+     * @return mixed $value
+     */
+    protected function normalizeValueForComparison($value) {
+        if(is_array($value) && count($value)==0)
+            return null;
+
+        if(!is_object($value))
+            return (String)$value;
+
+        if($value instanceof \DateTime)
+            return $value->format('Y-m-d H:i:s');
+
+        return $value;
+    }
+
+    /**
      * @return array
      */
     public function getChangedFields() {
@@ -790,10 +807,7 @@ class Form extends Widget implements FormInterface {
         foreach($oldValues as $fieldName => $fieldValue) {
             $newValue = isset($newValues[$fieldName]) ? $newValues[$fieldName] : null;
 
-            /* a direct comparison would raise notices when comparing different types
-               this happens when the changed field is a file: old value is an int, new value
-               a file proxy */
-            if(serialize($fieldValue) != serialize($newValue))
+            if($this->normalizeValueForComparison($fieldValue) != $this->normalizeValueForComparison($newValue))
                 $changedFields[$fieldName] = [
                     'old' => $fieldValue,
                     'new' => $newValue

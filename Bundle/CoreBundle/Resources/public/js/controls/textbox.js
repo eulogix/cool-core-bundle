@@ -36,7 +36,7 @@ define("cool/controls/textbox",
                     control.emit("change", {});
             });
 
-            if(this.definition.value !== undefined) {
+            if(this.definition.hasOwnProperty('value')) {
                 this.set('value', this.definition.value);
                 this.emit("valueInit", {});
             }
