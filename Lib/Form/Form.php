@@ -786,7 +786,7 @@ class Form extends Widget implements FormInterface {
     protected function normalizeValueForComparison($value) {
         if(is_array($value) && count($value)==0){
             return null;
-        } elseif(is_array($value) && count($value)==0){
+        } elseif(is_array($value) && count($value)>0){
             return implode(",",$value);
         }
 
