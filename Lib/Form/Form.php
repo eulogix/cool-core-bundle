@@ -784,8 +784,11 @@ class Form extends Widget implements FormInterface {
      * @return mixed $value
      */
     protected function normalizeValueForComparison($value) {
-        if(is_array($value) && count($value)==0)
-            return null;
+        if(is_array($value)) {
+            if(count($value)==0)
+                return null;
+            return json_encode($value);
+        }
 
         if(!is_object($value))
             return (String)$value;
