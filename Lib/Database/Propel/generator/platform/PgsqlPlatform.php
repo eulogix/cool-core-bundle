@@ -24,7 +24,7 @@ class PgsqlPlatform extends \PgsqlPlatform {
      * @param \Table $table
      * @return string
      */
-    protected function getDropSequenceDDL(\Table $table)
+    protected function getDropSequenceDDL( $table)
     {
         if ($table->getIdMethod() == \IDMethod::NATIVE && $table->getIdMethodParameters() != null) {
             $pattern = "
