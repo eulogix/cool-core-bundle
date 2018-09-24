@@ -635,7 +635,9 @@ class Schema implements Shimmable
 
         $stmt = "SELECT *, COALESCE(dec_{$currentLocale}, '*' || dec_en) AS label FROM lookups.{$tableName}";
         if ($filter = $this->getSchemaFilter()) {
-            $stmt .= " WHERE schema_filter IS NULL OR ('{$filter}' = ANY(schema_filter))";
+            $stmt .= " WHERE (schema_filter IS NULL AND NOT ('{$filter}' = ANY(schema_filter_inv)) ) OR  
+            (schema_filter IS NULL AND schema_filter_inv IS NULL) 
+            OR ('{$filter}' = ANY(schema_filter))";
         }
         $stmt .= " ORDER BY sort_order ASC, label ASC";
 

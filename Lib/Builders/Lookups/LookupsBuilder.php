@@ -99,6 +99,7 @@ class LookupsBuilder {
         $fields['mandatory_flag'] = 'BOOLEAN';
         $fields['filter'] = 'TEXT[]'; //generic field that can be used to filter the visible portion of the lookup
         $fields['schema_filter'] = 'TEXT[]'; //this field allows to define specific lookup sets for multi tenant schemas
+        $fields['schema_filter_inv'] = 'TEXT[]'; //this field allows to define specific lookup sets for multi tenant schemas
         $fields['original_value'] = 'TEXT'; //used to aid in migration
         $fields['notes'] = 'TEXT'; //used for generic comments on a particular lookup value
 
