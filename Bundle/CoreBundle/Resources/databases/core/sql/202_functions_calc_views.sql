@@ -68,6 +68,6 @@ CREATE OR REPLACE FUNCTION core.update_calculated_fields_from_view(schema_name t
 $$
 LANGUAGE plv8;
 
-CREATE OR REPLACE FUNCTION core.update_calculated_fields_from_view(table_name unknown, record_pk integer) RETURNS void AS $$
+CREATE OR REPLACE FUNCTION core.update_calculated_fields_from_view(table_name text, record_pk integer) RETURNS void AS $$
 SELECT core.update_calculated_fields_from_view(current_schema(), table_name::text, record_pk);
 $$ LANGUAGE SQL;
