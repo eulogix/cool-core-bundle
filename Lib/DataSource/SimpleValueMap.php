@@ -114,6 +114,9 @@ class SimpleValueMap  extends BaseValueMap implements ValueMapInterface
      * @inheritdoc
      */
     public function getMap($value = '', $searchText = "", $parameters = [], $limit = null) {
+        if ($value === null){
+          $value = '';
+        }
         if($value !=='') {
             foreach($this->mapHash as $mapElement) {
                 if($mapElement['value']==$value)
