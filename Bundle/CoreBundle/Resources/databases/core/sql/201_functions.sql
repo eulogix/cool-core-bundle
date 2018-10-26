@@ -227,25 +227,36 @@ CREATE or REPLACE FUNCTION
 
 	}
 
-	/* compare table structure and create missing columns in target */
-	var s = "select * from INFORMATION_SCHEMA.COLUMNS where table_name = '"+source_table+"' AND table_schema='"+source_schema+"' ORDER BY ordinal_position ASC";
+
+	var s = "SELECT column_name,data_type, udt_name, numeric_precision, numeric_scale FROM INFORMATION_SCHEMA.COLUMNS where table_name = '"+source_table+"' AND table_schema='"+source_schema+"' EXCEPT ";
+    s += " SELECT column_name,data_type, udt_name, numeric_precision, numeric_scale FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+target_table+"' AND table_schema='"+audit_schema+"'";
+
+
+
+
 	var sourceTableColumns = plv8.execute( s );
 	for(var i=0; i < sourceTableColumns.length; i++) {
 		var sourceColumn = sourceTableColumns[i];
-		var targetColumnExists = plv8.execute("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+target_table+"' AND table_schema='"+audit_schema+"' AND column_name='"+sourceColumn.column_name+"'").length == 1;
-		if(!targetColumnExists) {
+
 		    var createType = '';
 		    switch(sourceColumn.udt_name) {
                 case '_text' : createType = 'TEXT[]'; break; //_text means array of text
                 default : createType = sourceColumn.data_type;
 		    }
-		    var createStatement = "ALTER TABLE "+audit_table+" ADD COLUMN "+sourceColumn.column_name+" "+createType;
-		    if(sourceColumn.data_type == 'numeric') {
-		        createStatement += "("+sourceColumn.numeric_precision+","+sourceColumn.numeric_scale+")";
+	    	if(sourceColumn.data_type == 'numeric') {
+		        		createType += "("+sourceColumn.numeric_precision+","+sourceColumn.numeric_scale+")";
 		    }
-			plv8.execute(createStatement);
-		}
+
+		    var createStatement = "DO $$ BEGIN ALTER TABLE "+audit_table+" ADD COLUMN "+sourceColumn.column_name+" "+createType+";";
+		    createStatement += " EXCEPTION 	WHEN duplicate_column THEN";
+		    createStatement += " ALTER TABLE "+audit_table+" ALTER COLUMN "+sourceColumn.column_name+" TYPE "+createType;
+			createStatement += " USING "+sourceColumn.column_name+"::"+createType+";";
+		    createStatement += " END; $$";
+
+  			plv8.execute(createStatement);
+
 	}
+
 
     /* bulk insert data and default index creation*/
     if(!targetTableExists) {
@@ -270,21 +281,61 @@ CREATE or REPLACE FUNCTION
     }
 
 	/* compare indexes and create missing ones in target */
-	var sourceIndexes = plv8.execute("select core.get_table_indexes('"+source_schema+"','"+source_table+"') as tbl_index");
 
-	for(var i=0; i < sourceIndexes.length; i++) {
-		var sourceIndex = sourceIndexes[i].tbl_index;
-		var targetIndexAlreadyExists = plv8.execute("select core.index_exists('"+target_table+"', '"+audit_schema+"', '"+sourceIndex.column_names+"') as ret").pop().ret;
-		if(!targetIndexAlreadyExists) {
-		    var newIndexName, j=0, indexExists;
-		    //an existing index may be there with the same name, so we find a free name before creating it
-		    do {
-		        newIndexName = "inherited_" + sourceIndex.index_name + ( j++ > 0 ? "_" + j : "");
-		        indexExists = plv8.execute("SELECT core.relation_exists('" + newIndexName + "','" + audit_schema + "') as ret").pop().ret;
-		    } while(indexExists);
-			plv8.execute("CREATE INDEX " + newIndexName + " ON "+audit_table+"("+sourceIndex.column_names+");");
-		}
-	}
+    var indexDifQuery = ["SELECT 'inherited_'||i.relname as index_name,",
+"       array(",
+"       SELECT pg_get_indexdef(idx.indexrelid, k + 1, true)",
+"       FROM generate_subscripts(idx.indkey, 1) as k",
+"       ORDER BY k",
+"       ) as column_names",
+" FROM   pg_index as idx",
+" JOIN   pg_class as i",
+" ON     i.oid = idx.indexrelid",
+" JOIN   pg_am as am",
+" ON     i.relam = am.oid",
+" JOIN   pg_namespace as ns",
+" ON     ns.oid = i.relnamespace",
+" AND    ns.nspname = '"+source_schema+"'",
+" AND idx.indrelid::REGCLASS::TEXT = '"+source_schema+"."+source_table+"'",
+" EXCEPT",
+" SELECT i.relname as index_name,",
+"       array(",
+"       SELECT pg_get_indexdef(idx.indexrelid, k + 1, true)",
+"       FROM generate_subscripts(idx.indkey, 1) as k",
+"       ORDER BY k",
+"       ) as column_names",
+" FROM   pg_index as idx",
+" JOIN   pg_class as i",
+" 	ON     i.oid = idx.indexrelid",
+" 	JOIN   pg_am as am",
+" 	ON     i.relam = am.oid",
+" 	JOIN   pg_namespace as ns",
+" 	ON     ns.oid = i.relnamespace",
+" 		AND    ns.nspname = '"+audit_schema+"'",
+" 		AND idx.indrelid::REGCLASS::TEXT = '"+audit_table+"'",
+" 		AND i.relname LIKE 'inherited_%'"].join("\n");
+
+var difIndexes = plv8.execute(indexDifQuery);
+var relationExist ='';
+
+for (i=0;i<difIndexes.length;i++){
+	var newIndex = difIndexes[i];
+
+	var newIndexName, j=0, indexExists;
+
+	/*an existing index may be there with the same name, so we find a free name before creating it*/
+
+	do {
+	    newIndexName =  newIndex.index_name + ( j > 0 ? "_" + j : "");
+	    relationExist = "SELECT core.relation_exists('" + newIndexName + "','" + audit_schema + "') as ret";
+	    indexExists = plv8.execute(relationExist).pop().ret;
+	    j++;
+	} while(indexExists);
+
+	var indexColumnNames = (newIndex.column_names).join(",");
+	plv8.execute("CREATE INDEX " + newIndexName + " ON "+audit_table+"("+indexColumnNames+");");
+
+}
 
   $$ LANGUAGE plv8;
 
