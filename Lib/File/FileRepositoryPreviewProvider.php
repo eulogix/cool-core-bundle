@@ -13,6 +13,7 @@ namespace Eulogix\Cool\Lib\File;
 
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Hipoges\Hams\Lib\Enums\AppSettings;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -73,6 +74,17 @@ class FileRepositoryPreviewProvider {
         $f = $this->repo->get($filePath);
         if(!$f)
             return false;
+
+        $staticPdfIcon = Cool::getInstance()->getFactory()->getSettingsManager()->getSetting('STATIC_PDF_ICONS');
+        if(strtolower($f->getExtension())=='pdf' && $staticPdfIcon){
+            // In this case, not want to generate pdf thumbnail
+            return false;
+        }
+
+        if(strtolower($f->getExtension())=='tif' || strtolower($f->getExtension())=='tiff'){
+            // In this case, not want to generate tif or tiff thumbnail
+            return false;
+        }
 
         if(!$this->cacheValid($absCachePath, $f->getLastModificationDate())) {
             if($thumb = FileUtil::getThumbnail($f, $width)) {

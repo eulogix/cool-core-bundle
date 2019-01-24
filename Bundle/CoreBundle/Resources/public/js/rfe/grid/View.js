@@ -99,13 +99,20 @@ define([
                 case 'application':
                     if(mimeExt!='pdf')
                         img.src = require.toUrl('cool/rfe/resources/images/icons-64/file-text.png');
+                    else
+                        img.src = require.toUrl('cool/rfe/resources/images/icons-64/pdf.png');
                     break;
 				case 'image':
-					img.className = 'iconImage';
-					img.src = UrlUtils.addParams(self.servicePreview, {'filePath' : obj.id});
-					//img.width = this.iconWidth;
-					img.removeAttribute('width');
-					img.removeAttribute('height');
+					if(mimeExt != 'tiff' && mimeExt != 'tif'){
+                        img.className = 'iconImage';
+                        img.src = UrlUtils.addParams(self.servicePreview, {'filePath' : obj.id});
+                        //img.width = this.iconWidth;
+                        img.removeAttribute('width');
+                        img.removeAttribute('height');
+					} else {
+                        img.src = require.toUrl('cool/rfe/resources/images/icons-64/file-image.png');
+					}
+
 					break;
                 case 'video':
 					img.src = require.toUrl('cool/rfe/resources/images/icons-64/file-video.png');

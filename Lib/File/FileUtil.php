@@ -50,6 +50,8 @@ class FileUtil {
             case 'xltx'   : { return "Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.template"; break;}
 
             case 'odt'    : { return "Content-Type: application/vnd.oasis.opendocument.text, application/x-vnd.oasis.opendocument.text"; break;}
+            case 'tiff'   : { return "Content-Type: image/tiff"; break;}
+            case 'tif'    : { return "Content-Type: image/tiff"; break;}
             default       : { return "Content-Type: file"; break;}
         }
     }
@@ -88,6 +90,15 @@ class FileUtil {
             ,"php"=>"text/html"
             ,"htm"=>"text/html"
             ,"html"=>"text/html"
+            ,"tiff"=>"image/tiff"
+            ,"tif"=>"image/tiff"
+            ,"7z"=>"application/x-7z-compressed"
+            ,"mkv"=>"video/x-matroska"
+            ,"msg"=>"application/vnd.ms-outlook"
+            ,"vcf"=>"text/x-vcard"
+            ,"xps"=>"application/vnd.ms-xpsdocument"
+            ,"odt"=>"application/vnd.oasis.opendocument.text"
+
         );
 
         return @$mime_types[strtolower($extension)];
