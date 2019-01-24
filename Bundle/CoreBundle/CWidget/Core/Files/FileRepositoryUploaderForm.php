@@ -50,7 +50,13 @@ class FileRepositoryUploaderForm extends Form {
         if($f = $this->getField('files')->getUploadedFiles()) {
             foreach($f as $file) {
                 //$file->setProperty(CoolTableFileRepository::PROP_CATEGORY, $categoryName);
-                $this->repo->storeFileAt($file, $targetFolder);
+                try {
+                    $this->repo->storeFileAt($file, $targetFolder);
+                } catch (\Exception $e){
+                    $this->addMessageError($this->getTranslator()->trans('DUPLICATED_FILENAME').' '.$file->getName());
+                    return ;
+                }
+
             }
             $this->addCommandJs(" widget.dialog.hide(); widget.dialog.rfe.reload(); ");
             $this->getField('files')->clearUploadedFiles();
