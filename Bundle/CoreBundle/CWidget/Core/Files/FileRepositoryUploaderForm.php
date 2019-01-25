@@ -47,20 +47,28 @@ class FileRepositoryUploaderForm extends Form {
         $targetFolder = $this->parameters->get('folder');
         $targetFolder = $targetFolder == FileRepositoryDataSource::ROOT_PLACEHOLDER ? null : $targetFolder;
 
+        $uplpoadErrors = FALSE;
+
         if($f = $this->getField('files')->getUploadedFiles()) {
             foreach($f as $file) {
                 //$file->setProperty(CoolTableFileRepository::PROP_CATEGORY, $categoryName);
                 try {
                     $this->repo->storeFileAt($file, $targetFolder);
-                    $this->addMessage($this->getTranslator()->trans('SUCCESS_UPLOAD').' '.$file->getName());
+                    $this->addMessageInfo($this->getTranslator()->trans('SUCCESS_UPLOAD').' '.$file->getName());
                 } catch (\Exception $e){
                     $this->addMessageError($this->getTranslator()->trans('DUPLICATED_FILENAME').' '.$file->getName());
-                    return ;
+                    $uplpoadErrors = TRUE;
                 }
 
             }
-            $this->addCommandJs(" widget.dialog.hide(); widget.dialog.rfe.reload(); ");
-            $this->getField('files')->clearUploadedFiles();
+
+            if (!$uplpoadErrors){
+                $this->addCommandJs(" widget.dialog.hide(); widget.dialog.rfe.reload(); ");
+                $this->getField('files')->clearUploadedFiles();
+            }  else {
+                $this->addCommandJs(" widget.dialog.rfe.reload(); ");
+            }
+
         }
     }
 
