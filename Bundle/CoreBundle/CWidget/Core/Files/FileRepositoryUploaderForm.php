@@ -52,6 +52,7 @@ class FileRepositoryUploaderForm extends Form {
                 //$file->setProperty(CoolTableFileRepository::PROP_CATEGORY, $categoryName);
                 try {
                     $this->repo->storeFileAt($file, $targetFolder);
+                    $this->addMessage($this->getTranslator()->trans('SUCCESS_UPLOAD').' '.$file->getName());
                 } catch (\Exception $e){
                     $this->addMessageError($this->getTranslator()->trans('DUPLICATED_FILENAME').' '.$file->getName());
                     return ;
