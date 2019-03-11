@@ -34,11 +34,18 @@ function(dateLocale, currencyLocale){
         return Math.trunc(100*floatValue);
     });
 
-    Handlebars.registerHelper('boolIcon', function(boolValue) {
-        if(boolValue === null || boolValue === undefined)
+    Handlebars.registerHelper('boolIcon', function(boolValue){
+        if(boolValue === null || boolValue === undefined) {
             return '-';
-        return '<img src="/bower_components/fugue/icons/tick' + (boolValue ? '' : '-red') + '.png">';
-    });
+        }
+        if(boolValue) {
+            return '<img src="/bower_components/fugue/icons/tick.png">';
+        }
+        else {
+            return '<img src="/bower_components/fugue/icons/cross.png">';
+        } }
+
+    );
 
     Handlebars.registerHelper('fileSize', function(fileSizeInBytes) {
         var i = -1;
