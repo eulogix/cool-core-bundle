@@ -490,6 +490,33 @@ abstract class BaseDataSource implements DataSourceInterface {
     }
 
     /**
+     * retrieves an array containing the fields that are set as lazy fetch in an array
+     * @return array
+     */
+    public function getLazyFields() : array {
+        $ret = [];
+        $fields = $this->getFields();
+        foreach ($fields as $field){
+            if ($field->getLazyFetch()){
+                $ret[] = $field->getName();
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param $lazyFields - array of DSFields names to modify the lazyFetch value
+     * @param $value - value (boolean) to set to the Lazy fetch in the selected fields
+     */
+    public function setLazyFields( $lazyFields, $value){
+        foreach ($lazyFields as $lazy){
+            if ($this->getField($lazy)){
+                $this->getField($lazy)->setLazyFetch($value);
+            }
+        }
+    }
+
+    /**
      * gridx enumerates columns starting from 1, and the first one is reserved for tools.
      * TODO: refactor this, having the client resolve column offsets to actual field names
      * TODO: get rid of the dependancy with gridx and cool lister (offset 2)

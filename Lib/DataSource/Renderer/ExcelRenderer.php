@@ -13,6 +13,7 @@ namespace Eulogix\Cool\Lib\DataSource\Renderer;
 
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\DataSource\DataSourceInterface;
+use Eulogix\Cool\Lib\DataSource\DSRequest;
 use Eulogix\Cool\Lib\PHPExcel\CoolExcelDate;
 use PHPExcel;
 use PHPExcel_Cell;
@@ -257,6 +258,26 @@ class ExcelRenderer extends BaseRenderer {
             }
 
         }
+        return $ret;
+    }
+
+    /**
+     * @param DSRequest $request
+     * @param bool $raw
+     * @param array|null $listerColumnsDefinitions
+     * @param null $asyncIfMoreThanRows
+     * @return mixed
+     *
+     * Modifies the dataSource for retrieve all the fields making them not lazy fetch during the export
+     */
+    public function render(DSRequest $request, $raw = false, array $listerColumnsDefinitions = null, $asyncIfMoreThanRows = null)
+    {
+        $ds = $this->getDataSource();
+        $lazyFields = $ds->getLazyFields();
+        $ds->setLazyFields($lazyFields,0);
+        $ret = parent::render($request, $raw, $listerColumnsDefinitions, $asyncIfMoreThanRows);
+        $ds->setLazyFields($lazyFields,1);
+
         return $ret;
     }
 }
