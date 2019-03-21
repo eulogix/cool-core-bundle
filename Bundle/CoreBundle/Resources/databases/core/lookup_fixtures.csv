@@ -1,4 +1,4 @@
-domain;value;dec_en;dec_es;dec_pt;dec_it;sort_order;mandatory_flag
+domain;value;dec_en;dec_es;dec_pt;dec_it;dec_el;sort_order;mandatory_flag
 APP_SETTING_NAME;;;;;;;
 APP_SETTING_SPACE;;;;;;;
 CODE_SNIPPET_CATEGORY;form_action;"Form Action";"Form Action";"Form Action";"Form Action";;

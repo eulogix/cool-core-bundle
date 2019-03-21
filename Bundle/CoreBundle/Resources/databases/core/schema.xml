@@ -461,6 +461,7 @@
         <column name="dec_en" type="LONGVARCHAR"/>
         <column name="dec_es" type="LONGVARCHAR"/>
         <column name="dec_pt" type="LONGVARCHAR"/>
+        <column name="dec_el" type="LONGVARCHAR"/>
         <column name="sort_order" type="INTEGER"/>
 
         <column name="schema_filter" type="LONGVARCHAR" sqlType="TEXT[]" description="this field allows to define specific lookup sets for multi tenant schemas"/>

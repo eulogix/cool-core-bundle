@@ -21,7 +21,7 @@ class LocaleManager {
      * @return string[]
      */
     public function getAvailableLocales() {
-        return ['en','es','pt','it'];
+        return ['en','es','pt','it','el'];
     }
 
 } 
