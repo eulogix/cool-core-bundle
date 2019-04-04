@@ -19,7 +19,7 @@ function(dateLocale, currencyLocale){
     Handlebars.registerHelper('onlyDate', function(isoTimestamp) {
         if(!isoTimestamp)
             return '-';
-        return dateLocale.format(new Date(isoTimestamp), { locale: dojoConfig.locale, formatLength: "medium", selector: "date" });
+        return dateLocale.format(new Date(isoTimestamp), { datePattern: "dd/MM/yyyy", selector: "date" });
     });
 
     Handlebars.registerHelper('onlyTime', function(isoTimestamp) {
