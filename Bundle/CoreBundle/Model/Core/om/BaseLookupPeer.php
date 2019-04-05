@@ -30,13 +30,13 @@ abstract class BaseLookupPeer
     const TM_CLASS = 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\map\\LookupTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 12;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 12;
 
     /** the column name for the lookup_id field */
     const LOOKUP_ID = 'core.lookup.lookup_id';
@@ -58,6 +58,9 @@ abstract class BaseLookupPeer
 
     /** the column name for the dec_pt field */
     const DEC_PT = 'core.lookup.dec_pt';
+
+    /** the column name for the dec_el field */
+    const DEC_EL = 'core.lookup.dec_el';
 
     /** the column name for the sort_order field */
     const SORT_ORDER = 'core.lookup.sort_order';
@@ -90,12 +93,12 @@ abstract class BaseLookupPeer
      * e.g. LookupPeer::$fieldNames[LookupPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('LookupId', 'DomainName', 'Value', 'DecIt', 'DecEn', 'DecEs', 'DecPt', 'SortOrder', 'SchemaFilter', 'Filter', 'Ext', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('lookupId', 'domainName', 'value', 'decIt', 'decEn', 'decEs', 'decPt', 'sortOrder', 'schemaFilter', 'filter', 'ext', ),
-        BasePeer::TYPE_COLNAME => array (LookupPeer::LOOKUP_ID, LookupPeer::DOMAIN_NAME, LookupPeer::VALUE, LookupPeer::DEC_IT, LookupPeer::DEC_EN, LookupPeer::DEC_ES, LookupPeer::DEC_PT, LookupPeer::SORT_ORDER, LookupPeer::SCHEMA_FILTER, LookupPeer::FILTER, LookupPeer::EXT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LOOKUP_ID', 'DOMAIN_NAME', 'VALUE', 'DEC_IT', 'DEC_EN', 'DEC_ES', 'DEC_PT', 'SORT_ORDER', 'SCHEMA_FILTER', 'FILTER', 'EXT', ),
-        BasePeer::TYPE_FIELDNAME => array ('lookup_id', 'domain_name', 'value', 'dec_it', 'dec_en', 'dec_es', 'dec_pt', 'sort_order', 'schema_filter', 'filter', 'ext', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('LookupId', 'DomainName', 'Value', 'DecIt', 'DecEn', 'DecEs', 'DecPt', 'DecEl', 'SortOrder', 'SchemaFilter', 'Filter', 'Ext', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('lookupId', 'domainName', 'value', 'decIt', 'decEn', 'decEs', 'decPt', 'decEl', 'sortOrder', 'schemaFilter', 'filter', 'ext', ),
+        BasePeer::TYPE_COLNAME => array (LookupPeer::LOOKUP_ID, LookupPeer::DOMAIN_NAME, LookupPeer::VALUE, LookupPeer::DEC_IT, LookupPeer::DEC_EN, LookupPeer::DEC_ES, LookupPeer::DEC_PT, LookupPeer::DEC_EL, LookupPeer::SORT_ORDER, LookupPeer::SCHEMA_FILTER, LookupPeer::FILTER, LookupPeer::EXT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LOOKUP_ID', 'DOMAIN_NAME', 'VALUE', 'DEC_IT', 'DEC_EN', 'DEC_ES', 'DEC_PT', 'DEC_EL', 'SORT_ORDER', 'SCHEMA_FILTER', 'FILTER', 'EXT', ),
+        BasePeer::TYPE_FIELDNAME => array ('lookup_id', 'domain_name', 'value', 'dec_it', 'dec_en', 'dec_es', 'dec_pt', 'dec_el', 'sort_order', 'schema_filter', 'filter', 'ext', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -105,12 +108,12 @@ abstract class BaseLookupPeer
      * e.g. LookupPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('LookupId' => 0, 'DomainName' => 1, 'Value' => 2, 'DecIt' => 3, 'DecEn' => 4, 'DecEs' => 5, 'DecPt' => 6, 'SortOrder' => 7, 'SchemaFilter' => 8, 'Filter' => 9, 'Ext' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('lookupId' => 0, 'domainName' => 1, 'value' => 2, 'decIt' => 3, 'decEn' => 4, 'decEs' => 5, 'decPt' => 6, 'sortOrder' => 7, 'schemaFilter' => 8, 'filter' => 9, 'ext' => 10, ),
-        BasePeer::TYPE_COLNAME => array (LookupPeer::LOOKUP_ID => 0, LookupPeer::DOMAIN_NAME => 1, LookupPeer::VALUE => 2, LookupPeer::DEC_IT => 3, LookupPeer::DEC_EN => 4, LookupPeer::DEC_ES => 5, LookupPeer::DEC_PT => 6, LookupPeer::SORT_ORDER => 7, LookupPeer::SCHEMA_FILTER => 8, LookupPeer::FILTER => 9, LookupPeer::EXT => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('LOOKUP_ID' => 0, 'DOMAIN_NAME' => 1, 'VALUE' => 2, 'DEC_IT' => 3, 'DEC_EN' => 4, 'DEC_ES' => 5, 'DEC_PT' => 6, 'SORT_ORDER' => 7, 'SCHEMA_FILTER' => 8, 'FILTER' => 9, 'EXT' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('lookup_id' => 0, 'domain_name' => 1, 'value' => 2, 'dec_it' => 3, 'dec_en' => 4, 'dec_es' => 5, 'dec_pt' => 6, 'sort_order' => 7, 'schema_filter' => 8, 'filter' => 9, 'ext' => 10, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('LookupId' => 0, 'DomainName' => 1, 'Value' => 2, 'DecIt' => 3, 'DecEn' => 4, 'DecEs' => 5, 'DecPt' => 6, 'DecEl' => 7, 'SortOrder' => 8, 'SchemaFilter' => 9, 'Filter' => 10, 'Ext' => 11, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('lookupId' => 0, 'domainName' => 1, 'value' => 2, 'decIt' => 3, 'decEn' => 4, 'decEs' => 5, 'decPt' => 6, 'decEl' => 7, 'sortOrder' => 8, 'schemaFilter' => 9, 'filter' => 10, 'ext' => 11, ),
+        BasePeer::TYPE_COLNAME => array (LookupPeer::LOOKUP_ID => 0, LookupPeer::DOMAIN_NAME => 1, LookupPeer::VALUE => 2, LookupPeer::DEC_IT => 3, LookupPeer::DEC_EN => 4, LookupPeer::DEC_ES => 5, LookupPeer::DEC_PT => 6, LookupPeer::DEC_EL => 7, LookupPeer::SORT_ORDER => 8, LookupPeer::SCHEMA_FILTER => 9, LookupPeer::FILTER => 10, LookupPeer::EXT => 11, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('LOOKUP_ID' => 0, 'DOMAIN_NAME' => 1, 'VALUE' => 2, 'DEC_IT' => 3, 'DEC_EN' => 4, 'DEC_ES' => 5, 'DEC_PT' => 6, 'DEC_EL' => 7, 'SORT_ORDER' => 8, 'SCHEMA_FILTER' => 9, 'FILTER' => 10, 'EXT' => 11, ),
+        BasePeer::TYPE_FIELDNAME => array ('lookup_id' => 0, 'domain_name' => 1, 'value' => 2, 'dec_it' => 3, 'dec_en' => 4, 'dec_es' => 5, 'dec_pt' => 6, 'dec_el' => 7, 'sort_order' => 8, 'schema_filter' => 9, 'filter' => 10, 'ext' => 11, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -191,6 +194,7 @@ abstract class BaseLookupPeer
             $criteria->addSelectColumn(LookupPeer::DEC_EN);
             $criteria->addSelectColumn(LookupPeer::DEC_ES);
             $criteria->addSelectColumn(LookupPeer::DEC_PT);
+            $criteria->addSelectColumn(LookupPeer::DEC_EL);
             $criteria->addSelectColumn(LookupPeer::SORT_ORDER);
             $criteria->addSelectColumn(LookupPeer::SCHEMA_FILTER);
             $criteria->addSelectColumn(LookupPeer::FILTER);
@@ -203,6 +207,7 @@ abstract class BaseLookupPeer
             $criteria->addSelectColumn($alias . '.dec_en');
             $criteria->addSelectColumn($alias . '.dec_es');
             $criteria->addSelectColumn($alias . '.dec_pt');
+            $criteria->addSelectColumn($alias . '.dec_el');
             $criteria->addSelectColumn($alias . '.sort_order');
             $criteria->addSelectColumn($alias . '.schema_filter');
             $criteria->addSelectColumn($alias . '.filter');

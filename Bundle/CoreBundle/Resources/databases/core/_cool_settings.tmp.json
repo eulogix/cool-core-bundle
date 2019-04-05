@@ -15,7 +15,7 @@
                         "name": "password",
                         "language": "plpgsql",
                         "when": "BEFORE UPDATE",
-                        "body": "\n            \n                    NEW.hashed_password = md5(NEW.password);\n                    \/*NEW.password=''hidden'';*\/\n                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,'0')) THEN\n                        NEW.last_password_update = NOW();\n                    END IF;\n                    return NEW;\n                \n        "
+                        "body": "\n            \n                    \/*NEW.password=''hidden'';*\/\n                    IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,'0')) THEN\n                        NEW.last_password_update = NOW();\n                    END IF;\n                    return NEW;\n                \n        "
                     }
                 ],
                 "files": {
@@ -38,9 +38,6 @@
                         "attributes": []
                     },
                     "login_name": {
-                        "attributes": []
-                    },
-                    "password": {
                         "attributes": []
                     },
                     "hashed_password": {
@@ -95,6 +92,16 @@
                     },
                     "last_password_update": {
                         "attributes": []
+                    },
+                    "validate_method": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "LDAP,LOCAL"
+                        }
                     }
                 }
             },
@@ -473,6 +480,9 @@
                         "attributes": []
                     },
                     "dec_pt": {
+                        "attributes": []
+                    },
+                    "dec_el": {
                         "attributes": []
                     },
                     "sort_order": {

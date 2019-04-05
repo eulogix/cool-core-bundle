@@ -11,7 +11,6 @@ SET SCHEMA 'core';
                         PERFORM set_config('search_path', TG_TABLE_SCHEMA, true);
                         
             
-                    NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=''hidden'';*/
                     IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,'0')) THEN
                         NEW.last_password_update = NOW();

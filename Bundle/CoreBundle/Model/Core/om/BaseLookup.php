@@ -79,6 +79,12 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
     protected $dec_pt;
 
     /**
+     * The value for the dec_el field.
+     * @var        string
+     */
+    protected $dec_el;
+
+    /**
      * The value for the sort_order field.
      * @var        int
      */
@@ -197,6 +203,17 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
     {
 
         return $this->dec_pt;
+    }
+
+    /**
+     * Get the [dec_el] column value.
+     *
+     * @return string
+     */
+    public function getDecEl()
+    {
+
+        return $this->dec_el;
     }
 
     /**
@@ -391,6 +408,27 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
     } // setDecPt()
 
     /**
+     * Set the value of [dec_el] column.
+     *
+     * @param  string $v new value
+     * @return Lookup The current object (for fluent API support)
+     */
+    public function setDecEl($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->dec_el !== $v) {
+            $this->dec_el = $v;
+            $this->modifiedColumns[] = LookupPeer::DEC_EL;
+        }
+
+
+        return $this;
+    } // setDecEl()
+
+    /**
      * Set the value of [sort_order] column.
      *
      * @param  int $v new value
@@ -513,10 +551,11 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
             $this->dec_en = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->dec_es = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->dec_pt = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->sort_order = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-            $this->schema_filter = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->filter = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->ext = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->dec_el = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->sort_order = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->schema_filter = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->filter = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->ext = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -526,7 +565,7 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 11; // 11 = LookupPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = LookupPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Lookup object", $e);
@@ -772,6 +811,9 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(LookupPeer::DEC_PT)) {
             $modifiedColumns[':p' . $index++]  = 'dec_pt';
         }
+        if ($this->isColumnModified(LookupPeer::DEC_EL)) {
+            $modifiedColumns[':p' . $index++]  = 'dec_el';
+        }
         if ($this->isColumnModified(LookupPeer::SORT_ORDER)) {
             $modifiedColumns[':p' . $index++]  = 'sort_order';
         }
@@ -815,6 +857,9 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
                         break;
                     case 'dec_pt':
                         $stmt->bindValue($identifier, $this->dec_pt, PDO::PARAM_STR);
+                        break;
+                    case 'dec_el':
+                        $stmt->bindValue($identifier, $this->dec_el, PDO::PARAM_STR);
                         break;
                     case 'sort_order':
                         $stmt->bindValue($identifier, $this->sort_order, PDO::PARAM_INT);
@@ -977,15 +1022,18 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
                 return $this->getDecPt();
                 break;
             case 7:
-                return $this->getSortOrder();
+                return $this->getDecEl();
                 break;
             case 8:
-                return $this->getSchemaFilter();
+                return $this->getSortOrder();
                 break;
             case 9:
-                return $this->getFilter();
+                return $this->getSchemaFilter();
                 break;
             case 10:
+                return $this->getFilter();
+                break;
+            case 11:
                 return $this->getExt();
                 break;
             default:
@@ -1023,10 +1071,11 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
             $keys[4] => $this->getDecEn(),
             $keys[5] => $this->getDecEs(),
             $keys[6] => $this->getDecPt(),
-            $keys[7] => $this->getSortOrder(),
-            $keys[8] => $this->getSchemaFilter(),
-            $keys[9] => $this->getFilter(),
-            $keys[10] => $this->getExt(),
+            $keys[7] => $this->getDecEl(),
+            $keys[8] => $this->getSortOrder(),
+            $keys[9] => $this->getSchemaFilter(),
+            $keys[10] => $this->getFilter(),
+            $keys[11] => $this->getExt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1088,15 +1137,18 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
                 $this->setDecPt($value);
                 break;
             case 7:
-                $this->setSortOrder($value);
+                $this->setDecEl($value);
                 break;
             case 8:
-                $this->setSchemaFilter($value);
+                $this->setSortOrder($value);
                 break;
             case 9:
-                $this->setFilter($value);
+                $this->setSchemaFilter($value);
                 break;
             case 10:
+                $this->setFilter($value);
+                break;
+            case 11:
                 $this->setExt($value);
                 break;
         } // switch()
@@ -1130,10 +1182,11 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[4], $arr)) $this->setDecEn($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setDecEs($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setDecPt($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setSortOrder($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setSchemaFilter($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setFilter($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setExt($arr[$keys[10]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDecEl($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setSortOrder($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setSchemaFilter($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setFilter($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setExt($arr[$keys[11]]);
     }
 
     /**
@@ -1152,6 +1205,7 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(LookupPeer::DEC_EN)) $criteria->add(LookupPeer::DEC_EN, $this->dec_en);
         if ($this->isColumnModified(LookupPeer::DEC_ES)) $criteria->add(LookupPeer::DEC_ES, $this->dec_es);
         if ($this->isColumnModified(LookupPeer::DEC_PT)) $criteria->add(LookupPeer::DEC_PT, $this->dec_pt);
+        if ($this->isColumnModified(LookupPeer::DEC_EL)) $criteria->add(LookupPeer::DEC_EL, $this->dec_el);
         if ($this->isColumnModified(LookupPeer::SORT_ORDER)) $criteria->add(LookupPeer::SORT_ORDER, $this->sort_order);
         if ($this->isColumnModified(LookupPeer::SCHEMA_FILTER)) $criteria->add(LookupPeer::SCHEMA_FILTER, $this->schema_filter);
         if ($this->isColumnModified(LookupPeer::FILTER)) $criteria->add(LookupPeer::FILTER, $this->filter);
@@ -1225,6 +1279,7 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
         $copyObj->setDecEn($this->getDecEn());
         $copyObj->setDecEs($this->getDecEs());
         $copyObj->setDecPt($this->getDecPt());
+        $copyObj->setDecEl($this->getDecEl());
         $copyObj->setSortOrder($this->getSortOrder());
         $copyObj->setSchemaFilter($this->getSchemaFilter());
         $copyObj->setFilter($this->getFilter());
@@ -1287,6 +1342,7 @@ abstract class BaseLookup extends CoolPropelObject implements Persistent
         $this->dec_en = null;
         $this->dec_es = null;
         $this->dec_pt = null;
+        $this->dec_el = null;
         $this->sort_order = null;
         $this->schema_filter = null;
         $this->filter = null;

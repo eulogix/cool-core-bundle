@@ -26,7 +26,7 @@
         
         <column name="account_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="login_name" type="LONGVARCHAR" required="true"/>
-        <column name="password" type="LONGVARCHAR"/>
+
         <column name="hashed_password" type="LONGVARCHAR"/>
 
         <column name="type" type="LONGVARCHAR" description="each app may use this field to cluster users as it likes">
@@ -52,7 +52,12 @@
 
         <column name="roles" type="LONGVARCHAR" sqlType="text[]" description="SF security roles"></column>
 		<column name="last_password_update" type="TIMESTAMP" defaultExpr="CURRENT_TIMESTAMP"></column>
-		
+
+        <column name="validate_method" type="LONGVARCHAR" required="true" default="LOCAL" description="identifies the type of login to be used for the user" >
+            <_lookup type="enum" validValues="LDAP,LOCAL"></_lookup>
+            <_control type="select"></_control>
+        </column>
+
         <unique>
             <unique-column name="login_name"/>
         </unique>
@@ -69,7 +74,6 @@
 
         <_trigger name="password" when="BEFORE UPDATE" language="plpgsql">
             <![CDATA[
-                    NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=''hidden'';*/
                     IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,'0')) THEN
                         NEW.last_password_update = NOW();

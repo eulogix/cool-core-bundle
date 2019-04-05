@@ -25,7 +25,6 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
 /**
  * @method AccountQuery orderByAccountId($order = Criteria::ASC) Order by the account_id column
  * @method AccountQuery orderByLoginName($order = Criteria::ASC) Order by the login_name column
- * @method AccountQuery orderByPassword($order = Criteria::ASC) Order by the password column
  * @method AccountQuery orderByHashedPassword($order = Criteria::ASC) Order by the hashed_password column
  * @method AccountQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method AccountQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
@@ -39,10 +38,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery orderByValidity($order = Criteria::ASC) Order by the validity column
  * @method AccountQuery orderByRoles($order = Criteria::ASC) Order by the roles column
  * @method AccountQuery orderByLastPasswordUpdate($order = Criteria::ASC) Order by the last_password_update column
+ * @method AccountQuery orderByValidateMethod($order = Criteria::ASC) Order by the validate_method column
  *
  * @method AccountQuery groupByAccountId() Group by the account_id column
  * @method AccountQuery groupByLoginName() Group by the login_name column
- * @method AccountQuery groupByPassword() Group by the password column
  * @method AccountQuery groupByHashedPassword() Group by the hashed_password column
  * @method AccountQuery groupByType() Group by the type column
  * @method AccountQuery groupByFirstName() Group by the first_name column
@@ -56,6 +55,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery groupByValidity() Group by the validity column
  * @method AccountQuery groupByRoles() Group by the roles column
  * @method AccountQuery groupByLastPasswordUpdate() Group by the last_password_update column
+ * @method AccountQuery groupByValidateMethod() Group by the validate_method column
  *
  * @method AccountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AccountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -105,7 +105,6 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method Account findOneOrCreate(PropelPDO $con = null) Return the first Account matching the query, or a new Account object populated from the query conditions when no match is found
  *
  * @method Account findOneByLoginName(string $login_name) Return the first Account filtered by the login_name column
- * @method Account findOneByPassword(string $password) Return the first Account filtered by the password column
  * @method Account findOneByHashedPassword(string $hashed_password) Return the first Account filtered by the hashed_password column
  * @method Account findOneByType(string $type) Return the first Account filtered by the type column
  * @method Account findOneByFirstName(string $first_name) Return the first Account filtered by the first_name column
@@ -119,10 +118,10 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method Account findOneByValidity(string $validity) Return the first Account filtered by the validity column
  * @method Account findOneByRoles(string $roles) Return the first Account filtered by the roles column
  * @method Account findOneByLastPasswordUpdate(string $last_password_update) Return the first Account filtered by the last_password_update column
+ * @method Account findOneByValidateMethod(string $validate_method) Return the first Account filtered by the validate_method column
  *
  * @method array findByAccountId(int $account_id) Return Account objects filtered by the account_id column
  * @method array findByLoginName(string $login_name) Return Account objects filtered by the login_name column
- * @method array findByPassword(string $password) Return Account objects filtered by the password column
  * @method array findByHashedPassword(string $hashed_password) Return Account objects filtered by the hashed_password column
  * @method array findByType(string $type) Return Account objects filtered by the type column
  * @method array findByFirstName(string $first_name) Return Account objects filtered by the first_name column
@@ -136,6 +135,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method array findByValidity(string $validity) Return Account objects filtered by the validity column
  * @method array findByRoles(string $roles) Return Account objects filtered by the roles column
  * @method array findByLastPasswordUpdate(string $last_password_update) Return Account objects filtered by the last_password_update column
+ * @method array findByValidateMethod(string $validate_method) Return Account objects filtered by the validate_method column
  */
 abstract class BaseAccountQuery extends ModelCriteria
 {
@@ -241,7 +241,7 @@ abstract class BaseAccountQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT account_id, login_name, password, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles, last_password_update FROM core.account WHERE account_id = :p0';
+        $sql = 'SELECT account_id, login_name, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles, last_password_update, validate_method FROM core.account WHERE account_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -423,35 +423,6 @@ abstract class BaseAccountQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AccountPeer::LOGIN_NAME, $loginName, $comparison);
-    }
-
-    /**
-     * Filter the query on the password column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByPassword('fooValue');   // WHERE password = 'fooValue'
-     * $query->filterByPassword('%fooValue%'); // WHERE password LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $password The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AccountQuery The current query, for fluid interface
-     */
-    public function filterByPassword($password = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($password)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $password)) {
-                $password = str_replace('*', '%', $password);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(AccountPeer::PASSWORD, $password, $comparison);
     }
 
     /**
@@ -843,6 +814,35 @@ abstract class BaseAccountQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AccountPeer::LAST_PASSWORD_UPDATE, $lastPasswordUpdate, $comparison);
+    }
+
+    /**
+     * Filter the query on the validate_method column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByValidateMethod('fooValue');   // WHERE validate_method = 'fooValue'
+     * $query->filterByValidateMethod('%fooValue%'); // WHERE validate_method LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $validateMethod The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AccountQuery The current query, for fluid interface
+     */
+    public function filterByValidateMethod($validateMethod = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($validateMethod)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $validateMethod)) {
+                $validateMethod = str_replace('*', '%', $validateMethod);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AccountPeer::VALIDATE_METHOD, $validateMethod, $comparison);
     }
 
     /**

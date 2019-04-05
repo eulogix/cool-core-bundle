@@ -65,12 +65,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     protected $login_name;
 
     /**
-     * The value for the password field.
-     * @var        string
-     */
-    protected $password;
-
-    /**
      * The value for the hashed_password field.
      * @var        string
      */
@@ -148,6 +142,13 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
      * @var        string
      */
     protected $last_password_update;
+
+    /**
+     * The value for the validate_method field.
+     * Note: this column has a database default value of: 'LOCAL'
+     * @var        string
+     */
+    protected $validate_method;
 
     /**
      * @var        PropelObjectCollection|AccountSetting[] Collection to store aggregation of AccountSetting objects.
@@ -297,6 +298,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
      */
     public function applyDefaultValues()
     {
+        $this->validate_method = 'LOCAL';
     }
 
     /**
@@ -329,17 +331,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     {
 
         return $this->login_name;
-    }
-
-    /**
-     * Get the [password] column value.
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-
-        return $this->password;
     }
 
     /**
@@ -510,6 +501,17 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     }
 
     /**
+     * Get the [validate_method] column value.
+     * identifies the type of login to be used for the user
+     * @return string
+     */
+    public function getValidateMethod()
+    {
+
+        return $this->validate_method;
+    }
+
+    /**
      * Set the value of [account_id] column.
      *
      * @param  int $v new value
@@ -550,27 +552,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
 
         return $this;
     } // setLoginName()
-
-    /**
-     * Set the value of [password] column.
-     *
-     * @param  string $v new value
-     * @return Account The current object (for fluent API support)
-     */
-    public function setPassword($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->password !== $v) {
-            $this->password = $v;
-            $this->modifiedColumns[] = AccountPeer::PASSWORD;
-        }
-
-
-        return $this;
-    } // setPassword()
 
     /**
      * Set the value of [hashed_password] column.
@@ -848,6 +829,27 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     } // setLastPasswordUpdate()
 
     /**
+     * Set the value of [validate_method] column.
+     * identifies the type of login to be used for the user
+     * @param  string $v new value
+     * @return Account The current object (for fluent API support)
+     */
+    public function setValidateMethod($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->validate_method !== $v) {
+            $this->validate_method = $v;
+            $this->modifiedColumns[] = AccountPeer::VALIDATE_METHOD;
+        }
+
+
+        return $this;
+    } // setValidateMethod()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -857,6 +859,10 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->validate_method !== 'LOCAL') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -881,20 +887,20 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
 
             $this->account_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->login_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->password = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->hashed_password = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->type = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->first_name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->last_name = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->sex = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->email = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->telephone = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->mobile = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->default_locale = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->company_name = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->validity = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
-            $this->roles = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->last_password_update = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->hashed_password = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->first_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->last_name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->sex = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->email = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->telephone = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->mobile = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->default_locale = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->company_name = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->validity = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->roles = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->last_password_update = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->validate_method = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1332,9 +1338,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::LOGIN_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'login_name';
         }
-        if ($this->isColumnModified(AccountPeer::PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = 'password';
-        }
         if ($this->isColumnModified(AccountPeer::HASHED_PASSWORD)) {
             $modifiedColumns[':p' . $index++]  = 'hashed_password';
         }
@@ -1374,6 +1377,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::LAST_PASSWORD_UPDATE)) {
             $modifiedColumns[':p' . $index++]  = 'last_password_update';
         }
+        if ($this->isColumnModified(AccountPeer::VALIDATE_METHOD)) {
+            $modifiedColumns[':p' . $index++]  = 'validate_method';
+        }
 
         $sql = sprintf(
             'INSERT INTO core.account (%s) VALUES (%s)',
@@ -1390,9 +1396,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                         break;
                     case 'login_name':
                         $stmt->bindValue($identifier, $this->login_name, PDO::PARAM_STR);
-                        break;
-                    case 'password':
-                        $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
                         break;
                     case 'hashed_password':
                         $stmt->bindValue($identifier, $this->hashed_password, PDO::PARAM_STR);
@@ -1432,6 +1435,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                         break;
                     case 'last_password_update':
                         $stmt->bindValue($identifier, $this->last_password_update, PDO::PARAM_STR);
+                        break;
+                    case 'validate_method':
+                        $stmt->bindValue($identifier, $this->validate_method, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1647,46 +1653,46 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                 return $this->getLoginName();
                 break;
             case 2:
-                return $this->getPassword();
-                break;
-            case 3:
                 return $this->getHashedPassword();
                 break;
-            case 4:
+            case 3:
                 return $this->getType();
                 break;
-            case 5:
+            case 4:
                 return $this->getFirstName();
                 break;
-            case 6:
+            case 5:
                 return $this->getLastName();
                 break;
-            case 7:
+            case 6:
                 return $this->getSex();
                 break;
-            case 8:
+            case 7:
                 return $this->getEmail();
                 break;
-            case 9:
+            case 8:
                 return $this->getTelephone();
                 break;
-            case 10:
+            case 9:
                 return $this->getMobile();
                 break;
-            case 11:
+            case 10:
                 return $this->getDefaultLocale();
                 break;
-            case 12:
+            case 11:
                 return $this->getCompanyName();
                 break;
-            case 13:
+            case 12:
                 return $this->getValidity();
                 break;
-            case 14:
+            case 13:
                 return $this->getRoles();
                 break;
-            case 15:
+            case 14:
                 return $this->getLastPasswordUpdate();
+                break;
+            case 15:
+                return $this->getValidateMethod();
                 break;
             default:
                 return null;
@@ -1719,20 +1725,20 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $result = array(
             $keys[0] => $this->getAccountId(),
             $keys[1] => $this->getLoginName(),
-            $keys[2] => $this->getPassword(),
-            $keys[3] => $this->getHashedPassword(),
-            $keys[4] => $this->getType(),
-            $keys[5] => $this->getFirstName(),
-            $keys[6] => $this->getLastName(),
-            $keys[7] => $this->getSex(),
-            $keys[8] => $this->getEmail(),
-            $keys[9] => $this->getTelephone(),
-            $keys[10] => $this->getMobile(),
-            $keys[11] => $this->getDefaultLocale(),
-            $keys[12] => $this->getCompanyName(),
-            $keys[13] => $this->getValidity(),
-            $keys[14] => $this->getRoles(),
-            $keys[15] => $this->getLastPasswordUpdate(),
+            $keys[2] => $this->getHashedPassword(),
+            $keys[3] => $this->getType(),
+            $keys[4] => $this->getFirstName(),
+            $keys[5] => $this->getLastName(),
+            $keys[6] => $this->getSex(),
+            $keys[7] => $this->getEmail(),
+            $keys[8] => $this->getTelephone(),
+            $keys[9] => $this->getMobile(),
+            $keys[10] => $this->getDefaultLocale(),
+            $keys[11] => $this->getCompanyName(),
+            $keys[12] => $this->getValidity(),
+            $keys[13] => $this->getRoles(),
+            $keys[14] => $this->getLastPasswordUpdate(),
+            $keys[15] => $this->getValidateMethod(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1811,46 +1817,46 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                 $this->setLoginName($value);
                 break;
             case 2:
-                $this->setPassword($value);
-                break;
-            case 3:
                 $this->setHashedPassword($value);
                 break;
-            case 4:
+            case 3:
                 $this->setType($value);
                 break;
-            case 5:
+            case 4:
                 $this->setFirstName($value);
                 break;
-            case 6:
+            case 5:
                 $this->setLastName($value);
                 break;
-            case 7:
+            case 6:
                 $this->setSex($value);
                 break;
-            case 8:
+            case 7:
                 $this->setEmail($value);
                 break;
-            case 9:
+            case 8:
                 $this->setTelephone($value);
                 break;
-            case 10:
+            case 9:
                 $this->setMobile($value);
                 break;
-            case 11:
+            case 10:
                 $this->setDefaultLocale($value);
                 break;
-            case 12:
+            case 11:
                 $this->setCompanyName($value);
                 break;
-            case 13:
+            case 12:
                 $this->setValidity($value);
                 break;
-            case 14:
+            case 13:
                 $this->setRoles($value);
                 break;
-            case 15:
+            case 14:
                 $this->setLastPasswordUpdate($value);
+                break;
+            case 15:
+                $this->setValidateMethod($value);
                 break;
         } // switch()
     }
@@ -1878,20 +1884,20 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setAccountId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setLoginName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setPassword($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setHashedPassword($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setType($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setFirstName($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setLastName($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setSex($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setEmail($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setTelephone($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setMobile($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setDefaultLocale($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setCompanyName($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setValidity($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setRoles($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setLastPasswordUpdate($arr[$keys[15]]);
+        if (array_key_exists($keys[2], $arr)) $this->setHashedPassword($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setType($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setFirstName($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setLastName($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setSex($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setEmail($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setTelephone($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setMobile($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDefaultLocale($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setCompanyName($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setValidity($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setRoles($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setLastPasswordUpdate($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setValidateMethod($arr[$keys[15]]);
     }
 
     /**
@@ -1905,7 +1911,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
 
         if ($this->isColumnModified(AccountPeer::ACCOUNT_ID)) $criteria->add(AccountPeer::ACCOUNT_ID, $this->account_id);
         if ($this->isColumnModified(AccountPeer::LOGIN_NAME)) $criteria->add(AccountPeer::LOGIN_NAME, $this->login_name);
-        if ($this->isColumnModified(AccountPeer::PASSWORD)) $criteria->add(AccountPeer::PASSWORD, $this->password);
         if ($this->isColumnModified(AccountPeer::HASHED_PASSWORD)) $criteria->add(AccountPeer::HASHED_PASSWORD, $this->hashed_password);
         if ($this->isColumnModified(AccountPeer::TYPE)) $criteria->add(AccountPeer::TYPE, $this->type);
         if ($this->isColumnModified(AccountPeer::FIRST_NAME)) $criteria->add(AccountPeer::FIRST_NAME, $this->first_name);
@@ -1919,6 +1924,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::VALIDITY)) $criteria->add(AccountPeer::VALIDITY, $this->validity);
         if ($this->isColumnModified(AccountPeer::ROLES)) $criteria->add(AccountPeer::ROLES, $this->roles);
         if ($this->isColumnModified(AccountPeer::LAST_PASSWORD_UPDATE)) $criteria->add(AccountPeer::LAST_PASSWORD_UPDATE, $this->last_password_update);
+        if ($this->isColumnModified(AccountPeer::VALIDATE_METHOD)) $criteria->add(AccountPeer::VALIDATE_METHOD, $this->validate_method);
 
         return $criteria;
     }
@@ -1983,7 +1989,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setLoginName($this->getLoginName());
-        $copyObj->setPassword($this->getPassword());
         $copyObj->setHashedPassword($this->getHashedPassword());
         $copyObj->setType($this->getType());
         $copyObj->setFirstName($this->getFirstName());
@@ -1997,6 +2002,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $copyObj->setValidity($this->getValidity());
         $copyObj->setRoles($this->getRoles());
         $copyObj->setLastPasswordUpdate($this->getLastPasswordUpdate());
+        $copyObj->setValidateMethod($this->getValidateMethod());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -4465,7 +4471,6 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     {
         $this->account_id = null;
         $this->login_name = null;
-        $this->password = null;
         $this->hashed_password = null;
         $this->type = null;
         $this->first_name = null;
@@ -4479,6 +4484,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $this->validity = null;
         $this->roles = null;
         $this->last_password_update = null;
+        $this->validate_method = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

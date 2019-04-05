@@ -44,7 +44,6 @@ class AccountTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         // columns
         $this->addPrimaryKey('account_id', 'AccountId', 'INTEGER', true, null, null);
         $this->addColumn('login_name', 'LoginName', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('password', 'Password', 'LONGVARCHAR', false, null, null);
         $this->addColumn('hashed_password', 'HashedPassword', 'LONGVARCHAR', false, null, null);
         $this->addColumn('type', 'Type', 'LONGVARCHAR', false, null, null);
         $this->addColumn('first_name', 'FirstName', 'LONGVARCHAR', false, null, null);
@@ -58,6 +57,7 @@ class AccountTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('validity', 'Validity', 'LONGVARCHAR', false, null, null);
         $this->addColumn('roles', 'Roles', 'LONGVARCHAR', false, null, null);
         $this->addColumn('last_password_update', 'LastPasswordUpdate', 'TIMESTAMP', false, null, 'CURRENT_TIMESTAMP');
+        $this->addColumn('validate_method', 'ValidateMethod', 'LONGVARCHAR', true, null, 'LOCAL');
         // validators
     } // initialize()
 

@@ -79,7 +79,7 @@ class CoolUser implements UserInterface {
      */
     public function getPassword()
     {
-        return $this->Account->getPassword();
+        return $this->Account->getHashedPassword();
     }
 
     /**

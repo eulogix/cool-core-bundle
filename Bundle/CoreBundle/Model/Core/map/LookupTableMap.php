@@ -49,6 +49,7 @@ class LookupTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('dec_en', 'DecEn', 'LONGVARCHAR', false, null, null);
         $this->addColumn('dec_es', 'DecEs', 'LONGVARCHAR', false, null, null);
         $this->addColumn('dec_pt', 'DecPt', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('dec_el', 'DecEl', 'LONGVARCHAR', false, null, null);
         $this->addColumn('sort_order', 'SortOrder', 'INTEGER', false, null, null);
         $this->addColumn('schema_filter', 'SchemaFilter', 'LONGVARCHAR', false, null, null);
         $this->addColumn('filter', 'Filter', 'LONGVARCHAR', false, null, null);

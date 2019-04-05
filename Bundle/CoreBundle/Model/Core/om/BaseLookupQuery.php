@@ -22,6 +22,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\LookupQuery;
  * @method LookupQuery orderByDecEn($order = Criteria::ASC) Order by the dec_en column
  * @method LookupQuery orderByDecEs($order = Criteria::ASC) Order by the dec_es column
  * @method LookupQuery orderByDecPt($order = Criteria::ASC) Order by the dec_pt column
+ * @method LookupQuery orderByDecEl($order = Criteria::ASC) Order by the dec_el column
  * @method LookupQuery orderBySortOrder($order = Criteria::ASC) Order by the sort_order column
  * @method LookupQuery orderBySchemaFilter($order = Criteria::ASC) Order by the schema_filter column
  * @method LookupQuery orderByFilter($order = Criteria::ASC) Order by the filter column
@@ -34,6 +35,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\LookupQuery;
  * @method LookupQuery groupByDecEn() Group by the dec_en column
  * @method LookupQuery groupByDecEs() Group by the dec_es column
  * @method LookupQuery groupByDecPt() Group by the dec_pt column
+ * @method LookupQuery groupByDecEl() Group by the dec_el column
  * @method LookupQuery groupBySortOrder() Group by the sort_order column
  * @method LookupQuery groupBySchemaFilter() Group by the schema_filter column
  * @method LookupQuery groupByFilter() Group by the filter column
@@ -52,6 +54,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\LookupQuery;
  * @method Lookup findOneByDecEn(string $dec_en) Return the first Lookup filtered by the dec_en column
  * @method Lookup findOneByDecEs(string $dec_es) Return the first Lookup filtered by the dec_es column
  * @method Lookup findOneByDecPt(string $dec_pt) Return the first Lookup filtered by the dec_pt column
+ * @method Lookup findOneByDecEl(string $dec_el) Return the first Lookup filtered by the dec_el column
  * @method Lookup findOneBySortOrder(int $sort_order) Return the first Lookup filtered by the sort_order column
  * @method Lookup findOneBySchemaFilter(string $schema_filter) Return the first Lookup filtered by the schema_filter column
  * @method Lookup findOneByFilter(string $filter) Return the first Lookup filtered by the filter column
@@ -64,6 +67,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\LookupQuery;
  * @method array findByDecEn(string $dec_en) Return Lookup objects filtered by the dec_en column
  * @method array findByDecEs(string $dec_es) Return Lookup objects filtered by the dec_es column
  * @method array findByDecPt(string $dec_pt) Return Lookup objects filtered by the dec_pt column
+ * @method array findByDecEl(string $dec_el) Return Lookup objects filtered by the dec_el column
  * @method array findBySortOrder(int $sort_order) Return Lookup objects filtered by the sort_order column
  * @method array findBySchemaFilter(string $schema_filter) Return Lookup objects filtered by the schema_filter column
  * @method array findByFilter(string $filter) Return Lookup objects filtered by the filter column
@@ -173,7 +177,7 @@ abstract class BaseLookupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT lookup_id, domain_name, value, dec_it, dec_en, dec_es, dec_pt, sort_order, schema_filter, filter, ext FROM core.lookup WHERE lookup_id = :p0';
+        $sql = 'SELECT lookup_id, domain_name, value, dec_it, dec_en, dec_es, dec_pt, dec_el, sort_order, schema_filter, filter, ext FROM core.lookup WHERE lookup_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -500,6 +504,35 @@ abstract class BaseLookupQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(LookupPeer::DEC_PT, $decPt, $comparison);
+    }
+
+    /**
+     * Filter the query on the dec_el column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDecEl('fooValue');   // WHERE dec_el = 'fooValue'
+     * $query->filterByDecEl('%fooValue%'); // WHERE dec_el LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $decEl The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return LookupQuery The current query, for fluid interface
+     */
+    public function filterByDecEl($decEl = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($decEl)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $decEl)) {
+                $decEl = str_replace('*', '%', $decEl);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LookupPeer::DEC_EL, $decEl, $comparison);
     }
 
     /**

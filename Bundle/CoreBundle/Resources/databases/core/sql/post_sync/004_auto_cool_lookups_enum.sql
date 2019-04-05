@@ -4,6 +4,9 @@ SET lc_messages TO 'en_US.UTF-8';
                         ALTER TABLE account DROP CONSTRAINT IF EXISTS account_enum_sex;
                         ALTER TABLE account ADD CONSTRAINT account_enum_sex CHECK (sex IN('M','F'));
                  
+                        ALTER TABLE account DROP CONSTRAINT IF EXISTS account_enum_validate_method;
+                        ALTER TABLE account ADD CONSTRAINT account_enum_validate_method CHECK (validate_method IN('LDAP','LOCAL'));
+                 
                         ALTER TABLE lister_config_column DROP CONSTRAINT IF EXISTS lister_config_column_enum_sortby_direction;
                         ALTER TABLE lister_config_column ADD CONSTRAINT lister_config_column_enum_sortby_direction CHECK (sortby_direction IN('ASC','DESC'));
                  

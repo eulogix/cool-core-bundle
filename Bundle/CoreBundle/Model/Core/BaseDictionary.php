@@ -32,7 +32,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'when' => 'BEFORE UPDATE',
           'body' => '
             
-                    NEW.hashed_password = md5(NEW.password);
                     /*NEW.password=\'\'hidden\'\';*/
                     IF(NEW.hashed_password IS NOT NULL AND  NEW.hashed_password != COALESCE(OLD.hashed_password,\'0\')) THEN
                         NEW.last_password_update = NOW();
@@ -72,12 +71,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'login_name' => 
-        array (
-          'attributes' => 
-          array (
-          ),
-        ),
-        'password' => 
         array (
           'attributes' => 
           array (
@@ -177,6 +170,21 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         array (
           'attributes' => 
           array (
+          ),
+        ),
+        'validate_method' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'LDAP,LOCAL',
           ),
         ),
       ),
@@ -826,6 +834,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           ),
         ),
         'dec_pt' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'dec_el' => 
         array (
           'attributes' => 
           array (

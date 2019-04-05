@@ -5,7 +5,7 @@
         
         <column name="account_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="login_name" type="LONGVARCHAR" required="true"/>
-        <column name="password" type="LONGVARCHAR"/>
+
         <column name="hashed_password" type="LONGVARCHAR"/>
 
         <column name="type" type="LONGVARCHAR" description="each app may use this field to cluster users as it likes">
@@ -31,7 +31,12 @@
 
         <column name="roles" type="LONGVARCHAR" sqlType="text[]" description="SF security roles"/>
 		<column name="last_password_update" type="TIMESTAMP" defaultExpr="CURRENT_TIMESTAMP"/>
-		
+
+        <column name="validate_method" type="LONGVARCHAR" required="true" default="LOCAL" description="identifies the type of login to be used for the user">
+            
+            
+        </column>
+
         <unique>
             <unique-column name="login_name"/>
         </unique>
@@ -395,6 +400,7 @@
         <column name="dec_en" type="LONGVARCHAR"/>
         <column name="dec_es" type="LONGVARCHAR"/>
         <column name="dec_pt" type="LONGVARCHAR"/>
+        <column name="dec_el" type="LONGVARCHAR"/>
         <column name="sort_order" type="INTEGER"/>
 
         <column name="schema_filter" type="LONGVARCHAR" sqlType="TEXT[]" description="this field allows to define specific lookup sets for multi tenant schemas"/>
