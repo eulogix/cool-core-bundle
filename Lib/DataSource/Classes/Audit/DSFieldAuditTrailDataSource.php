@@ -46,7 +46,7 @@ class DSFieldAuditTrailDataSource extends CD {
         $trailDSParameters = [];
 
         if($sourceRecordId = $parameters[CD::RECORD_IDENTIFIER]) {
-            $pks = $sourceDS->explodePks($sourceRecordId);
+            $pks = $sourceDS->extractRelationPks($sourceRecordId);
         } else $pks = null;
 
         foreach($sourceRelations as $rk => $r)
