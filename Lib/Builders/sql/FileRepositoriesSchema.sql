@@ -43,6 +43,20 @@ CREATE INDEX files_idx_7 ON [[ globalSchemaName ]]_files (last_modification_date
 CREATE INDEX files_idx_8 ON [[ globalSchemaName ]]_files (uploaded_by_user);
 CREATE INDEX files_idx_9 ON [[ globalSchemaName ]]_files (checksum_sha1);
 
+CREATE OR REPLACE FUNCTION [[ globalSchemaName ]]_files_last_modification_date() RETURNS trigger
+ LANGUAGE plpgsql
+ AS $$
+ BEGIN
+   NEW.last_modification_date := NOW();
+   RETURN NEW;
+ END
+ $$;
+
+CREATE TRIGGER [[ globalSchemaName ]]_files_last_modification_date
+BEFORE INSERT OR UPDATE ON [[ globalSchemaName ]]_files
+FOR EACH ROW
+EXECUTE PROCEDURE [[ globalSchemaName ]]_files_last_modification_date();
+
 {{% for tableName,tableMap in tableMaps %}}
     {{% set fileCategories = tableMap.getFileCategories() %}}
     {{% if fileCategories|length > 0 %}}
