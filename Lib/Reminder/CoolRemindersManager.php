@@ -11,8 +11,11 @@
 
 namespace Eulogix\Cool\Lib\Reminder;
 
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\map\UserReminderTableMap;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminder;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderPeer;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
+use Propel;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -32,7 +35,28 @@ class CoolRemindersManager extends RemindersManager {
     {
         if(!$this->initialized) {
 
-            $userReminders = UserReminderQuery::create()->orderBySortOrder(\Criteria::ASC)->find();
+            $tableMap = new UserReminderTableMap();
+            $columns = $tableMap->getColumns();
+            $columns = array_keys($columns);
+
+            foreach ($columns as &$column){
+                $column = "rem.".$column;
+            }
+            $columns = implode(", ",$columns);
+            $sql = "select $columns ".
+                "   from core.user_reminder as rem inner join ".
+                "   lookups.core_user_reminder_category as cat on rem.category=cat.value ".
+                " order by cat.sort_order asc,rem.sort_order;";
+
+            $con = Propel::getConnection(UserReminderPeer::DATABASE_NAME);
+            $stmt = $con->prepare($sql);
+            $stmt->execute();
+            $formatter = new \PropelObjectFormatter();
+            $formatter->setClass('UserReminder');
+            $criteria = new UserReminderQuery();
+            $formatter->init($criteria);
+            $userReminders = $formatter->format($stmt);
+
             foreach($userReminders as $ur) {
                 /**
                  * @var UserReminder $ur
