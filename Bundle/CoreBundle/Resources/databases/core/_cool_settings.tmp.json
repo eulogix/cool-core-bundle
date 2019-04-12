@@ -861,16 +861,6 @@
                     "name": {
                         "attributes": []
                     },
-                    "type": {
-                        "attributes": [],
-                        "control": {
-                            "type": "select"
-                        },
-                        "lookup": {
-                            "type": "enum",
-                            "validValues": "SIMPLE,DATED"
-                        }
-                    },
                     "category": {
                         "attributes": [],
                         "control": {
@@ -880,9 +870,6 @@
                             "type": "table",
                             "domainName": "CORE_USER_REMINDER_CATEGORY"
                         }
-                    },
-                    "sort_order": {
-                        "attributes": []
                     },
                     "lister": {
                         "attributes": []
@@ -901,6 +888,19 @@
                         "control": {
                             "type": "textarea"
                         }
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "SIMPLE,DATED"
+                        }
+                    },
+                    "sort_order": {
+                        "attributes": []
                     },
                     "count_sql_query": {
                         "attributes": [],

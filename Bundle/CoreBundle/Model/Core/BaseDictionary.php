@@ -1500,21 +1500,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
-        'type' => 
-        array (
-          'attributes' => 
-          array (
-          ),
-          'control' => 
-          array (
-            'type' => 'select',
-          ),
-          'lookup' => 
-          array (
-            'type' => 'enum',
-            'validValues' => 'SIMPLE,DATED',
-          ),
-        ),
         'category' => 
         array (
           'attributes' => 
@@ -1528,12 +1513,6 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
             'type' => 'table',
             'domainName' => 'CORE_USER_REMINDER_CATEGORY',
-          ),
-        ),
-        'sort_order' => 
-        array (
-          'attributes' => 
-          array (
           ),
         ),
         'lister' => 
@@ -1568,6 +1547,27 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'control' => 
           array (
             'type' => 'textarea',
+          ),
+        ),
+        'type' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'SIMPLE,DATED',
+          ),
+        ),
+        'sort_order' => 
+        array (
+          'attributes' => 
+          array (
           ),
         ),
         'count_sql_query' => 

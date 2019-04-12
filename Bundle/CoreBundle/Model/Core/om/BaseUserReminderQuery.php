@@ -17,26 +17,26 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
 /**
  * @method UserReminderQuery orderByUserReminderId($order = Criteria::ASC) Order by the user_reminder_id column
  * @method UserReminderQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method UserReminderQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method UserReminderQuery orderByCategory($order = Criteria::ASC) Order by the category column
- * @method UserReminderQuery orderBySortOrder($order = Criteria::ASC) Order by the sort_order column
  * @method UserReminderQuery orderByLister($order = Criteria::ASC) Order by the lister column
  * @method UserReminderQuery orderByListerTranslationDomain($order = Criteria::ASC) Order by the lister_translation_domain column
  * @method UserReminderQuery orderByParentTables($order = Criteria::ASC) Order by the parent_tables column
  * @method UserReminderQuery orderByContextSchema($order = Criteria::ASC) Order by the context_schema column
  * @method UserReminderQuery orderBySqlQuery($order = Criteria::ASC) Order by the sql_query column
+ * @method UserReminderQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method UserReminderQuery orderBySortOrder($order = Criteria::ASC) Order by the sort_order column
  * @method UserReminderQuery orderByCountSqlQuery($order = Criteria::ASC) Order by the count_sql_query column
  *
  * @method UserReminderQuery groupByUserReminderId() Group by the user_reminder_id column
  * @method UserReminderQuery groupByName() Group by the name column
- * @method UserReminderQuery groupByType() Group by the type column
  * @method UserReminderQuery groupByCategory() Group by the category column
- * @method UserReminderQuery groupBySortOrder() Group by the sort_order column
  * @method UserReminderQuery groupByLister() Group by the lister column
  * @method UserReminderQuery groupByListerTranslationDomain() Group by the lister_translation_domain column
  * @method UserReminderQuery groupByParentTables() Group by the parent_tables column
  * @method UserReminderQuery groupByContextSchema() Group by the context_schema column
  * @method UserReminderQuery groupBySqlQuery() Group by the sql_query column
+ * @method UserReminderQuery groupByType() Group by the type column
+ * @method UserReminderQuery groupBySortOrder() Group by the sort_order column
  * @method UserReminderQuery groupByCountSqlQuery() Group by the count_sql_query column
  *
  * @method UserReminderQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -47,26 +47,26 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserReminderQuery;
  * @method UserReminder findOneOrCreate(PropelPDO $con = null) Return the first UserReminder matching the query, or a new UserReminder object populated from the query conditions when no match is found
  *
  * @method UserReminder findOneByName(string $name) Return the first UserReminder filtered by the name column
- * @method UserReminder findOneByType(string $type) Return the first UserReminder filtered by the type column
  * @method UserReminder findOneByCategory(string $category) Return the first UserReminder filtered by the category column
- * @method UserReminder findOneBySortOrder(int $sort_order) Return the first UserReminder filtered by the sort_order column
  * @method UserReminder findOneByLister(string $lister) Return the first UserReminder filtered by the lister column
  * @method UserReminder findOneByListerTranslationDomain(string $lister_translation_domain) Return the first UserReminder filtered by the lister_translation_domain column
  * @method UserReminder findOneByParentTables(string $parent_tables) Return the first UserReminder filtered by the parent_tables column
  * @method UserReminder findOneByContextSchema(string $context_schema) Return the first UserReminder filtered by the context_schema column
  * @method UserReminder findOneBySqlQuery(string $sql_query) Return the first UserReminder filtered by the sql_query column
+ * @method UserReminder findOneByType(string $type) Return the first UserReminder filtered by the type column
+ * @method UserReminder findOneBySortOrder(int $sort_order) Return the first UserReminder filtered by the sort_order column
  * @method UserReminder findOneByCountSqlQuery(string $count_sql_query) Return the first UserReminder filtered by the count_sql_query column
  *
  * @method array findByUserReminderId(int $user_reminder_id) Return UserReminder objects filtered by the user_reminder_id column
  * @method array findByName(string $name) Return UserReminder objects filtered by the name column
- * @method array findByType(string $type) Return UserReminder objects filtered by the type column
  * @method array findByCategory(string $category) Return UserReminder objects filtered by the category column
- * @method array findBySortOrder(int $sort_order) Return UserReminder objects filtered by the sort_order column
  * @method array findByLister(string $lister) Return UserReminder objects filtered by the lister column
  * @method array findByListerTranslationDomain(string $lister_translation_domain) Return UserReminder objects filtered by the lister_translation_domain column
  * @method array findByParentTables(string $parent_tables) Return UserReminder objects filtered by the parent_tables column
  * @method array findByContextSchema(string $context_schema) Return UserReminder objects filtered by the context_schema column
  * @method array findBySqlQuery(string $sql_query) Return UserReminder objects filtered by the sql_query column
+ * @method array findByType(string $type) Return UserReminder objects filtered by the type column
+ * @method array findBySortOrder(int $sort_order) Return UserReminder objects filtered by the sort_order column
  * @method array findByCountSqlQuery(string $count_sql_query) Return UserReminder objects filtered by the count_sql_query column
  */
 abstract class BaseUserReminderQuery extends ModelCriteria
@@ -173,7 +173,7 @@ abstract class BaseUserReminderQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT user_reminder_id, name, type, category, sort_order, lister, lister_translation_domain, parent_tables, context_schema, sql_query, count_sql_query FROM core.user_reminder WHERE user_reminder_id = :p0';
+        $sql = 'SELECT user_reminder_id, name, category, lister, lister_translation_domain, parent_tables, context_schema, sql_query, type, sort_order, count_sql_query FROM core.user_reminder WHERE user_reminder_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -358,35 +358,6 @@ abstract class BaseUserReminderQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the type column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
-     * $query->filterByType('%fooValue%'); // WHERE type LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $type The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return UserReminderQuery The current query, for fluid interface
-     */
-    public function filterByType($type = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($type)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $type)) {
-                $type = str_replace('*', '%', $type);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserReminderPeer::TYPE, $type, $comparison);
-    }
-
-    /**
      * Filter the query on the category column
      *
      * Example usage:
@@ -413,48 +384,6 @@ abstract class BaseUserReminderQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserReminderPeer::CATEGORY, $category, $comparison);
-    }
-
-    /**
-     * Filter the query on the sort_order column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterBySortOrder(1234); // WHERE sort_order = 1234
-     * $query->filterBySortOrder(array(12, 34)); // WHERE sort_order IN (12, 34)
-     * $query->filterBySortOrder(array('min' => 12)); // WHERE sort_order >= 12
-     * $query->filterBySortOrder(array('max' => 12)); // WHERE sort_order <= 12
-     * </code>
-     *
-     * @param     mixed $sortOrder The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return UserReminderQuery The current query, for fluid interface
-     */
-    public function filterBySortOrder($sortOrder = null, $comparison = null)
-    {
-        if (is_array($sortOrder)) {
-            $useMinMax = false;
-            if (isset($sortOrder['min'])) {
-                $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($sortOrder['max'])) {
-                $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder, $comparison);
     }
 
     /**
@@ -600,6 +529,77 @@ abstract class BaseUserReminderQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserReminderPeer::SQL_QUERY, $sqlQuery, $comparison);
+    }
+
+    /**
+     * Filter the query on the type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
+     * $query->filterByType('%fooValue%'); // WHERE type LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $type The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return UserReminderQuery The current query, for fluid interface
+     */
+    public function filterByType($type = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($type)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $type)) {
+                $type = str_replace('*', '%', $type);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserReminderPeer::TYPE, $type, $comparison);
+    }
+
+    /**
+     * Filter the query on the sort_order column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySortOrder(1234); // WHERE sort_order = 1234
+     * $query->filterBySortOrder(array(12, 34)); // WHERE sort_order IN (12, 34)
+     * $query->filterBySortOrder(array('min' => 12)); // WHERE sort_order >= 12
+     * $query->filterBySortOrder(array('max' => 12)); // WHERE sort_order <= 12
+     * </code>
+     *
+     * @param     mixed $sortOrder The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return UserReminderQuery The current query, for fluid interface
+     */
+    public function filterBySortOrder($sortOrder = null, $comparison = null)
+    {
+        if (is_array($sortOrder)) {
+            $useMinMax = false;
+            if (isset($sortOrder['min'])) {
+                $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($sortOrder['max'])) {
+                $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserReminderPeer::SORT_ORDER, $sortOrder, $comparison);
     }
 
     /**

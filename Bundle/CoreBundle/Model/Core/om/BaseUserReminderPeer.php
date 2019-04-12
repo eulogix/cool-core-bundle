@@ -44,14 +44,8 @@ abstract class BaseUserReminderPeer
     /** the column name for the name field */
     const NAME = 'core.user_reminder.name';
 
-    /** the column name for the type field */
-    const TYPE = 'core.user_reminder.type';
-
     /** the column name for the category field */
     const CATEGORY = 'core.user_reminder.category';
-
-    /** the column name for the sort_order field */
-    const SORT_ORDER = 'core.user_reminder.sort_order';
 
     /** the column name for the lister field */
     const LISTER = 'core.user_reminder.lister';
@@ -67,6 +61,12 @@ abstract class BaseUserReminderPeer
 
     /** the column name for the sql_query field */
     const SQL_QUERY = 'core.user_reminder.sql_query';
+
+    /** the column name for the type field */
+    const TYPE = 'core.user_reminder.type';
+
+    /** the column name for the sort_order field */
+    const SORT_ORDER = 'core.user_reminder.sort_order';
 
     /** the column name for the count_sql_query field */
     const COUNT_SQL_QUERY = 'core.user_reminder.count_sql_query';
@@ -90,11 +90,11 @@ abstract class BaseUserReminderPeer
      * e.g. UserReminderPeer::$fieldNames[UserReminderPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('UserReminderId', 'Name', 'Type', 'Category', 'SortOrder', 'Lister', 'ListerTranslationDomain', 'ParentTables', 'ContextSchema', 'SqlQuery', 'CountSqlQuery', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('userReminderId', 'name', 'type', 'category', 'sortOrder', 'lister', 'listerTranslationDomain', 'parentTables', 'contextSchema', 'sqlQuery', 'countSqlQuery', ),
-        BasePeer::TYPE_COLNAME => array (UserReminderPeer::USER_REMINDER_ID, UserReminderPeer::NAME, UserReminderPeer::TYPE, UserReminderPeer::CATEGORY, UserReminderPeer::SORT_ORDER, UserReminderPeer::LISTER, UserReminderPeer::LISTER_TRANSLATION_DOMAIN, UserReminderPeer::PARENT_TABLES, UserReminderPeer::CONTEXT_SCHEMA, UserReminderPeer::SQL_QUERY, UserReminderPeer::COUNT_SQL_QUERY, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USER_REMINDER_ID', 'NAME', 'TYPE', 'CATEGORY', 'SORT_ORDER', 'LISTER', 'LISTER_TRANSLATION_DOMAIN', 'PARENT_TABLES', 'CONTEXT_SCHEMA', 'SQL_QUERY', 'COUNT_SQL_QUERY', ),
-        BasePeer::TYPE_FIELDNAME => array ('user_reminder_id', 'name', 'type', 'category', 'sort_order', 'lister', 'lister_translation_domain', 'parent_tables', 'context_schema', 'sql_query', 'count_sql_query', ),
+        BasePeer::TYPE_PHPNAME => array ('UserReminderId', 'Name', 'Category', 'Lister', 'ListerTranslationDomain', 'ParentTables', 'ContextSchema', 'SqlQuery', 'Type', 'SortOrder', 'CountSqlQuery', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('userReminderId', 'name', 'category', 'lister', 'listerTranslationDomain', 'parentTables', 'contextSchema', 'sqlQuery', 'type', 'sortOrder', 'countSqlQuery', ),
+        BasePeer::TYPE_COLNAME => array (UserReminderPeer::USER_REMINDER_ID, UserReminderPeer::NAME, UserReminderPeer::CATEGORY, UserReminderPeer::LISTER, UserReminderPeer::LISTER_TRANSLATION_DOMAIN, UserReminderPeer::PARENT_TABLES, UserReminderPeer::CONTEXT_SCHEMA, UserReminderPeer::SQL_QUERY, UserReminderPeer::TYPE, UserReminderPeer::SORT_ORDER, UserReminderPeer::COUNT_SQL_QUERY, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USER_REMINDER_ID', 'NAME', 'CATEGORY', 'LISTER', 'LISTER_TRANSLATION_DOMAIN', 'PARENT_TABLES', 'CONTEXT_SCHEMA', 'SQL_QUERY', 'TYPE', 'SORT_ORDER', 'COUNT_SQL_QUERY', ),
+        BasePeer::TYPE_FIELDNAME => array ('user_reminder_id', 'name', 'category', 'lister', 'lister_translation_domain', 'parent_tables', 'context_schema', 'sql_query', 'type', 'sort_order', 'count_sql_query', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
@@ -105,11 +105,11 @@ abstract class BaseUserReminderPeer
      * e.g. UserReminderPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('UserReminderId' => 0, 'Name' => 1, 'Type' => 2, 'Category' => 3, 'SortOrder' => 4, 'Lister' => 5, 'ListerTranslationDomain' => 6, 'ParentTables' => 7, 'ContextSchema' => 8, 'SqlQuery' => 9, 'CountSqlQuery' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('userReminderId' => 0, 'name' => 1, 'type' => 2, 'category' => 3, 'sortOrder' => 4, 'lister' => 5, 'listerTranslationDomain' => 6, 'parentTables' => 7, 'contextSchema' => 8, 'sqlQuery' => 9, 'countSqlQuery' => 10, ),
-        BasePeer::TYPE_COLNAME => array (UserReminderPeer::USER_REMINDER_ID => 0, UserReminderPeer::NAME => 1, UserReminderPeer::TYPE => 2, UserReminderPeer::CATEGORY => 3, UserReminderPeer::SORT_ORDER => 4, UserReminderPeer::LISTER => 5, UserReminderPeer::LISTER_TRANSLATION_DOMAIN => 6, UserReminderPeer::PARENT_TABLES => 7, UserReminderPeer::CONTEXT_SCHEMA => 8, UserReminderPeer::SQL_QUERY => 9, UserReminderPeer::COUNT_SQL_QUERY => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USER_REMINDER_ID' => 0, 'NAME' => 1, 'TYPE' => 2, 'CATEGORY' => 3, 'SORT_ORDER' => 4, 'LISTER' => 5, 'LISTER_TRANSLATION_DOMAIN' => 6, 'PARENT_TABLES' => 7, 'CONTEXT_SCHEMA' => 8, 'SQL_QUERY' => 9, 'COUNT_SQL_QUERY' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('user_reminder_id' => 0, 'name' => 1, 'type' => 2, 'category' => 3, 'sort_order' => 4, 'lister' => 5, 'lister_translation_domain' => 6, 'parent_tables' => 7, 'context_schema' => 8, 'sql_query' => 9, 'count_sql_query' => 10, ),
+        BasePeer::TYPE_PHPNAME => array ('UserReminderId' => 0, 'Name' => 1, 'Category' => 2, 'Lister' => 3, 'ListerTranslationDomain' => 4, 'ParentTables' => 5, 'ContextSchema' => 6, 'SqlQuery' => 7, 'Type' => 8, 'SortOrder' => 9, 'CountSqlQuery' => 10, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('userReminderId' => 0, 'name' => 1, 'category' => 2, 'lister' => 3, 'listerTranslationDomain' => 4, 'parentTables' => 5, 'contextSchema' => 6, 'sqlQuery' => 7, 'type' => 8, 'sortOrder' => 9, 'countSqlQuery' => 10, ),
+        BasePeer::TYPE_COLNAME => array (UserReminderPeer::USER_REMINDER_ID => 0, UserReminderPeer::NAME => 1, UserReminderPeer::CATEGORY => 2, UserReminderPeer::LISTER => 3, UserReminderPeer::LISTER_TRANSLATION_DOMAIN => 4, UserReminderPeer::PARENT_TABLES => 5, UserReminderPeer::CONTEXT_SCHEMA => 6, UserReminderPeer::SQL_QUERY => 7, UserReminderPeer::TYPE => 8, UserReminderPeer::SORT_ORDER => 9, UserReminderPeer::COUNT_SQL_QUERY => 10, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USER_REMINDER_ID' => 0, 'NAME' => 1, 'CATEGORY' => 2, 'LISTER' => 3, 'LISTER_TRANSLATION_DOMAIN' => 4, 'PARENT_TABLES' => 5, 'CONTEXT_SCHEMA' => 6, 'SQL_QUERY' => 7, 'TYPE' => 8, 'SORT_ORDER' => 9, 'COUNT_SQL_QUERY' => 10, ),
+        BasePeer::TYPE_FIELDNAME => array ('user_reminder_id' => 0, 'name' => 1, 'category' => 2, 'lister' => 3, 'lister_translation_domain' => 4, 'parent_tables' => 5, 'context_schema' => 6, 'sql_query' => 7, 'type' => 8, 'sort_order' => 9, 'count_sql_query' => 10, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
@@ -186,26 +186,26 @@ abstract class BaseUserReminderPeer
         if (null === $alias) {
             $criteria->addSelectColumn(UserReminderPeer::USER_REMINDER_ID);
             $criteria->addSelectColumn(UserReminderPeer::NAME);
-            $criteria->addSelectColumn(UserReminderPeer::TYPE);
             $criteria->addSelectColumn(UserReminderPeer::CATEGORY);
-            $criteria->addSelectColumn(UserReminderPeer::SORT_ORDER);
             $criteria->addSelectColumn(UserReminderPeer::LISTER);
             $criteria->addSelectColumn(UserReminderPeer::LISTER_TRANSLATION_DOMAIN);
             $criteria->addSelectColumn(UserReminderPeer::PARENT_TABLES);
             $criteria->addSelectColumn(UserReminderPeer::CONTEXT_SCHEMA);
             $criteria->addSelectColumn(UserReminderPeer::SQL_QUERY);
+            $criteria->addSelectColumn(UserReminderPeer::TYPE);
+            $criteria->addSelectColumn(UserReminderPeer::SORT_ORDER);
             $criteria->addSelectColumn(UserReminderPeer::COUNT_SQL_QUERY);
         } else {
             $criteria->addSelectColumn($alias . '.user_reminder_id');
             $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.type');
             $criteria->addSelectColumn($alias . '.category');
-            $criteria->addSelectColumn($alias . '.sort_order');
             $criteria->addSelectColumn($alias . '.lister');
             $criteria->addSelectColumn($alias . '.lister_translation_domain');
             $criteria->addSelectColumn($alias . '.parent_tables');
             $criteria->addSelectColumn($alias . '.context_schema');
             $criteria->addSelectColumn($alias . '.sql_query');
+            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.sort_order');
             $criteria->addSelectColumn($alias . '.count_sql_query');
         }
     }

@@ -832,19 +832,13 @@
 
         <column name="name" type="LONGVARCHAR" required="true" description=""></column>
 
-        <column name="type" type="LONGVARCHAR" required="true" default="SIMPLE" description="SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column">
-            <_lookup type="enum" validValues="SIMPLE,DATED"/>
-            <_control type="select"></_control>
-        </column>
-
         <column name="category" type="LONGVARCHAR">
             <_lookup type="table" domainName="CORE_USER_REMINDER_CATEGORY"/>
             <_control type="select"></_control>
         </column>
 
-        <column name="sort_order" type="INTEGER"/>
-
         <column name="lister" type="LONGVARCHAR" required="false" description="fill this with a widgetId if you don't want the default one"></column>
+
         <column name="lister_translation_domain" type="LONGVARCHAR" description="set this with an existing translation domain to reuse translations already in place somewhere else"></column>
 
         <column name="parent_tables" type="LONGVARCHAR" description="use a comma separated list of tables here. Their fields will be visible in the lister"></column>
@@ -854,6 +848,13 @@
         <column name="sql_query" type="LONGVARCHAR" required="true">
             <_control type="textarea"></_control>
         </column>
+
+        <column name="type" type="LONGVARCHAR" required="true" default="SIMPLE" description="SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column">
+            <_lookup type="enum" validValues="SIMPLE,DATED"/>
+            <_control type="select"></_control>
+        </column>
+
+        <column name="sort_order" type="INTEGER"/>
 
         <column name="count_sql_query" type="LONGVARCHAR"
                 description="alternate query for counting, used as is instead of the rewritten query for complex cases">

@@ -49,23 +49,10 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     protected $name;
 
     /**
-     * The value for the type field.
-     * Note: this column has a database default value of: 'SIMPLE'
-     * @var        string
-     */
-    protected $type;
-
-    /**
      * The value for the category field.
      * @var        string
      */
     protected $category;
-
-    /**
-     * The value for the sort_order field.
-     * @var        int
-     */
-    protected $sort_order;
 
     /**
      * The value for the lister field.
@@ -97,6 +84,19 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
      * @var        string
      */
     protected $sql_query;
+
+    /**
+     * The value for the type field.
+     * Note: this column has a database default value of: 'SIMPLE'
+     * @var        string
+     */
+    protected $type;
+
+    /**
+     * The value for the sort_order field.
+     * @var        int
+     */
+    protected $sort_order;
 
     /**
      * The value for the count_sql_query field.
@@ -132,8 +132,8 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
      */
     public function applyDefaultValues()
     {
-        $this->type = 'SIMPLE';
         $this->context_schema = 'core';
+        $this->type = 'SIMPLE';
     }
 
     /**
@@ -169,17 +169,6 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     }
 
     /**
-     * Get the [type] column value.
-     * SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column
-     * @return string
-     */
-    public function getType()
-    {
-
-        return $this->type;
-    }
-
-    /**
      * Get the [category] column value.
      *
      * @return string
@@ -188,17 +177,6 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     {
 
         return $this->category;
-    }
-
-    /**
-     * Get the [sort_order] column value.
-     *
-     * @return int
-     */
-    public function getSortOrder()
-    {
-
-        return $this->sort_order;
     }
 
     /**
@@ -257,6 +235,28 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     }
 
     /**
+     * Get the [type] column value.
+     * SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column
+     * @return string
+     */
+    public function getType()
+    {
+
+        return $this->type;
+    }
+
+    /**
+     * Get the [sort_order] column value.
+     *
+     * @return int
+     */
+    public function getSortOrder()
+    {
+
+        return $this->sort_order;
+    }
+
+    /**
      * Get the [count_sql_query] column value.
      * alternate query for counting, used as is instead of the rewritten query for complex cases
      * @return string
@@ -310,27 +310,6 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     } // setName()
 
     /**
-     * Set the value of [type] column.
-     * SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column
-     * @param  string $v new value
-     * @return UserReminder The current object (for fluent API support)
-     */
-    public function setType($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->type !== $v) {
-            $this->type = $v;
-            $this->modifiedColumns[] = UserReminderPeer::TYPE;
-        }
-
-
-        return $this;
-    } // setType()
-
-    /**
      * Set the value of [category] column.
      *
      * @param  string $v new value
@@ -350,27 +329,6 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
 
         return $this;
     } // setCategory()
-
-    /**
-     * Set the value of [sort_order] column.
-     *
-     * @param  int $v new value
-     * @return UserReminder The current object (for fluent API support)
-     */
-    public function setSortOrder($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->sort_order !== $v) {
-            $this->sort_order = $v;
-            $this->modifiedColumns[] = UserReminderPeer::SORT_ORDER;
-        }
-
-
-        return $this;
-    } // setSortOrder()
 
     /**
      * Set the value of [lister] column.
@@ -478,6 +436,48 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     } // setSqlQuery()
 
     /**
+     * Set the value of [type] column.
+     * SIMPLE: the result is a simple count. DATED: the query is partitioned on the _date column
+     * @param  string $v new value
+     * @return UserReminder The current object (for fluent API support)
+     */
+    public function setType($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[] = UserReminderPeer::TYPE;
+        }
+
+
+        return $this;
+    } // setType()
+
+    /**
+     * Set the value of [sort_order] column.
+     *
+     * @param  int $v new value
+     * @return UserReminder The current object (for fluent API support)
+     */
+    public function setSortOrder($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->sort_order !== $v) {
+            $this->sort_order = $v;
+            $this->modifiedColumns[] = UserReminderPeer::SORT_ORDER;
+        }
+
+
+        return $this;
+    } // setSortOrder()
+
+    /**
      * Set the value of [count_sql_query] column.
      * alternate query for counting, used as is instead of the rewritten query for complex cases
      * @param  string $v new value
@@ -508,11 +508,11 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->type !== 'SIMPLE') {
+            if ($this->context_schema !== 'core') {
                 return false;
             }
 
-            if ($this->context_schema !== 'core') {
+            if ($this->type !== 'SIMPLE') {
                 return false;
             }
 
@@ -540,14 +540,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
 
             $this->user_reminder_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->category = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->sort_order = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-            $this->lister = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->lister_translation_domain = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->parent_tables = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->context_schema = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->sql_query = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->category = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->lister = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->lister_translation_domain = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->parent_tables = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->context_schema = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->sql_query = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->type = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->sort_order = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
             $this->count_sql_query = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->resetModified();
 
@@ -789,14 +789,8 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(UserReminderPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = 'name';
         }
-        if ($this->isColumnModified(UserReminderPeer::TYPE)) {
-            $modifiedColumns[':p' . $index++]  = 'type';
-        }
         if ($this->isColumnModified(UserReminderPeer::CATEGORY)) {
             $modifiedColumns[':p' . $index++]  = 'category';
-        }
-        if ($this->isColumnModified(UserReminderPeer::SORT_ORDER)) {
-            $modifiedColumns[':p' . $index++]  = 'sort_order';
         }
         if ($this->isColumnModified(UserReminderPeer::LISTER)) {
             $modifiedColumns[':p' . $index++]  = 'lister';
@@ -812,6 +806,12 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         }
         if ($this->isColumnModified(UserReminderPeer::SQL_QUERY)) {
             $modifiedColumns[':p' . $index++]  = 'sql_query';
+        }
+        if ($this->isColumnModified(UserReminderPeer::TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'type';
+        }
+        if ($this->isColumnModified(UserReminderPeer::SORT_ORDER)) {
+            $modifiedColumns[':p' . $index++]  = 'sort_order';
         }
         if ($this->isColumnModified(UserReminderPeer::COUNT_SQL_QUERY)) {
             $modifiedColumns[':p' . $index++]  = 'count_sql_query';
@@ -833,14 +833,8 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
                     case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case 'type':
-                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
-                        break;
                     case 'category':
                         $stmt->bindValue($identifier, $this->category, PDO::PARAM_STR);
-                        break;
-                    case 'sort_order':
-                        $stmt->bindValue($identifier, $this->sort_order, PDO::PARAM_INT);
                         break;
                     case 'lister':
                         $stmt->bindValue($identifier, $this->lister, PDO::PARAM_STR);
@@ -856,6 +850,12 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
                         break;
                     case 'sql_query':
                         $stmt->bindValue($identifier, $this->sql_query, PDO::PARAM_STR);
+                        break;
+                    case 'type':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
+                    case 'sort_order':
+                        $stmt->bindValue($identifier, $this->sort_order, PDO::PARAM_INT);
                         break;
                     case 'count_sql_query':
                         $stmt->bindValue($identifier, $this->count_sql_query, PDO::PARAM_STR);
@@ -994,28 +994,28 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
                 return $this->getName();
                 break;
             case 2:
-                return $this->getType();
-                break;
-            case 3:
                 return $this->getCategory();
                 break;
-            case 4:
-                return $this->getSortOrder();
-                break;
-            case 5:
+            case 3:
                 return $this->getLister();
                 break;
-            case 6:
+            case 4:
                 return $this->getListerTranslationDomain();
                 break;
-            case 7:
+            case 5:
                 return $this->getParentTables();
                 break;
-            case 8:
+            case 6:
                 return $this->getContextSchema();
                 break;
-            case 9:
+            case 7:
                 return $this->getSqlQuery();
+                break;
+            case 8:
+                return $this->getType();
+                break;
+            case 9:
+                return $this->getSortOrder();
                 break;
             case 10:
                 return $this->getCountSqlQuery();
@@ -1050,14 +1050,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
         $result = array(
             $keys[0] => $this->getUserReminderId(),
             $keys[1] => $this->getName(),
-            $keys[2] => $this->getType(),
-            $keys[3] => $this->getCategory(),
-            $keys[4] => $this->getSortOrder(),
-            $keys[5] => $this->getLister(),
-            $keys[6] => $this->getListerTranslationDomain(),
-            $keys[7] => $this->getParentTables(),
-            $keys[8] => $this->getContextSchema(),
-            $keys[9] => $this->getSqlQuery(),
+            $keys[2] => $this->getCategory(),
+            $keys[3] => $this->getLister(),
+            $keys[4] => $this->getListerTranslationDomain(),
+            $keys[5] => $this->getParentTables(),
+            $keys[6] => $this->getContextSchema(),
+            $keys[7] => $this->getSqlQuery(),
+            $keys[8] => $this->getType(),
+            $keys[9] => $this->getSortOrder(),
             $keys[10] => $this->getCountSqlQuery(),
         );
         $virtualColumns = $this->virtualColumns;
@@ -1105,28 +1105,28 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
                 $this->setName($value);
                 break;
             case 2:
-                $this->setType($value);
-                break;
-            case 3:
                 $this->setCategory($value);
                 break;
-            case 4:
-                $this->setSortOrder($value);
-                break;
-            case 5:
+            case 3:
                 $this->setLister($value);
                 break;
-            case 6:
+            case 4:
                 $this->setListerTranslationDomain($value);
                 break;
-            case 7:
+            case 5:
                 $this->setParentTables($value);
                 break;
-            case 8:
+            case 6:
                 $this->setContextSchema($value);
                 break;
-            case 9:
+            case 7:
                 $this->setSqlQuery($value);
+                break;
+            case 8:
+                $this->setType($value);
+                break;
+            case 9:
+                $this->setSortOrder($value);
                 break;
             case 10:
                 $this->setCountSqlQuery($value);
@@ -1157,14 +1157,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setUserReminderId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setType($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setCategory($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setSortOrder($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setLister($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setListerTranslationDomain($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setParentTables($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setContextSchema($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setSqlQuery($arr[$keys[9]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCategory($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setLister($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setListerTranslationDomain($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setParentTables($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setContextSchema($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setSqlQuery($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setType($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setSortOrder($arr[$keys[9]]);
         if (array_key_exists($keys[10], $arr)) $this->setCountSqlQuery($arr[$keys[10]]);
     }
 
@@ -1179,14 +1179,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
 
         if ($this->isColumnModified(UserReminderPeer::USER_REMINDER_ID)) $criteria->add(UserReminderPeer::USER_REMINDER_ID, $this->user_reminder_id);
         if ($this->isColumnModified(UserReminderPeer::NAME)) $criteria->add(UserReminderPeer::NAME, $this->name);
-        if ($this->isColumnModified(UserReminderPeer::TYPE)) $criteria->add(UserReminderPeer::TYPE, $this->type);
         if ($this->isColumnModified(UserReminderPeer::CATEGORY)) $criteria->add(UserReminderPeer::CATEGORY, $this->category);
-        if ($this->isColumnModified(UserReminderPeer::SORT_ORDER)) $criteria->add(UserReminderPeer::SORT_ORDER, $this->sort_order);
         if ($this->isColumnModified(UserReminderPeer::LISTER)) $criteria->add(UserReminderPeer::LISTER, $this->lister);
         if ($this->isColumnModified(UserReminderPeer::LISTER_TRANSLATION_DOMAIN)) $criteria->add(UserReminderPeer::LISTER_TRANSLATION_DOMAIN, $this->lister_translation_domain);
         if ($this->isColumnModified(UserReminderPeer::PARENT_TABLES)) $criteria->add(UserReminderPeer::PARENT_TABLES, $this->parent_tables);
         if ($this->isColumnModified(UserReminderPeer::CONTEXT_SCHEMA)) $criteria->add(UserReminderPeer::CONTEXT_SCHEMA, $this->context_schema);
         if ($this->isColumnModified(UserReminderPeer::SQL_QUERY)) $criteria->add(UserReminderPeer::SQL_QUERY, $this->sql_query);
+        if ($this->isColumnModified(UserReminderPeer::TYPE)) $criteria->add(UserReminderPeer::TYPE, $this->type);
+        if ($this->isColumnModified(UserReminderPeer::SORT_ORDER)) $criteria->add(UserReminderPeer::SORT_ORDER, $this->sort_order);
         if ($this->isColumnModified(UserReminderPeer::COUNT_SQL_QUERY)) $criteria->add(UserReminderPeer::COUNT_SQL_QUERY, $this->count_sql_query);
 
         return $criteria;
@@ -1252,14 +1252,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
-        $copyObj->setType($this->getType());
         $copyObj->setCategory($this->getCategory());
-        $copyObj->setSortOrder($this->getSortOrder());
         $copyObj->setLister($this->getLister());
         $copyObj->setListerTranslationDomain($this->getListerTranslationDomain());
         $copyObj->setParentTables($this->getParentTables());
         $copyObj->setContextSchema($this->getContextSchema());
         $copyObj->setSqlQuery($this->getSqlQuery());
+        $copyObj->setType($this->getType());
+        $copyObj->setSortOrder($this->getSortOrder());
         $copyObj->setCountSqlQuery($this->getCountSqlQuery());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1314,14 +1314,14 @@ abstract class BaseUserReminder extends CoolPropelObject implements Persistent
     {
         $this->user_reminder_id = null;
         $this->name = null;
-        $this->type = null;
         $this->category = null;
-        $this->sort_order = null;
         $this->lister = null;
         $this->lister_translation_domain = null;
         $this->parent_tables = null;
         $this->context_schema = null;
         $this->sql_query = null;
+        $this->type = null;
+        $this->sort_order = null;
         $this->count_sql_query = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;

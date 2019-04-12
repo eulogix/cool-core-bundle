@@ -44,14 +44,14 @@ class UserReminderTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMa
         // columns
         $this->addPrimaryKey('user_reminder_id', 'UserReminderId', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('type', 'Type', 'LONGVARCHAR', true, null, 'SIMPLE');
         $this->addColumn('category', 'Category', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('sort_order', 'SortOrder', 'INTEGER', false, null, null);
         $this->addColumn('lister', 'Lister', 'LONGVARCHAR', false, null, null);
         $this->addColumn('lister_translation_domain', 'ListerTranslationDomain', 'LONGVARCHAR', false, null, null);
         $this->addColumn('parent_tables', 'ParentTables', 'LONGVARCHAR', false, null, null);
         $this->addColumn('context_schema', 'ContextSchema', 'LONGVARCHAR', true, null, 'core');
         $this->addColumn('sql_query', 'SqlQuery', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('type', 'Type', 'LONGVARCHAR', true, null, 'SIMPLE');
+        $this->addColumn('sort_order', 'SortOrder', 'INTEGER', false, null, null);
         $this->addColumn('count_sql_query', 'CountSqlQuery', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
