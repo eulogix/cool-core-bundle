@@ -28,7 +28,6 @@ class UserReminderQuery extends BaseUserReminderQuery
         $stmt = $con->prepare($sql);
         $stmt->execute();
         $formatter = new \PropelObjectFormatter();
-        $formatter->setClass('UserReminder');
         $criteria = new UserReminderQuery();
         $formatter->init($criteria);
         return $formatter->format($stmt);
