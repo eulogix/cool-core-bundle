@@ -30,7 +30,7 @@ DO $$ BEGIN ALTER TABLE lookups.core_user_type ADD COLUMN schema_filter TEXT[]; 
 DO $$ BEGIN ALTER TABLE lookups.core_user_type ADD COLUMN schema_filter_inv TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
 DO $$ BEGIN ALTER TABLE lookups.core_user_type ADD COLUMN original_value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
 DO $$ BEGIN ALTER TABLE lookups.core_user_type ADD COLUMN notes TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-CREATE TABLE IF NOT EXISTS lookups.account_office
+CREATE TABLE IF NOT EXISTS lookups.core_account_office
                     (value TEXT,
 dec_en TEXT,
 dec_es TEXT,
@@ -47,19 +47,19 @@ notes TEXT,
 PRIMARY KEY (value)
                     );
 
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN dec_en TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN dec_es TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN dec_pt TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN dec_it TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN dec_el TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN sort_order INTEGER; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN mandatory_flag BOOLEAN; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN schema_filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN schema_filter_inv TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN original_value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
-DO $$ BEGIN ALTER TABLE lookups.account_office ADD COLUMN notes TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN dec_en TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN dec_es TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN dec_pt TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN dec_it TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN dec_el TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN sort_order INTEGER; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN mandatory_flag BOOLEAN; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN schema_filter TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN schema_filter_inv TEXT[]; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN original_value TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
+DO $$ BEGIN ALTER TABLE lookups.core_account_office ADD COLUMN notes TEXT; EXCEPTION WHEN OTHERS THEN END; $$;
 CREATE TABLE IF NOT EXISTS lookups.app_setting_name
                     (value TEXT,
 dec_en TEXT,

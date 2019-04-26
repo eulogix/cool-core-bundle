@@ -110,7 +110,7 @@
                         },
                         "lookup": {
                             "type": "table",
-                            "domainName": "ACCOUNT_OFFICE"
+                            "domainName": "CORE_ACCOUNT_OFFICE"
                         }
                     }
                 }

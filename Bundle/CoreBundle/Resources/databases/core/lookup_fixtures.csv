@@ -1,5 +1,5 @@
 domain;value;dec_en;dec_es;dec_pt;dec_it;dec_el;sort_order;mandatory_flag
-ACCOUNT_OFFICE;
+ACCOUNT_OFFICE;;;;;;;;
 APP_SETTING_NAME;;;;;;;;
 APP_SETTING_SPACE;;;;;;;;
 CODE_SNIPPET_CATEGORY;form_action;"Form Action";"Form Action";"Form Action";"Form Action";;;
@@ -10,6 +10,7 @@ CODE_SNIPPET_CATEGORY;lister_action;"Lister Action";"Lister Action";"Lister Acti
 CODE_SNIPPET_CATEGORY;lister_variable;"Lister Variable";"Lister Action";"Lister Action";"Lister Action";;;
 CODE_SNIPPET_CATEGORY;widget_action;"Widget Action";"Widget Action";"Widget Action";"Widget Action";;;
 CODE_SNIPPET_CATEGORY;widget_variable;"Widget Variable";"Widget Action";"Widget Action";"Widget Action";;;
+CORE_ACCOUNT_OFFICE;
 CORE_GROUP_TYPE;;;;;;;;
 CORE_USER_REMINDER_CATEGORY;;;;;;;;
 CORE_USER_TYPE;;;;;;;;

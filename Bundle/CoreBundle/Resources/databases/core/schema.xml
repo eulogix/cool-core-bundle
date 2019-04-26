@@ -59,7 +59,7 @@
         </column>
 
         <column name="office" type="LONGVARCHAR">
-            <_lookup type="table" domainName="ACCOUNT_OFFICE"/>
+            <_lookup type="table" domainName="CORE_ACCOUNT_OFFICE"/>
             <_control type="select"></_control>
         </column>
 

@@ -199,7 +199,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           'lookup' => 
           array (
             'type' => 'table',
-            'domainName' => 'ACCOUNT_OFFICE',
+            'domainName' => 'CORE_ACCOUNT_OFFICE',
           ),
         ),
       ),

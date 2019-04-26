@@ -11,7 +11,7 @@ SET lc_messages TO 'en_US.UTF-8';
      ALTER TABLE core.account DROP CONSTRAINT IF EXISTS core_account_office_FK;
      ALTER TABLE core.account ADD CONSTRAINT core_account_office_FK
                             FOREIGN KEY (office)
-                            REFERENCES lookups.account_office (value)
+                            REFERENCES lookups.core_account_office (value)
                             ON DELETE RESTRICT
                             ON UPDATE CASCADE;
                             
