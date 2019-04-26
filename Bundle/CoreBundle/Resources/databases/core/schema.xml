@@ -58,6 +58,11 @@
             <_control type="select"></_control>
         </column>
 
+        <column name="office" type="LONGVARCHAR">
+            <_lookup type="table" domainName="ACCOUNT_OFFICE"/>
+            <_control type="select"></_control>
+        </column>
+
         <unique>
             <unique-column name="login_name"/>
         </unique>

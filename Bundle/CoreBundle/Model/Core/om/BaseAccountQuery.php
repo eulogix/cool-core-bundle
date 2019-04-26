@@ -39,6 +39,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery orderByRoles($order = Criteria::ASC) Order by the roles column
  * @method AccountQuery orderByLastPasswordUpdate($order = Criteria::ASC) Order by the last_password_update column
  * @method AccountQuery orderByValidateMethod($order = Criteria::ASC) Order by the validate_method column
+ * @method AccountQuery orderByOffice($order = Criteria::ASC) Order by the office column
  *
  * @method AccountQuery groupByAccountId() Group by the account_id column
  * @method AccountQuery groupByLoginName() Group by the login_name column
@@ -56,6 +57,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method AccountQuery groupByRoles() Group by the roles column
  * @method AccountQuery groupByLastPasswordUpdate() Group by the last_password_update column
  * @method AccountQuery groupByValidateMethod() Group by the validate_method column
+ * @method AccountQuery groupByOffice() Group by the office column
  *
  * @method AccountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AccountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -119,6 +121,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method Account findOneByRoles(string $roles) Return the first Account filtered by the roles column
  * @method Account findOneByLastPasswordUpdate(string $last_password_update) Return the first Account filtered by the last_password_update column
  * @method Account findOneByValidateMethod(string $validate_method) Return the first Account filtered by the validate_method column
+ * @method Account findOneByOffice(string $office) Return the first Account filtered by the office column
  *
  * @method array findByAccountId(int $account_id) Return Account objects filtered by the account_id column
  * @method array findByLoginName(string $login_name) Return Account objects filtered by the login_name column
@@ -136,6 +139,7 @@ use Eulogix\Cool\Bundle\CoreBundle\Model\Core\UserNotification;
  * @method array findByRoles(string $roles) Return Account objects filtered by the roles column
  * @method array findByLastPasswordUpdate(string $last_password_update) Return Account objects filtered by the last_password_update column
  * @method array findByValidateMethod(string $validate_method) Return Account objects filtered by the validate_method column
+ * @method array findByOffice(string $office) Return Account objects filtered by the office column
  */
 abstract class BaseAccountQuery extends ModelCriteria
 {
@@ -241,7 +245,7 @@ abstract class BaseAccountQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT account_id, login_name, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles, last_password_update, validate_method FROM core.account WHERE account_id = :p0';
+        $sql = 'SELECT account_id, login_name, hashed_password, type, first_name, last_name, sex, email, telephone, mobile, default_locale, company_name, validity, roles, last_password_update, validate_method, office FROM core.account WHERE account_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -843,6 +847,35 @@ abstract class BaseAccountQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AccountPeer::VALIDATE_METHOD, $validateMethod, $comparison);
+    }
+
+    /**
+     * Filter the query on the office column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByOffice('fooValue');   // WHERE office = 'fooValue'
+     * $query->filterByOffice('%fooValue%'); // WHERE office LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $office The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AccountQuery The current query, for fluid interface
+     */
+    public function filterByOffice($office = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($office)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $office)) {
+                $office = str_replace('*', '%', $office);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AccountPeer::OFFICE, $office, $comparison);
     }
 
     /**

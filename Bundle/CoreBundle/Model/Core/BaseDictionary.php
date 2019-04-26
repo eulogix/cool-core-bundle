@@ -187,6 +187,21 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
             'validValues' => 'LDAP,LOCAL',
           ),
         ),
+        'office' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'table',
+            'domainName' => 'ACCOUNT_OFFICE',
+          ),
+        ),
       ),
     ),
     'core.app_setting' => 

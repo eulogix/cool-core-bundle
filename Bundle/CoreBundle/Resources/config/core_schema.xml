@@ -37,6 +37,11 @@
             
         </column>
 
+        <column name="office" type="LONGVARCHAR">
+            
+            
+        </column>
+
         <unique>
             <unique-column name="login_name"/>
         </unique>

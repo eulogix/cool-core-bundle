@@ -151,6 +151,12 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     protected $validate_method;
 
     /**
+     * The value for the office field.
+     * @var        string
+     */
+    protected $office;
+
+    /**
      * @var        PropelObjectCollection|AccountSetting[] Collection to store aggregation of AccountSetting objects.
      */
     protected $collAccountSettings;
@@ -512,6 +518,17 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     }
 
     /**
+     * Get the [office] column value.
+     *
+     * @return string
+     */
+    public function getOffice()
+    {
+
+        return $this->office;
+    }
+
+    /**
      * Set the value of [account_id] column.
      *
      * @param  int $v new value
@@ -850,6 +867,27 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
     } // setValidateMethod()
 
     /**
+     * Set the value of [office] column.
+     *
+     * @param  string $v new value
+     * @return Account The current object (for fluent API support)
+     */
+    public function setOffice($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->office !== $v) {
+            $this->office = $v;
+            $this->modifiedColumns[] = AccountPeer::OFFICE;
+        }
+
+
+        return $this;
+    } // setOffice()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -901,6 +939,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             $this->roles = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
             $this->last_password_update = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
             $this->validate_method = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->office = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -910,7 +949,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 16; // 16 = AccountPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = AccountPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Account object", $e);
@@ -1380,6 +1419,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::VALIDATE_METHOD)) {
             $modifiedColumns[':p' . $index++]  = 'validate_method';
         }
+        if ($this->isColumnModified(AccountPeer::OFFICE)) {
+            $modifiedColumns[':p' . $index++]  = 'office';
+        }
 
         $sql = sprintf(
             'INSERT INTO core.account (%s) VALUES (%s)',
@@ -1438,6 +1480,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
                         break;
                     case 'validate_method':
                         $stmt->bindValue($identifier, $this->validate_method, PDO::PARAM_STR);
+                        break;
+                    case 'office':
+                        $stmt->bindValue($identifier, $this->office, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1694,6 +1739,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             case 15:
                 return $this->getValidateMethod();
                 break;
+            case 16:
+                return $this->getOffice();
+                break;
             default:
                 return null;
                 break;
@@ -1739,6 +1787,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             $keys[13] => $this->getRoles(),
             $keys[14] => $this->getLastPasswordUpdate(),
             $keys[15] => $this->getValidateMethod(),
+            $keys[16] => $this->getOffice(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1858,6 +1907,9 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
             case 15:
                 $this->setValidateMethod($value);
                 break;
+            case 16:
+                $this->setOffice($value);
+                break;
         } // switch()
     }
 
@@ -1898,6 +1950,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[13], $arr)) $this->setRoles($arr[$keys[13]]);
         if (array_key_exists($keys[14], $arr)) $this->setLastPasswordUpdate($arr[$keys[14]]);
         if (array_key_exists($keys[15], $arr)) $this->setValidateMethod($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setOffice($arr[$keys[16]]);
     }
 
     /**
@@ -1925,6 +1978,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(AccountPeer::ROLES)) $criteria->add(AccountPeer::ROLES, $this->roles);
         if ($this->isColumnModified(AccountPeer::LAST_PASSWORD_UPDATE)) $criteria->add(AccountPeer::LAST_PASSWORD_UPDATE, $this->last_password_update);
         if ($this->isColumnModified(AccountPeer::VALIDATE_METHOD)) $criteria->add(AccountPeer::VALIDATE_METHOD, $this->validate_method);
+        if ($this->isColumnModified(AccountPeer::OFFICE)) $criteria->add(AccountPeer::OFFICE, $this->office);
 
         return $criteria;
     }
@@ -2003,6 +2057,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $copyObj->setRoles($this->getRoles());
         $copyObj->setLastPasswordUpdate($this->getLastPasswordUpdate());
         $copyObj->setValidateMethod($this->getValidateMethod());
+        $copyObj->setOffice($this->getOffice());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -4485,6 +4540,7 @@ abstract class BaseAccount extends CoolPropelObject implements Persistent
         $this->roles = null;
         $this->last_password_update = null;
         $this->validate_method = null;
+        $this->office = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

@@ -102,6 +102,16 @@
                             "type": "enum",
                             "validValues": "LDAP,LOCAL"
                         }
+                    },
+                    "office": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "ACCOUNT_OFFICE"
+                        }
                     }
                 }
             },

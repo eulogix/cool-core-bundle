@@ -58,6 +58,7 @@ class AccountTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('roles', 'Roles', 'LONGVARCHAR', false, null, null);
         $this->addColumn('last_password_update', 'LastPasswordUpdate', 'TIMESTAMP', false, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('validate_method', 'ValidateMethod', 'LONGVARCHAR', true, null, 'LOCAL');
+        $this->addColumn('office', 'Office', 'LONGVARCHAR', false, null, null);
         // validators
     } // initialize()
 

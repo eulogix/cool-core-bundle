@@ -8,6 +8,13 @@ SET lc_messages TO 'en_US.UTF-8';
                             ON DELETE RESTRICT
                             ON UPDATE CASCADE;
                             
+     ALTER TABLE core.account DROP CONSTRAINT IF EXISTS core_account_office_FK;
+     ALTER TABLE core.account ADD CONSTRAINT core_account_office_FK
+                            FOREIGN KEY (office)
+                            REFERENCES lookups.account_office (value)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE;
+                            
      ALTER TABLE core.app_setting DROP CONSTRAINT IF EXISTS core_app_setting_name_FK;
      ALTER TABLE core.app_setting ADD CONSTRAINT core_app_setting_name_FK
                             FOREIGN KEY (name)
